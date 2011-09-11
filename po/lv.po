@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit gnome-2-30\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
 "cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-07-01 22:43+0000\n"
-"PO-Revision-Date: 2011-07-10 09:54+0300\n"
+"POT-Creation-Date: 2011-08-28 16:03+0000\n"
+"PO-Revision-Date: 2011-09-07 10:43+0300\n"
 "Last-Translator: Rūdofls Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
 "MIME-Version: 1.0\n"
@@ -26,8 +26,8 @@ msgstr "Pievienot vai izņemt programmatūru sistēmā"
 
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
-#: ../src/gpk-application.c:4056 ../src/gpk-log.c:498
-#: ../src/gpk-update-viewer.c:3337
+#: ../src/gpk-application.c:4068 ../src/gpk-log.c:498
+#: ../src/gpk-update-viewer.c:3354
 msgid "Add/Remove Software"
 msgstr "Pievienot/Izņemt programmatūru"
 
@@ -67,13 +67,12 @@ msgstr "Palīdzība par šo programmatūru"
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
-#. TRANSLATORS: if the update should be installed
 #: ../data/gpk-application.ui.h:9 ../src/gpk-dbus-task.c:710
-#: ../src/gpk-dbus-task.c:1245 ../src/gpk-dbus-task.c:1464
-#: ../src/gpk-dbus-task.c:1667 ../src/gpk-dbus-task.c:2127
-#: ../src/gpk-dbus-task.c:2465 ../src/gpk-dbus-task.c:2678
-#: ../src/gpk-dbus-task.c:2800 ../src/gpk-dbus-task.c:3153
-#: ../src/gpk-task.c:405 ../src/gpk-update-viewer.c:1659
+#: ../src/gpk-dbus-task.c:1249 ../src/gpk-dbus-task.c:1468
+#: ../src/gpk-dbus-task.c:1671 ../src/gpk-dbus-task.c:2131
+#: ../src/gpk-dbus-task.c:2469 ../src/gpk-dbus-task.c:2682
+#: ../src/gpk-dbus-task.c:2804 ../src/gpk-dbus-task.c:3157
+#: ../src/gpk-task.c:405
 msgid "Install"
 msgstr "Instalēt"
 
@@ -142,7 +141,7 @@ msgid "Refresh the list of packages on the system"
 msgstr "Atsvaidzināt sistēmas pakotņu sarakstus"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../data/gpk-application.ui.h:26 ../src/gpk-dbus-task.c:3091
+#: ../data/gpk-application.ui.h:26 ../src/gpk-dbus-task.c:3095
 #: ../src/gpk-task.c:411
 msgid "Remove"
 msgstr "Izņemt"
@@ -252,10 +251,9 @@ msgstr "Instalēt izvēlēto programmatūru sistēmā"
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:2
-#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3368
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3372
 #: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
 #: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
-#| msgid "_Force install"
 msgid "Software Install"
 msgstr "Programmatūras instalēšana"
 
@@ -289,8 +287,9 @@ msgstr ""
 "programmatūras avotus"
 
 #: ../data/gpk-prefs.desktop.in.h:2
-msgid "Software Updates"
-msgstr "Programmatūras atjauninājumi"
+#| msgid "Software Sources"
+msgid "Software Settings"
+msgstr "Programmatūras iestatījumi"
 
 #: ../data/gpk-prefs.ui.h:1
 msgid ""
@@ -362,7 +361,8 @@ msgid "Destination package list:"
 msgstr "Mērķa pakotņu saraksts:"
 
 #. TRANSLATORS: column for what packages were upgraded
-#: ../data/gpk-service-pack.ui.h:7 ../src/gpk-log.c:322
+#: ../data/gpk-service-pack.ui.h:7 ../data/gpk-update-viewer.ui.h:1
+#: ../src/gpk-log.c:322
 msgid "Details"
 msgstr "Sīkāka informācija"
 
@@ -423,7 +423,7 @@ msgstr "Paraksta lietotāja identifikators:"
 msgid "Software signature is required"
 msgstr "Nepieciešams programmatūras paraksts"
 
-#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:2
 msgid "Software Update"
 msgstr "Programmatūras atjaunināšana"
 
@@ -439,7 +439,7 @@ msgstr "Operētājsistēmas uzlabošana"
 msgid "Upgrade the operating system to a new version"
 msgstr "Uzlabot operētājsistēmu uz jaunu versiju"
 
-#: ../data/gpk-update-viewer.ui.h:2
+#: ../data/gpk-update-viewer.ui.h:3
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities and "
 "provide new features."
@@ -447,11 +447,13 @@ msgstr ""
 "Programmatūras atjauninājumi labo kļūdas, likvidē drošības ievainojamības un "
 "piedāvā jaunu funkcionalitāti."
 
-#: ../data/gpk-update-viewer.ui.h:3
-msgid "_Install Update(s)"
-msgstr "_Instalēt atjauninājumu(-s)"
-
 #: ../data/gpk-update-viewer.ui.h:4
+#| msgid "_Install Update"
+#| msgid_plural "_Install Updates"
+msgid "_Install Updates"
+msgstr "_Instalēt atjauninājumus"
+
+#: ../data/gpk-update-viewer.ui.h:5
 msgid "_Upgrade"
 msgstr "_Atjaunināt"
 
@@ -489,7 +491,7 @@ msgstr ""
 "programmatūru, kura arī tad tiks izņemta."
 
 #. TRANSLATORS: button label, install
-#: ../python/packagekit/gtkwidgets.py:646 ../src/gpk-helper-chooser.c:296
+#: ../python/packagekit/gtkwidgets.py:646 ../src/gpk-helper-chooser.c:298
 msgid "_Install"
 msgstr "_Instalēt"
 
@@ -577,22 +579,22 @@ msgid "Invalid"
 msgstr "Nederīgs"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1305
+#: ../src/gpk-application.c:1309
 msgid "No results were found."
 msgstr "Nav rezultātu meklēšanai"
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1313
+#: ../src/gpk-application.c:1317
 msgid "Try entering a package name in the search bar."
 msgstr "Mēģiniet ievadīt pakotnes nosaukumu meklēšanas joslā."
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1316
+#: ../src/gpk-application.c:1320
 msgid "There are no packages queued to be installed or removed."
 msgstr "Rindā nav instalēšanai vai izņemšanai paredzētu pakotņu."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1321
+#: ../src/gpk-application.c:1325
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -601,158 +603,157 @@ msgstr ""
 "tekstam."
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1324
+#: ../src/gpk-application.c:1328
 msgid "Try again with a different search term."
 msgstr "Mēģiniet vēlreiz ar citu meklējamo vārdu."
 
 #. TRANSLATORS: title: invlid text in the search bar
-#: ../src/gpk-application.c:1598
+#: ../src/gpk-application.c:1602
 msgid "Invalid search text"
 msgstr "Nederīgs meklējamais teksts"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1600
+#: ../src/gpk-application.c:1604
 msgid "The search text contains invalid characters"
 msgstr "Meklējamais teksts satur nederīgas rakstzīmes"
 
 #. TRANSLATORS: title: we failed to execute the mthod
-#: ../src/gpk-application.c:1641
+#: ../src/gpk-application.c:1645
 msgid "The search could not be completed"
 msgstr "Meklēšanu neizdevās pabeigt"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1643
+#: ../src/gpk-application.c:1647
 msgid "Running the transaction failed"
 msgstr "Transakcija neizdevās"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1777
+#: ../src/gpk-application.c:1786
 msgid "Changes not applied"
 msgstr "Izmaiņas nav pielietotas"
 
-#: ../src/gpk-application.c:1778
+#: ../src/gpk-application.c:1787
 msgid "Close _Anyway"
 msgstr "Aizvērt _tāpat"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1782
+#: ../src/gpk-application.c:1791
 msgid "You have made changes that have not yet been applied."
 msgstr "Jūs esat veikuši izmaiņas, kas vēl nav pielietotas."
 
-#: ../src/gpk-application.c:1783
+#: ../src/gpk-application.c:1792
 msgid "These changes will be lost if you close this window."
 msgstr "Šīs izmaiņas tiks zaudētas, ja jūs aizvērsiet šo logu."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2098 ../src/gpk-enum.c:1156 ../src/gpk-enum.c:1245
+#: ../src/gpk-application.c:2107 ../src/gpk-enum.c:1156 ../src/gpk-enum.c:1245
 msgid "Installed"
 msgstr "Instalēta"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2114 ../src/gpk-application.c:2136
-#: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:727
+#: ../src/gpk-application.c:2123 ../src/gpk-application.c:2145
+#: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
 msgid "Name"
 msgstr "Nosaukums"
 
 #. TRANSLATORS: the type of package is a collection (metagroup)
-#: ../src/gpk-application.c:2275
+#: ../src/gpk-application.c:2285
 msgid "Type"
 msgstr "Tips"
 
-#: ../src/gpk-application.c:2275
+#: ../src/gpk-application.c:2285
 msgid "Collection"
 msgstr "Kolekcija"
 
 #. TRANSLATORS: tooltip: go to the web address
-#: ../src/gpk-application.c:2283
+#: ../src/gpk-application.c:2293
 #, c-format
 msgid "Visit %s"
 msgstr "Apmeklējiet %s"
 
 #. TRANSLATORS: add an entry to go to the project home page
-#: ../src/gpk-application.c:2288
+#: ../src/gpk-application.c:2298
 msgid "Project"
 msgstr "Projekts"
 
-#: ../src/gpk-application.c:2288
+#: ../src/gpk-application.c:2298
 msgid "Homepage"
 msgstr "Mājas lapa"
 
 #. TRANSLATORS: the group the package belongs in
-#: ../src/gpk-application.c:2302
+#: ../src/gpk-application.c:2312
 msgid "Group"
 msgstr "Grupa"
 
 #. TRANSLATORS: the licence string for the package
-#: ../src/gpk-application.c:2308
+#: ../src/gpk-application.c:2318
 msgid "License"
 msgstr "Licence"
 
 #. TRANSLATORS: the size of the meta package
-#. TRANSLATORS: a column that has size of each package
-#: ../src/gpk-application.c:2323 ../src/gpk-update-viewer.c:1730
+#: ../src/gpk-application.c:2333
 msgid "Size"
 msgstr "Izmērs"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2326
+#: ../src/gpk-application.c:2336
 msgid "Installed size"
 msgstr "Instalētais izmērs"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2329
+#: ../src/gpk-application.c:2339
 msgid "Download size"
 msgstr "Lejupielādes izmērs"
 
 #. TRANSLATORS: where the package came from, the software source name
-#: ../src/gpk-application.c:2338
+#: ../src/gpk-application.c:2348
 msgid "Source"
 msgstr "Avots"
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:2483
+#: ../src/gpk-application.c:2493
 msgid "Selected packages"
 msgstr "Atlasītās pakotnes"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2536
+#: ../src/gpk-application.c:2546
 msgid "Searching by name"
 msgstr "Meklēšana pēc vārda"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2560
+#: ../src/gpk-application.c:2570
 msgid "Searching by description"
 msgstr "Meklēšana pēc apraksta"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2584
+#: ../src/gpk-application.c:2594
 msgid "Searching by file"
 msgstr "Meklēšana pēc faila"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2606
+#: ../src/gpk-application.c:2616
 msgid "Search by name"
 msgstr "Meklēšana pēc nosaukuma"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2617
+#: ../src/gpk-application.c:2627
 msgid "Search by description"
 msgstr "Meklēšana pēc apraksta"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2628
+#: ../src/gpk-application.c:2638
 msgid "Search by file name"
 msgstr "Meklēšana pēc faila nosaukuma"
 
-#: ../src/gpk-application.c:2669
+#: ../src/gpk-application.c:2679
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Licenzēta sakarā ar GNU Vispārīgās Publiskās Licences 2. versiju"
 
-#: ../src/gpk-application.c:2670
+#: ../src/gpk-application.c:2680
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -764,7 +765,7 @@ msgstr ""
 "Licences noteikumiem. Derīgi ir licences otrās versijas vai (pēc jūsu "
 "vēlmes) kādas vēlākas versijas redakcija."
 
-#: ../src/gpk-application.c:2674
+#: ../src/gpk-application.c:2684
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -776,7 +777,7 @@ msgstr ""
 "KONKRĒTAM MĒRĶIM.  Sīkāku informāciju meklējiet GNU Vispārējās Publiskās "
 "Licences tekstā."
 
-#: ../src/gpk-application.c:2678
+#: ../src/gpk-application.c:2688
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -787,105 +788,108 @@ msgstr ""
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2684
+#: ../src/gpk-application.c:2694
 msgid "translator-credits"
 msgstr "Pēteris Krišjānis <pecisk@gmail.com>"
 
-#: ../src/gpk-application.c:2704
+#: ../src/gpk-application.c:2714
 msgid "PackageKit Website"
 msgstr "PackageKit tīmekļa vietne"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2707
+#: ../src/gpk-application.c:2717
 msgid "Package Manager for GNOME"
 msgstr "GNOME pakotņu pārvaldnieks"
 
 #. TRANSLATORS: single column for the package details, not visible at the moment
-#: ../src/gpk-application.c:3133
+#: ../src/gpk-application.c:3144
 msgid "Text"
 msgstr "Teksts"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:3156
+#: ../src/gpk-application.c:3168
+#| msgid ""
+#| "Enter a package name and then click find, or click a group to get started."
 msgid ""
-"Enter a package name and then click find, or click a group to get started."
+"Enter a search word and then click find, or click a group to get started."
 msgstr ""
-"Ievadiet pakotnes nosaukumu un tad klikšķiniet 'Meklēt', vai arī klikšķiniet "
+"Ievadiet meklējamo vārdu un tad klikšķiniet 'Meklēt', vai arī klikšķiniet "
 "grupu, lai sāktu."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:3159
-msgid "Enter a package name and then click find to get started."
-msgstr "Ievadiet pakotnes nosaukumu un tad klikšķiniet 'Meklēt', lai sāktu."
+#: ../src/gpk-application.c:3171
+#| msgid "Enter a package name and then click find to get started."
+msgid "Enter a search word and then click find to get started."
+msgstr "Ievadiet meklējamo vārdu un tad klikšķiniet 'Meklēt', lai sāktu."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3385
+#: ../src/gpk-application.c:3397
 msgid "Exiting as properties could not be retrieved"
 msgstr "Iziet, tā kā iestatījumus neizdevās iegūt"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3504
+#: ../src/gpk-application.c:3516
 msgid "All packages"
 msgstr "Visas pakotnes"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3506
+#: ../src/gpk-application.c:3518
 msgid "Show all packages"
 msgstr "Rāda visas pakotnes"
 
 #. TRANSLATORS: tooltip on the clear button
-#: ../src/gpk-application.c:3749
+#: ../src/gpk-application.c:3761
 msgid "Clear current selection"
 msgstr "Attīrīt pašreizējo atlasi"
 
 #. TRANSLATORS: tooltip on the apply button
-#: ../src/gpk-application.c:3774
+#: ../src/gpk-application.c:3786
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "Izmaiņas netiek pielietotas uzreiz, šī poga pielieto visas izmaiņas"
 
 #. TRANSLATORS: tooltip on the homepage button
-#: ../src/gpk-application.c:3800
+#: ../src/gpk-application.c:3812
 msgid "Visit home page for selected package"
 msgstr "Apmeklēt izvēlētās pakotnes mājas lapu"
 
 #. TRANSLATORS: tooltip on the find button
-#: ../src/gpk-application.c:3908
+#: ../src/gpk-application.c:3920
 msgid "Find packages"
 msgstr "Meklēt pakotnes"
 
 #. TRANSLATORS: tooltip on the cancel button
-#: ../src/gpk-application.c:3916
+#: ../src/gpk-application.c:3928
 msgid "Cancel search"
 msgstr "Atcelt meklēšanu"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:4039 ../src/gpk-update-viewer.c:3320
+#: ../src/gpk-application.c:4051 ../src/gpk-update-viewer.c:3337
 msgid "Show the program version and exit"
 msgstr "Rādīt programmas versiju un iziet"
 
 #. are we running privileged
-#: ../src/gpk-application.c:4072
+#: ../src/gpk-application.c:4084
 msgid "Package installer"
 msgstr "Pakotnes instalators"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
-#: ../src/gpk-common.c:370
+#: ../src/gpk-common.c:426
 msgid "This application is running as a privileged user"
 msgstr "Šī lietotne ir palaista ar priviliģētu lietotāju"
 
 #. TRANSLATORS: cannot run as root user, and we display the applicaiton name
-#: ../src/gpk-common.c:373
+#: ../src/gpk-common.c:429
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "%s ir palaists ar priviliģētu lietotāju"
 
 #. TRANSLATORS: tell the user off
-#: ../src/gpk-common.c:376
+#: ../src/gpk-common.c:432
 msgid "Package management applications are security sensitive."
 msgstr "Pakotņu pārvaldības lietotnes ir jūtīgas attiecībā pret drošību."
 
 #. TRANSLATORS: and explain why
-#: ../src/gpk-common.c:378
+#: ../src/gpk-common.c:434
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
@@ -894,18 +898,18 @@ msgstr ""
 "priviliģētam lietotājam "
 
 #. TRANSLATORS: button: allow the user to run this, even when insecure
-#: ../src/gpk-common.c:384
+#: ../src/gpk-common.c:440
 msgid "Continue _Anyway"
 msgstr "Turpināt _tik un tā"
 
 #. TRANSLATORS: The actions has just literally happened
-#: ../src/gpk-common.c:454 ../src/gpk-common.c:504
+#: ../src/gpk-common.c:510 ../src/gpk-common.c:560
 #, c-format
 msgid "Now"
 msgstr "Tagad"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:464 ../src/gpk-common.c:514
+#: ../src/gpk-common.c:520 ../src/gpk-common.c:570
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
@@ -914,7 +918,7 @@ msgstr[1] "%i sekundes"
 msgstr[2] "%i sekunžu"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:474 ../src/gpk-common.c:527
+#: ../src/gpk-common.c:530 ../src/gpk-common.c:583
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -923,7 +927,7 @@ msgstr[1] "%i minūtes"
 msgstr[2] "%i minūšu"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:480 ../src/gpk-common.c:546
+#: ../src/gpk-common.c:536 ../src/gpk-common.c:602
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
@@ -935,48 +939,48 @@ msgstr[2] "%i stundu"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/gpk-common.c:533 ../src/gpk-common.c:552
+#: ../src/gpk-common.c:589 ../src/gpk-common.c:608
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s un %i %s"
 
-#: ../src/gpk-common.c:534 ../src/gpk-common.c:554
+#: ../src/gpk-common.c:590 ../src/gpk-common.c:610
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "stunda"
 msgstr[1] "minūtes"
 msgstr[2] "minūšu"
 
-#: ../src/gpk-common.c:535
+#: ../src/gpk-common.c:591
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "sekunde"
 msgstr[1] "sekundes"
 msgstr[2] "sekunžu"
 
-#: ../src/gpk-common.c:553
+#: ../src/gpk-common.c:609
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "stunda"
 msgstr[1] "stundas"
 msgstr[2] "stundu"
 
-#: ../src/gpk-common.c:580
+#: ../src/gpk-common.c:636
 #, c-format
 msgid "%s and %s"
 msgstr "%s un %s"
 
-#: ../src/gpk-common.c:583
+#: ../src/gpk-common.c:639
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s un %s"
 
-#: ../src/gpk-common.c:586
+#: ../src/gpk-common.c:642
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s un %s"
 
-#: ../src/gpk-common.c:590
+#: ../src/gpk-common.c:646
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s un %s"
@@ -1036,7 +1040,7 @@ msgstr "Rādīt sīkāku informāciju"
 
 #. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:472 ../src/gpk-dbus-task.c:1152
+#: ../src/gpk-dbus-task.c:472 ../src/gpk-dbus-task.c:1156
 msgid "Failed to install package"
 msgstr "Neizdevās instalēt pakotni"
 
@@ -1047,7 +1051,7 @@ msgid "Installing packages"
 msgstr "Instalē pakotnes"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:612 ../src/gpk-dbus-task.c:1371
+#: ../src/gpk-dbus-task.c:612 ../src/gpk-dbus-task.c:1375
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "Neizdevās instalēt failu"
@@ -1063,7 +1067,7 @@ msgstr[1] "Vai jūs vēlaties instalēt šos failus?"
 msgstr[2] "Vai jūs vēlaties instalēt šos failus?"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1025
+#: ../src/gpk-dbus-task.c:1029
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "Instalēt vietējo failu"
@@ -1071,13 +1075,13 @@ msgstr[1] "Instalēt vietējos failus"
 msgstr[2] "Instalēt vietējos failus"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1084
+#: ../src/gpk-dbus-task.c:1088
 #, c-format
 msgid "Could not find packages"
 msgstr "Neizdevās atrast pakotnes"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1093
+#: ../src/gpk-dbus-task.c:1097
 msgid "The packages could not be found in any software source"
 msgstr "Neizdevās atrast pakotnes nevienā no programmatūras avotiem"
 
@@ -1086,13 +1090,13 @@ msgstr "Neizdevās atrast pakotnes nevienā no programmatūras avotiem"
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
-#: ../src/gpk-dbus-task.c:1096 ../src/gpk-dbus-task.c:1333
-#: ../src/gpk-dbus-task.c:1639 ../src/gpk-dbus-task.c:1845
-#: ../src/gpk-dbus-task.c:2100 ../src/gpk-dbus-task.c:2437
+#: ../src/gpk-dbus-task.c:1100 ../src/gpk-dbus-task.c:1337
+#: ../src/gpk-dbus-task.c:1643 ../src/gpk-dbus-task.c:1849
+#: ../src/gpk-dbus-task.c:2104 ../src/gpk-dbus-task.c:2441
 msgid "More information"
 msgstr "Vairāk informācijas"
 
-#: ../src/gpk-dbus-task.c:1133 ../src/gpk-enum.c:336
+#: ../src/gpk-dbus-task.c:1137 ../src/gpk-enum.c:336
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "Pakotne jau ir instalēta"
@@ -1100,17 +1104,17 @@ msgstr[1] "Pakotne jau ir instalēta"
 msgstr[2] "Pakotne jau ir instalēta"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1137
+#: ../src/gpk-dbus-task.c:1141
 msgid "Nothing to do."
 msgstr "Nav ko darīt."
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1154
+#: ../src/gpk-dbus-task.c:1158
 msgid "Incorrect response from search"
 msgstr "Nekorekta atbilde no meklēšanas"
 
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1229
+#: ../src/gpk-dbus-task.c:1233
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
 msgstr[0] "Nepieciešama papildus pakotne:"
@@ -1118,7 +1122,7 @@ msgstr[1] "Nepieciešama papildus pakotnes:"
 msgstr[2] "Nepieciešamas papildus pakotnes:"
 
 #. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1232
+#: ../src/gpk-dbus-task.c:1236
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "Vai jūs tagad vēlaties sameklēt un instalēt šo pakotni?"
@@ -1126,7 +1130,7 @@ msgstr[1] "Vai jūs tagad vēlaties sameklēt un instalēt šīs pakotnes?"
 msgstr[2] "Vai jūs tagad vēlaties sameklēt un instalēt šīs pakotnes?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1238
+#: ../src/gpk-dbus-task.c:1242
 #, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
@@ -1135,7 +1139,7 @@ msgstr[1] "%s prasa instalēt pakotnes"
 msgstr[2] "%s prasa instalēt pakotnes"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1241
+#: ../src/gpk-dbus-task.c:1245
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
 msgstr[0] "Programma prasa instalēt pakotni"
@@ -1143,28 +1147,28 @@ msgstr[1] "Programma prasa instalēt pakotnes"
 msgstr[2] "Programma prasa instalēt pakotnes"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1258 ../src/gpk-dbus-task.c:2860
+#: ../src/gpk-dbus-task.c:1262 ../src/gpk-dbus-task.c:2864
 msgid "Searching for packages"
 msgstr "Pakotņu meklēšana"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1328
+#: ../src/gpk-dbus-task.c:1332
 msgid "Failed to find package"
 msgstr "Neizdevās atrast pakotni"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1330 ../src/gpk-dbus-task.c:3000
+#: ../src/gpk-dbus-task.c:1334 ../src/gpk-dbus-task.c:3004
 msgid "The file could not be found in any packages"
 msgstr "Failu neizdevās atrast nevienā pakotnē"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1368
+#: ../src/gpk-dbus-task.c:1372
 #, c-format
 msgid "The %s package already provides this file"
 msgstr "Pakotne %s jau nodrošina šo failu"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1449
+#: ../src/gpk-dbus-task.c:1453
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "Ir pieprasīts sekojošs fails:"
@@ -1172,7 +1176,7 @@ msgstr[1] "Ir pieprasīti sekojoši faili:"
 msgstr[2] "Ir pieprasīti sekojoši faili:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1452
+#: ../src/gpk-dbus-task.c:1456
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "Vai vēlaties meklēt šo failu tagad?"
@@ -1180,7 +1184,7 @@ msgstr[1] "Vai vēlaties meklēt šo failus tagad?"
 msgstr[2] "Vai vēlaties meklēt šo failus tagad?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1457
+#: ../src/gpk-dbus-task.c:1461
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1189,7 +1193,7 @@ msgstr[1] "%s prasa instalēt failus"
 msgstr[2] "%s prasa instalēt failus"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1460
+#: ../src/gpk-dbus-task.c:1464
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "Programma prasa instalēt failu"
@@ -1198,13 +1202,13 @@ msgstr[2] "Programma prasa instalēt failus"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1476 ../src/gpk-dbus-task.c:3103
+#: ../src/gpk-dbus-task.c:1480 ../src/gpk-dbus-task.c:3107
 #: ../src/gpk-enum.c:1315
 msgid "Searching for file"
 msgstr "Faila meklēšana"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1519
+#: ../src/gpk-dbus-task.c:1523
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "Ir pieprasīts sekojošs spraudnis:"
@@ -1212,7 +1216,7 @@ msgstr[1] "Ir pieprasīti sekojoši spraudņi:"
 msgstr[2] "Ir pieprasīti sekojoši spraudņi:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1537 ../src/gpk-dbus-task.c:2365
+#: ../src/gpk-dbus-task.c:1541 ../src/gpk-dbus-task.c:2369
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Vai vēlaties meklēt to tagad?"
@@ -1220,7 +1224,7 @@ msgstr[1] "Vai vēlaties meklēt tos tagad?"
 msgstr[2] "Vai vēlaties meklēt tos tagad?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1550
+#: ../src/gpk-dbus-task.c:1554
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1229,7 +1233,7 @@ msgstr[1] "%s ir nepieciešami papildus spraudņi, lai atkodētu šo failu"
 msgstr[2] "%s ir nepieciešami papildus spraudņi, lai atkodētu šo failu"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1554
+#: ../src/gpk-dbus-task.c:1558
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1238,7 +1242,7 @@ msgstr[1] "%s ir nepieciešami papildus spraudņi, lai kodētu šo failu"
 msgstr[2] "%s ir nepieciešami papildus spraudņi, lai kodētu šo failu"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1558
+#: ../src/gpk-dbus-task.c:1562
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1247,7 +1251,7 @@ msgstr[1] "%s ir nepieciešami papildus spraudņi šai darbībai"
 msgstr[2] "%s ir nepieciešami papildus spraudņi šai darbībai"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1564
+#: ../src/gpk-dbus-task.c:1568
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] ""
@@ -1256,7 +1260,7 @@ msgstr[1] "Programmai ir nepieciešami papildus spraudņi, lai atkodētu šo fai
 msgstr[2] "Programmai ir nepieciešami papildus spraudņi, lai atkodētu šo failu"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1568
+#: ../src/gpk-dbus-task.c:1572
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] "Programmai ir nepieciešams papildus spraudnis, lai kodētu šo failu"
@@ -1264,7 +1268,7 @@ msgstr[1] "Programmai ir nepieciešami papildus spraudņi, lai kodētu šo failu
 msgstr[2] "Programmai ir nepieciešami papildus spraudņi, lai kodētu šo failu"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1572
+#: ../src/gpk-dbus-task.c:1576
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "Programmai ir nepieciešams papildus spraudnis šai darbībai"
@@ -1272,22 +1276,22 @@ msgstr[1] "Programmai ir nepieciešami papildus spraudņi šai darbībai"
 msgstr[2] "Programmai ir nepieciešami papildus spraudņi šai darbībai"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1578 ../src/gpk-dbus-task.c:1931
-#: ../src/gpk-dbus-task.c:2304 ../src/gpk-dbus-task.c:2377
+#: ../src/gpk-dbus-task.c:1582 ../src/gpk-dbus-task.c:1935
+#: ../src/gpk-dbus-task.c:2308 ../src/gpk-dbus-task.c:2381
 msgid "Search"
 msgstr "Meklēt"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1633
+#: ../src/gpk-dbus-task.c:1637
 msgid "Failed to search for plugin"
 msgstr "Neizdevās atrast spraudni"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1635
+#: ../src/gpk-dbus-task.c:1639
 msgid "Could not find plugin in any configured software source"
 msgstr "Neizdevās atrast spraudni nevienā konfigurētajā programmatūras avotā"
 
-#: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2456
+#: ../src/gpk-dbus-task.c:1662 ../src/gpk-dbus-task.c:2460
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "Instalēt sekojošu spraudni"
@@ -1295,8 +1299,8 @@ msgstr[1] "Instalēt sekojošus spraudņus"
 msgstr[2] "Instalēt sekojošus spraudņus"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1659 ../src/gpk-dbus-task.c:2120
-#: ../src/gpk-dbus-task.c:2457 ../src/gpk-dbus-task.c:2792
+#: ../src/gpk-dbus-task.c:1663 ../src/gpk-dbus-task.c:2124
+#: ../src/gpk-dbus-task.c:2461 ../src/gpk-dbus-task.c:2796
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Vai vēlaties instalēt šo pakotni to tagad?"
@@ -1304,42 +1308,42 @@ msgstr[1] "Vai vēlaties instalēt šīs pakotnes tagad?"
 msgstr[2] "Vai vēlaties instalēt šīs pakotnes tagad?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1751
+#: ../src/gpk-dbus-task.c:1755
 msgid "Searching for plugins"
 msgstr "Spraudņa meklēšana"
 
-#: ../src/gpk-dbus-task.c:1772
+#: ../src/gpk-dbus-task.c:1776
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "Spraudņa %s meklēšana"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1810
+#: ../src/gpk-dbus-task.c:1814
 msgid "Failed to search for provides"
 msgstr "Neizdevās sameklēt nodrošinātās"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1840
+#: ../src/gpk-dbus-task.c:1844
 msgid "Failed to find software"
 msgstr "Neizdevās atrast programmatūru"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1842
+#: ../src/gpk-dbus-task.c:1846
 msgid "No new applications can be found to handle this type of file"
 msgstr "Nav jaunu lietotņu, ar kuru pārvaldīt šāda tipa failu"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1913
+#: ../src/gpk-dbus-task.c:1917
 msgid "An additional program is required to open this type of file:"
 msgstr "Nepieciešama papildus programma, lai atvērtu šāda tipa failu:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1916
+#: ../src/gpk-dbus-task.c:1920
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "Vai jūs tagad vēlaties meklēt programmu, lai atvērtu šāda tipa failu?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1924
+#: ../src/gpk-dbus-task.c:1928
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1348,7 +1352,7 @@ msgstr[1] "%s pieprasa jaunus MIME tipus"
 msgstr[2] "%s pieprasa jaunus MIME tipus"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1927
+#: ../src/gpk-dbus-task.c:1931
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "Programma pieprasa jaunu MIME tipu"
@@ -1356,22 +1360,22 @@ msgstr[1] "Programma pieprasa jaunus MIME tipus"
 msgstr[2] "Programma pieprasa jaunus MIME tipus"
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1942
+#: ../src/gpk-dbus-task.c:1946
 msgid "Searching for file handlers"
 msgstr "Meklē failu deskriptorus"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2021
+#: ../src/gpk-dbus-task.c:2025
 msgid "Language tag not parsed"
 msgstr "Nav parsēts valodas tags"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2029
+#: ../src/gpk-dbus-task.c:2033
 msgid "Language code not matched"
 msgstr "Nesakrīt valodas kods"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2089
+#: ../src/gpk-dbus-task.c:2093
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "Neizdevās atrast fontu"
@@ -1379,12 +1383,12 @@ msgstr[1] "Neizdevās atrast fontus"
 msgstr[2] "Neizdevās atrast fontus"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2097
+#: ../src/gpk-dbus-task.c:2101
 msgid "No new fonts can be found for this document"
 msgstr "Šim dokumentam neizdodas atrast jaunus fontus"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2283
+#: ../src/gpk-dbus-task.c:2287
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] "Lai šo dokumentu korekti skatītu, ir nepieciešams papildus fonts."
@@ -1392,7 +1396,7 @@ msgstr[1] "Lai šo dokumentu korekti skatītu, ir nepieciešami papildus fonti."
 msgstr[2] "Lai šo dokumentu korekti skatītu, ir nepieciešami papildus fonti."
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2287
+#: ../src/gpk-dbus-task.c:2291
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "Vai jūs tagad vēlaties meklēt piemērotu pakotni?"
@@ -1400,7 +1404,7 @@ msgstr[1] "Vai jūs tagad vēlaties meklēt piemērotas pakotnes?"
 msgstr[2] "Vai jūs tagad vēlaties meklēt piemērotas pakotnes?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2297
+#: ../src/gpk-dbus-task.c:2301
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1409,7 +1413,7 @@ msgstr[1] "%s vēlas instalēt fontus"
 msgstr[2] "%s vēlas instalēt fontus"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2300
+#: ../src/gpk-dbus-task.c:2304
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "Programma vēlas instalēt fontu"
@@ -1417,7 +1421,7 @@ msgstr[1] "Programma vēlas instalēt fontus"
 msgstr[2] "Programma vēlas instalēt fontus"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2316
+#: ../src/gpk-dbus-task.c:2320
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "Meklē fontu"
@@ -1425,71 +1429,63 @@ msgstr[1] "Meklē fontus"
 msgstr[2] "Meklē fontus"
 
 #. TRANSLATORS: we are listing the services in a box
-#: ../src/gpk-dbus-task.c:2353
-#| msgid "The following file is required:"
-#| msgid_plural "The following files are required:"
+#: ../src/gpk-dbus-task.c:2357
 msgid "The following service is required:"
 msgid_plural "The following services are required:"
 msgstr[0] "Ir pieprasīts šāds serviss:"
 msgstr[1] "Ir pieprasīti šādi servisi:"
 msgstr[2] "Ir pieprasīti šādi servisi:"
 
-#: ../src/gpk-dbus-task.c:2373
-#| msgid "%s requires an additional plugin for this operation"
-#| msgid_plural "%s requires additional plugins for this operation"
+#: ../src/gpk-dbus-task.c:2377
 msgid "Plasma requires an additional service for this operation"
 msgid_plural "Plasma requires additional services for this operation"
 msgstr[0] "Servisam Plasma vajag papildu spraudnis šai darbībai"
 msgstr[1] "Servisam Plasma vajag papildu spraudņus šai darbībai"
 msgstr[2] "Servisam Plasma vajag papildu spraudņus šai darbībai"
 
-#: ../src/gpk-dbus-task.c:2431
-#| msgid "Failed to search for provides"
+#: ../src/gpk-dbus-task.c:2435
 msgid "Failed to search for Plasma service"
 msgstr "Neizdevās atrast Plasma servisu"
 
 #. TRANSLATORS: no software sources have the wanted Plasma service
-#: ../src/gpk-dbus-task.c:2433
-#| msgid "Could not find plugin in any configured software source"
+#: ../src/gpk-dbus-task.c:2437
 msgid "Could not find service in any configured software source"
 msgstr "Neizdevās atrast servisu nevienā konfigurētajā programmatūras avotā"
 
 #. TRANSLATORS: search for Plasma services
-#: ../src/gpk-dbus-task.c:2539
-#| msgid "Searching for file"
+#: ../src/gpk-dbus-task.c:2543
 msgid "Searching for services"
 msgstr "Meklē servisus"
 
-#: ../src/gpk-dbus-task.c:2558
+#: ../src/gpk-dbus-task.c:2562
 #, c-format
-#| msgid "Searching for plugin: %s"
 msgid "Searching for service: %s"
 msgstr "Meklē servisus: %s"
 
-#: ../src/gpk-dbus-task.c:2635
+#: ../src/gpk-dbus-task.c:2639
 msgid "Could not process catalog"
 msgstr "Neizdevās apstrādāt katalogu"
 
-#: ../src/gpk-dbus-task.c:2653
+#: ../src/gpk-dbus-task.c:2657
 msgid "No packages need to be installed"
 msgstr "Nav nepieciešams instalēt pakotnes"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2672
+#: ../src/gpk-dbus-task.c:2676
 msgid "Install packages in catalog?"
 msgstr "Instalēt pakotnes no kataloga?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2674
+#: ../src/gpk-dbus-task.c:2678
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "Sekojošas pakotnes ir atzīmētas kā instalējamas no šī kataloga:"
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2714
+#: ../src/gpk-dbus-task.c:2718
 msgid "Failed to remove package"
 msgstr "Neizdevās izņemt pakotni"
 
-#: ../src/gpk-dbus-task.c:2791
+#: ../src/gpk-dbus-task.c:2795
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "Instalēt sekojošu draiveri"
@@ -1498,17 +1494,17 @@ msgstr[2] "Instalēt sekojošus draiverus"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2944 ../src/gpk-enum.c:947
+#: ../src/gpk-dbus-task.c:2948 ../src/gpk-enum.c:947
 msgid "Removing packages"
 msgstr "Izņem pakotnes"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:2998
+#: ../src/gpk-dbus-task.c:3002
 msgid "Failed to find package for this file"
 msgstr "Neizdevās atrast pakotni šim failam"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:3076
+#: ../src/gpk-dbus-task.c:3080
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "Sekojošs fails tiks izņemts:"
@@ -1516,7 +1512,7 @@ msgstr[1] "Sekojoši faili tiks izņemti:"
 msgstr[2] "Sekojoši faili tiks izņemti:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:3079
+#: ../src/gpk-dbus-task.c:3083
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Vai jūs tagad vēlaties izņemt šo failu?"
@@ -1524,7 +1520,7 @@ msgstr[1] "Vai jūs tagad vēlaties izņemt šo failus?"
 msgstr[2] "Vai jūs tagad vēlaties izņemt šo failus?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:3084
+#: ../src/gpk-dbus-task.c:3088
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1533,7 +1529,7 @@ msgstr[1] "%s vēlas izņemt failus"
 msgstr[2] "%s vēlas izņemt failus"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-dbus-task.c:3091
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Programma vēlas izņemt failu"
@@ -1541,7 +1537,7 @@ msgstr[1] "Programma vēlas izņemt failus"
 msgstr[2] "Programma vēlas izņemt failus"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:3144
+#: ../src/gpk-dbus-task.c:3148
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Vai jūs vēlaties instalēt šo katalogu?"
@@ -1549,7 +1545,7 @@ msgstr[1] "Vai jūs vēlaties instalēt šos katalogus?"
 msgstr[2] "Vai jūs vēlaties instalēt šos katalogus?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:3169
+#: ../src/gpk-dbus-task.c:3173
 msgid "Install catalogs"
 msgstr "Instalēt katalogus"
 
@@ -2030,7 +2026,6 @@ msgid "Install root is invalid"
 msgstr "Instalēšanas sakne nav derīga"
 
 #: ../src/gpk-enum.c:498
-#| msgid "Cannot disable source"
 msgid "Cannot fetch install sources"
 msgstr "Nevar saņemt instalēšanas avotus"
 
@@ -2475,7 +2470,6 @@ msgid "The install root is invalid. Please contact your administrator."
 msgstr "Instalēšanas sakne nav derīga. Sazinieties ar administratoru."
 
 #: ../src/gpk-enum.c:749
-#| msgid "The specified software source could not be disabled."
 msgid "The list of software sources could not be downloaded."
 msgstr "Nevarēja lejupielādēt programmatūras avotus."
 
@@ -3505,12 +3499,12 @@ msgstr "Nezināma grupa"
 msgid "Icon"
 msgstr "Ikona"
 
-#: ../src/gpk-helper-chooser.c:284
+#: ../src/gpk-helper-chooser.c:286
 msgid "Applications that can open this type of file"
 msgstr "Lietotnes, kas var atvērt šāda tipa failus"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-helper-chooser.c:300
+#: ../src/gpk-helper-chooser.c:302
 msgid "Install package"
 msgstr "Instalēt pakotni"
 
@@ -3575,7 +3569,6 @@ msgid "The following software also needs to be updated"
 msgstr "Ir arī jāatjaunina sekojoša programmatūra"
 
 #: ../src/gpk-task.c:416
-#| msgid "Updated"
 msgid "Update"
 msgstr "Atjaunināt"
 
@@ -3585,7 +3578,6 @@ msgid "The following software also needs to be re-installed"
 msgstr "Ir arī jāpārinstalē sekojoša programmatūra"
 
 #: ../src/gpk-task.c:421
-#| msgid "Reinstalled"
 msgid "Reinstall"
 msgstr "Pārinstalēt"
 
@@ -3595,7 +3587,6 @@ msgid "The following software also needs to be downgraded"
 msgstr "Ir arī jāuzliek vecāka versija sekojošai programmatūrai"
 
 #: ../src/gpk-task.c:426
-#| msgid "Downloaded"
 msgid "Downgrade"
 msgstr "Pazemināt"
 
@@ -3664,12 +3655,12 @@ msgid "Force installing package"
 msgstr "Instalēt pakotni piespiedu kārtā"
 
 #. TRANSLATORS: window title: do we want to execute a program we just installed?
-#: ../src/gpk-helper-run.c:481
+#: ../src/gpk-helper-run.c:480
 msgid "Run new application?"
 msgstr "Palaist jauno lietotni?"
 
 #. add run button
-#: ../src/gpk-helper-run.c:484
+#: ../src/gpk-helper-run.c:483
 msgid "_Run"
 msgstr "_Palaist"
 
@@ -3851,7 +3842,7 @@ msgstr "Iestatīt vecāku logu, lai padarītu šo logu modālu"
 msgid "Log viewer"
 msgstr "Žurnāla skatītājs"
 
-#: ../src/gpk-modal-dialog.c:438
+#: ../src/gpk-modal-dialog.c:441
 #, c-format
 msgid "Remaining time : %s"
 msgstr "Atlikušais laiks: %s"
@@ -3912,7 +3903,7 @@ msgid "Failed to get the list of sources"
 msgstr "Neizdevās iegūt avotu sarakstu"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3072
+#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3096
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Iziet, tā kā sīkāku informāciju par aizmuguri nevarēja iegūt"
 
@@ -4013,12 +4004,12 @@ msgid "Set the default output directory"
 msgstr "Iestatīt noklusēto izvades direktoriju"
 
 #. TRANSLATORS: we don't have a lot to go on here
-#: ../src/gpk-update-viewer.c:187
+#: ../src/gpk-update-viewer.c:178
 msgid "Failed to process request."
 msgstr "Neizdevās apstrādāt pieprasījumu."
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:215
+#: ../src/gpk-update-viewer.c:206
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "before the changes will be applied."
@@ -4027,12 +4018,12 @@ msgstr ""
 "izmaiņas, ir nepieciešams, lai jūs pārstartētu datoru."
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:217 ../src/gpk-update-viewer.c:223
+#: ../src/gpk-update-viewer.c:208 ../src/gpk-update-viewer.c:214
 msgid "Restart Computer"
 msgstr "Pārstartēt datoru"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:221
+#: ../src/gpk-update-viewer.c:212
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "to remain secure."
@@ -4041,7 +4032,7 @@ msgstr ""
 "nepieciešams, lai jūs pārstartētu datoru."
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:227
+#: ../src/gpk-update-viewer.c:218
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "before the changes will be applied."
@@ -4051,12 +4042,12 @@ msgstr ""
 "vēlreiz."
 
 #. TRANSLATORS: the button text for the logout
-#: ../src/gpk-update-viewer.c:229 ../src/gpk-update-viewer.c:235
+#: ../src/gpk-update-viewer.c:220 ../src/gpk-update-viewer.c:226
 msgid "Log Out"
 msgstr "Atteikties"
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:233
+#: ../src/gpk-update-viewer.c:224
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "to remain secure."
@@ -4065,49 +4056,91 @@ msgstr ""
 "nepieciešams, lai jūs atteiktos no sesijas un pieteiktos vēlreiz."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:275
+#: ../src/gpk-update-viewer.c:266
 msgid "Could not restart"
 msgstr "Neizdevās pārstartēt"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:343
+#: ../src/gpk-update-viewer.c:334
 msgid "Some updates were not installed"
 msgstr "Daži atjauninājumi netika instalēti"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:412 ../src/gpk-update-viewer.c:423
+#: ../src/gpk-update-viewer.c:403 ../src/gpk-update-viewer.c:414
 msgid "Could not update packages"
 msgstr "Neizdevās atjaunināt pakotnes"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:491 ../src/gpk-update-viewer.c:512
+#: ../src/gpk-update-viewer.c:482 ../src/gpk-update-viewer.c:503
 msgid "Updates installed"
 msgstr "Atjauninājumi instalēti"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:501
+#: ../src/gpk-update-viewer.c:492
 msgid "All updates were installed successfully."
 msgstr "Visi atjauninājumi tika instalēti veiksmīgi."
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:504
+#: ../src/gpk-update-viewer.c:495
 msgid "The selected updates were installed successfully."
 msgstr "Izvēlētie atjauninājumi tika instalēti veiksmīgi."
 
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:713
+#| msgid "Trivial update"
+msgid "Trivial updates"
+msgstr "Triviāli atjauninājumi"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:717
+#| msgid "Important update"
+msgid "Important updates"
+msgstr "Svarīgi atjauninājumi"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:721
+#| msgid "Security update"
+msgid "Security updates"
+msgstr "Drošības atjauninājumi"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:725
+#| msgid "Bug fix update"
+msgid "Bug fix updates"
+msgstr "Kļūdu labojumu atjauninājumi"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:729
+#| msgid "Enhancement update"
+msgid "Enhancement updates"
+msgstr "Uzlabošanas atjauninājumi"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:733
+#| msgid "Blocked update"
+msgid "Blocked updates"
+msgstr "Bloķētie atjauninājumi"
+
+#. TRANSLATORS: The type of update, i.e. unspecified
+#: ../src/gpk-update-viewer.c:737
+#| msgid "Got updates"
+msgid "Other updates"
+msgstr "Citi atjauninājumi"
+
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:974
+#: ../src/gpk-update-viewer.c:1001
 msgid "Getting the list of updates"
 msgstr "Iegūst atjauninājumu sarakstu"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1213
+#: ../src/gpk-update-viewer.c:1240
 msgid "Could not run upgrade script"
 msgstr "Neizdevās palaist uzlabošanas skriptu"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1262
+#: ../src/gpk-update-viewer.c:1289
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4125,22 +4158,22 @@ msgstr[2] ""
 "var būt dārgi atjaunināt šīs pakotnes."
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1350
+#: ../src/gpk-update-viewer.c:1377
 msgid "There are no updates available"
 msgstr "Atjauninājumi nav pieejami"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1408
+#: ../src/gpk-update-viewer.c:1435
 msgid "No updates are available"
 msgstr "Nav pieejami atjauninājumi"
 
 #. TRANSLATORS: no network connnection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1410
+#: ../src/gpk-update-viewer.c:1437
 msgid "No network connection was detected."
 msgstr "Netika atrasts tīkla savienojums."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1427
+#: ../src/gpk-update-viewer.c:1454
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Instalēt atjauninājumu"
@@ -4148,16 +4181,16 @@ msgstr[1] "_Instalēt atjauninājumus"
 msgstr[2] "_Instalēt atjauninājumus"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1435
+#: ../src/gpk-update-viewer.c:1462
 msgid "All software is up to date"
 msgstr "Visa programmatūra ir atjaunināta"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1437
+#: ../src/gpk-update-viewer.c:1464
 msgid "There are no software updates available for your computer at this time."
 msgstr "Uz doto brīdi jūsu datoram nav pieejami programmatūras atjauninājumi."
 
-#: ../src/gpk-update-viewer.c:1463
+#: ../src/gpk-update-viewer.c:1490
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4166,7 +4199,7 @@ msgstr[1] "Ir pieejami %i atjauninājumi"
 msgstr[2] "Ir pieejami %i atjauninājumu"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1479
+#: ../src/gpk-update-viewer.c:1506
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4175,7 +4208,7 @@ msgstr[1] "izvēlēti %i atjauninājumi"
 msgstr[2] "izvēlēti %i atjauninājumu"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1487
+#: ../src/gpk-update-viewer.c:1514
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4183,31 +4216,26 @@ msgstr[0] "izvēlēts %i atjauninājums (%s)"
 msgstr[1] "izvēlēti %i atjauninājumi (%s)"
 msgstr[2] "izvēlēti %i atjauninājumu (%s)"
 
-#. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1690
-msgid "Software"
-msgstr "Programmatūra"
-
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1700
+#: ../src/gpk-update-viewer.c:1711
 msgid "Status"
 msgstr "Statuss"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1909
+#: ../src/gpk-update-viewer.c:1934
 msgid "This update will fix bugs and other non-critical problems."
 msgstr ""
 "Šis atjauninājums satur kļūdu labojumus un citu nekritisku problēmu "
 "atrisinājumus."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1913
+#: ../src/gpk-update-viewer.c:1938
 msgid "This update is important as it may solve critical problems."
 msgstr ""
 "Šis atjauninājums ir svarīgs, tā kā tas satur kritisku problēmu risinājumus."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1917
+#: ../src/gpk-update-viewer.c:1942
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
@@ -4215,25 +4243,25 @@ msgstr ""
 "ievainojamību."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1921
+#: ../src/gpk-update-viewer.c:1946
 msgid "This update is blocked."
 msgstr "Šis atjauninājums ir bloķēts."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1933
+#: ../src/gpk-update-viewer.c:1958
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr ""
 "Šis paziņojums tika izdots sakarā ar %s un pēdējo reizi atjaunināts %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1940
+#: ../src/gpk-update-viewer.c:1965
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Šis paziņojums tika izdots sakarā ar %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1962
+#: ../src/gpk-update-viewer.c:1987
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4248,7 +4276,7 @@ msgstr[2] ""
 "vietnes:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1970
+#: ../src/gpk-update-viewer.c:1995
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4266,7 +4294,7 @@ msgstr[2] ""
 "apmeklējiet šīs tīmekļa vietnes:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1978
+#: ../src/gpk-update-viewer.c:2003
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4282,14 +4310,14 @@ msgstr[2] ""
 "tīmekļa vietnes:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1987
+#: ../src/gpk-update-viewer.c:2012
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
 msgstr "Dators būs jāpārstartē pēc atjaunināšanas, lai izmaiņas stātos spēkā."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1991
+#: ../src/gpk-update-viewer.c:2016
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4298,7 +4326,7 @@ msgstr ""
 "stātos spēkā."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:1998
+#: ../src/gpk-update-viewer.c:2023
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
@@ -4307,7 +4335,7 @@ msgstr ""
 "produkcijas lietošanai."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2002
+#: ../src/gpk-update-viewer.c:2027
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4316,7 +4344,7 @@ msgstr ""
 "ziņojiet par jebkurām problēmām un regresijām, ja ar tādām saskaraties."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2011
+#: ../src/gpk-update-viewer.c:2036
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
@@ -4324,70 +4352,74 @@ msgstr ""
 "Tā kā šim atjauninājumam nav pieejams apraksts, tā vietā tiks rādīti "
 "Izstrādātāju žurnāli:"
 
-#. set loading text
-#: ../src/gpk-update-viewer.c:2047
+#: ../src/gpk-update-viewer.c:2086
 msgid "Loading..."
 msgstr "Ielādē..."
 
+#: ../src/gpk-update-viewer.c:2089
+#| msgid "No updates are available"
+msgid "No update details available."
+msgstr "Nav pieejama informācija par atjauninājumiem."
+
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2087 ../src/gpk-update-viewer.c:2185
-#: ../src/gpk-update-viewer.c:2205
+#: ../src/gpk-update-viewer.c:2121 ../src/gpk-update-viewer.c:2219
+#: ../src/gpk-update-viewer.c:2239
 msgid "Could not get update details"
 msgstr "Neizdevās iegūt sīkāku informāciju par atjauninājumu"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2107
+#: ../src/gpk-update-viewer.c:2141
 msgid "Could not get package details"
 msgstr "Neizdevās iegūt sīkāku informāciju par pakotni"
 
-#: ../src/gpk-update-viewer.c:2107 ../src/gpk-update-viewer.c:2205
+#: ../src/gpk-update-viewer.c:2141 ../src/gpk-update-viewer.c:2239
 msgid "No results were returned."
 msgstr "Netika atgriezti rezultāti."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2440
+#: ../src/gpk-update-viewer.c:2474
 msgid "Select all"
 msgstr "Atlasīt visu"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2448
+#: ../src/gpk-update-viewer.c:2482
 msgid "Unselect all"
 msgstr "Neatlasīt neko"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2455
+#: ../src/gpk-update-viewer.c:2489
 msgid "Select security updates"
 msgstr "Atlasīt drošības atjauninājumus"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2461
+#: ../src/gpk-update-viewer.c:2495
 msgid "Ignore this update"
 msgstr "Ignorēt šo atjauninājumu"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2573
+#: ../src/gpk-update-viewer.c:2606
 msgid "Could not get updates"
 msgstr "Neizdevās iegūt atjauninājumus"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2722
+#: ../src/gpk-update-viewer.c:2759
 msgid "Checking for updates..."
 msgstr "Pārbauda atjauninājumus..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3008
+#: ../src/gpk-update-viewer.c:3032
 msgid "Could not get list of distribution upgrades"
 msgstr "Neizdevās iegūt distribūcijas uzlabojumu sarakstu"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3038
+#: ../src/gpk-update-viewer.c:3062
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Jauns distribūcijas uzlabojuma laidiens '%s' ir pieejams"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3284
+#: ../src/gpk-update-viewer.c:3306
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -4396,7 +4428,7 @@ msgstr ""
 "sistēmas pakotnes."
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3354
+#: ../src/gpk-update-viewer.c:3371
 msgid "Software Update Viewer"
 msgstr "Programmatūras atjaunināšanas skatītājs"
 
@@ -4420,6 +4452,15 @@ msgstr "Atkļūdošanas opcijas"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Rādīt atkļūdošanas opcijas"
+
+#~ msgid "Software Updates"
+#~ msgstr "Programmatūras atjauninājumi"
+
+#~ msgid "_Install Update(s)"
+#~ msgstr "_Instalēt atjauninājumu(-s)"
+
+#~ msgid "Software"
+#~ msgstr "Programmatūra"
 
 #~ msgid "Package Installer"
 #~ msgstr "Pakotnes instalators"
