@@ -684,9 +684,9 @@ gpk_package_entry_completion_get_names_from_file (const gchar *filename)
 		if (g_strv_length (split) != 3)
 			continue;
 		item = pk_package_new ();
+		pk_package_set_id (item, split[1], NULL);
 		g_object_set (item,
 			      "info", pk_info_enum_from_string (split[0]),
-			      "package-id", split[1],
 			      "summary", split[2],
 			      NULL);
 		g_ptr_array_add (array, item);
