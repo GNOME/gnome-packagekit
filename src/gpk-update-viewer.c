@@ -1143,7 +1143,9 @@ gpk_update_viewer_get_install_package_ids (void)
 				    GPK_UPDATES_COLUMN_ID, &package_id, -1);
 
 		/* if selected, and not added previously because of deps */
-		if (update && gpk_update_viewer_info_is_update_enum (info))
+		if (package_id != NULL &&
+		    update &&
+		    gpk_update_viewer_info_is_update_enum (info))
 			g_ptr_array_add (array, package_id);
 		else
 			g_free (package_id);
@@ -1306,6 +1308,7 @@ gpk_update_viewer_update_global_state_recursive (GtkTreeModel *model, GtkTreeIte
 	gboolean selected;
 	PkRestartEnum restart;
 	guint size;
+	gchar *package_id = NULL;
 	gboolean child_valid;
 	GtkTreeIter child_iter;
 
@@ -1313,8 +1316,9 @@ gpk_update_viewer_update_global_state_recursive (GtkTreeModel *model, GtkTreeIte
 			    GPK_UPDATES_COLUMN_SELECT, &selected,
 			    GPK_UPDATES_COLUMN_RESTART, &restart,
 			    GPK_UPDATES_COLUMN_SIZE, &size,
+			    GPK_UPDATES_COLUMN_ID, &package_id,
 			    -1);
-	if (selected) {
+	if (selected && package_id != NULL) {
 		size_total += size;
 		number_total++;
 		if (restart > restart_worst)
@@ -1327,7 +1331,7 @@ gpk_update_viewer_update_global_state_recursive (GtkTreeModel *model, GtkTreeIte
 		gpk_update_viewer_update_global_state_recursive (model, &child_iter);
 		child_valid = gtk_tree_model_iter_next (model, &child_iter);
 	}
-
+	g_free (package_id);
 }
 
 /**
