@@ -992,6 +992,7 @@ gpk_dbus_task_install_package_files (GpkDbusTask *dtask, gchar **files_rel, GpkD
 	GError *error = NULL;
 	GError *error_dbus = NULL;
 	gboolean ret;
+	GPtrArray *array_basename;
 	GPtrArray *array;
 	guint len;
 	guint i;
@@ -1005,12 +1006,15 @@ gpk_dbus_task_install_package_files (GpkDbusTask *dtask, gchar **files_rel, GpkD
 
 	/* only show the basenames */
 	array = g_ptr_array_new_with_free_func (g_free);
-	for (i = 0; files_rel[i] != NULL; i++)
-		g_ptr_array_add (array, g_path_get_basename (files_rel[i]));
+	array_basename = g_ptr_array_new_with_free_func (g_free);
+	for (i = 0; files_rel[i] != NULL; i++) {
+		g_ptr_array_add (array, g_strdup (files_rel[i]));
+		g_ptr_array_add (array_basename, g_path_get_basename (files_rel[i]));
+	}
 
 	/* check the user wanted to call this method */
 	if (dtask->priv->show_confirm_search) {
-		ret = gpk_dbus_task_install_package_files_verify (dtask, array, &error);
+		ret = gpk_dbus_task_install_package_files_verify (dtask, array_basename, &error);
 		if (!ret) {
 			error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_gerror (error), "failed to verify files: %s", error->message);
 			gpk_dbus_task_dbus_return_error (dtask, error_dbus);
@@ -1038,6 +1042,7 @@ gpk_dbus_task_install_package_files (GpkDbusTask *dtask, gchar **files_rel, GpkD
 	/* wait for async reply */
 out:
 	g_ptr_array_unref (array);
+	g_ptr_array_unref (array_basename);
 }
 
 /**
