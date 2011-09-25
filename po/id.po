@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-08-17 13:02+0000\n"
-"PO-Revision-Date: 2011-08-18 12:59+0700\n"
+"POT-Creation-Date: 2011-09-24 22:35+0000\n"
+"PO-Revision-Date: 2011-09-25 15:19+0700\n"
 "Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: GNOME Indonesian Translation Team <gnome@i15n.org>\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr "Tambah atau hapus perangkat lunak yang terpasang pada sistem"
 #: ../data/gpk-application.ui.h:2
 #: ../src/gpk-application.c:4068
 #: ../src/gpk-log.c:498
-#: ../src/gpk-update-viewer.c:3345
+#: ../src/gpk-update-viewer.c:3358
 msgid "Add/Remove Software"
 msgstr "Tambah/Hapus Piranti Lunak"
 
@@ -71,19 +71,17 @@ msgstr "Bantuan atas perangkat lunak ini"
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
-#. TRANSLATORS: if the update should be installed
 #: ../data/gpk-application.ui.h:9
 #: ../src/gpk-dbus-task.c:710
-#: ../src/gpk-dbus-task.c:1245
-#: ../src/gpk-dbus-task.c:1464
-#: ../src/gpk-dbus-task.c:1667
-#: ../src/gpk-dbus-task.c:2127
-#: ../src/gpk-dbus-task.c:2465
-#: ../src/gpk-dbus-task.c:2678
-#: ../src/gpk-dbus-task.c:2800
-#: ../src/gpk-dbus-task.c:3153
+#: ../src/gpk-dbus-task.c:1254
+#: ../src/gpk-dbus-task.c:1473
+#: ../src/gpk-dbus-task.c:1676
+#: ../src/gpk-dbus-task.c:2136
+#: ../src/gpk-dbus-task.c:2474
+#: ../src/gpk-dbus-task.c:2687
+#: ../src/gpk-dbus-task.c:2809
+#: ../src/gpk-dbus-task.c:3162
 #: ../src/gpk-task.c:405
-#: ../src/gpk-update-viewer.c:1661
 msgid "Install"
 msgstr "Pasang"
 
@@ -153,8 +151,8 @@ msgstr "Segarkan daftar paket pada sistem"
 
 #. TRANSLATORS: button: confirm to search for packages
 #: ../data/gpk-application.ui.h:26
-#: ../src/gpk-dbus-task.c:3091
-#: ../src/gpk-task.c:411
+#: ../src/gpk-dbus-task.c:3100
+#: ../src/gpk-task.c:410
 msgid "Remove"
 msgstr "Buang"
 
@@ -265,12 +263,11 @@ msgstr "Pasang perangkat lunak yang dipilih pada sistem"
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:2
 #: ../data/gpk-install-local-file.desktop.in.h:2
-#: ../src/gpk-dbus-task.c:3368
+#: ../src/gpk-dbus-task.c:3377
 #: ../src/gpk-install-local-file.c:67
 #: ../src/gpk-install-package-name.c:66
 #: ../src/gpk-dbus-service.c:153
 #: ../src/gpk-dbus-service.c:156
-#| msgid "_Force install"
 msgid "Software Install"
 msgstr "Pasang Perangkat Lunak"
 
@@ -304,8 +301,8 @@ msgid "Change software update preferences and enable or disable software sources
 msgstr "Mengubah preferensi pemutakhiran serta mengaktifkan/menonaktifkan sumber perangkat lunak"
 
 #: ../data/gpk-prefs.desktop.in.h:2
-msgid "Software Updates"
-msgstr "Pemutakhiran Perangkat Lunak"
+msgid "Software Settings"
+msgstr "Pengaturan Perangkat Lunak"
 
 #: ../data/gpk-prefs.ui.h:1
 msgid "A software source contains packages that can be installed on this computer."
@@ -378,6 +375,7 @@ msgstr "Daftar paket tujuan:"
 
 #. TRANSLATORS: column for what packages were upgraded
 #: ../data/gpk-service-pack.ui.h:7
+#: ../data/gpk-update-viewer.ui.h:1
 #: ../src/gpk-log.c:322
 msgid "Details"
 msgstr "Rincian"
@@ -441,7 +439,7 @@ msgid "Software signature is required"
 msgstr "Diperlukan tanda tangan perangkat lunak"
 
 #: ../data/gpk-update-viewer.desktop.in.h:1
-#: ../data/gpk-update-viewer.ui.h:1
+#: ../data/gpk-update-viewer.ui.h:2
 msgid "Software Update"
 msgstr "Pembaruan Perangkat Lunak"
 
@@ -457,17 +455,15 @@ msgstr "Peningkatan Sistem Operasi"
 msgid "Upgrade the operating system to a new version"
 msgstr "Tingkatkan sistem operasi ke versi baru"
 
-#: ../data/gpk-update-viewer.ui.h:2
+#: ../data/gpk-update-viewer.ui.h:3
 msgid "Software updates correct errors, eliminate security vulnerabilities and provide new features."
 msgstr "Pemutakhiran perangkat lunak memperbaiki galat, menghilangkan kerentanan  keamanan, dan menyediakan fitur baru."
 
-#: ../data/gpk-update-viewer.ui.h:3
-#| msgid "_Install Update"
-#| msgid_plural "_Install Updates"
+#: ../data/gpk-update-viewer.ui.h:4
 msgid "_Install Updates"
 msgstr "Pasang Pemutakh_iran"
 
-#: ../data/gpk-update-viewer.ui.h:4
+#: ../data/gpk-update-viewer.ui.h:5
 msgid "_Upgrade"
 msgstr "_Tingkatkan"
 
@@ -649,7 +645,7 @@ msgstr "Terpasang"
 #: ../src/gpk-application.c:2123
 #: ../src/gpk-application.c:2145
 #: ../src/gpk-dialog.c:151
-#: ../src/gpk-modal-dialog.c:728
+#: ../src/gpk-modal-dialog.c:731
 msgid "Name"
 msgstr "Nama"
 
@@ -688,9 +684,7 @@ msgid "License"
 msgstr "Lisensi"
 
 #. TRANSLATORS: the size of the meta package
-#. TRANSLATORS: a column that has size of each package
 #: ../src/gpk-application.c:2333
-#: ../src/gpk-update-viewer.c:1732
 msgid "Size"
 msgstr "Ukuran"
 
@@ -764,7 +758,7 @@ msgstr "Anda seharusnya menerima salinan dari GNU General Public License bersama
 #: ../src/gpk-application.c:2694
 msgid "translator-credits"
 msgstr ""
-"Andika Triwidada <andika@gmail.com>, 2009-2010.\n"
+"Andika Triwidada <andika@gmail.com>, 2009-2011.\n"
 "Dirgita <dirgitadevina@yahoo.co.id>, 2010."
 
 #: ../src/gpk-application.c:2714
@@ -783,14 +777,11 @@ msgstr "Teks"
 
 #. TRANSLATORS: welcome text if we can click the group array
 #: ../src/gpk-application.c:3168
-#| msgid ""
-#| "Enter a package name and then click find, or click a group to get started."
 msgid "Enter a search word and then click find, or click a group to get started."
 msgstr "Masukkan suatu kata cari dan klik cari, atau klik suatu grup untuk memulai."
 
 #. TRANSLATORS: welcome text if we have to search by name
 #: ../src/gpk-application.c:3171
-#| msgid "Enter a package name and then click find to get started."
 msgid "Enter a search word and then click find to get started."
 msgstr "Masukkan suatu kata cari dan klik cari untuk memulai."
 
@@ -836,7 +827,7 @@ msgstr "Batalkan pencarian"
 
 #. TRANSLATORS: show the program version
 #: ../src/gpk-application.c:4051
-#: ../src/gpk-update-viewer.c:3328
+#: ../src/gpk-update-viewer.c:3341
 msgid "Show the program version and exit"
 msgstr "Tampilkan versi program dan keluar"
 
@@ -846,57 +837,57 @@ msgid "Package installer"
 msgstr "Pemasang paket"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
-#: ../src/gpk-common.c:397
+#: ../src/gpk-common.c:426
 msgid "This application is running as a privileged user"
 msgstr "Aplikasi ini dijalankan sebagai pengguna dengan hak tinggi"
 
 #. TRANSLATORS: cannot run as root user, and we display the applicaiton name
-#: ../src/gpk-common.c:400
+#: ../src/gpk-common.c:429
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "%s sedang berjalan sebagai pengguna dengan hak khusus"
 
 #. TRANSLATORS: tell the user off
-#: ../src/gpk-common.c:403
+#: ../src/gpk-common.c:432
 msgid "Package management applications are security sensitive."
 msgstr "Aplikasi manajemen paket peka terhadap keamanan."
 
 #. TRANSLATORS: and explain why
-#: ../src/gpk-common.c:405
+#: ../src/gpk-common.c:434
 msgid "Running graphical applications as a privileged user should be avoided for security reasons."
 msgstr "Sebisa mungkin dihindarkan menjalankan aplikasi grafis sebagai pengguna dengan hak tinggi demi alasan keamanan."
 
 #. TRANSLATORS: button: allow the user to run this, even when insecure
-#: ../src/gpk-common.c:411
+#: ../src/gpk-common.c:440
 msgid "Continue _Anyway"
 msgstr "Lanjutkan S_aja"
 
 #. TRANSLATORS: The actions has just literally happened
-#: ../src/gpk-common.c:481
-#: ../src/gpk-common.c:531
+#: ../src/gpk-common.c:510
+#: ../src/gpk-common.c:560
 #, c-format
 msgid "Now"
 msgstr "Kini"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:491
-#: ../src/gpk-common.c:541
+#: ../src/gpk-common.c:520
+#: ../src/gpk-common.c:570
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
 msgstr[0] "%i detik"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:501
-#: ../src/gpk-common.c:554
+#: ../src/gpk-common.c:530
+#: ../src/gpk-common.c:583
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
 msgstr[0] "%i menit"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:507
-#: ../src/gpk-common.c:573
+#: ../src/gpk-common.c:536
+#: ../src/gpk-common.c:602
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
@@ -906,44 +897,44 @@ msgstr[0] "%i jam"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/gpk-common.c:560
-#: ../src/gpk-common.c:579
+#: ../src/gpk-common.c:589
+#: ../src/gpk-common.c:608
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s %i %s"
 
-#: ../src/gpk-common.c:561
-#: ../src/gpk-common.c:581
+#: ../src/gpk-common.c:590
+#: ../src/gpk-common.c:610
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "menit"
 
-#: ../src/gpk-common.c:562
+#: ../src/gpk-common.c:591
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "detik"
 
-#: ../src/gpk-common.c:580
+#: ../src/gpk-common.c:609
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "jam"
 
-#: ../src/gpk-common.c:607
+#: ../src/gpk-common.c:636
 #, c-format
 msgid "%s and %s"
 msgstr "%s dan %s"
 
-#: ../src/gpk-common.c:610
+#: ../src/gpk-common.c:639
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s, dan %s"
 
-#: ../src/gpk-common.c:613
+#: ../src/gpk-common.c:642
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s, dan %s"
 
-#: ../src/gpk-common.c:617
+#: ../src/gpk-common.c:646
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s, dan %s"
@@ -1000,7 +991,7 @@ msgstr "Lihat rincian"
 #. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
 #: ../src/gpk-dbus-task.c:472
-#: ../src/gpk-dbus-task.c:1152
+#: ../src/gpk-dbus-task.c:1161
 msgid "Failed to install package"
 msgstr "Gagal memasang paket"
 
@@ -1013,7 +1004,7 @@ msgstr "Memasang paket"
 
 #. TRANSLATORS: title
 #: ../src/gpk-dbus-task.c:612
-#: ../src/gpk-dbus-task.c:1371
+#: ../src/gpk-dbus-task.c:1380
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "Gagal memasang berkas"
@@ -1025,19 +1016,19 @@ msgid_plural "Do you want to install these files?"
 msgstr[0] "Apakah Anda ingin memasang berkas ini?"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1025
+#: ../src/gpk-dbus-task.c:1033
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "Pasang berkas lokal"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1084
+#: ../src/gpk-dbus-task.c:1093
 #, c-format
 msgid "Could not find packages"
 msgstr "Tak menemukan paket"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1093
+#: ../src/gpk-dbus-task.c:1102
 msgid "The packages could not be found in any software source"
 msgstr "Paket tak ditemukan di sumber perangkat lunak manapun"
 
@@ -1046,413 +1037,405 @@ msgstr "Paket tak ditemukan di sumber perangkat lunak manapun"
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
-#: ../src/gpk-dbus-task.c:1096
-#: ../src/gpk-dbus-task.c:1333
-#: ../src/gpk-dbus-task.c:1639
-#: ../src/gpk-dbus-task.c:1845
-#: ../src/gpk-dbus-task.c:2100
-#: ../src/gpk-dbus-task.c:2437
+#: ../src/gpk-dbus-task.c:1105
+#: ../src/gpk-dbus-task.c:1342
+#: ../src/gpk-dbus-task.c:1648
+#: ../src/gpk-dbus-task.c:1854
+#: ../src/gpk-dbus-task.c:2109
+#: ../src/gpk-dbus-task.c:2446
 msgid "More information"
 msgstr "Informasi lebih"
 
-#: ../src/gpk-dbus-task.c:1133
+#: ../src/gpk-dbus-task.c:1142
 #: ../src/gpk-enum.c:336
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "Paket telah terpasang"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1137
+#: ../src/gpk-dbus-task.c:1146
 msgid "Nothing to do."
 msgstr "Tak ada yang perlu dilakukan."
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1154
+#: ../src/gpk-dbus-task.c:1163
 msgid "Incorrect response from search"
 msgstr "Respon salah dari pencarian"
 
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1229
+#: ../src/gpk-dbus-task.c:1238
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
 msgstr[0] "Perlu paket tambahan:"
 
 #. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1232
+#: ../src/gpk-dbus-task.c:1241
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "Anda ingin mencari dan memasang paket tersebut sekarang?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1238
+#: ../src/gpk-dbus-task.c:1247
 #, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
 msgstr[0] "%s ingin memasang satu paket"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1241
+#: ../src/gpk-dbus-task.c:1250
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
 msgstr[0] "Suatu program ingin memasang satu paket"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1258
-#: ../src/gpk-dbus-task.c:2860
+#: ../src/gpk-dbus-task.c:1267
+#: ../src/gpk-dbus-task.c:2869
 msgid "Searching for packages"
 msgstr "Sedang mencari paket"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1328
+#: ../src/gpk-dbus-task.c:1337
 msgid "Failed to find package"
 msgstr "Gagal temukan paket"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1330
-#: ../src/gpk-dbus-task.c:3000
+#: ../src/gpk-dbus-task.c:1339
+#: ../src/gpk-dbus-task.c:3009
 msgid "The file could not be found in any packages"
 msgstr "Berkas tak ditemukan di paket manapun"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1368
+#: ../src/gpk-dbus-task.c:1377
 #, c-format
 msgid "The %s package already provides this file"
 msgstr "Paket %s telah menyediakan berkas ini"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1449
+#: ../src/gpk-dbus-task.c:1458
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "Berkas berikut diperlukan:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1452
+#: ../src/gpk-dbus-task.c:1461
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "Anda ingin mencari berkas ini sekarang?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1457
+#: ../src/gpk-dbus-task.c:1466
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
 msgstr[0] "%s ingin memasang satu berkas"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1460
+#: ../src/gpk-dbus-task.c:1469
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "Suatu program ingin memasang satu berkas"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1476
-#: ../src/gpk-dbus-task.c:3103
+#: ../src/gpk-dbus-task.c:1485
+#: ../src/gpk-dbus-task.c:3112
 #: ../src/gpk-enum.c:1315
 msgid "Searching for file"
 msgstr "Mencari berkas"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1519
+#: ../src/gpk-dbus-task.c:1528
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "Plugin berikut diperlukan:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1537
-#: ../src/gpk-dbus-task.c:2365
+#: ../src/gpk-dbus-task.c:1546
+#: ../src/gpk-dbus-task.c:2374
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Anda ingin mencari ini sekarang?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1550
+#: ../src/gpk-dbus-task.c:1559
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
 msgstr[0] "%s membutuhkan plugin tambahan untuk mengawasandi berkas ini"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1554
+#: ../src/gpk-dbus-task.c:1563
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
 msgstr[0] "%s membutuhkan plugin tambahan untuk menyandikan berkas ini"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1558
+#: ../src/gpk-dbus-task.c:1567
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
 msgstr[0] "%s membutuhkan plugin tambahan untuk operasi ini"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1564
+#: ../src/gpk-dbus-task.c:1573
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] "Suatu program memerlukan plugin tambahan untuk mengawasandi berkas ini"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1568
+#: ../src/gpk-dbus-task.c:1577
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] "Suatu program memerlukan plugin tambahan untuk menyandikan berkas ini"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1572
+#: ../src/gpk-dbus-task.c:1581
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "Suatu program memerlukan plugin tambahan untuk operasi ini"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1578
-#: ../src/gpk-dbus-task.c:1931
-#: ../src/gpk-dbus-task.c:2304
-#: ../src/gpk-dbus-task.c:2377
+#: ../src/gpk-dbus-task.c:1587
+#: ../src/gpk-dbus-task.c:1940
+#: ../src/gpk-dbus-task.c:2313
+#: ../src/gpk-dbus-task.c:2386
 msgid "Search"
 msgstr "Cari"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1633
+#: ../src/gpk-dbus-task.c:1642
 msgid "Failed to search for plugin"
 msgstr "Gagal mencari plugin"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1635
+#: ../src/gpk-dbus-task.c:1644
 msgid "Could not find plugin in any configured software source"
 msgstr "Tak temukan plugin pada sumber perangkat lunak manapun"
 
-#: ../src/gpk-dbus-task.c:1658
-#: ../src/gpk-dbus-task.c:2456
+#: ../src/gpk-dbus-task.c:1667
+#: ../src/gpk-dbus-task.c:2465
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "Pasang plugin berikut"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1659
-#: ../src/gpk-dbus-task.c:2120
-#: ../src/gpk-dbus-task.c:2457
-#: ../src/gpk-dbus-task.c:2792
+#: ../src/gpk-dbus-task.c:1668
+#: ../src/gpk-dbus-task.c:2129
+#: ../src/gpk-dbus-task.c:2466
+#: ../src/gpk-dbus-task.c:2801
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Anda ingin memasang paket ini sekarang?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1751
+#: ../src/gpk-dbus-task.c:1760
 msgid "Searching for plugins"
 msgstr "Mencari plugin"
 
-#: ../src/gpk-dbus-task.c:1772
+#: ../src/gpk-dbus-task.c:1781
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "Mencari plugin: %s"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1810
+#: ../src/gpk-dbus-task.c:1819
 msgid "Failed to search for provides"
 msgstr "Gagal mencari paket penyedia"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1840
+#: ../src/gpk-dbus-task.c:1849
 msgid "Failed to find software"
 msgstr "Gagal temukan perangkat lunak"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1842
+#: ../src/gpk-dbus-task.c:1851
 msgid "No new applications can be found to handle this type of file"
 msgstr "Tidak ditemukan aplikasi baru untuk menangani tipe berkas ini"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1913
+#: ../src/gpk-dbus-task.c:1922
 msgid "An additional program is required to open this type of file:"
 msgstr "Sebuah program tambahan diperlukan untuk membuka tipe berkas ini:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1916
+#: ../src/gpk-dbus-task.c:1925
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "Anda ingin mencari program untuk membuka berkas tipe ini sekarang?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1924
+#: ../src/gpk-dbus-task.c:1933
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
 msgstr[0] "%s memerlukan sebuah tipe mime baru"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1927
+#: ../src/gpk-dbus-task.c:1936
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "Sebuah program memerlukan suatu tipe mime baru"
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1942
+#: ../src/gpk-dbus-task.c:1951
 msgid "Searching for file handlers"
 msgstr "Mencari pemroses berkas"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2021
+#: ../src/gpk-dbus-task.c:2030
 msgid "Language tag not parsed"
 msgstr "Tag bahasa tak diurai"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2029
+#: ../src/gpk-dbus-task.c:2038
 msgid "Language code not matched"
 msgstr "Kode bahasa tak cocok"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2089
+#: ../src/gpk-dbus-task.c:2098
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "Gagal temukan fonta"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2097
+#: ../src/gpk-dbus-task.c:2106
 msgid "No new fonts can be found for this document"
 msgstr "Tak ditemukan fonta baru bagi dokumen ini"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2283
+#: ../src/gpk-dbus-task.c:2292
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] "Sebuah fonta tambahan diperlukan untuk menilik dokumen ini dengan benar."
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2287
+#: ../src/gpk-dbus-task.c:2296
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "Anda ingin mencari sebuah paket yang cocok sekarang?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2297
+#: ../src/gpk-dbus-task.c:2306
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
 msgstr[0] "%s ingin memasang sebuah fonta"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2300
+#: ../src/gpk-dbus-task.c:2309
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "Suatu program ingin memasang sebuah fonta"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2316
+#: ../src/gpk-dbus-task.c:2325
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "Mencari fonta"
 
 #. TRANSLATORS: we are listing the services in a box
-#: ../src/gpk-dbus-task.c:2353
-#| msgid "The following file is required:"
-#| msgid_plural "The following files are required:"
+#: ../src/gpk-dbus-task.c:2362
 msgid "The following service is required:"
 msgid_plural "The following services are required:"
 msgstr[0] "Layanan berikut diperlukan:"
 
-#: ../src/gpk-dbus-task.c:2373
-#| msgid "%s requires an additional plugin for this operation"
-#| msgid_plural "%s requires additional plugins for this operation"
+#: ../src/gpk-dbus-task.c:2382
 msgid "Plasma requires an additional service for this operation"
 msgid_plural "Plasma requires additional services for this operation"
 msgstr[0] "Plasma memerlukan layanan tambahan untuk operasi ini"
 
-#: ../src/gpk-dbus-task.c:2431
-#| msgid "Failed to search for provides"
+#: ../src/gpk-dbus-task.c:2440
 msgid "Failed to search for Plasma service"
 msgstr "Gagal mencari layanan Plasma"
 
 #. TRANSLATORS: no software sources have the wanted Plasma service
-#: ../src/gpk-dbus-task.c:2433
-#| msgid "Could not find plugin in any configured software source"
+#: ../src/gpk-dbus-task.c:2442
 msgid "Could not find service in any configured software source"
 msgstr "Tak bisa temukan layanan pada sumber perangkat lunak manapun yang telah ditata"
 
 #. TRANSLATORS: search for Plasma services
-#: ../src/gpk-dbus-task.c:2539
-#| msgid "Searching for file"
+#: ../src/gpk-dbus-task.c:2548
 msgid "Searching for services"
 msgstr "Mencari layanan"
 
-#: ../src/gpk-dbus-task.c:2558
+#: ../src/gpk-dbus-task.c:2567
 #, c-format
-#| msgid "Searching for plugin: %s"
 msgid "Searching for service: %s"
 msgstr "Mencari layanan: %s"
 
-#: ../src/gpk-dbus-task.c:2635
+#: ../src/gpk-dbus-task.c:2644
 msgid "Could not process catalog"
 msgstr "Tidak dapat memroses katalog"
 
-#: ../src/gpk-dbus-task.c:2653
+#: ../src/gpk-dbus-task.c:2662
 msgid "No packages need to be installed"
 msgstr "Tak ada paket yang perlu dipasang"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2672
+#: ../src/gpk-dbus-task.c:2681
 msgid "Install packages in catalog?"
 msgstr "Pasang paket di katalog?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2674
+#: ../src/gpk-dbus-task.c:2683
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "Paket berikut ditandai untuk dipasang dari katalog:"
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2714
+#: ../src/gpk-dbus-task.c:2723
 msgid "Failed to remove package"
 msgstr "Gagal menghapus paket"
 
-#: ../src/gpk-dbus-task.c:2791
+#: ../src/gpk-dbus-task.c:2800
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "Pasang penggerak berikut"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2944
+#: ../src/gpk-dbus-task.c:2953
 #: ../src/gpk-enum.c:947
 msgid "Removing packages"
 msgstr "Menghapus paket"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:2998
+#: ../src/gpk-dbus-task.c:3007
 msgid "Failed to find package for this file"
 msgstr "Gagal temukan paket untuk berkas ini"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:3076
+#: ../src/gpk-dbus-task.c:3085
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "Berkas berikut akan dihapus:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:3079
+#: ../src/gpk-dbus-task.c:3088
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Anda ingin menghapus berkas tersebut sekarang?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:3084
+#: ../src/gpk-dbus-task.c:3093
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
 msgstr[0] "%s ingin menghapus berkas"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:3087
+#: ../src/gpk-dbus-task.c:3096
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Suatu program ingin menghapus berkas"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:3144
+#: ../src/gpk-dbus-task.c:3153
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Anda ingin memasang katalog ini?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:3169
+#: ../src/gpk-dbus-task.c:3178
 msgid "Install catalogs"
 msgstr "Pasang katalog"
 
@@ -1905,7 +1888,6 @@ msgid "Install root is invalid"
 msgstr "Puncak direktori pemasangan tidak sah"
 
 #: ../src/gpk-enum.c:498
-#| msgid "Cannot disable source"
 msgid "Cannot fetch install sources"
 msgstr "Tak bisa mengambil sumber pemasangan"
 
@@ -2322,7 +2304,6 @@ msgid "The install root is invalid. Please contact your administrator."
 msgstr "Puncak direktori pemasangan tidak sah. Hubungi administrator Anda."
 
 #: ../src/gpk-enum.c:749
-#| msgid "The specified software source could not be disabled."
 msgid "The list of software sources could not be downloaded."
 msgstr "Daftar sumber perangkat lunak tak dapat diunduh."
 
@@ -2807,6 +2788,7 @@ msgstr "Dibersihkan"
 
 #. TRANSLATORS: The action of the package, in past tense
 #: ../src/gpk-enum.c:1257
+#: ../src/gpk-task.c:415
 msgid "Obsoleted"
 msgstr "Telah dikadaluarsakan"
 
@@ -3194,7 +3176,7 @@ msgstr "Perkantoran"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1633
-#: ../src/gpk-task.c:431
+#: ../src/gpk-task.c:435
 msgid "Other"
 msgstr "Lainnya"
 
@@ -3389,7 +3371,7 @@ msgstr "Perlu media tambahan. Silakan sisipkan %s berlabel '%s' untuk melanjutka
 
 #. TRANSLATORS: this is button text
 #: ../src/gpk-task.c:361
-#: ../src/gpk-task.c:558
+#: ../src/gpk-task.c:562
 msgid "Continue"
 msgstr "Teruskan"
 
@@ -3399,96 +3381,94 @@ msgid "The following software also needs to be installed"
 msgstr "Perangkat lunak berikut juga perlu dipasang"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:410
+#: ../src/gpk-task.c:409
+#: ../src/gpk-task.c:414
 msgid "The following software also needs to be removed"
 msgstr "Perangkat lunak berikut juga perlu dihapus"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:415
+#: ../src/gpk-task.c:419
 msgid "The following software also needs to be updated"
 msgstr "Perangkat lunak berikut juga perlu dimutakhirkan"
 
-#: ../src/gpk-task.c:416
-#| msgid "Updated"
+#: ../src/gpk-task.c:420
 msgid "Update"
 msgstr "Mutakhirkan"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:420
+#: ../src/gpk-task.c:424
 msgid "The following software also needs to be re-installed"
 msgstr "Perangkat lunak berikut juga perlu dipasang ulang"
 
-#: ../src/gpk-task.c:421
-#| msgid "Reinstalled"
+#: ../src/gpk-task.c:425
 msgid "Reinstall"
 msgstr "Pasang ulang"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:425
+#: ../src/gpk-task.c:429
 msgid "The following software also needs to be downgraded"
 msgstr "Perangkat lunak berikut juga perlu diturun-tingkatkan"
 
-#: ../src/gpk-task.c:426
-#| msgid "Downloaded"
+#: ../src/gpk-task.c:430
 msgid "Downgrade"
 msgstr "Turunkan versi"
 
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:430
+#: ../src/gpk-task.c:434
 msgid "The following software also needs to be processed"
 msgstr "Perangkat lunak berikut juga perlu diproses"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:491
+#: ../src/gpk-task.c:495
 msgid "Additional confirmation required"
 msgstr "Perlu konfirmasi tambahan"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:497
+#: ../src/gpk-task.c:501
 msgid "To install this package, additional software also has to be modified."
 msgid_plural "To install these packages, additional software also has to be modified."
 msgstr[0] "Untuk memasang paket ini, perangkat lunak tambahan juga mesti diubah."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:502
+#: ../src/gpk-task.c:506
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural "To remove these packages, additional software also has to be modified."
 msgstr[0] "Untuk menghapus paket ini, perangkat lunak tambahan juga mesti diubah."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:507
+#: ../src/gpk-task.c:511
 msgid "To update this package, additional software also has to be modified."
 msgid_plural "To update these packages, additional software also has to be modified."
 msgstr[0] "Untuk memutakhirkan paket ini, perangkat lunak tambahan juga mesti diubah."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:512
+#: ../src/gpk-task.c:516
 msgid "To install this file, additional software also has to be modified."
 msgid_plural "To install these files, additional software also has to be modified."
 msgstr[0] "Untuk memasang berkas ini, perangkat lunak tambahan juga mesti diubah."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:517
+#: ../src/gpk-task.c:521
 msgid "To process this transaction, additional software also has to be modified."
 msgstr "Untuk memroses transaksi ini, perangkat lunak tambahan juga mesti diubah."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:608
+#: ../src/gpk-task.c:612
 msgid "_Force install"
 msgstr "_Pasang paksa"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:612
+#: ../src/gpk-task.c:616
 msgid "Force installing package"
 msgstr "Memaksa memasang paket"
 
 #. TRANSLATORS: window title: do we want to execute a program we just installed?
-#: ../src/gpk-helper-run.c:481
+#: ../src/gpk-helper-run.c:480
 msgid "Run new application?"
 msgstr "Jalankan aplikasi baru?"
 
 #. add run button
-#: ../src/gpk-helper-run.c:484
+#: ../src/gpk-helper-run.c:483
 msgid "_Run"
 msgstr "_Jalankan"
 
@@ -3675,7 +3655,7 @@ msgstr "Tata jendela induk untuk membuat ini modal"
 msgid "Log viewer"
 msgstr "Penilik log"
 
-#: ../src/gpk-modal-dialog.c:438
+#: ../src/gpk-modal-dialog.c:441
 #, c-format
 msgid "Remaining time : %s"
 msgstr "Sisa waktu : %s"
@@ -3737,7 +3717,7 @@ msgstr "Gagal memperoleh daftar sumber"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
 #: ../src/gpk-prefs.c:763
-#: ../src/gpk-update-viewer.c:3078
+#: ../src/gpk-update-viewer.c:3100
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Keluar karena rincian backend tidak dapat diambil"
 
@@ -3839,299 +3819,332 @@ msgid "Set the default output directory"
 msgstr "Tata direktori keluaran bawaan"
 
 #. TRANSLATORS: we don't have a lot to go on here
-#: ../src/gpk-update-viewer.c:187
+#: ../src/gpk-update-viewer.c:178
 msgid "Failed to process request."
 msgstr "Gagal memroses permintaan."
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:215
+#: ../src/gpk-update-viewer.c:206
 msgid "Some of the updates that were installed require the computer to be restarted before the changes will be applied."
 msgstr "Beberapa pemutakhiran yang dipasang memerlukan start ulang komputer sebelum perubahan diterapkan."
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:217
-#: ../src/gpk-update-viewer.c:223
+#: ../src/gpk-update-viewer.c:208
+#: ../src/gpk-update-viewer.c:214
 msgid "Restart Computer"
 msgstr "Start Ulang Komputer"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:221
+#: ../src/gpk-update-viewer.c:212
 msgid "Some of the updates that were installed require the computer to be restarted to remain secure."
 msgstr "Beberapa pemutakhiran yang dipasang memerlukan start ulang komputer agar tetap aman."
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:227
+#: ../src/gpk-update-viewer.c:218
 msgid "Some of the updates that were installed require you to log out and back in before the changes will be applied."
 msgstr "Beberapa pemutakhiran yang dipasang memerlukan Anda untuk log keluar dan masuk lagi sebelum perubahan diterapkan."
 
 #. TRANSLATORS: the button text for the logout
-#: ../src/gpk-update-viewer.c:229
-#: ../src/gpk-update-viewer.c:235
+#: ../src/gpk-update-viewer.c:220
+#: ../src/gpk-update-viewer.c:226
 msgid "Log Out"
 msgstr "Log Keluar"
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:233
+#: ../src/gpk-update-viewer.c:224
 msgid "Some of the updates that were installed require you to log out and back in to remain secure."
 msgstr "Beberapa pemutakhiran yang dipasang memerlukan Anda untuk log keluar dan masuk lagi agar tetap aman."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:275
+#: ../src/gpk-update-viewer.c:266
 msgid "Could not restart"
 msgstr "Tak bisa memulai ulang"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:343
+#: ../src/gpk-update-viewer.c:334
 msgid "Some updates were not installed"
 msgstr "Beberapa pemutakhiran tak dipasang"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:412
-#: ../src/gpk-update-viewer.c:423
+#: ../src/gpk-update-viewer.c:403
+#: ../src/gpk-update-viewer.c:414
 msgid "Could not update packages"
 msgstr "Tak bisa memutakhirkan paket"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:491
-#: ../src/gpk-update-viewer.c:512
+#: ../src/gpk-update-viewer.c:482
+#: ../src/gpk-update-viewer.c:503
 msgid "Updates installed"
 msgstr "Pemutakhiran dipasang"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:501
+#: ../src/gpk-update-viewer.c:492
 msgid "All updates were installed successfully."
 msgstr "Semua pemutakhiran sukses terpasang."
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:504
+#: ../src/gpk-update-viewer.c:495
 msgid "The selected updates were installed successfully."
 msgstr "Pemutakhiran terpilih sukses terpasang."
 
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:713
+msgid "Trivial updates"
+msgstr "Pemutakhiran kecil"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:717
+msgid "Important updates"
+msgstr "Pemutakhiran penting"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:721
+msgid "Security updates"
+msgstr "Pemutakhiran keamanan"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:725
+msgid "Bug fix updates"
+msgstr "Pemutakhiran perbaikan kutu"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:729
+msgid "Enhancement updates"
+msgstr "Pemutakhiran peningkatan"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:733
+msgid "Blocked updates"
+msgstr "Pemutakhiran terblokir"
+
+#. TRANSLATORS: The type of update, i.e. unspecified
+#: ../src/gpk-update-viewer.c:737
+msgid "Other updates"
+msgstr "Pemutakhiran lainnya"
+
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:976
+#: ../src/gpk-update-viewer.c:1001
 msgid "Getting the list of updates"
 msgstr "Mengambil daftar pemutakhiran"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1215
+#: ../src/gpk-update-viewer.c:1242
 msgid "Could not run upgrade script"
 msgstr "Tidak dapat menjalankan skrip peningkatan"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1264
+#: ../src/gpk-update-viewer.c:1291
 msgid "Connectivity is being provided by wireless broadband, and it may be expensive to update this package."
 msgid_plural "Connectivity is being provided by wireless broadband, and it may be expensive to update these packages."
 msgstr[0] "Konektivitas disediakan oleh data seluler, dan mungkin mahal untuk memutakhirkan paket ini."
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1352
+#: ../src/gpk-update-viewer.c:1381
 msgid "There are no updates available"
 msgstr "Tak tersedia pembaruan"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1410
+#: ../src/gpk-update-viewer.c:1439
 msgid "No updates are available"
 msgstr "Tidak tersedia pembaharuan"
 
 #. TRANSLATORS: no network connnection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1412
+#: ../src/gpk-update-viewer.c:1441
 msgid "No network connection was detected."
 msgstr "Tidak tersedia sambungan jaringan."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1429
+#: ../src/gpk-update-viewer.c:1458
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Pasang Pembaruan"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1437
+#: ../src/gpk-update-viewer.c:1466
 msgid "All software is up to date"
 msgstr "Semua perangkat lunak mutakhir"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1439
+#: ../src/gpk-update-viewer.c:1468
 msgid "There are no software updates available for your computer at this time."
 msgstr "Tak ada pemutakhiran perangkat lunak tersedia bagi komputer Anda saat ini."
 
-#: ../src/gpk-update-viewer.c:1465
+#: ../src/gpk-update-viewer.c:1494
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
 msgstr[0] "Tersedia %i pemutakhiran"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1481
+#: ../src/gpk-update-viewer.c:1510
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
 msgstr[0] "%i pemutakhiran dipilih\t"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1489
+#: ../src/gpk-update-viewer.c:1518
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
 msgstr[0] "%i pemutakhiran dipilih (%s)"
 
-#. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1692
-msgid "Software"
-msgstr "Perangkat Lunak"
-
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1702
+#: ../src/gpk-update-viewer.c:1715
 msgid "Status"
 msgstr "Status"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1911
+#: ../src/gpk-update-viewer.c:1938
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Pemutakhiran ini akan memperbaiki kutu dan masalah tak kritis lainnya."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1915
+#: ../src/gpk-update-viewer.c:1942
 msgid "This update is important as it may solve critical problems."
 msgstr "Pemutakhiran ini penting dan mungkin memecahkan masalah kritis."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1919
+#: ../src/gpk-update-viewer.c:1946
 msgid "This update is needed to fix a security vulnerability with this package."
 msgstr "Pemutakhiran ini diperlukan untuk memperbaiki kelemahan keamanan atas paket ini."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1923
+#: ../src/gpk-update-viewer.c:1950
 msgid "This update is blocked."
 msgstr "Pemutakhiran ini diblok."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1935
+#: ../src/gpk-update-viewer.c:1962
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Pemberitahuan ini diterbitkan pada %s dan diperbarui terakhir pada %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1942
+#: ../src/gpk-update-viewer.c:1969
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Pemberitahuan ini diterbitkan pada %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1964
+#: ../src/gpk-update-viewer.c:1991
 msgid "For more information about this update please visit this website:"
 msgid_plural "For more information about this update please visit these websites:"
 msgstr[0] "Untuk informasi lebih lanjut tentang pemutakhiran ini silakan kunjungi situs web ini:\t"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1972
+#: ../src/gpk-update-viewer.c:1999
 msgid "For more information about bugs fixed by this update please visit this website:"
 msgid_plural "For more information about bugs fixed by this update please visit these websites:"
 msgstr[0] "Untuk informasi lebih lanjut tentang kutu yang diperbaiki oleh pemutakhiran ini silakan kunjungi situs web ini:\t"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1980
+#: ../src/gpk-update-viewer.c:2007
 msgid "For more information about this security update please visit this website:"
 msgid_plural "For more information about this security update please visit these websites:"
 msgstr[0] "Untuk informasi lebih lanjut tentang pemutakhiran keamanan ini silakan kunjungi situs web ini:\t"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:1989
+#: ../src/gpk-update-viewer.c:2016
 msgid "The computer will have to be restarted after the update for the changes to take effect."
 msgstr "Komputer Anda mesti akan harus distart ulang setelah pemutakhiran agar perubahannya berdampak."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:1993
+#: ../src/gpk-update-viewer.c:2020
 msgid "You will need to log out and back in after the update for the changes to take effect."
 msgstr "Anda akan perlu log keluar dan masuk lagi setelah pemutakhiran agar perubahannya berdampak."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2000
+#: ../src/gpk-update-viewer.c:2027
 msgid "The classifaction of this update is unstable which means it is not designed for production use."
 msgstr "Klasifikasi pemutakhiran ini adalah tak stabil yang berarti ini tidak dirancang untuk penggunaan produksi."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2004
+#: ../src/gpk-update-viewer.c:2031
 msgid "This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter."
 msgstr "Ini adalah pemutakhiran uji, dan tidak dirancang untuk penggunaan normal. Silakan laporkan sebarang masalah atau kemunduran yang Anda jumpai."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2013
+#: ../src/gpk-update-viewer.c:2040
 msgid "The developer logs will be shown as no description is available for this update:"
 msgstr "Log para pengembang akan ditampilkan karena tidak ada keterangan tersedia bagi pemutakhiran ini:"
 
-#. set loading text
-#: ../src/gpk-update-viewer.c:2049
+#: ../src/gpk-update-viewer.c:2090
 msgid "Loading..."
 msgstr "Sedang memuat..."
 
+#: ../src/gpk-update-viewer.c:2093
+msgid "No update details available."
+msgstr "Tak tersedia rincian pemutakhiran."
+
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2089
-#: ../src/gpk-update-viewer.c:2187
-#: ../src/gpk-update-viewer.c:2207
+#: ../src/gpk-update-viewer.c:2125
+#: ../src/gpk-update-viewer.c:2223
+#: ../src/gpk-update-viewer.c:2243
 msgid "Could not get update details"
 msgstr "Tidak dapat memperoleh rincian pemutakhiran"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2109
+#: ../src/gpk-update-viewer.c:2145
 msgid "Could not get package details"
 msgstr "Tidak dapat memperoleh rincian paket"
 
-#: ../src/gpk-update-viewer.c:2109
-#: ../src/gpk-update-viewer.c:2207
+#: ../src/gpk-update-viewer.c:2145
+#: ../src/gpk-update-viewer.c:2243
 msgid "No results were returned."
 msgstr "Tak ada hasil yang dikembalikan."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2442
+#: ../src/gpk-update-viewer.c:2478
 msgid "Select all"
 msgstr "Pilih semua"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2450
+#: ../src/gpk-update-viewer.c:2486
 msgid "Unselect all"
 msgstr "Jangan pilih semua"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2457
+#: ../src/gpk-update-viewer.c:2493
 msgid "Select security updates"
 msgstr "Pilih pemutakhiran keamanan"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2463
+#: ../src/gpk-update-viewer.c:2499
 msgid "Ignore this update"
 msgstr "Abaikan pemutakhiran ini"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2575
+#: ../src/gpk-update-viewer.c:2610
 msgid "Could not get updates"
 msgstr "Tak bisa memperoleh pemutakhiran"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2727
+#: ../src/gpk-update-viewer.c:2763
 msgid "Checking for updates..."
 msgstr "Memeriksa pemutakhiran..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3014
+#: ../src/gpk-update-viewer.c:3036
 msgid "Could not get list of distribution upgrades"
 msgstr "Tidak dapat memperoleh daftar peningkatan distribusi"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3044
+#: ../src/gpk-update-viewer.c:3066
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Peningkatan ke rilis baru distribusi '%s' tersedia."
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3292
+#: ../src/gpk-update-viewer.c:3310
 msgid "Other updates are held back as some important system packages need to be installed first."
 msgstr "Pembaruan lain ditahan karena beberapa paket sistem yang penting perlu dipasang terlebih dahulu."
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3362
+#: ../src/gpk-update-viewer.c:3375
 msgid "Software Update Viewer"
 msgstr "Penilik Pemutakhiran Perangkat Lunak"
 
