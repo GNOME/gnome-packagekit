@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-04-07 08:43+0000\n"
-"PO-Revision-Date: 2011-03-18 19:25+0100\n"
+"POT-Creation-Date: 2011-09-28 07:39+0000\n"
+"PO-Revision-Date: 2011-10-16 22:46+0200\n"
 "Last-Translator: Ivan Masár <helix84@centrum.sk>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -23,8 +23,8 @@ msgstr "Pridať alebo odstrániť softvér nainštalovaný na systéme"
 
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
-#: ../src/gpk-application.c:4056 ../src/gpk-log.c:498
-#: ../src/gpk-update-viewer.c:3350
+#: ../src/gpk-application.c:4068 ../src/gpk-log.c:498
+#: ../src/gpk-update-viewer.c:3358
 msgid "Add/Remove Software"
 msgstr "Pridať/odstrániť softvér"
 
@@ -67,15 +67,16 @@ msgstr "Pomoc s touto aplikáciou"
 #. TRANSLATORS: button: confirm to search for packages
 #. TRANSLATORS: button: install codecs
 #. TRANSLATORS: button: install a font
+#. TRANSLATORS: button: install Plasma services
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
-#. TRANSLATORS: if the update should be installed
 #: ../data/gpk-application.ui.h:9 ../src/gpk-dbus-task.c:710
-#: ../src/gpk-dbus-task.c:1245 ../src/gpk-dbus-task.c:1464
-#: ../src/gpk-dbus-task.c:1667 ../src/gpk-dbus-task.c:2127
-#: ../src/gpk-dbus-task.c:2397 ../src/gpk-dbus-task.c:2519
-#: ../src/gpk-dbus-task.c:2872 ../src/gpk-update-viewer.c:1672
+#: ../src/gpk-dbus-task.c:1254 ../src/gpk-dbus-task.c:1473
+#: ../src/gpk-dbus-task.c:1676 ../src/gpk-dbus-task.c:2136
+#: ../src/gpk-dbus-task.c:2474 ../src/gpk-dbus-task.c:2687
+#: ../src/gpk-dbus-task.c:2809 ../src/gpk-dbus-task.c:3162
+#: ../src/gpk-task.c:405
 msgid "Install"
 msgstr "Nainštalovať"
 
@@ -144,7 +145,8 @@ msgid "Refresh the list of packages on the system"
 msgstr "Zaktualizovať zoznam balíkov na systéme"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../data/gpk-application.ui.h:26 ../src/gpk-dbus-task.c:2810
+#: ../data/gpk-application.ui.h:26 ../src/gpk-dbus-task.c:3100
+#: ../src/gpk-task.c:410
 msgid "Remove"
 msgstr "Odstrániť"
 
@@ -253,7 +255,7 @@ msgstr "Nainštalovať na systéme zvolený softvér"
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:2
-#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3087
+#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3377
 #: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
 #: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
 msgid "Software Install"
@@ -291,8 +293,8 @@ msgstr ""
 "Zmeniť predvoľby aktualizácie softvéru, povoliť alebo zakázať zdroje softvéru"
 
 #: ../data/gpk-prefs.desktop.in.h:2
-msgid "Software Updates"
-msgstr "Aktualizácie softvéru"
+msgid "Software Settings"
+msgstr "Nastavenie softvéru"
 
 #: ../data/gpk-prefs.ui.h:1
 msgid ""
@@ -368,7 +370,8 @@ msgid "Destination package list:"
 msgstr "Cieľový zoznam balíkov:"
 
 #. TRANSLATORS: column for what packages were upgraded
-#: ../data/gpk-service-pack.ui.h:7 ../src/gpk-log.c:322
+#: ../data/gpk-service-pack.ui.h:7 ../data/gpk-update-viewer.ui.h:1
+#: ../src/gpk-log.c:322
 msgid "Details"
 msgstr "Podrobnosti"
 
@@ -436,7 +439,7 @@ msgstr "Identifikátor používateľa podpisu:"
 msgid "Software signature is required"
 msgstr "Vyžaduje sa podpísanie softvéru"
 
-#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:2
 msgid "Software Update"
 msgstr "Aktualizácia softvéru"
 
@@ -453,7 +456,7 @@ msgstr "Aktualizácia operačného systému"
 msgid "Upgrade the operating system to a new version"
 msgstr "Aktualizovať operačný systém na novú verziu"
 
-#: ../data/gpk-update-viewer.ui.h:2
+#: ../data/gpk-update-viewer.ui.h:3
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities and "
 "provide new features."
@@ -461,11 +464,11 @@ msgstr ""
 "Aktualizácie softvéru opravujú chyby, odstraňujú bezpečnostné zraniteľnosti "
 "a poskytujú nové vlastnosti."
 
-#: ../data/gpk-update-viewer.ui.h:3
-msgid "_Install Update(s)"
+#: ../data/gpk-update-viewer.ui.h:4
+msgid "_Install Updates"
 msgstr "Na_inštalovať aktualizácie"
 
-#: ../data/gpk-update-viewer.ui.h:4
+#: ../data/gpk-update-viewer.ui.h:5
 msgid "_Upgrade"
 msgstr "_Aktualizovať"
 
@@ -504,7 +507,7 @@ msgstr ""
 "ktorý bude taktiež odstránený."
 
 #. TRANSLATORS: button label, install
-#: ../python/packagekit/gtkwidgets.py:646 ../src/gpk-helper-chooser.c:296
+#: ../python/packagekit/gtkwidgets.py:646 ../src/gpk-helper-chooser.c:298
 msgid "_Install"
 msgstr "Na_inštalovať"
 
@@ -593,22 +596,22 @@ msgid "Invalid"
 msgstr "Neplatný"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1305
+#: ../src/gpk-application.c:1309
 msgid "No results were found."
 msgstr "Neboli nájdené žiadne výsledky."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1313
+#: ../src/gpk-application.c:1317
 msgid "Try entering a package name in the search bar."
 msgstr "Skúste do vyhľadávacieho poľa zadať názov balíka."
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1316
+#: ../src/gpk-application.c:1320
 msgid "There are no packages queued to be installed or removed."
 msgstr "Na nainštalovanie alebo odstránenie nečakajú žiadne balíky."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1321
+#: ../src/gpk-application.c:1325
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -616,160 +619,159 @@ msgstr ""
 "Skúste hľadať popisy balíkov kliknutím na ikonu vedľa textu vyhľadávania."
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1324
+#: ../src/gpk-application.c:1328
 msgid "Try again with a different search term."
 msgstr "Skúste hľadať znova s inými kľúčovými slovami."
 
 #. TRANSLATORS: title: invlid text in the search bar
-#: ../src/gpk-application.c:1598
+#: ../src/gpk-application.c:1602
 msgid "Invalid search text"
 msgstr "Neplatný text hľadania"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1600
+#: ../src/gpk-application.c:1604
 msgid "The search text contains invalid characters"
 msgstr "Text hľadania obsahuje neplatné znaky"
 
 #. TRANSLATORS: title: we failed to execute the mthod
-#: ../src/gpk-application.c:1641
+#: ../src/gpk-application.c:1645
 msgid "The search could not be completed"
 msgstr "Nepodarilo sa dokončiť hľadanie"
 
 # PS: nie je vhodné rovnako prekladať action aj transaction. Na transakcii nie je nič zlé...
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1643
+#: ../src/gpk-application.c:1647
 msgid "Running the transaction failed"
 msgstr "Spustenie transakcie zlyhalo"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1777
+#: ../src/gpk-application.c:1786
 msgid "Changes not applied"
 msgstr "Zmeny neboli aplikované"
 
-#: ../src/gpk-application.c:1778
+#: ../src/gpk-application.c:1787
 msgid "Close _Anyway"
 msgstr "N_apriek tomu zavrieť"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1782
+#: ../src/gpk-application.c:1791
 msgid "You have made changes that have not yet been applied."
 msgstr "Vykonali ste zmeny, ktoré zatiaľ neboli aplikované."
 
-#: ../src/gpk-application.c:1783
+#: ../src/gpk-application.c:1792
 msgid "These changes will be lost if you close this window."
 msgstr "Tieto zmeny sa po zatvorení tohto okna stratia."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2098 ../src/gpk-enum.c:1142 ../src/gpk-enum.c:1223
+#: ../src/gpk-application.c:2107 ../src/gpk-enum.c:1156 ../src/gpk-enum.c:1245
 msgid "Installed"
 msgstr "Nainštalované"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2114 ../src/gpk-application.c:2136
-#: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:727
+#: ../src/gpk-application.c:2123 ../src/gpk-application.c:2145
+#: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
 msgid "Name"
 msgstr "Názov"
 
 #. TRANSLATORS: the type of package is a collection (metagroup)
-#: ../src/gpk-application.c:2275
+#: ../src/gpk-application.c:2285
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/gpk-application.c:2275
+#: ../src/gpk-application.c:2285
 msgid "Collection"
 msgstr "Zbierka"
 
 #. TRANSLATORS: tooltip: go to the web address
-#: ../src/gpk-application.c:2283
+#: ../src/gpk-application.c:2293
 #, c-format
 msgid "Visit %s"
 msgstr "Navštívte %s"
 
 #. TRANSLATORS: add an entry to go to the project home page
-#: ../src/gpk-application.c:2288
+#: ../src/gpk-application.c:2298
 msgid "Project"
 msgstr "Projekt"
 
-#: ../src/gpk-application.c:2288
+#: ../src/gpk-application.c:2298
 msgid "Homepage"
 msgstr "Domovská stránka"
 
 #. TRANSLATORS: the group the package belongs in
-#: ../src/gpk-application.c:2302
+#: ../src/gpk-application.c:2312
 msgid "Group"
 msgstr "Skupina"
 
 #. TRANSLATORS: the licence string for the package
-#: ../src/gpk-application.c:2308
+#: ../src/gpk-application.c:2318
 msgid "License"
 msgstr "Licencia"
 
 #. TRANSLATORS: the size of the meta package
-#. TRANSLATORS: a column that has size of each package
-#: ../src/gpk-application.c:2323 ../src/gpk-update-viewer.c:1743
+#: ../src/gpk-application.c:2333
 msgid "Size"
 msgstr "Veľkosť"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2326
+#: ../src/gpk-application.c:2336
 msgid "Installed size"
 msgstr "Veľkosť po nainštalovaní"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2329
+#: ../src/gpk-application.c:2339
 msgid "Download size"
 msgstr "Veľkosť na stiahnutie"
 
 #. TRANSLATORS: where the package came from, the software source name
-#: ../src/gpk-application.c:2338
+#: ../src/gpk-application.c:2348
 msgid "Source"
 msgstr "Zdroj"
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:2483
+#: ../src/gpk-application.c:2493
 msgid "Selected packages"
 msgstr "Vybrané balíky"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2536
+#: ../src/gpk-application.c:2546
 msgid "Searching by name"
 msgstr "Hľadá sa podľa názvu"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2560
+#: ../src/gpk-application.c:2570
 msgid "Searching by description"
 msgstr "Hľadá sa podľa popisu"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2584
+#: ../src/gpk-application.c:2594
 msgid "Searching by file"
 msgstr "Hľadá sa podľa súboru"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2606
+#: ../src/gpk-application.c:2616
 msgid "Search by name"
 msgstr "Hľadanie podľa názvu"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2617
+#: ../src/gpk-application.c:2627
 msgid "Search by description"
 msgstr "Hľadanie podľa popisu"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2628
+#: ../src/gpk-application.c:2638
 msgid "Search by file name"
 msgstr "Hľadanie podľa názvu súboru"
 
 # Myslím, že GNU GPL prekladáme.
-#: ../src/gpk-application.c:2669
+#: ../src/gpk-application.c:2679
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Licencované za podmienok GNU General Public License Version 2"
 
-#: ../src/gpk-application.c:2670
+#: ../src/gpk-application.c:2680
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -780,7 +782,7 @@ msgstr ""
 "General Public License, ktorú publikovala Free Software Foundation; buď "
 "verzie 2 licencie alebo (ak sa tak rozhodnete) ktorejkoľvek neskoršej verzie."
 
-#: ../src/gpk-application.c:2674
+#: ../src/gpk-application.c:2684
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -791,7 +793,7 @@ msgstr ""
 "aj bez implicitnej záruky OBCHODOVATEĽNOSTI alebo VHODNOTI NA URČITÝ ÚČEL. "
 "Podrobnosti nájdete v GNU General Public License."
 
-#: ../src/gpk-application.c:2678
+#: ../src/gpk-application.c:2688
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -802,104 +804,104 @@ msgstr ""
 "Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2684
+#: ../src/gpk-application.c:2694
 msgid "translator-credits"
 msgstr "Ivan Masár <helix84@centrum.sk>"
 
-#: ../src/gpk-application.c:2704
+#: ../src/gpk-application.c:2714
 msgid "PackageKit Website"
 msgstr "WWW stránky PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2707
+#: ../src/gpk-application.c:2717
 msgid "Package Manager for GNOME"
 msgstr "Správca balíkov pre GNOME"
 
 #. TRANSLATORS: single column for the package details, not visible at the moment
-#: ../src/gpk-application.c:3133
+#: ../src/gpk-application.c:3144
 msgid "Text"
 msgstr "Text"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:3156
+#: ../src/gpk-application.c:3168
 msgid ""
-"Enter a package name and then click find, or click a group to get started."
-msgstr "Zadajte názov balíka a začnite kliknutím na Nájsť alebo na skupinu."
+"Enter a search word and then click find, or click a group to get started."
+msgstr "Zadajte hľadané slovo a začnite kliknutím na Nájsť alebo na skupinu."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:3159
-msgid "Enter a package name and then click find to get started."
-msgstr "Zadajte názov balíka a začnite kliknutím na Nájsť."
+#: ../src/gpk-application.c:3171
+msgid "Enter a search word and then click find to get started."
+msgstr "Zadajte hľadané slovo a začnite kliknutím na Nájsť."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3385
+#: ../src/gpk-application.c:3397
 msgid "Exiting as properties could not be retrieved"
 msgstr "Ukončuje sa, lebo sa nepodarilo získať vlastnosti"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3504
+#: ../src/gpk-application.c:3516
 msgid "All packages"
 msgstr "Všetky balíky"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3506
+#: ../src/gpk-application.c:3518
 msgid "Show all packages"
 msgstr "Zobraziť všetky balíky"
 
 #. TRANSLATORS: tooltip on the clear button
-#: ../src/gpk-application.c:3749
+#: ../src/gpk-application.c:3761
 msgid "Clear current selection"
 msgstr "Vyčistiť momentálne vybrané"
 
 #. TRANSLATORS: tooltip on the apply button
-#: ../src/gpk-application.c:3774
+#: ../src/gpk-application.c:3786
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "Zmeny sa nepoužijú okamžite, toto tlačidlo aplikuje všetky zmeny"
 
 #. TRANSLATORS: tooltip on the homepage button
-#: ../src/gpk-application.c:3800
+#: ../src/gpk-application.c:3812
 msgid "Visit home page for selected package"
 msgstr "Navštíviť domovskú stránku označeného balíka"
 
 #. TRANSLATORS: tooltip on the find button
-#: ../src/gpk-application.c:3908
+#: ../src/gpk-application.c:3920
 msgid "Find packages"
 msgstr "Nájsť balíky"
 
 #. TRANSLATORS: tooltip on the cancel button
-#: ../src/gpk-application.c:3916
+#: ../src/gpk-application.c:3928
 msgid "Cancel search"
 msgstr "Zrušiť hľadanie"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:4039 ../src/gpk-update-viewer.c:3333
+#: ../src/gpk-application.c:4051 ../src/gpk-update-viewer.c:3341
 msgid "Show the program version and exit"
 msgstr "Zobraziť verziu programu a skončiť"
 
 #. are we running privileged
-#: ../src/gpk-application.c:4072
+#: ../src/gpk-application.c:4084
 msgid "Package installer"
 msgstr "Inštalátor balíkov"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
-#: ../src/gpk-common.c:370
+#: ../src/gpk-common.c:426
 msgid "This application is running as a privileged user"
 msgstr "Táto aplikácia beží pod privilegovaným používateľom"
 
 #. TRANSLATORS: cannot run as root user, and we display the applicaiton name
-#: ../src/gpk-common.c:373
+#: ../src/gpk-common.c:429
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "%s beží pod privilegovaným používateľom"
 
 #. TRANSLATORS: tell the user off
-#: ../src/gpk-common.c:376
+#: ../src/gpk-common.c:432
 msgid "Package management applications are security sensitive."
 msgstr "Aplikácie na správu balíkov sú citlivé na bezpečnosť."
 
 # Originál je neosobný, t.j. nepoužíva ekvivalent "by ste sa mali".
 #. TRANSLATORS: and explain why
-#: ../src/gpk-common.c:378
+#: ../src/gpk-common.c:434
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
@@ -908,18 +910,18 @@ msgstr ""
 "aplikácií pod privilegovaným používateľom."
 
 #. TRANSLATORS: button: allow the user to run this, even when insecure
-#: ../src/gpk-common.c:384
+#: ../src/gpk-common.c:440
 msgid "Continue _Anyway"
 msgstr "Napriek tomu _pokračovať"
 
 #. TRANSLATORS: The actions has just literally happened
-#: ../src/gpk-common.c:454 ../src/gpk-common.c:504
+#: ../src/gpk-common.c:510 ../src/gpk-common.c:560
 #, c-format
 msgid "Now"
 msgstr "Teraz"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:464 ../src/gpk-common.c:514
+#: ../src/gpk-common.c:520 ../src/gpk-common.c:570
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
@@ -928,7 +930,7 @@ msgstr[1] "%i sekunda"
 msgstr[2] "%i sekundy"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:474 ../src/gpk-common.c:527
+#: ../src/gpk-common.c:530 ../src/gpk-common.c:583
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -937,7 +939,7 @@ msgstr[1] "%i minúta"
 msgstr[2] "%i minúty"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:480 ../src/gpk-common.c:546
+#: ../src/gpk-common.c:536 ../src/gpk-common.c:602
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
@@ -949,48 +951,48 @@ msgstr[2] "%i hodiny"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/gpk-common.c:533 ../src/gpk-common.c:552
+#: ../src/gpk-common.c:589 ../src/gpk-common.c:608
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s %i %s"
 
-#: ../src/gpk-common.c:534 ../src/gpk-common.c:554
+#: ../src/gpk-common.c:590 ../src/gpk-common.c:610
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minút"
 msgstr[1] "minúta"
 msgstr[2] "minúty"
 
-#: ../src/gpk-common.c:535
+#: ../src/gpk-common.c:591
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "sekúnd"
 msgstr[1] "sekunda"
 msgstr[2] "sekundy"
 
-#: ../src/gpk-common.c:553
+#: ../src/gpk-common.c:609
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "hodín"
 msgstr[1] "hodina"
 msgstr[2] "hodiny"
 
-#: ../src/gpk-common.c:580
+#: ../src/gpk-common.c:636
 #, c-format
 msgid "%s and %s"
 msgstr "%s a %s"
 
-#: ../src/gpk-common.c:583
+#: ../src/gpk-common.c:639
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s a %s"
 
-#: ../src/gpk-common.c:586
+#: ../src/gpk-common.c:642
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s a %s"
 
-#: ../src/gpk-common.c:590
+#: ../src/gpk-common.c:646
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s a %s"
@@ -1050,18 +1052,18 @@ msgstr "Zobraziť podrobnosti"
 
 #. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:472 ../src/gpk-dbus-task.c:1152
+#: ../src/gpk-dbus-task.c:472 ../src/gpk-dbus-task.c:1161
 msgid "Failed to install package"
 msgstr "Nepodarilo sa nainštalovať balík"
 
 #. TRANSLATORS: title: installing packages
 #. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:510 ../src/gpk-enum.c:941
+#: ../src/gpk-dbus-task.c:510 ../src/gpk-enum.c:955
 msgid "Installing packages"
 msgstr "Inštalujú sa balíky"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:612 ../src/gpk-dbus-task.c:1371
+#: ../src/gpk-dbus-task.c:612 ../src/gpk-dbus-task.c:1380
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "Nepodarilo sa nainštalovať súbory"
@@ -1077,7 +1079,7 @@ msgstr[1] "Chcete nainštalovať tento súbor?"
 msgstr[2] "Chcete nainštalovať tieto súbory?"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1025
+#: ../src/gpk-dbus-task.c:1033
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "Nainštalovať lokálne súbory"
@@ -1085,13 +1087,13 @@ msgstr[1] "Nainštalovať lokálny súbor"
 msgstr[2] "Nainštalovať lokálne súbory"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1084
+#: ../src/gpk-dbus-task.c:1093
 #, c-format
 msgid "Could not find packages"
 msgstr "Nepodarilo sa nájsť balíky"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1093
+#: ../src/gpk-dbus-task.c:1102
 msgid "The packages could not be found in any software source"
 msgstr "Balíky neboli nájdené v žiadnom zdroji softvéru"
 
@@ -1100,13 +1102,14 @@ msgstr "Balíky neboli nájdené v žiadnom zdroji softvéru"
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
-#: ../src/gpk-dbus-task.c:1096 ../src/gpk-dbus-task.c:1333
-#: ../src/gpk-dbus-task.c:1639 ../src/gpk-dbus-task.c:1845
-#: ../src/gpk-dbus-task.c:2100
+#. TRANSLATORS: button text
+#: ../src/gpk-dbus-task.c:1105 ../src/gpk-dbus-task.c:1342
+#: ../src/gpk-dbus-task.c:1648 ../src/gpk-dbus-task.c:1854
+#: ../src/gpk-dbus-task.c:2109 ../src/gpk-dbus-task.c:2446
 msgid "More information"
 msgstr "Viac informácií"
 
-#: ../src/gpk-dbus-task.c:1133 ../src/gpk-enum.c:334
+#: ../src/gpk-dbus-task.c:1142 ../src/gpk-enum.c:336
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "Balíky sú už nainštalované"
@@ -1114,19 +1117,19 @@ msgstr[1] "Balík je už nainštalovaný"
 msgstr[2] "Balíky sú už nainštalované"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1137
+#: ../src/gpk-dbus-task.c:1146
 msgid "Nothing to do."
 msgstr "Niet čo robiť."
 
 # "vyhľadávačom" je táto aplikácia, nikto iný - takže z vyhľadávania
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1154
+#: ../src/gpk-dbus-task.c:1163
 msgid "Incorrect response from search"
 msgstr "Nesprávna odpoveď z vyhľadávania"
 
 # "additional" sa mi viac zdá ako "prídavný". Vieme presnejší kontext?
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1229
+#: ../src/gpk-dbus-task.c:1238
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
 msgstr[0] "Sú potrebné ďalšie balíky:"
@@ -1134,7 +1137,7 @@ msgstr[1] "Je potrebný ďalší balík:"
 msgstr[2] "Sú potrebné ďalšie balíky:"
 
 #. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1232
+#: ../src/gpk-dbus-task.c:1241
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "Chcete teraz vyhľadať a nainštalovať tieto balíky?"
@@ -1142,7 +1145,7 @@ msgstr[1] "Chcete teraz vyhľadať a nainštalovať tento balík?"
 msgstr[2] "Chcete teraz vyhľadať a nainštalovať tieto balíky?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1238
+#: ../src/gpk-dbus-task.c:1247
 #, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
@@ -1151,7 +1154,7 @@ msgstr[1] "%s požaduje inštaláciu balíka"
 msgstr[2] "%s požaduje inštaláciu balíkov"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1241
+#: ../src/gpk-dbus-task.c:1250
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
 msgstr[0] "Program požaduje inštaláciu balíkov"
@@ -1159,28 +1162,28 @@ msgstr[1] "Program požaduje inštaláciu balíka"
 msgstr[2] "Program požaduje inštaláciu balíkov"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1258 ../src/gpk-dbus-task.c:2579
+#: ../src/gpk-dbus-task.c:1267 ../src/gpk-dbus-task.c:2869
 msgid "Searching for packages"
 msgstr "Hľadajú sa balíky"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1328
+#: ../src/gpk-dbus-task.c:1337
 msgid "Failed to find package"
 msgstr "Nepodarilo sa nájsť balík"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1330 ../src/gpk-dbus-task.c:2719
+#: ../src/gpk-dbus-task.c:1339 ../src/gpk-dbus-task.c:3009
 msgid "The file could not be found in any packages"
 msgstr "Súbor sa nepodarilo nájsť v žiadnom z balíkov"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1368
+#: ../src/gpk-dbus-task.c:1377
 #, c-format
 msgid "The %s package already provides this file"
 msgstr "Balík %s už poskytuje tento súbor"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1449
+#: ../src/gpk-dbus-task.c:1458
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "Sú potrebné nasledovné súbory:"
@@ -1188,7 +1191,7 @@ msgstr[1] "Je potrebný nasledovný súbor:"
 msgstr[2] "Sú potrebné nasledovné súbory:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1452
+#: ../src/gpk-dbus-task.c:1461
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "Chcete teraz tieto súbory vyhľadať?"
@@ -1196,7 +1199,7 @@ msgstr[1] "Chcete teraz tento súbor vyhľadať?"
 msgstr[2] "Chcete teraz tieto súbory vyhľadať?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1457
+#: ../src/gpk-dbus-task.c:1466
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1205,7 +1208,7 @@ msgstr[1] "%s požaduje inštaláciu súboru"
 msgstr[2] "%s požaduje inštaláciu súborov"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1460
+#: ../src/gpk-dbus-task.c:1469
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "Program požaduje inštaláciu súborov"
@@ -1214,13 +1217,13 @@ msgstr[2] "Program požaduje inštaláciu súborov"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1476 ../src/gpk-dbus-task.c:2822
-#: ../src/gpk-enum.c:1293
+#: ../src/gpk-dbus-task.c:1485 ../src/gpk-dbus-task.c:3112
+#: ../src/gpk-enum.c:1315
 msgid "Searching for file"
 msgstr "Hľadá sa súbor"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1519
+#: ../src/gpk-dbus-task.c:1528
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "Sú potrebné nasledovné zásuvné moduly:"
@@ -1228,7 +1231,7 @@ msgstr[1] "Je potrebný nasledovný zásuvný modul:"
 msgstr[2] "Sú potrebné nasledovné zásuvné moduly:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1537
+#: ../src/gpk-dbus-task.c:1546 ../src/gpk-dbus-task.c:2374
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Chcete ich hľadať teraz?"
@@ -1236,7 +1239,7 @@ msgstr[1] "Chcete ho hľadať teraz?"
 msgstr[2] "Chcete ich hľadať teraz?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1550
+#: ../src/gpk-dbus-task.c:1559
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1245,7 +1248,7 @@ msgstr[1] "%s vyžaduje ďalší zásuvný modul na dekódovanie tohto súboru"
 msgstr[2] "%s vyžaduje ďalšie zásuvné moduly na dekódovanie tohto súboru"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1554
+#: ../src/gpk-dbus-task.c:1563
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1254,7 +1257,7 @@ msgstr[1] "%s požaduje ďalší zásuvný modul na zakódovanie tohto súboru"
 msgstr[2] "%s požaduje ďalšie zásuvné moduly na zakódovanie tohto súboru"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1558
+#: ../src/gpk-dbus-task.c:1567
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1263,7 +1266,7 @@ msgstr[1] "%s vyžaduje na túto operáciu ďalší zásuvný modul"
 msgstr[2] "%s vyžaduje na túto operáciu ďalšie zásuvné moduly"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1564
+#: ../src/gpk-dbus-task.c:1573
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] "Program požaduje ďalšie zásuvné moduly na dekódovanie tohto súboru"
@@ -1271,7 +1274,7 @@ msgstr[1] "Program požaduje ďalší zásuvný modul na dekódovanie tohto súb
 msgstr[2] "Program požaduje ďalšie zásuvné moduly na dekódovanie tohto súboru"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1568
+#: ../src/gpk-dbus-task.c:1577
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] "Program požaduje ďalšie zásuvné moduly na zakódovanie tohto súboru"
@@ -1279,7 +1282,7 @@ msgstr[1] "Program požaduje ďalší zásuvný modul na zakódovanie tohto súb
 msgstr[2] "Program požaduje ďalšie zásuvné moduly na zakódovanie tohto súboru"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1572
+#: ../src/gpk-dbus-task.c:1581
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "Program vyžaduje na túto operáciu ďalšie zásuvné moduly"
@@ -1287,23 +1290,23 @@ msgstr[1] "Program vyžaduje na túto operáciu ďalší zásuvný modul"
 msgstr[2] "Program vyžaduje na túto operáciu ďalšie zásuvné moduly"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1578 ../src/gpk-dbus-task.c:1931
-#: ../src/gpk-dbus-task.c:2304
+#: ../src/gpk-dbus-task.c:1587 ../src/gpk-dbus-task.c:1940
+#: ../src/gpk-dbus-task.c:2313 ../src/gpk-dbus-task.c:2386
 msgid "Search"
 msgstr "Hľadať"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1633
+#: ../src/gpk-dbus-task.c:1642
 msgid "Failed to search for plugin"
 msgstr "Hľadanie zásuvného modulu zlyhalo"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1635
+#: ../src/gpk-dbus-task.c:1644
 msgid "Could not find plugin in any configured software source"
 msgstr ""
 "Nepodarilo sa nájsť zásuvný modul v žiadnom z nastavených zdrojov softvéru"
 
-#: ../src/gpk-dbus-task.c:1658
+#: ../src/gpk-dbus-task.c:1667 ../src/gpk-dbus-task.c:2465
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "Nainštalovať nasledovné zásuvné moduly"
@@ -1311,8 +1314,8 @@ msgstr[1] "Nainštalovať nasledovný zásuvný modul"
 msgstr[2] "Nainštalovať nasledovné zásuvné moduly"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1659 ../src/gpk-dbus-task.c:2120
-#: ../src/gpk-dbus-task.c:2511
+#: ../src/gpk-dbus-task.c:1668 ../src/gpk-dbus-task.c:2129
+#: ../src/gpk-dbus-task.c:2466 ../src/gpk-dbus-task.c:2801
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Chcete teraz tieto balíky nainštalovať?"
@@ -1320,44 +1323,44 @@ msgstr[1] "Chcete teraz tento balík nainštalovať?"
 msgstr[2] "Chcete teraz tieto balíky nainštalovať?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1751
+#: ../src/gpk-dbus-task.c:1760
 msgid "Searching for plugins"
 msgstr "Hľadajú sa zásuvné moduly"
 
-#: ../src/gpk-dbus-task.c:1772
+#: ../src/gpk-dbus-task.c:1781
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "Hľadá sa zásuvný modul: %s"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1810
+#: ../src/gpk-dbus-task.c:1819
 msgid "Failed to search for provides"
 msgstr "Hľadanie poskytovaní zlyhalo"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1840
+#: ../src/gpk-dbus-task.c:1849
 msgid "Failed to find software"
 msgstr "Hľadanie softvéru zlyhalo"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1842
+#: ../src/gpk-dbus-task.c:1851
 msgid "No new applications can be found to handle this type of file"
 msgstr ""
 "Nie je možné nájsť žiadne nové aplikácie, ktoré by dokázali pracovať s týmto "
 "typom súboru"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1913
+#: ../src/gpk-dbus-task.c:1922
 msgid "An additional program is required to open this type of file:"
 msgstr "Na otvorenie tohto typu súboru je potrebný ďalší program:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1916
+#: ../src/gpk-dbus-task.c:1925
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "Chcete teraz hľadať program, ktorý otvorí tento typ súboru?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1924
+#: ../src/gpk-dbus-task.c:1933
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1366,7 +1369,7 @@ msgstr[1] "%s vyžaduje nový typ MIME"
 msgstr[2] "%s vyžaduje nové typy MIME"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1927
+#: ../src/gpk-dbus-task.c:1936
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "Program vyžaduje nové typy MIME"
@@ -1375,22 +1378,22 @@ msgstr[2] "Program vyžaduje nové typy MIME"
 
 # Prečo "programy"? Originál o tom nehovorí. Toto bude ťažké...
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1942
+#: ../src/gpk-dbus-task.c:1951
 msgid "Searching for file handlers"
 msgstr "Hľadajú sa programy, ktoré otvoria súbor"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2021
+#: ../src/gpk-dbus-task.c:2030
 msgid "Language tag not parsed"
 msgstr "Jazyková značka nebola spracovaná"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2029
+#: ../src/gpk-dbus-task.c:2038
 msgid "Language code not matched"
 msgstr "Kód jazyka sa nezhoduje"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2089
+#: ../src/gpk-dbus-task.c:2098
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "Nepodarilo sa nájsť písma"
@@ -1398,12 +1401,12 @@ msgstr[1] "Nepodarilo sa nájsť písmo"
 msgstr[2] "Nepodarilo sa nájsť písma"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2097
+#: ../src/gpk-dbus-task.c:2106
 msgid "No new fonts can be found for this document"
 msgstr "Nepodarilo sa nájsť žiadne nové písma pre tento dokument"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2283
+#: ../src/gpk-dbus-task.c:2292
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] "Na správne zobrazenie tohto dokumentu sú potrebné ďalšie písma."
@@ -1411,7 +1414,7 @@ msgstr[1] "Na správne zobrazenie tohto dokumentu je potrebné ďalšie písmo."
 msgstr[2] "Na správne zobrazenie tohto dokumentu sú potrebné ďalšie písma."
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2287
+#: ../src/gpk-dbus-task.c:2296
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "Chcete teraz hľadať vhodné balíky?"
@@ -1419,7 +1422,7 @@ msgstr[1] "Chcete teraz hľadať vhodný balík?"
 msgstr[2] "Chcete teraz hľadať vhodné balíky?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2297
+#: ../src/gpk-dbus-task.c:2306
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1428,7 +1431,7 @@ msgstr[1] "%s požaduje inštaláciu písma"
 msgstr[2] "%s požaduje inštaláciu písiem"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2300
+#: ../src/gpk-dbus-task.c:2309
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "Program požaduje inštaláciu písiem"
@@ -1436,37 +1439,71 @@ msgstr[1] "Program požaduje inštaláciu písma"
 msgstr[2] "Program požaduje inštaláciu písiem"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2316
+#: ../src/gpk-dbus-task.c:2325
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "Hľadajú sa písma"
 msgstr[1] "Hľadá sa písmo"
 msgstr[2] "Hľadajú sa písma"
 
-#: ../src/gpk-dbus-task.c:2354
+#. TRANSLATORS: we are listing the services in a box
+#: ../src/gpk-dbus-task.c:2362
+msgid "The following service is required:"
+msgid_plural "The following services are required:"
+msgstr[0] "Sú potrebné nasledovné služby:"
+msgstr[1] "Je potrebná nasledovná služba:"
+msgstr[2] "Sú potrebné nasledovné služby:"
+
+#: ../src/gpk-dbus-task.c:2382
+msgid "Plasma requires an additional service for this operation"
+msgid_plural "Plasma requires additional services for this operation"
+msgstr[0] "Plasma vyžaduje na túto operáciu ďalšie služby"
+msgstr[1] "Plasma vyžaduje na túto operáciu ďalšiu službu"
+msgstr[2] "Plasma vyžaduje na túto operáciu ďalšie služby"
+
+#: ../src/gpk-dbus-task.c:2440
+msgid "Failed to search for Plasma service"
+msgstr "Hľadanie služby Plasma zlyhalo"
+
+#. TRANSLATORS: no software sources have the wanted Plasma service
+#: ../src/gpk-dbus-task.c:2442
+msgid "Could not find service in any configured software source"
+msgstr "Nepodarilo sa nájsť službu v žiadnom z nastavených zdrojov softvéru"
+
+#. TRANSLATORS: search for Plasma services
+#: ../src/gpk-dbus-task.c:2548
+msgid "Searching for services"
+msgstr "Hľadajú sa služby"
+
+#: ../src/gpk-dbus-task.c:2567
+#, c-format
+msgid "Searching for service: %s"
+msgstr "Hľadá sa služba: %s"
+
+#: ../src/gpk-dbus-task.c:2644
 msgid "Could not process catalog"
 msgstr "Nepodarilo sa spracovať katalóg"
 
-#: ../src/gpk-dbus-task.c:2372
+#: ../src/gpk-dbus-task.c:2662
 msgid "No packages need to be installed"
 msgstr "Netreba inštalovať žiadne balíky"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2391
+#: ../src/gpk-dbus-task.c:2681
 msgid "Install packages in catalog?"
 msgstr "Nainštalovať balíky v katalógu?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2393
+#: ../src/gpk-dbus-task.c:2683
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "Nasledovné balíky sú označené na inštaláciu z katalógu:"
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2433
+#: ../src/gpk-dbus-task.c:2723
 msgid "Failed to remove package"
 msgstr "Nepodarilo sa odstrániť balík"
 
-#: ../src/gpk-dbus-task.c:2510
+#: ../src/gpk-dbus-task.c:2800
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "Nainštalovať nasledovné ovládače"
@@ -1475,17 +1512,17 @@ msgstr[2] "Nainštalovať nasledovné ovládače"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2663 ../src/gpk-enum.c:933
+#: ../src/gpk-dbus-task.c:2953 ../src/gpk-enum.c:947
 msgid "Removing packages"
 msgstr "Odstraňujú sa balíky"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:2717
+#: ../src/gpk-dbus-task.c:3007
 msgid "Failed to find package for this file"
 msgstr "Nepodarilo sa nájsť balík k tomuto súboru"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2795
+#: ../src/gpk-dbus-task.c:3085
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "Nasledovné súbory budú odstránené:"
@@ -1493,7 +1530,7 @@ msgstr[1] "Nasledovný súbor bude odstránený:"
 msgstr[2] "Nasledovné súbory budú odstránené:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2798
+#: ../src/gpk-dbus-task.c:3088
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Chcete teraz tieto súbory odstrániť?"
@@ -1501,7 +1538,7 @@ msgstr[1] "Chcete teraz tento súbor odstrániť?"
 msgstr[2] "Chcete teraz tieto súbory odstrániť?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2803
+#: ../src/gpk-dbus-task.c:3093
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1510,7 +1547,7 @@ msgstr[1] "%s požaduje odstránenie súboru"
 msgstr[2] "%s požaduje odstránenie súborov"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2806
+#: ../src/gpk-dbus-task.c:3096
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Program požaduje odstránenie súborov"
@@ -1518,7 +1555,7 @@ msgstr[1] "Program požaduje odstránenie súboru"
 msgstr[2] "Program požaduje odstránenie súborov"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:2863
+#: ../src/gpk-dbus-task.c:3153
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Chcete nainštalovať tieto katalógy?"
@@ -1526,7 +1563,7 @@ msgstr[1] "Chcete nainštalovať tento katalóg?"
 msgstr[2] "Chcete nainštalovať tieto katalógy?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:2888
+#: ../src/gpk-dbus-task.c:3178
 msgid "Install catalogs"
 msgstr "Nainštalovať katalógy"
 
@@ -1594,7 +1631,7 @@ msgstr "Nie sú dostupné žiadne vydania na aktualizáciu"
 msgid "Upgrade your system (%d of %d)"
 msgstr "Aktualizovať váš systém (%d z %d)"
 
-#: ../src/gpk-distro-upgrade.c:406
+#: ../src/gpk-distro-upgrade.c:405
 msgid ""
 "This assistant will guide you through upgrading your currently installed "
 "operating system to a newer release."
@@ -1602,7 +1639,7 @@ msgstr ""
 "Tento asistent vás prevedie aktualizáciou vášho momentálne nainštalovaného "
 "operačného systému na novšie vydanie."
 
-#: ../src/gpk-distro-upgrade.c:407
+#: ../src/gpk-distro-upgrade.c:406
 msgid ""
 "This process may take several hours to complete, depending on the speed of "
 "your internet connection and the options selected."
@@ -1610,7 +1647,7 @@ msgstr ""
 "Dokončenie tohto procesu môže trvať niekoľko hodín v závislosti od rýchlosti "
 "vášho pripojenia k internetu a vybraných voľbách."
 
-#: ../src/gpk-distro-upgrade.c:408
+#: ../src/gpk-distro-upgrade.c:407
 msgid ""
 "You will be able to continue using your system while this assistant "
 "downloads the packages needed to upgrade your system."
@@ -1618,7 +1655,7 @@ msgstr ""
 "Budete môcť pokračovať v používaní svojho systému, kým tento asistent bude "
 "sťahovať balíky potrebné na aktualizáciu vášho systému."
 
-#: ../src/gpk-distro-upgrade.c:409
+#: ../src/gpk-distro-upgrade.c:408
 msgid ""
 "When the download has completed, you will be prompted to restart your system "
 "in order to complete the upgrade process."
@@ -1627,35 +1664,35 @@ msgstr ""
 "dokončili aktualizáciu."
 
 #. TRANSLATORS: this is a intro page title
-#: ../src/gpk-distro-upgrade.c:421
+#: ../src/gpk-distro-upgrade.c:420
 msgid "Upgrade your system"
 msgstr "Aktualizovať váš systém"
 
-#: ../src/gpk-distro-upgrade.c:476
+#: ../src/gpk-distro-upgrade.c:470
 msgid "Available operating system _releases:"
 msgstr "Dostupné vydania ope_račného systému:"
 
 #. TRANSLATORS: this is in the combobox
-#: ../src/gpk-distro-upgrade.c:485
+#: ../src/gpk-distro-upgrade.c:479
 msgid "Loading list of upgrades"
 msgstr "Načítava sa zoznam aktualizácií"
 
 #. TRANSLATORS: this is a choose page title
-#: ../src/gpk-distro-upgrade.c:503
+#: ../src/gpk-distro-upgrade.c:497
 msgid "Choose desired operating system version"
 msgstr "Vyberte požadovanú verziu operačného systému"
 
 #. label and combobox
-#: ../src/gpk-distro-upgrade.c:538
+#: ../src/gpk-distro-upgrade.c:527
 msgid "The upgrade tool can operate with three different modes:"
 msgstr "Nástroj na aktualizáciu dokáže pracovať v troch rozličných režimoch:"
 
-#: ../src/gpk-distro-upgrade.c:568
+#: ../src/gpk-distro-upgrade.c:557
 msgid ""
 "The selected option will require the installer to download additional data."
 msgstr "Vybraná voľba bude vyžadovať, aby inštalátor stiahol dodatočné údaje."
 
-#: ../src/gpk-distro-upgrade.c:569
+#: ../src/gpk-distro-upgrade.c:558
 msgid ""
 "Do not continue with this option if the network will not be available at "
 "upgrade time."
@@ -1663,366 +1700,374 @@ msgstr ""
 "Nepokračujte s touto voľbou ak nebude počas aktualizácie dostupná sieť."
 
 #. TRANSLATORS: this is a choose page title
-#: ../src/gpk-distro-upgrade.c:584
+#: ../src/gpk-distro-upgrade.c:573
 msgid "Choose desired download options"
 msgstr "Vyberte požadované voľby aktualizácie"
 
-#: ../src/gpk-distro-upgrade.c:606
+#: ../src/gpk-distro-upgrade.c:590
 msgid ""
 "The operating system upgrade tool will now perform the following actions:"
 msgstr ""
 "Nástroj na aktualizáciu operačného systému teraz vykoná nasledovné operácie:"
 
-#: ../src/gpk-distro-upgrade.c:607
+#: ../src/gpk-distro-upgrade.c:591
 msgid "Request authentication from a privileged user"
 msgstr "Vyžiadať overenie totožnosti od privilegovaného používateľa"
 
-#: ../src/gpk-distro-upgrade.c:608
+#: ../src/gpk-distro-upgrade.c:592
 msgid "Download installer images"
 msgstr "Stiahnuť obrazy inštalátora"
 
-#: ../src/gpk-distro-upgrade.c:609
+#: ../src/gpk-distro-upgrade.c:593
 msgid "Download packages"
 msgstr "Stiahnuť balíky"
 
-#: ../src/gpk-distro-upgrade.c:610
+#: ../src/gpk-distro-upgrade.c:594
 msgid "Prepare and test the upgrade"
 msgstr "Príprava a test aktualizácie"
 
-#: ../src/gpk-distro-upgrade.c:611
+#: ../src/gpk-distro-upgrade.c:595
 msgid "You will have to restart your computer at the end of the upgrade."
 msgstr "Budete musieť na konci aktualizácie reštartovať počítač."
 
-#: ../src/gpk-distro-upgrade.c:612
+#: ../src/gpk-distro-upgrade.c:596
 msgid "Press 'Apply' to apply changes."
 msgstr "Stlačením „Použiť“ aplikujete zmeny."
 
 #. TRANSLATORS: button text
-#: ../src/gpk-distro-upgrade.c:625
+#: ../src/gpk-distro-upgrade.c:609
 msgid "Confirmation"
 msgstr "Potvrdenie"
 
 #. TRANSLATORS: title text
-#: ../src/gpk-distro-upgrade.c:662
+#: ../src/gpk-distro-upgrade.c:641
 msgid "Applying changes"
 msgstr "Aplikujú sa zmeny"
 
 #. TRANSLATORS: title, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:728
+#: ../src/gpk-distro-upgrade.c:703
 msgid "Cannot perform operating system upgrade"
 msgstr "Nie je možné vykonať aktualizáciu operačného systému."
 
 #. TRANSLATORS: message, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:740
+#: ../src/gpk-distro-upgrade.c:715
 msgid "Upgrading the operating system is not supported."
 msgstr "Aktualizácia operačného systému nie je podporovaná."
 
 #. TRANSLATORS: message, we're unable to do this action as PackageKit is too old
-#: ../src/gpk-distro-upgrade.c:744
+#: ../src/gpk-distro-upgrade.c:719
 msgid "Cannot get operating system upgrade information."
 msgstr "Nie je možné získať informácie o aktualizácii operačného systému."
 
 #. TRANSLATORS: message, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:748
+#: ../src/gpk-distro-upgrade.c:723
 msgid "Unsupported daemon version."
 msgstr "Nepodporovaná verzia démona."
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-distro-upgrade.c:800 ../src/gpk-distro-upgrade.c:803
+#: ../src/gpk-distro-upgrade.c:775 ../src/gpk-distro-upgrade.c:778
 msgid "Distribution Upgrade Tool"
 msgstr "Nástroj na aktualizáciu distribúcie"
 
 #. TRANSLATORS: this is compact disk (CD) media
-#: ../src/gpk-enum.c:275
+#: ../src/gpk-enum.c:277
 msgid "CD"
 msgstr "CD"
 
 #. TRANSLATORS: this is digital versatile disk (DVD) media
-#: ../src/gpk-enum.c:279
+#: ../src/gpk-enum.c:281
 msgid "DVD"
 msgstr "DVD"
 
 #. TRANSLATORS: this is either CD or DVD media
-#: ../src/gpk-enum.c:283
+#: ../src/gpk-enum.c:285
 msgid "disc"
 msgstr "disk"
 
 #. TRANSLATORS: this is generic media of unknown type that we will install from
-#: ../src/gpk-enum.c:287
+#: ../src/gpk-enum.c:289
 msgid "media"
 msgstr "nosič"
 
-#: ../src/gpk-enum.c:304
+#: ../src/gpk-enum.c:306
 msgid "Failed with unknown error code"
 msgstr "Zlyhalo s neznámym chybovým kódom"
 
-#: ../src/gpk-enum.c:307
+#: ../src/gpk-enum.c:309
 msgid "No network connection available"
 msgstr "Nie je dostupné žiadne sieťové pripojenie"
 
-#: ../src/gpk-enum.c:310
+#: ../src/gpk-enum.c:312
 msgid "No package cache is available."
 msgstr "Nie je dostupná vyrovnávacia pamäť balíkov."
 
-#: ../src/gpk-enum.c:313
+#: ../src/gpk-enum.c:315
 msgid "Out of memory"
 msgstr "Nedostatok pamäte"
 
-#: ../src/gpk-enum.c:316
+#: ../src/gpk-enum.c:318
 msgid "Failed to create a thread"
 msgstr "Nepodarilo sa vytvoriť vlákno"
 
-#: ../src/gpk-enum.c:319
+#: ../src/gpk-enum.c:321
 msgid "Not supported by this backend"
 msgstr "Nepodporované týmto balíkovacím systémom"
 
-#: ../src/gpk-enum.c:322
+#: ../src/gpk-enum.c:324
 msgid "An internal system error has occurred"
 msgstr "Vyskytla sa vnútorná chyba systému"
 
-#: ../src/gpk-enum.c:325
+#: ../src/gpk-enum.c:327
 msgid "A security signature is not present"
 msgstr "Nie je dostupný bezpečnostný podpis"
 
-#: ../src/gpk-enum.c:328
+#: ../src/gpk-enum.c:330
 msgid "The package is not installed"
 msgstr "Balík nie je nainštalovaný"
 
-#: ../src/gpk-enum.c:331
+#: ../src/gpk-enum.c:333
 msgid "The package was not found"
 msgstr "Balík nebol nájdený"
 
-#: ../src/gpk-enum.c:337
+#: ../src/gpk-enum.c:339
 msgid "The package download failed"
 msgstr "Nepodarilo sa stiahnuť balík"
 
-#: ../src/gpk-enum.c:340
+#: ../src/gpk-enum.c:342
 msgid "The group was not found"
 msgstr "Skupina nebola nájdená"
 
-#: ../src/gpk-enum.c:343
+#: ../src/gpk-enum.c:345
 msgid "The group list was invalid"
 msgstr "Zoznam skupín bol neplatný"
 
-#: ../src/gpk-enum.c:346
+#: ../src/gpk-enum.c:348
 msgid "Dependency resolution failed"
 msgstr "Zlyhalo riešenie závislostí"
 
-#: ../src/gpk-enum.c:349
+#: ../src/gpk-enum.c:351
 msgid "Search filter was invalid"
 msgstr "Vyhľadávací filter bol neplatný"
 
-#: ../src/gpk-enum.c:352
+#: ../src/gpk-enum.c:354
 msgid "The package identifier was not well formed"
 msgstr "Identifikátor balíka bol v nesprávnom tvare"
 
-#: ../src/gpk-enum.c:355
+#: ../src/gpk-enum.c:357
 msgid "Transaction error"
 msgstr "Chyba transakcie"
 
 # Preložiť "repositories" ako "zdroje" mi príde dosť nepresné. Často
 # používané slovo "repozitár" asi neobstojí, pretože nie je slovenské. Ja
 # sa v poslednom čase prikláňam k prekladu "repository" -> "depozitár".
-#: ../src/gpk-enum.c:358
+#: ../src/gpk-enum.c:360
 msgid "Repository name was not found"
 msgstr "Názov zdroja softvéru nebol nájdený"
 
-#: ../src/gpk-enum.c:361
+#: ../src/gpk-enum.c:363
 msgid "Could not remove a protected system package"
 msgstr "Nepodarilo sa odstrániť chránený systémový balík"
 
-#: ../src/gpk-enum.c:364
+#: ../src/gpk-enum.c:366
 msgid "The action was canceled"
 msgstr "Operácia bola zrušená"
 
-#: ../src/gpk-enum.c:367
+#: ../src/gpk-enum.c:369
 msgid "The action was forcibly canceled"
 msgstr "Operácia bola zrušená vynútením"
 
-#: ../src/gpk-enum.c:370
+#: ../src/gpk-enum.c:372
 msgid "Reading the configuration file failed"
 msgstr "Čítanie konfiguračného súboru zlyhalo"
 
-#: ../src/gpk-enum.c:373
+#: ../src/gpk-enum.c:375
 msgid "The action cannot be canceled"
 msgstr "Túto operáciu nemožno zrušiť"
 
-#: ../src/gpk-enum.c:376
+#: ../src/gpk-enum.c:378
 msgid "Source packages cannot be installed"
 msgstr "Zdrojové balíky nemožno nainštalovať"
 
-#: ../src/gpk-enum.c:379
+#: ../src/gpk-enum.c:381
 msgid "The license agreement failed"
 msgstr "Súhlas s licenciou zlyhal"
 
-#: ../src/gpk-enum.c:382
+#: ../src/gpk-enum.c:384
 msgid "Local file conflict between packages"
 msgstr "Konflikt lokálnych súborov medzi balíkmi"
 
-#: ../src/gpk-enum.c:385
+#: ../src/gpk-enum.c:387
 msgid "Packages are not compatible"
 msgstr "Balíky nie sú kompatibilné"
 
-#: ../src/gpk-enum.c:388
+#: ../src/gpk-enum.c:390
 msgid "Problem connecting to a software source"
 msgstr "Problém pri pripájaní k zdroju softvéru"
 
-#: ../src/gpk-enum.c:391
+#: ../src/gpk-enum.c:393
 msgid "Failed to initialize"
 msgstr "Nepodarilo sa inicializovať"
 
-#: ../src/gpk-enum.c:394
+#: ../src/gpk-enum.c:396
 msgid "Failed to finalise"
 msgstr "Nepodarilo sa dokončiť"
 
-#: ../src/gpk-enum.c:397
+#: ../src/gpk-enum.c:399
 msgid "Cannot get lock"
 msgstr "Nemožno získať zámok"
 
-#: ../src/gpk-enum.c:400
+#: ../src/gpk-enum.c:402
 msgid "No packages to update"
 msgstr "Žiadne balíky na aktualizáciu"
 
 # Preložiť "repositories" ako "zdroje" mi príde dosť nepresné. Často
 # používané slovo "repozitár" asi neobstojí, pretože nie je slovenské. Ja
 # sa v poslednom čase prikláňam k prekladu "repository" -> "depozitár".
-#: ../src/gpk-enum.c:403
+#: ../src/gpk-enum.c:405
 msgid "Cannot write repository configuration"
 msgstr "Nemožno zapísať konfiguráciu zdroja softvéru"
 
-#: ../src/gpk-enum.c:406
+#: ../src/gpk-enum.c:408
 msgid "Local install failed"
 msgstr "Lokálna inštalácia zlyhala"
 
-#: ../src/gpk-enum.c:409
+#: ../src/gpk-enum.c:411
 msgid "Bad security signature"
 msgstr "Chybný bezpečnostný podpis"
 
-#: ../src/gpk-enum.c:412
+#: ../src/gpk-enum.c:414
 msgid "Missing security signature"
 msgstr "Chýba bezpečnostný podpis"
 
 # Preložiť "repositories" ako "zdroje" mi príde dosť nepresné. Často
 # používané slovo "repozitár" asi neobstojí, pretože nie je slovenské. Ja
 # sa v poslednom čase prikláňam k prekladu "repository" -> "depozitár".
-#: ../src/gpk-enum.c:415
+#: ../src/gpk-enum.c:417
 msgid "Repository configuration invalid"
 msgstr "Konfigurácia zdroja softvéru nie je platná"
 
-#: ../src/gpk-enum.c:418
+#: ../src/gpk-enum.c:420
 msgid "Invalid package file"
 msgstr "Neplatný súbor balíka"
 
-#: ../src/gpk-enum.c:421
+#: ../src/gpk-enum.c:423
 msgid "Package install blocked"
 msgstr "Inštalácia balíka zablokovaná"
 
-#: ../src/gpk-enum.c:424
+#: ../src/gpk-enum.c:426
 msgid "Package is corrupt"
 msgstr "Balík je poškodený"
 
-#: ../src/gpk-enum.c:427
+#: ../src/gpk-enum.c:429
 msgid "All packages are already installed"
 msgstr "Všetky balíky sú už nainštalované"
 
-#: ../src/gpk-enum.c:430
+#: ../src/gpk-enum.c:432
 msgid "The specified file could not be found"
 msgstr "Uvedený súbor sa nepodarilo nájsť"
 
-#: ../src/gpk-enum.c:433
+#: ../src/gpk-enum.c:435
 msgid "No more mirrors are available"
 msgstr "Ďalšie zrkadlá už nie sú dostupné"
 
 # rozmýšľam, či by sme nemali rozlišovať medzi "update" a "upgrade"
 # oboje prekladáš ako "aktualizácia", čo by mohlo občas pôsobiť problémy
-#: ../src/gpk-enum.c:436
+#: ../src/gpk-enum.c:438
 msgid "No distribution upgrade data is available"
 msgstr "Nie sú dostupné údaje o aktualizácii distribúcie"
 
-#: ../src/gpk-enum.c:439
+#: ../src/gpk-enum.c:441
 msgid "Package is incompatible with this system"
 msgstr "Balík nie je kompatibilný s týmto systémom"
 
-#: ../src/gpk-enum.c:442
+#: ../src/gpk-enum.c:444
 msgid "No space is left on the disk"
 msgstr "Na disku už nie je voľné miesto"
 
 #. TRANSLATORS: this is the window title when a new cd or dvd is required
-#: ../src/gpk-enum.c:445 ../src/gpk-task.c:357
+#: ../src/gpk-enum.c:447 ../src/gpk-task.c:357
 msgid "A media change is required"
 msgstr "Je potrebná výmena nosiča"
 
 # "authorization" je "oprávnenie", ale neviem, či to tu nebude znieť divne
-#: ../src/gpk-enum.c:448
+#: ../src/gpk-enum.c:450
 msgid "Authorization failed"
 msgstr "Autorizácia zlyhala"
 
-#: ../src/gpk-enum.c:451
+#: ../src/gpk-enum.c:453
 msgid "Update not found"
 msgstr "Aktualizácia nenájdená"
 
-#: ../src/gpk-enum.c:454
+#: ../src/gpk-enum.c:456
 msgid "Cannot install from untrusted source"
 msgstr "Nemožno inštalovať z nedôveryhodného zdroja"
 
-#: ../src/gpk-enum.c:457
+#: ../src/gpk-enum.c:459
 msgid "Cannot update from untrusted source"
 msgstr "Nemožno aktualizovať z nedôveryhodného zdroja"
 
-#: ../src/gpk-enum.c:460
+#: ../src/gpk-enum.c:462
 msgid "Cannot get the file list"
 msgstr "Nemožno získať zoznam súborov"
 
-#: ../src/gpk-enum.c:463
+#: ../src/gpk-enum.c:465
 msgid "Cannot get package requires"
 msgstr "Nemožno získať závislosti balíka"
 
-#: ../src/gpk-enum.c:466
+#: ../src/gpk-enum.c:468
 msgid "Cannot disable source"
 msgstr "Nemožno zakázať zdroj"
 
-#: ../src/gpk-enum.c:469
+#: ../src/gpk-enum.c:471
 msgid "The download failed"
 msgstr "Stiahnutie zlyhalo"
 
-#: ../src/gpk-enum.c:472
+#: ../src/gpk-enum.c:474
 msgid "Package failed to configure"
 msgstr "Nakonfigurovanie balíka zlyhalo"
 
-#: ../src/gpk-enum.c:475
+#: ../src/gpk-enum.c:477
 msgid "Package failed to build"
 msgstr "Zostavenie balíka zlyhalo"
 
-#: ../src/gpk-enum.c:478
+#: ../src/gpk-enum.c:480
 msgid "Package failed to install"
 msgstr "Nainštalovanie balíka zlyhalo"
 
-#: ../src/gpk-enum.c:481
+#: ../src/gpk-enum.c:483
 msgid "Package failed to be removed"
 msgstr "Odstránenie balíka zlyhalo"
 
-#: ../src/gpk-enum.c:484
+#: ../src/gpk-enum.c:486
 msgid "Update failed due to running process"
 msgstr "Aktualizácia zlyhala kvôli bežiacemu procesu"
 
-#: ../src/gpk-enum.c:487
+#: ../src/gpk-enum.c:489
 msgid "The package database was changed"
 msgstr "Databáza balíkov bola zmenená"
 
-#: ../src/gpk-enum.c:490
+#: ../src/gpk-enum.c:492
 msgid "Virtual provide type is not supported"
 msgstr "Virtuálne typ poskytovaní nie je podporovaný"
 
-#: ../src/gpk-enum.c:493
+#: ../src/gpk-enum.c:495
 msgid "Install root is invalid"
 msgstr "Koreňový adresár inštalácie je neplatný"
 
-#: ../src/gpk-enum.c:510
+#: ../src/gpk-enum.c:498
+msgid "Cannot fetch install sources"
+msgstr "Nemožno získať inštalačné zdroje"
+
+#: ../src/gpk-enum.c:501
+msgid "Rescheduled due to priority"
+msgstr "Naplánovanie zmenené z dôvodu priority"
+
+#: ../src/gpk-enum.c:518
 msgid "Failed with unknown error code."
 msgstr "Zlyhanie s neznámym chybovým kódom."
 
-#: ../src/gpk-enum.c:513
+#: ../src/gpk-enum.c:521
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
@@ -2030,7 +2075,7 @@ msgstr ""
 "Nie je dostupné žiadne sieťové pripojenie.\n"
 "Prosím, skontrolujte nastavenia svojho pripojenia a skúste to znova."
 
-#: ../src/gpk-enum.c:517
+#: ../src/gpk-enum.c:525
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
@@ -2038,7 +2083,7 @@ msgstr ""
 "Zoznam balíkov treba znova zostaviť.\n"
 "To by mal spraviť balíkovací systém automaticky."
 
-#: ../src/gpk-enum.c:521
+#: ../src/gpk-enum.c:529
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
@@ -2047,11 +2092,11 @@ msgstr ""
 "Služba zodpovedná za obsluhu požiadaviek používateľa nemá dostatok pamäte.\n"
 "Prosím, reštartujte svoj počítač."
 
-#: ../src/gpk-enum.c:525
+#: ../src/gpk-enum.c:533
 msgid "A thread could not be created to service the user request."
 msgstr "Nebolo možné vytvoriť vlákno na obslúženie požiadavky používateľa."
 
-#: ../src/gpk-enum.c:528
+#: ../src/gpk-enum.c:536
 msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug in your distribution bugtracker as this should not have "
@@ -2061,7 +2106,7 @@ msgstr ""
 "Prosím, nahláste to do systému na sledovanie chýb vašej distribúcie, pretože "
 "toto by sa nemalo stať."
 
-#: ../src/gpk-enum.c:532
+#: ../src/gpk-enum.c:540
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug in your distribution bugtracker with the error "
@@ -2072,7 +2117,7 @@ msgstr ""
 "popisom chyby."
 
 # možno presnejšie by bolo niečo ako "nadviazať bezpečný dôverný vzťah"
-#: ../src/gpk-enum.c:536
+#: ../src/gpk-enum.c:544
 msgid ""
 "A security trust relationship could not be made with software source.\n"
 "Please check your security settings."
@@ -2080,14 +2125,14 @@ msgstr ""
 "Nebolo možné nadviazať vzťah dôvery so zdrojom softvéru.\n"
 "Prosím, skontrolujte si svoje nastavenia bezpečnosti."
 
-#: ../src/gpk-enum.c:540
+#: ../src/gpk-enum.c:548
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
 msgstr ""
 "Balík, ktorý sa pokúšate odstrániť alebo aktualizovať, už nie je "
 "nainštalovaný."
 
-#: ../src/gpk-enum.c:543
+#: ../src/gpk-enum.c:551
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "software source."
@@ -2095,11 +2140,11 @@ msgstr ""
 "Balík, ktorý sa pokúšate zmeniť, nebol nájdený na vašom systéme ani v "
 "žiadnom zdroji softvéru."
 
-#: ../src/gpk-enum.c:546
+#: ../src/gpk-enum.c:554
 msgid "The package that is trying to be installed is already installed."
 msgstr "Balík, ktorý sa pokúšate nainštalovať, je už nainštalovaný."
 
-#: ../src/gpk-enum.c:549
+#: ../src/gpk-enum.c:557
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
@@ -2107,7 +2152,7 @@ msgstr ""
 "Sťahovanie balíka zlyhalo.\n"
 "Prosím, skontrolujte svoje sieťové pripojenie."
 
-#: ../src/gpk-enum.c:553
+#: ../src/gpk-enum.c:561
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
@@ -2115,7 +2160,7 @@ msgstr ""
 "Typ skupiny nebol nájdený.\n"
 "Prosím, skontrolujte zoznam skupín a skúste to znova."
 
-#: ../src/gpk-enum.c:557
+#: ../src/gpk-enum.c:565
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source "
@@ -2125,7 +2170,7 @@ msgstr ""
 "Môže pomôcť obnovenie vyrovnávacej pamäte, hoci toto je zvyčajne chyba "
 "zdroja softvéru."
 
-#: ../src/gpk-enum.c:562
+#: ../src/gpk-enum.c:570
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
@@ -2133,11 +2178,11 @@ msgstr ""
 "Nebolo možné nájsť balík umožňujúci dokončenie operácie.\n"
 "Viac informácií nájdete v podrobnom hlásení."
 
-#: ../src/gpk-enum.c:566
+#: ../src/gpk-enum.c:574
 msgid "The search filter was not correctly formed."
 msgstr "Vyhľadávací filter nemal správny tvar."
 
-#: ../src/gpk-enum.c:569
+#: ../src/gpk-enum.c:577
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
@@ -2145,7 +2190,7 @@ msgstr ""
 "Identifikátor balíka nemal správny tvar pri odoslaní na server.\n"
 "Toto zvyčajne indikuje vnútornú chybu a mali by ste to nahlásiť."
 
-#: ../src/gpk-enum.c:573
+#: ../src/gpk-enum.c:581
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
@@ -2153,7 +2198,7 @@ msgstr ""
 "Vyskytla sa bližšie neurčená chyba transakcie.\n"
 "Viac informácií nájdete v podrobnom hlásení."
 
-#: ../src/gpk-enum.c:577
+#: ../src/gpk-enum.c:585
 msgid ""
 "The remote software source name was not found.\n"
 "You may need to enable an item in Software Sources."
@@ -2161,15 +2206,15 @@ msgstr ""
 "Názov vzdialeného zdroja softvéru nebol nájdený.\n"
 "Možno budete musieť povoliť položku v Zdrojoch softvéru."
 
-#: ../src/gpk-enum.c:581
+#: ../src/gpk-enum.c:589
 msgid "Removing a protected system package is not allowed."
 msgstr "Odstránenie chráneného systémového balíka nie je dovolené."
 
-#: ../src/gpk-enum.c:584
+#: ../src/gpk-enum.c:592
 msgid "The action was canceled successfully and no packages were changed."
 msgstr "Operácia bola úspešne zrušená a žiadne balíky neboli zmenené."
 
-#: ../src/gpk-enum.c:587
+#: ../src/gpk-enum.c:595
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
@@ -2177,7 +2222,7 @@ msgstr ""
 "Operácia bola úspešne zrušená a žiadne balíky neboli zmenené.\n"
 "Balíkovací systém neskončil korektne."
 
-#: ../src/gpk-enum.c:591
+#: ../src/gpk-enum.c:599
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
@@ -2185,11 +2230,11 @@ msgstr ""
 "Vlastný konfiguračný súbor balíka nebolo možné otvoriť.\n"
 "Prosím, uistite sa, že je konfigurácia platná."
 
-#: ../src/gpk-enum.c:595
+#: ../src/gpk-enum.c:603
 msgid "The action cannot be canceled at this time."
 msgstr "Operáciu nemožno teraz zrušiť."
 
-#: ../src/gpk-enum.c:598
+#: ../src/gpk-enum.c:606
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
@@ -2197,7 +2242,7 @@ msgstr ""
 "Zdrojové balíky sa bežne týmto spôsobom neinštalujú.\n"
 "Overte si príponu súboru, ktorý sa pokúšate nainštalovať."
 
-#: ../src/gpk-enum.c:602
+#: ../src/gpk-enum.c:610
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
@@ -2205,7 +2250,7 @@ msgstr ""
 "Nesúhlasili ste s licenčnou dohodou.\n"
 "Aby ste mohli používať tento softvér, musíte s licenciou súhlasiť."
 
-#: ../src/gpk-enum.c:606
+#: ../src/gpk-enum.c:614
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2213,7 +2258,7 @@ msgstr ""
 "Dva balíky poskytujú rovnaký súbor.\n"
 "To zvyčajne nastane, keď miešate balíky z rozličných zdrojov softvéru."
 
-#: ../src/gpk-enum.c:610
+#: ../src/gpk-enum.c:618
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2221,7 +2266,7 @@ msgstr ""
 "Existujú viaceré navzájom nekompatibilné balíky.\n"
 "To zvyčajne nastane, keď miešate balíky z rozličných zdrojov softvéru."
 
-#: ../src/gpk-enum.c:614
+#: ../src/gpk-enum.c:622
 msgid ""
 "There was a (possibly temporary) problem connecting to a software source.\n"
 "Please check the detailed error for further details."
@@ -2229,7 +2274,7 @@ msgstr ""
 "Nastal (možno dočasný) problém pri pripájaní k zdroju softvéru.\n"
 "V podrobnostiach chyby nájdete ďalšie informácie."
 
-#: ../src/gpk-enum.c:618
+#: ../src/gpk-enum.c:626
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
@@ -2238,7 +2283,7 @@ msgstr ""
 "Toto sa môže stať ak sa pokúšate používať viac programov na správu balíkov "
 "súčasne."
 
-#: ../src/gpk-enum.c:622
+#: ../src/gpk-enum.c:630
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
@@ -2247,7 +2292,7 @@ msgstr ""
 "Túto chybu možno zvyčajne ignorovať."
 
 # chýba preklad "legacy"
-#: ../src/gpk-enum.c:626
+#: ../src/gpk-enum.c:634
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
@@ -2255,18 +2300,18 @@ msgstr ""
 "Nepodarilo sa získať výlučný zámok balíkovacieho systému.\n"
 "Prosím, zavrite akékoľvek iné nástroje na správu balíkov."
 
-#: ../src/gpk-enum.c:630
+#: ../src/gpk-enum.c:638
 msgid "None of the selected packages could be updated."
 msgstr "Žiaden z vybraných balíkov nebolo možné aktualizovať."
 
 # Preložiť "repositories" ako "zdroje" mi príde dosť nepresné. Často
 # používané slovo "repozitár" asi neobstojí, pretože nie je slovenské. Ja
 # sa v poslednom čase prikláňam k prekladu "repository" -> "depozitár".
-#: ../src/gpk-enum.c:633
+#: ../src/gpk-enum.c:641
 msgid "The repository configuration could not be modified."
 msgstr "Konfiguráciu zdroja softvéru nebolo možné zmeniť."
 
-#: ../src/gpk-enum.c:636
+#: ../src/gpk-enum.c:644
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
@@ -2274,11 +2319,11 @@ msgstr ""
 "Inštalácia lokálneho súboru zlyhala.\n"
 "Viac informácií nájdete v podrobnom hlásení."
 
-#: ../src/gpk-enum.c:640
+#: ../src/gpk-enum.c:648
 msgid "The package security signature could not be verified."
 msgstr "Nebolo možné overiť bezpečnostný podpis balíka."
 
-#: ../src/gpk-enum.c:643
+#: ../src/gpk-enum.c:651
 msgid ""
 "The package security signature is missing and this package is untrusted.\n"
 "This package was not signed when created."
@@ -2289,11 +2334,11 @@ msgstr ""
 # Preložiť "repositories" ako "zdroje" mi príde dosť nepresné. Často
 # používané slovo "repozitár" asi neobstojí, pretože nie je slovenské. Ja
 # sa v poslednom čase prikláňam k prekladu "repository" -> "depozitár".
-#: ../src/gpk-enum.c:647
+#: ../src/gpk-enum.c:655
 msgid "Repository configuration was invalid and could not be read."
 msgstr "Konfigurácia zdroja softvéru bola neplatná a nebolo možné ju načítať."
 
-#: ../src/gpk-enum.c:650
+#: ../src/gpk-enum.c:658
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
@@ -2301,24 +2346,24 @@ msgstr ""
 "Balík, ktorý sa pokúšate nainštalovať, nie je platný.\n"
 "Súbor balíka môže byť poškodený, alebo to nie je správny balík."
 
-#: ../src/gpk-enum.c:654
+#: ../src/gpk-enum.c:662
 msgid ""
 "Installation of this package prevented by your packaging system's "
 "configuration."
 msgstr ""
 "Inštalácii tohto balíka zabránila konfigurácia vášho balíkovacieho systému."
 
-#: ../src/gpk-enum.c:657
+#: ../src/gpk-enum.c:665
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr "Stiahnutý balík je poškodený a je potrebné ho stiahnuť znova."
 
-#: ../src/gpk-enum.c:660
+#: ../src/gpk-enum.c:668
 msgid ""
 "All of the packages selected for install are already installed on the system."
 msgstr "Všetky balíky vybrané na inštaláciu sú už na systéme nainštalované."
 
-#: ../src/gpk-enum.c:663
+#: ../src/gpk-enum.c:671
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
@@ -2326,7 +2371,7 @@ msgstr ""
 "Uvedený súbor nebolo možné na systéme nájsť.\n"
 "Skontrolujte, či súbor ešte existuje a nebol zmazaný."
 
-#: ../src/gpk-enum.c:667
+#: ../src/gpk-enum.c:675
 msgid ""
 "Required data could not be found on any of the configured software sources.\n"
 "There were no more download mirrors that could be tried."
@@ -2335,7 +2380,7 @@ msgstr ""
 "softvéru.\n"
 "Neexistuje viac zrkadiel, ktoré by bolo možné skúsiť."
 
-#: ../src/gpk-enum.c:671
+#: ../src/gpk-enum.c:679
 msgid ""
 "Required upgrade data could not be found in any of the configured software "
 "sources.\n"
@@ -2345,13 +2390,13 @@ msgstr ""
 "zdrojov softvéru.\n"
 "Zoznam aktualizácií distribúcie bude nedostupný."
 
-#: ../src/gpk-enum.c:675
+#: ../src/gpk-enum.c:683
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
 msgstr ""
 "Balík, ktorý sa pokúšate nainštalovať nie je kompatibilný s týmto systémom."
 
-#: ../src/gpk-enum.c:678
+#: ../src/gpk-enum.c:686
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
@@ -2359,11 +2404,11 @@ msgstr ""
 "Na zariadení nie je dostatok miesta.\n"
 "Ak chcete vykonať túto operáciu, uvoľnite nejaké miesto na systémovom disku."
 
-#: ../src/gpk-enum.c:682
+#: ../src/gpk-enum.c:690
 msgid "Additional media is required to complete the transaction."
 msgstr "Na dokončenie transakcie je potrebný ďalší nosič."
 
-#: ../src/gpk-enum.c:685
+#: ../src/gpk-enum.c:693
 msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
@@ -2371,7 +2416,7 @@ msgstr ""
 "Neposkytli ste správne údaje overenia totožnosti.\n"
 "Prosím, skontrolujte heslá alebo nastavenie účtov."
 
-#: ../src/gpk-enum.c:689
+#: ../src/gpk-enum.c:697
 msgid ""
 "The specified update could not be found.\n"
 "It could have already been installed or no longer available on the remote "
@@ -2381,28 +2426,28 @@ msgstr ""
 "Je možné, že už bola nainštalovaná alebo už nie je dostupná na vzdialenom "
 "serveri."
 
-#: ../src/gpk-enum.c:693
+#: ../src/gpk-enum.c:701
 msgid "The package could not be installed from untrusted source."
 msgstr "Balík nebolo možné nainštalovať z nedôveryhodného zdroja."
 
-#: ../src/gpk-enum.c:696
+#: ../src/gpk-enum.c:704
 msgid "The package could not be updated from untrusted source."
 msgstr "Balík nebolo možné aktualizovať z nedôveryhodného zdroja."
 
-#: ../src/gpk-enum.c:699
+#: ../src/gpk-enum.c:707
 msgid "The file list is not available for this package."
 msgstr "Nie je dostupný zoznam súborov tohto balíka."
 
-#: ../src/gpk-enum.c:702
+#: ../src/gpk-enum.c:710
 msgid "The information about what requires this package could not be obtained."
 msgstr ""
 "Nebolo možné získať informáciu o balíkoch, na ktorých tento balík závisí."
 
-#: ../src/gpk-enum.c:705
+#: ../src/gpk-enum.c:713
 msgid "The specified software source could not be disabled."
 msgstr "Zadaný zdroj softvéru nebolo možné zakázať."
 
-#: ../src/gpk-enum.c:708
+#: ../src/gpk-enum.c:716
 msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
@@ -2410,7 +2455,7 @@ msgstr ""
 "Nebolo možné automaticky vykonať stiahnutie a mali by ste ho urobiť ručne.\n"
 "V podrobnom hlásení nájdete ďalšie informácie."
 
-#: ../src/gpk-enum.c:712
+#: ../src/gpk-enum.c:720
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
@@ -2418,7 +2463,7 @@ msgstr ""
 "Jeden z vybraných balíkov sa nepodarilo správne nakonfigurovať.\n"
 "V podrobnom hlásení nájdete ďalšie informácie."
 
-#: ../src/gpk-enum.c:716
+#: ../src/gpk-enum.c:724
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
@@ -2426,7 +2471,7 @@ msgstr ""
 "Jeden z vybraných balíkov sa nepodarilo správne zostaviť.\n"
 "V podrobnom hlásení nájdete ďalšie informácie."
 
-#: ../src/gpk-enum.c:720
+#: ../src/gpk-enum.c:728
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
@@ -2434,7 +2479,7 @@ msgstr ""
 "Jeden z vybraných balíkov sa nepodarilo správne nainštalovať.\n"
 "V podrobnom hlásení nájdete ďalšie informácie."
 
-#: ../src/gpk-enum.c:724
+#: ../src/gpk-enum.c:732
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
@@ -2442,7 +2487,7 @@ msgstr ""
 "Jeden z vybraných balíkov sa nepodarilo správne odstrániť.\n"
 "V podrobnom hlásení nájdete ďalšie informácie."
 
-#: ../src/gpk-enum.c:728
+#: ../src/gpk-enum.c:736
 msgid ""
 "A program is running that has to be closed before the update can proceed.\n"
 "More information is available in the detailed report."
@@ -2451,241 +2496,253 @@ msgstr ""
 "pokračovať.\n"
 "V podrobnom hlásení nájdete ďalšie informácie."
 
-#: ../src/gpk-enum.c:732
+#: ../src/gpk-enum.c:740
 msgid "The package database was changed while the request was running."
 msgstr "Databáza balíkov bola zmenená počas behu požiadavky."
 
-#: ../src/gpk-enum.c:735
+#: ../src/gpk-enum.c:743
 msgid "The virtual provide type is not supported by this system."
 msgstr "Tento systém nepodporuje virtuálny typ poskytovaní."
 
-#: ../src/gpk-enum.c:738
+#: ../src/gpk-enum.c:746
 msgid "The install root is invalid. Please contact your administrator."
 msgstr ""
 "Koreňový adresár inštalácie je neplatný. Prosím, kontaktujte svojho správcu."
 
-#: ../src/gpk-enum.c:756
+#: ../src/gpk-enum.c:749
+msgid "The list of software sources could not be downloaded."
+msgstr "Zoznam zdrojov softvéru nebolo možné stiahnuť."
+
+#: ../src/gpk-enum.c:752
+msgid ""
+"The transaction has been cancelled and will be retried when the system is "
+"idle."
+msgstr ""
+"Transakcia bola zrušená a jej vykonanie sa skúsi znova počas nečinnosti "
+"systému."
+
+#: ../src/gpk-enum.c:770
 msgid "No restart is necessary."
 msgstr "Nie je potrebný reštart."
 
-#: ../src/gpk-enum.c:759
+#: ../src/gpk-enum.c:773
 msgid "You will be required to restart this application."
 msgstr "Budete musieť reštartovať túto aplikáciu."
 
-#: ../src/gpk-enum.c:762
+#: ../src/gpk-enum.c:776
 msgid "You will be required to log out and back in."
 msgstr "Budete sa musieť odhlásiť a znovu prihlásiť."
 
-#: ../src/gpk-enum.c:765
+#: ../src/gpk-enum.c:779
 msgid "A restart will be required."
 msgstr "Budete musieť reštartovať systém."
 
-#: ../src/gpk-enum.c:768
+#: ../src/gpk-enum.c:782
 msgid "You will be required to log out and back in due to a security update."
 msgstr ""
 "Kvôli bezpečnostnej aktualizácii sa budete musieť odhlásiť a znovu prihlásiť."
 
-#: ../src/gpk-enum.c:771
+#: ../src/gpk-enum.c:785
 msgid "A restart will be required due to a security update."
 msgstr "Kvôli bezpečnostnej aktualizácii budete musieť reštartovať systém."
 
-#: ../src/gpk-enum.c:788
+#: ../src/gpk-enum.c:802
 msgid "No restart is required."
 msgstr "Nie je potrebný reštart."
 
-#: ../src/gpk-enum.c:791
+#: ../src/gpk-enum.c:805
 msgid "A restart is required."
 msgstr "Je potrebný reštart."
 
-#: ../src/gpk-enum.c:794
+#: ../src/gpk-enum.c:808
 msgid "You need to log out and log back in."
 msgstr "Musíte sa odhlásiť a znovu prihlásiť."
 
-#: ../src/gpk-enum.c:797
+#: ../src/gpk-enum.c:811
 msgid "You need to restart the application."
 msgstr "Musíte reštartovať aplikáciu."
 
-#: ../src/gpk-enum.c:800
+#: ../src/gpk-enum.c:814
 msgid "You need to log out and log back in to remain secure."
 msgstr "Z bezpečnostných dôvodov sa musíte odhlásiť a znovu prihlásiť."
 
-#: ../src/gpk-enum.c:803
+#: ../src/gpk-enum.c:817
 msgid "A restart is required to remain secure."
 msgstr "Z bezpečnostných dôvodov sa vyžaduje reštart systému."
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:821
+#: ../src/gpk-enum.c:835
 msgid "Stable"
 msgstr "stabilná"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:825
+#: ../src/gpk-enum.c:839
 msgid "Unstable"
 msgstr "nestabilná"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:829
+#: ../src/gpk-enum.c:843
 msgid "Testing"
 msgstr "testovacia"
 
-#: ../src/gpk-enum.c:846
+#: ../src/gpk-enum.c:860
 msgid "A mirror is possibly broken"
 msgstr "Je možné, že zrkadlo je poškodené"
 
-#: ../src/gpk-enum.c:849
+#: ../src/gpk-enum.c:863
 msgid "The connection was refused"
 msgstr "Spojenie bolo odmietnuté"
 
-#: ../src/gpk-enum.c:852
+#: ../src/gpk-enum.c:866
 msgid "The parameter was invalid"
 msgstr "Parameter bol neplatný"
 
-#: ../src/gpk-enum.c:855
+#: ../src/gpk-enum.c:869
 msgid "The priority was invalid"
 msgstr "Priorita bola neplatná"
 
-#: ../src/gpk-enum.c:858
+#: ../src/gpk-enum.c:872
 msgid "Backend warning"
 msgstr "Upozornenie balíkovacieho systému"
 
-#: ../src/gpk-enum.c:861
+#: ../src/gpk-enum.c:875
 msgid "Daemon warning"
 msgstr "Upozornenie démona"
 
-#: ../src/gpk-enum.c:864
+#: ../src/gpk-enum.c:878
 msgid "The package list cache is being rebuilt"
 msgstr "Znova sa zostavuje vyrovnávacia pamäť zoznamu balíkov"
 
-#: ../src/gpk-enum.c:867
+#: ../src/gpk-enum.c:881
 msgid "An untrusted package was installed"
 msgstr "Bol nainštalovaný nedôveryhodný balík"
 
-#: ../src/gpk-enum.c:870
+#: ../src/gpk-enum.c:884
 msgid "A newer package exists"
 msgstr "Existuje novší balík"
 
-#: ../src/gpk-enum.c:873
+#: ../src/gpk-enum.c:887
 msgid "Could not find package"
 msgstr "Nepodarilo sa nájsť balík"
 
-#: ../src/gpk-enum.c:876
+#: ../src/gpk-enum.c:890
 msgid "Configuration files were changed"
 msgstr "Konfiguračné súbory boli zmenené"
 
-#: ../src/gpk-enum.c:879
+#: ../src/gpk-enum.c:893
 msgid "Package is already installed"
 msgstr "Balík je už nainštalovaný"
 
-#: ../src/gpk-enum.c:882
+#: ../src/gpk-enum.c:896
 msgid "Automatic cleanup is being ignored"
 msgstr "Ignoruje sa automatické čistenie"
 
-#: ../src/gpk-enum.c:885
+#: ../src/gpk-enum.c:899
 msgid "Software source download failed"
 msgstr "Nepodarilo sa stiahnuť zdroj softvéru"
 
-#: ../src/gpk-enum.c:888
+#: ../src/gpk-enum.c:902
 msgid "This software source is for developers only"
 msgstr "Tento zdroj softvéru je iba pre vývojárov"
 
-#: ../src/gpk-enum.c:891
+#: ../src/gpk-enum.c:905
 msgid "Other updates have been held back"
 msgstr "Ďalšie aktualizáce boli zadržané"
 
 #. TRANSLATORS: This is when the transaction status is not known
-#: ../src/gpk-enum.c:909
+#: ../src/gpk-enum.c:923
 msgid "Unknown state"
 msgstr "Neznámy stav"
 
 #. TRANSLATORS: transaction state, the daemon is in the process of starting
-#: ../src/gpk-enum.c:913
+#: ../src/gpk-enum.c:927
 msgid "Starting"
 msgstr "Spúšťa sa"
 
 #. TRANSLATORS: transaction state, the transaction is waiting for another to complete
-#: ../src/gpk-enum.c:917
+#: ../src/gpk-enum.c:931
 msgid "Waiting in queue"
 msgstr "Čaká vo fronte"
 
 #. TRANSLATORS: transaction state, just started
-#: ../src/gpk-enum.c:921
+#: ../src/gpk-enum.c:935
 msgid "Running"
 msgstr "Beží"
 
 #. TRANSLATORS: transaction state, is querying data
-#: ../src/gpk-enum.c:925
+#: ../src/gpk-enum.c:939
 msgid "Querying"
 msgstr "Zisťuje sa"
 
 #. TRANSLATORS: transaction state, getting data from a server
-#: ../src/gpk-enum.c:929
+#: ../src/gpk-enum.c:943
 msgid "Getting information"
 msgstr "Získavajú sa informácie"
 
 #. TRANSLATORS: transaction state, downloading package files
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:937 ../src/gpk-enum.c:1373
+#: ../src/gpk-enum.c:951 ../src/gpk-enum.c:1395
 msgid "Downloading packages"
 msgstr "Sťahujú sa balíky"
 
 #. TRANSLATORS: transaction state, refreshing internal lists
-#: ../src/gpk-enum.c:945
+#: ../src/gpk-enum.c:959
 msgid "Refreshing software list"
 msgstr "Obnovuje sa zoznam softvéru"
 
 #. TRANSLATORS: transaction state, installing updates
-#: ../src/gpk-enum.c:949
+#: ../src/gpk-enum.c:963
 msgid "Installing updates"
 msgstr "Inštalujú sa aktualizácie"
 
 #. TRANSLATORS: transaction state, removing old packages, and cleaning config files
-#: ../src/gpk-enum.c:953
+#: ../src/gpk-enum.c:967
 msgid "Cleaning up packages"
 msgstr "Čistia sa balíky"
 
 #. TRANSLATORS: transaction state, obsoleting old packages
-#: ../src/gpk-enum.c:957
+#: ../src/gpk-enum.c:971
 msgid "Obsoleting packages"
 msgstr "Označujú sa zastaralé balíky"
 
 #. TRANSLATORS: transaction state, checking the transaction before we do it
-#: ../src/gpk-enum.c:961
+#: ../src/gpk-enum.c:975
 msgid "Resolving dependencies"
 msgstr "Riešia sa závislosti"
 
 #. TRANSLATORS: transaction state, checking if we have all the security keys for the operation
-#: ../src/gpk-enum.c:965
+#: ../src/gpk-enum.c:979
 msgid "Checking signatures"
 msgstr "Kontrolujú sa podpisy"
 
 #. TRANSLATORS: transaction state, when we return to a previous system state
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:969 ../src/gpk-enum.c:1333
+#: ../src/gpk-enum.c:983 ../src/gpk-enum.c:1355
 msgid "Rolling back"
 msgstr "Vracia sa predošlý stav"
 
 #. TRANSLATORS: transaction state, when we're doing a test transaction
-#: ../src/gpk-enum.c:973
+#: ../src/gpk-enum.c:987
 msgid "Testing changes"
 msgstr "Testujú sa zmeny"
 
 #. TRANSLATORS: transaction state, when we're writing to the system package database
-#: ../src/gpk-enum.c:977
+#: ../src/gpk-enum.c:991
 msgid "Committing changes"
 msgstr "Vykonávajú sa zmeny"
 
 #. TRANSLATORS: transaction state, requesting data from a server
-#: ../src/gpk-enum.c:981
+#: ../src/gpk-enum.c:995
 msgid "Requesting data"
 msgstr "Požadujú sa údaje"
 
 #. TRANSLATORS: transaction state, all done!
-#: ../src/gpk-enum.c:985
+#: ../src/gpk-enum.c:999
 msgid "Finished"
 msgstr "Dokončené"
 
 #. TRANSLATORS: transaction state, in the process of cancelling
-#: ../src/gpk-enum.c:989
+#: ../src/gpk-enum.c:1003
 msgid "Cancelling"
 msgstr "Ruší sa"
 
@@ -2693,87 +2750,87 @@ msgstr "Ruší sa"
 # používané slovo "repozitár" asi neobstojí, pretože nie je slovenské. Ja
 # sa v poslednom čase prikláňam k prekladu "repository" -> "depozitár".
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:993
+#: ../src/gpk-enum.c:1007
 msgid "Downloading repository information"
 msgstr "Sťahujú sa informácie o zdroji softvéru"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:997
+#: ../src/gpk-enum.c:1011
 msgid "Downloading list of packages"
 msgstr "Sťahuje sa zoznam balíkov"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1001
+#: ../src/gpk-enum.c:1015
 msgid "Downloading file lists"
 msgstr "Sťahujú sa zoznamy súborov"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1005
+#: ../src/gpk-enum.c:1019
 msgid "Downloading lists of changes"
 msgstr "Sťahujú sa zoznamy zmien"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1009
+#: ../src/gpk-enum.c:1023
 msgid "Downloading groups"
 msgstr "Sťahujú sa skupiny"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1013
+#: ../src/gpk-enum.c:1027
 msgid "Downloading update information"
 msgstr "Sťahujú sa aktualizačné informácie"
 
 #. TRANSLATORS: transaction state, repackaging delta files
-#: ../src/gpk-enum.c:1017
+#: ../src/gpk-enum.c:1031
 msgid "Repackaging files"
 msgstr "Prebaľujú sa súbory"
 
 #. TRANSLATORS: transaction state, loading databases
-#: ../src/gpk-enum.c:1021
+#: ../src/gpk-enum.c:1035
 msgid "Loading cache"
 msgstr "Načítava sa vyrovnávacia pamäť"
 
 #. TRANSLATORS: transaction state, scanning for running processes
-#: ../src/gpk-enum.c:1025
+#: ../src/gpk-enum.c:1039
 msgid "Scanning installed applications"
 msgstr "Zisťujú sa nainštalované aplikácie"
 
 #. TRANSLATORS: transaction state, generating a list of packages installed on the system
-#: ../src/gpk-enum.c:1029
+#: ../src/gpk-enum.c:1043
 msgid "Generating package lists"
 msgstr "Vytvárajú sa zoznamy balíkov"
 
 #. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
-#: ../src/gpk-enum.c:1033
+#: ../src/gpk-enum.c:1047
 msgid "Waiting for package manager lock"
 msgstr "Čaká sa na zámok správcu balíkov"
 
 #. TRANSLATORS: waiting for user to type in a password
-#: ../src/gpk-enum.c:1037
+#: ../src/gpk-enum.c:1051
 msgid "Waiting for authentication"
 msgstr "Čaká sa na overenie totožnosti"
 
 #. TRANSLATORS: we are updating the list of processes
-#: ../src/gpk-enum.c:1041
+#: ../src/gpk-enum.c:1055
 msgid "Updating the list of running applications"
 msgstr "Aktualizuje sa zoznam bežiacich aplikácií"
 
 #. TRANSLATORS: we are checking executable files in use
-#: ../src/gpk-enum.c:1045
+#: ../src/gpk-enum.c:1059
 msgid "Checking for applications currently in use"
 msgstr "Kontrolujú sa momentálne používané aplikácie"
 
 #. TRANSLATORS: we are checking for libraries in use
-#: ../src/gpk-enum.c:1049
+#: ../src/gpk-enum.c:1063
 msgid "Checking for libraries currently in use"
 msgstr "Kontrolujú sa momentálne používané knižnice"
 
 #. TRANSLATORS: we are copying package files to prepare to install
-#: ../src/gpk-enum.c:1053
+#: ../src/gpk-enum.c:1067
 msgid "Copying files"
 msgstr "Kopírujú sa súbory"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1071
+#: ../src/gpk-enum.c:1085
 #, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
@@ -2782,7 +2839,7 @@ msgstr[1] "%i triviálna aktualizácia"
 msgstr[2] "%i triviálne aktualizácie"
 
 #. TRANSLATORS: type of update in the case that we don't have any data
-#: ../src/gpk-enum.c:1075
+#: ../src/gpk-enum.c:1089
 #, c-format
 msgid "%i update"
 msgid_plural "%i updates"
@@ -2791,7 +2848,7 @@ msgstr[1] "%i aktualizácia"
 msgstr[2] "%i aktualizácie"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1079
+#: ../src/gpk-enum.c:1093
 #, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
@@ -2800,7 +2857,7 @@ msgstr[1] "%i dôležitá aktualizácia"
 msgstr[2] "%i dôležité aktualizácie"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1083
+#: ../src/gpk-enum.c:1097
 #, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
@@ -2809,7 +2866,7 @@ msgstr[1] "%i bezpečnostná aktualizácia"
 msgstr[2] "%i bezpečnostné aktualizácie"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1087
+#: ../src/gpk-enum.c:1101
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
@@ -2818,7 +2875,7 @@ msgstr[1] "%i aktualizácia opravujúca chyby"
 msgstr[2] "%i aktualizácie opravujúce chyby"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1091
+#: ../src/gpk-enum.c:1105
 #, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
@@ -2827,7 +2884,7 @@ msgstr[1] "%i aktualizácia prinášajúca nové vlastnosti"
 msgstr[2] "%i aktualizácie prinášajúce nové vlastnosti"
 
 #. TRANSLATORS: number of updates that cannot be installed due to deps
-#: ../src/gpk-enum.c:1095
+#: ../src/gpk-enum.c:1109
 #, c-format
 msgid "%i blocked update"
 msgid_plural "%i blocked updates"
@@ -2836,200 +2893,210 @@ msgstr[1] "%i zablokovaná aktualizácia"
 msgstr[2] "%i zablokované aktualizácie"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1113
+#: ../src/gpk-enum.c:1127
 msgid "Trivial update"
 msgstr "Triviálna aktualizácia"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1117
+#: ../src/gpk-enum.c:1131
 msgid "Normal update"
 msgstr "Bežná aktualizácia"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1121
+#: ../src/gpk-enum.c:1135
 msgid "Important update"
 msgstr "Dôležitá aktualizácia"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1125
+#: ../src/gpk-enum.c:1139
 msgid "Security update"
 msgstr "Bezpečnostná aktualizácia"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1129
+#: ../src/gpk-enum.c:1143
 msgid "Bug fix update"
 msgstr "Aktualizácia opravujúca chyby"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1133
+#: ../src/gpk-enum.c:1147
 msgid "Enhancement update"
 msgstr "Aktualizácia prinášajúca nové vlastnosti"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1137
+#: ../src/gpk-enum.c:1151
 msgid "Blocked update"
 msgstr "Zablokovaná aktualizácia"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
-#: ../src/gpk-enum.c:1147
+#: ../src/gpk-enum.c:1161
 msgid "Available"
 msgstr "Dostupná"
 
+#. TRANSLATORS: The type of package
+#: ../src/gpk-enum.c:1165
+msgid "Trusted"
+msgstr "Dôveryhodný"
+
+#. TRANSLATORS: The type of package
+#: ../src/gpk-enum.c:1169
+msgid "Untrusted"
+msgstr "Nedôveryhodný"
+
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1165 ../src/gpk-service-pack.c:441
+#: ../src/gpk-enum.c:1187 ../src/gpk-service-pack.c:441
 msgid "Downloading"
 msgstr "Sťahuje sa"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1169
+#: ../src/gpk-enum.c:1191
 msgid "Updating"
 msgstr "Aktualizuje sa"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1173 ../src/gpk-enum.c:1309
+#: ../src/gpk-enum.c:1195 ../src/gpk-enum.c:1331
 msgid "Installing"
 msgstr "Inštaluje sa"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1177 ../src/gpk-enum.c:1305
+#: ../src/gpk-enum.c:1199 ../src/gpk-enum.c:1327
 msgid "Removing"
 msgstr "Odstraňuje sa"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1181
+#: ../src/gpk-enum.c:1203
 msgid "Cleaning up"
 msgstr "Čistí sa"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1185
+#: ../src/gpk-enum.c:1207
 msgid "Obsoleting"
 msgstr "Označuje sa ako zastaralý"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1189
+#: ../src/gpk-enum.c:1211
 msgid "Reinstalling"
 msgstr "Prebieha reinštalácia"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1193
+#: ../src/gpk-enum.c:1215
 msgid "Preparing"
 msgstr "Prebieha príprava"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1197
+#: ../src/gpk-enum.c:1219
 msgid "Decompressing"
 msgstr "Prebieha rozbaľovanie"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1215
+#: ../src/gpk-enum.c:1237
 msgid "Downloaded"
 msgstr "Stiahnutý"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1219
+#: ../src/gpk-enum.c:1241
 msgid "Updated"
 msgstr "Aktualizovaný"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1227
+#: ../src/gpk-enum.c:1249
 msgid "Removed"
 msgstr "Odstránený"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1231
+#: ../src/gpk-enum.c:1253
 msgid "Cleaned up"
 msgstr "Vyčistený"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1235
+#: ../src/gpk-enum.c:1257 ../src/gpk-task.c:415
 msgid "Obsoleted"
 msgstr "Označený ako zastaralý"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1239
+#: ../src/gpk-enum.c:1261
 msgid "Reinstalled"
 msgstr "Reinštalovaný"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1243
+#: ../src/gpk-enum.c:1265
 msgid "Prepared"
 msgstr "Pripravený"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1247
+#: ../src/gpk-enum.c:1269
 msgid "Decompressed"
 msgstr "Rozbalený"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1265 ../src/gpk-enum.c:1425
+#: ../src/gpk-enum.c:1287 ../src/gpk-enum.c:1447
 msgid "Unknown role type"
 msgstr "Neznámy typ role"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1269
+#: ../src/gpk-enum.c:1291
 msgid "Getting dependencies"
 msgstr "Zisťujú sa závislosti"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1273
+#: ../src/gpk-enum.c:1295
 msgid "Getting update detail"
 msgstr "Zisťujú sa podrobnosti aktualizácie"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1277
+#: ../src/gpk-enum.c:1299
 msgid "Getting details"
 msgstr "Zisťujú sa podrobnosti"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1281
+#: ../src/gpk-enum.c:1303
 msgid "Getting requires"
 msgstr "Získavajú sa závislosti"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1285
+#: ../src/gpk-enum.c:1307
 msgid "Getting updates"
 msgstr "Získavajú sa aktualizácie"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1289
+#: ../src/gpk-enum.c:1311
 msgid "Searching details"
 msgstr "Hľadajú sa podrobnosti"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1297
+#: ../src/gpk-enum.c:1319
 msgid "Searching groups"
 msgstr "Hľadajú sa skupiny"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1301
+#: ../src/gpk-enum.c:1323
 msgid "Searching for package name"
 msgstr "Hľadá sa názov balíka"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1313
+#: ../src/gpk-enum.c:1335
 msgid "Installing file"
 msgstr "Inštaluje sa súbor"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1317
+#: ../src/gpk-enum.c:1339
 msgid "Refreshing package cache"
 msgstr "Aktualizuje sa vyrovnávacia pamäť balíkov"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1321
+#: ../src/gpk-enum.c:1343
 msgid "Updating packages"
 msgstr "Aktualizujú sa balíky"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1325
+#: ../src/gpk-enum.c:1347
 msgid "Updating system"
 msgstr "Aktualizuje sa systém"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1329
+#: ../src/gpk-enum.c:1351
 msgid "Canceling"
 msgstr "Ruší sa"
 
@@ -3037,7 +3104,7 @@ msgstr "Ruší sa"
 # používané slovo "repozitár" asi neobstojí, pretože nie je slovenské. Ja
 # sa v poslednom čase prikláňam k prekladu "repository" -> "depozitár".
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1337
+#: ../src/gpk-enum.c:1359
 msgid "Getting list of repositories"
 msgstr "Zisťuje sa zoznam zdrojov softvéru"
 
@@ -3045,7 +3112,7 @@ msgstr "Zisťuje sa zoznam zdrojov softvéru"
 # používané slovo "repozitár" asi neobstojí, pretože nie je slovenské. Ja
 # sa v poslednom čase prikláňam k prekladu "repository" -> "depozitár".
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1341
+#: ../src/gpk-enum.c:1363
 msgid "Enabling repository"
 msgstr "Povoľuje sa zdroj softvéru"
 
@@ -3053,162 +3120,162 @@ msgstr "Povoľuje sa zdroj softvéru"
 # používané slovo "repozitár" asi neobstojí, pretože nie je slovenské. Ja
 # sa v poslednom čase prikláňam k prekladu "repository" -> "depozitár".
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1345
+#: ../src/gpk-enum.c:1367
 msgid "Setting repository data"
 msgstr "Nastavujú sa údaje zdroja softvéru"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1349
+#: ../src/gpk-enum.c:1371
 msgid "Resolving"
 msgstr "Rieši sa"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1353
+#: ../src/gpk-enum.c:1375
 msgid "Getting file list"
 msgstr "Získava sa zoznam súborov"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1357
+#: ../src/gpk-enum.c:1379
 msgid "Getting what provides"
 msgstr "Získava sa zoznam poskytovaných"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1361
+#: ../src/gpk-enum.c:1383
 msgid "Installing signature"
 msgstr "Inštaluje sa podpis"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1365
+#: ../src/gpk-enum.c:1387
 msgid "Getting package lists"
 msgstr "Získavajú sa zoznamy balíkov"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1369
+#: ../src/gpk-enum.c:1391
 msgid "Accepting EULA"
 msgstr "Prijíma sa používateľská licencia"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1377
+#: ../src/gpk-enum.c:1399
 msgid "Getting distribution upgrade information"
 msgstr "Získavajú sa informácie o aktualizácii distribúcie"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1381
+#: ../src/gpk-enum.c:1403
 msgid "Getting categories"
 msgstr "Zisťujú sa kategórie"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1385
+#: ../src/gpk-enum.c:1407
 msgid "Getting old transactions"
 msgstr "Zisťujú sa staré transakcie"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1389
+#: ../src/gpk-enum.c:1411
 msgid "Simulating the install of files"
 msgstr "Prebieha simulácia inštalácie súborov"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1393
+#: ../src/gpk-enum.c:1415
 msgid "Simulating the install"
 msgstr "Prebieha simulácia inštalácie"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1397
+#: ../src/gpk-enum.c:1419
 msgid "Simulating the remove"
 msgstr "Prebieha simulácia odstránenia"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1401
+#: ../src/gpk-enum.c:1423
 msgid "Simulating the update"
 msgstr "Prebieha simulácia aktualizácie"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1405
+#: ../src/gpk-enum.c:1427
 msgid "Upgrading system"
 msgstr "Aktualizuje sa systém"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1429
+#: ../src/gpk-enum.c:1451
 msgid "Got dependencies"
 msgstr "Získané závislosti"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1433
+#: ../src/gpk-enum.c:1455
 msgid "Got update detail"
 msgstr "Získané podrobnosti aktualizácie"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1437
+#: ../src/gpk-enum.c:1459
 msgid "Got details"
 msgstr "Získané podrobnosti"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1441
+#: ../src/gpk-enum.c:1463
 msgid "Got requires"
 msgstr "Získané závislosti"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1445
+#: ../src/gpk-enum.c:1467
 msgid "Got updates"
 msgstr "Získané aktualizácie"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1449
+#: ../src/gpk-enum.c:1471
 msgid "Searched for package details"
 msgstr "Vyhľadané podrobnosti balíka"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1453
+#: ../src/gpk-enum.c:1475
 msgid "Searched for file"
 msgstr "Vyhľadaný súbor"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1457
+#: ../src/gpk-enum.c:1479
 msgid "Searched groups"
 msgstr "Vyhľadané skupiny"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1461
+#: ../src/gpk-enum.c:1483
 msgid "Searched for package name"
 msgstr "Vyhľadaný názov balíka"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1465
+#: ../src/gpk-enum.c:1487
 msgid "Removed packages"
 msgstr "Odstránené balíky"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1469
+#: ../src/gpk-enum.c:1491
 msgid "Installed packages"
 msgstr "Nainštalované balíky"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1473
+#: ../src/gpk-enum.c:1495
 msgid "Installed local files"
 msgstr "Nainštalované lokálne súbory"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1477
+#: ../src/gpk-enum.c:1499
 msgid "Refreshed package cache"
 msgstr "Aktualizovaná vyrovnávacia pamäť balíkov"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1481
+#: ../src/gpk-enum.c:1503
 msgid "Updated packages"
 msgstr "Aktualizované balíky"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1485
+#: ../src/gpk-enum.c:1507
 msgid "Updated system"
 msgstr "Aktualizovaný systém"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1489
+#: ../src/gpk-enum.c:1511
 msgid "Canceled"
 msgstr "Zrušené"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1493
+#: ../src/gpk-enum.c:1515
 msgid "Rolled back"
 msgstr "Vrátený predošlý stav"
 
@@ -3216,7 +3283,7 @@ msgstr "Vrátený predošlý stav"
 # používané slovo "repozitár" asi neobstojí, pretože nie je slovenské. Ja
 # sa v poslednom čase prikláňam k prekladu "repository" -> "depozitár".
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1497
+#: ../src/gpk-enum.c:1519
 msgid "Got list of repositories"
 msgstr "Získaný zoznam zdrojov softvéru"
 
@@ -3224,7 +3291,7 @@ msgstr "Získaný zoznam zdrojov softvéru"
 # používané slovo "repozitár" asi neobstojí, pretože nie je slovenské. Ja
 # sa v poslednom čase prikláňam k prekladu "repository" -> "depozitár".
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1501
+#: ../src/gpk-enum.c:1523
 msgid "Enabled repository"
 msgstr "Povolený zdroj softvéru"
 
@@ -3232,257 +3299,257 @@ msgstr "Povolený zdroj softvéru"
 # používané slovo "repozitár" asi neobstojí, pretože nie je slovenské. Ja
 # sa v poslednom čase prikláňam k prekladu "repository" -> "depozitár".
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1505
+#: ../src/gpk-enum.c:1527
 msgid "Set repository data"
 msgstr "Nastavené údaje zdroja softvéru"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1509
+#: ../src/gpk-enum.c:1531
 msgid "Resolved"
 msgstr "Vyriešené"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1513
+#: ../src/gpk-enum.c:1535
 msgid "Got file list"
 msgstr "Získaný zoznam súborov"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1517
+#: ../src/gpk-enum.c:1539
 msgid "Got what provides"
 msgstr "Získaný zoznam poskytovaných"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1521
+#: ../src/gpk-enum.c:1543
 msgid "Installed signature"
 msgstr "Nainštalovaný podpis"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1525
+#: ../src/gpk-enum.c:1547
 msgid "Got package lists"
 msgstr "Získané zoznamy balíkov"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1529
+#: ../src/gpk-enum.c:1551
 msgid "Accepted EULA"
 msgstr "Prijatá používateľská licencia"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1533
+#: ../src/gpk-enum.c:1555
 msgid "Downloaded packages"
 msgstr "Stiahnuté balíky"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1537
+#: ../src/gpk-enum.c:1559
 msgid "Got distribution upgrades"
 msgstr "Získané aktualizácie distribúcie"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1541
+#: ../src/gpk-enum.c:1563
 msgid "Got categories"
 msgstr "Získané kategórie"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1545
+#: ../src/gpk-enum.c:1567
 msgid "Got old transactions"
 msgstr "Zistené staré transakcie"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1549
+#: ../src/gpk-enum.c:1571
 msgid "Simulated the install of files"
 msgstr "Prebehla simulácia inštalácie súborov"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1553
+#: ../src/gpk-enum.c:1575
 msgid "Simulated the install"
 msgstr "Prebehla simulácia inštalácie"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1557
+#: ../src/gpk-enum.c:1579
 msgid "Simulated the remove"
 msgstr "Prebehla simulácia odstránenia"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1561
+#: ../src/gpk-enum.c:1583
 msgid "Simulated the update"
 msgstr "Prebehla simulácia aktualizácie"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1565
+#: ../src/gpk-enum.c:1587
 msgid "Upgraded system"
 msgstr "Aktualizovaný systém"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1583
+#: ../src/gpk-enum.c:1605
 msgid "Accessibility"
 msgstr "Prístupnosť"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1587
+#: ../src/gpk-enum.c:1609
 msgid "Accessories"
 msgstr "Príslušenstvo"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1591
+#: ../src/gpk-enum.c:1613
 msgid "Education"
 msgstr "Vzdelávanie"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1595
+#: ../src/gpk-enum.c:1617
 msgid "Games"
 msgstr "Hry"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1599
+#: ../src/gpk-enum.c:1621
 msgid "Graphics"
 msgstr "Grafika"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1603
+#: ../src/gpk-enum.c:1625
 msgid "Internet"
 msgstr "Internet"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1607
+#: ../src/gpk-enum.c:1629
 msgid "Office"
 msgstr "Kancelária"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1611
+#: ../src/gpk-enum.c:1633 ../src/gpk-task.c:435
 msgid "Other"
 msgstr "Ostatné"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1615
+#: ../src/gpk-enum.c:1637
 msgid "Programming"
 msgstr "Programovanie"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1619
+#: ../src/gpk-enum.c:1641
 msgid "Multimedia"
 msgstr "Multimédiá"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1623
+#: ../src/gpk-enum.c:1645
 msgid "System"
 msgstr "Systém"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1627
+#: ../src/gpk-enum.c:1649
 msgid "GNOME desktop"
 msgstr "Pracovné prostredie GNOME"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1631
+#: ../src/gpk-enum.c:1653
 msgid "KDE desktop"
 msgstr "Pracovné prostredie KDE"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1635
+#: ../src/gpk-enum.c:1657
 msgid "XFCE desktop"
 msgstr "Pracovné prostredie XFCE"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1639
+#: ../src/gpk-enum.c:1661
 msgid "Other desktops"
 msgstr "Iné pracovné prostredia"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1643
+#: ../src/gpk-enum.c:1665
 msgid "Publishing"
 msgstr "Publikovanie"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1647
+#: ../src/gpk-enum.c:1669
 msgid "Servers"
 msgstr "Servery"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1651
+#: ../src/gpk-enum.c:1673
 msgid "Fonts"
 msgstr "Písma"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1655
+#: ../src/gpk-enum.c:1677
 msgid "Admin tools"
 msgstr "Nástroje na správu"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1659
+#: ../src/gpk-enum.c:1681
 msgid "Legacy"
 msgstr "Nevyvíjané"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1663
+#: ../src/gpk-enum.c:1685
 msgid "Localization"
 msgstr "Lokalizácia"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1667
+#: ../src/gpk-enum.c:1689
 msgid "Virtualization"
 msgstr "Virtualizácia"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1671
+#: ../src/gpk-enum.c:1693
 msgid "Security"
 msgstr "Bezpečnosť"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1675
+#: ../src/gpk-enum.c:1697
 msgid "Power management"
 msgstr "Správa napájania"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1679
+#: ../src/gpk-enum.c:1701
 msgid "Communication"
 msgstr "Komunikácia"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1683
+#: ../src/gpk-enum.c:1705
 msgid "Network"
 msgstr "Sieť"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1687
+#: ../src/gpk-enum.c:1709
 msgid "Maps"
 msgstr "Mapy"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1691
+#: ../src/gpk-enum.c:1713
 msgid "Software sources"
 msgstr "Zdroje softvéru"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1695
+#: ../src/gpk-enum.c:1717
 msgid "Science"
 msgstr "Veda"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1699
+#: ../src/gpk-enum.c:1721
 msgid "Documentation"
 msgstr "Dokumentácia"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1703
+#: ../src/gpk-enum.c:1725
 msgid "Electronics"
 msgstr "Elektronika"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1707
+#: ../src/gpk-enum.c:1729
 msgid "Package collections"
 msgstr "Zbierky balíkov"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1711
+#: ../src/gpk-enum.c:1733
 msgid "Vendor"
 msgstr "Dodávateľ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1715
+#: ../src/gpk-enum.c:1737
 msgid "Newest packages"
 msgstr "Najnovšie balíky"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1719
+#: ../src/gpk-enum.c:1741
 msgid "Unknown group"
 msgstr "Neznáma skupina"
 
@@ -3491,12 +3558,12 @@ msgstr "Neznáma skupina"
 msgid "Icon"
 msgstr "Ikona"
 
-#: ../src/gpk-helper-chooser.c:284
+#: ../src/gpk-helper-chooser.c:286
 msgid "Applications that can open this type of file"
 msgstr "Aplikácie, ktoré dokážu otvoriť tento typ súboru"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-helper-chooser.c:300
+#: ../src/gpk-helper-chooser.c:302
 msgid "Install package"
 msgstr "Nainštalovať balík"
 
@@ -3540,47 +3607,59 @@ msgstr ""
 "Pokračovať."
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-task.c:361 ../src/gpk-task.c:532
+#: ../src/gpk-task.c:361 ../src/gpk-task.c:562
 msgid "Continue"
 msgstr "Pokračovať"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:397
+#: ../src/gpk-task.c:404
 msgid "The following software also needs to be installed"
 msgstr "Je potrebné nainštalovať aj nasledovný softvér"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:402
+#: ../src/gpk-task.c:409 ../src/gpk-task.c:414
 msgid "The following software also needs to be removed"
 msgstr "Je potrebné odstrániť aj nasledovný softvér"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:406
+#: ../src/gpk-task.c:419
 msgid "The following software also needs to be updated"
 msgstr "Je potrebné aktualizovať aj nasledovný softvér"
 
+#: ../src/gpk-task.c:420
+msgid "Update"
+msgstr "Aktualizovať"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:410
+#: ../src/gpk-task.c:424
 msgid "The following software also needs to be re-installed"
 msgstr "Je potrebné znovu nainštalovať aj nasledovný softvér"
 
+#: ../src/gpk-task.c:425
+msgid "Reinstall"
+msgstr "Reinštalovať"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:414
+#: ../src/gpk-task.c:429
 msgid "The following software also needs to be downgraded"
 msgstr "Je potrebné znížiť verziu aj nasledovného softvéru"
 
+#: ../src/gpk-task.c:430
+msgid "Downgrade"
+msgstr "Znížiť verziu"
+
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:418
+#: ../src/gpk-task.c:434
 msgid "The following software also needs to be processed"
 msgstr "Je potrebné spracovať aj nasledovný softvér"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:476
+#: ../src/gpk-task.c:495
 msgid "Additional confirmation required"
 msgstr "Požaduje sa ďalšie potvrdenie"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:482
+#: ../src/gpk-task.c:501
 msgid "To install this package, additional software also has to be modified."
 msgid_plural ""
 "To install these packages, additional software also has to be modified."
@@ -3592,7 +3671,7 @@ msgstr[2] ""
 "Ak chcete nainštalovať tieto balíky, treba tiež zmeniť ďalší softvér."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:487
+#: ../src/gpk-task.c:506
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural ""
 "To remove these packages, additional software also has to be modified."
@@ -3601,7 +3680,7 @@ msgstr[1] "Ak chcete odstrániť tento balík, treba tiež zmeniť ďalší soft
 msgstr[2] "Ak chcete odstrániť tieto balíky, treba tiež zmeniť ďalší softvér."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:492
+#: ../src/gpk-task.c:511
 msgid "To update this package, additional software also has to be modified."
 msgid_plural ""
 "To update these packages, additional software also has to be modified."
@@ -3613,7 +3692,7 @@ msgstr[2] ""
 "Ak chcete aktualizovať tieto balíky, treba tiež zmeniť ďalší softvér."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:497
+#: ../src/gpk-task.c:516
 msgid "To install this file, additional software also has to be modified."
 msgid_plural ""
 "To install these files, additional software also has to be modified."
@@ -3625,28 +3704,28 @@ msgstr[2] ""
 "Ak chcete nainštalovať tieto súbory, treba tiež zmeniť ďalší softvér."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:502
+#: ../src/gpk-task.c:521
 msgid ""
 "To process this transaction, additional software also has to be modified."
 msgstr "Spracovanie tejto transakcie vyžaduje aj zmenu ďalšieho softvéru."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:582
+#: ../src/gpk-task.c:612
 msgid "_Force install"
 msgstr "_Vynútiť inštaláciu"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:586
+#: ../src/gpk-task.c:616
 msgid "Force installing package"
 msgstr "Vynútiť inštaláciu balíka"
 
 #. TRANSLATORS: window title: do we want to execute a program we just installed?
-#: ../src/gpk-helper-run.c:481
+#: ../src/gpk-helper-run.c:480
 msgid "Run new application?"
 msgstr "Spustiť novú aplikáciu?"
 
 #. add run button
-#: ../src/gpk-helper-run.c:484
+#: ../src/gpk-helper-run.c:483
 msgid "_Run"
 msgstr "_Spustiť"
 
@@ -3826,7 +3905,7 @@ msgstr "Ak chcete aby bol tento dialóg modálny, nastavte mu rodičovské okno"
 msgid "Log viewer"
 msgstr "Prehliadač protokolov"
 
-#: ../src/gpk-modal-dialog.c:438
+#: ../src/gpk-modal-dialog.c:441
 #, c-format
 msgid "Remaining time : %s"
 msgstr "Zostávajúci čas : %s"
@@ -3887,7 +3966,7 @@ msgid "Failed to get the list of sources"
 msgstr "Nepodarilo sa získať zoznam zdrojov"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3085
+#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3100
 msgid "Exiting as backend details could not be retrieved"
 msgstr ""
 "Ukončuje sa, lebo sa nepodarilo získať podrobnosti z balíkovacieho systému"
@@ -3989,12 +4068,12 @@ msgid "Set the default output directory"
 msgstr "Nastaviť predvolený výstupný adresár"
 
 #. TRANSLATORS: we don't have a lot to go on here
-#: ../src/gpk-update-viewer.c:187
+#: ../src/gpk-update-viewer.c:178
 msgid "Failed to process request."
 msgstr "Nepodarilo sa spracovať požiadavku."
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:215
+#: ../src/gpk-update-viewer.c:206
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "before the changes will be applied."
@@ -4003,12 +4082,12 @@ msgstr ""
 "aby sa zmeny prejavili."
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:217 ../src/gpk-update-viewer.c:223
+#: ../src/gpk-update-viewer.c:208 ../src/gpk-update-viewer.c:214
 msgid "Restart Computer"
 msgstr "Reštartovať počítač"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:221
+#: ../src/gpk-update-viewer.c:212
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "to remain secure."
@@ -4017,7 +4096,7 @@ msgstr ""
 "nainštalované reštart počítača."
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:227
+#: ../src/gpk-update-viewer.c:218
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "before the changes will be applied."
@@ -4026,12 +4105,12 @@ msgstr ""
 "odhlásili a znova prihlásili, aby sa zmeny prejavili."
 
 #. TRANSLATORS: the button text for the logout
-#: ../src/gpk-update-viewer.c:229 ../src/gpk-update-viewer.c:235
+#: ../src/gpk-update-viewer.c:220 ../src/gpk-update-viewer.c:226
 msgid "Log Out"
 msgstr "Odhlásiť sa"
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:233
+#: ../src/gpk-update-viewer.c:224
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "to remain secure."
@@ -4040,49 +4119,84 @@ msgstr ""
 "nainštalované, aby ste sa odhlásili a znova prihlásili."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:288
+#: ../src/gpk-update-viewer.c:266
 msgid "Could not restart"
 msgstr "Nepodarilo sa vykonať reštart"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:356
+#: ../src/gpk-update-viewer.c:334
 msgid "Some updates were not installed"
 msgstr "Niektoré aktualizácie neboli nainštalované"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:425 ../src/gpk-update-viewer.c:436
+#: ../src/gpk-update-viewer.c:403 ../src/gpk-update-viewer.c:414
 msgid "Could not update packages"
 msgstr "Nepodarilo sa aktualizovať balíky"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:504 ../src/gpk-update-viewer.c:525
+#: ../src/gpk-update-viewer.c:482 ../src/gpk-update-viewer.c:503
 msgid "Updates installed"
 msgstr "Aktualizácie nainštalované"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:514
+#: ../src/gpk-update-viewer.c:492
 msgid "All updates were installed successfully."
 msgstr "Všetky aktualizácie boli úspešne nainštalované."
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:517
+#: ../src/gpk-update-viewer.c:495
 msgid "The selected updates were installed successfully."
 msgstr "Vybrané aktualizácie boli úspešne nainštalované."
 
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:713
+msgid "Trivial updates"
+msgstr "Triviálne aktualizácie"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:717
+msgid "Important updates"
+msgstr "Dôležité aktualizácie"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:721
+msgid "Security updates"
+msgstr "Bezpečnostné aktualizácie"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:725
+msgid "Bug fix updates"
+msgstr "Aktualizácie opravujúce chyby"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:729
+msgid "Enhancement updates"
+msgstr "Aktualizácie prinášajúce nové vlastnosti"
+
+#. TRANSLATORS: The type of update
+#: ../src/gpk-update-viewer.c:733
+msgid "Blocked updates"
+msgstr "Zablokované aktualizácie"
+
+#. TRANSLATORS: The type of update, i.e. unspecified
+#: ../src/gpk-update-viewer.c:737
+msgid "Other updates"
+msgstr "Ďalšie aktualizácie"
+
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:987
+#: ../src/gpk-update-viewer.c:1001
 msgid "Getting the list of updates"
 msgstr "Získava sa zoznam aktualizácií"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1226
+#: ../src/gpk-update-viewer.c:1242
 msgid "Could not run upgrade script"
 msgstr "Nepodarilo sa spustiť aktualizačný skript"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1275
+#: ../src/gpk-update-viewer.c:1291
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4100,22 +4214,22 @@ msgstr[2] ""
 "týchto balíkov môže byť drahé."
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1363
+#: ../src/gpk-update-viewer.c:1381
 msgid "There are no updates available"
 msgstr "Žiadne aktualizácie nie sú dostupné"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1421
+#: ../src/gpk-update-viewer.c:1439
 msgid "No updates are available"
 msgstr "Nie sú dostupné žiadne aktualizácie"
 
 #. TRANSLATORS: no network connnection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1423
+#: ../src/gpk-update-viewer.c:1441
 msgid "No network connection was detected."
 msgstr "Nebolo zistené žiadne sieťové pripojenie."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1440
+#: ../src/gpk-update-viewer.c:1458
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "Na_inštalovať aktualizácie"
@@ -4123,16 +4237,16 @@ msgstr[1] "Na_inštalovať aktualizáciu"
 msgstr[2] "Na_inštalovať aktualizácie"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1448
+#: ../src/gpk-update-viewer.c:1466
 msgid "All software is up to date"
 msgstr "Všetok softvér je aktuálny"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1450
+#: ../src/gpk-update-viewer.c:1468
 msgid "There are no software updates available for your computer at this time."
 msgstr "Momentálne nie sú pre váš počítač dostupné žiadne aktualizácie."
 
-#: ../src/gpk-update-viewer.c:1476
+#: ../src/gpk-update-viewer.c:1494
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4141,7 +4255,7 @@ msgstr[1] "Je dostupná %i aktualizácia"
 msgstr[2] "Sú dostupné %i aktualizácie"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1492
+#: ../src/gpk-update-viewer.c:1510
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4150,7 +4264,7 @@ msgstr[1] "%i aktualizácia vybraná"
 msgstr[2] "%i aktualizácie vybrané"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1500
+#: ../src/gpk-update-viewer.c:1518
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4158,28 +4272,23 @@ msgstr[0] "Vybraných %i aktualizácií (%s)"
 msgstr[1] "Vybraná %i aktualizácia (%s)"
 msgstr[2] "Vybrané %i aktualizácie (%s)"
 
-#. TRANSLATORS: a column that has name of the package that will be updated
-#: ../src/gpk-update-viewer.c:1703
-msgid "Software"
-msgstr "Softvér"
-
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1713
+#: ../src/gpk-update-viewer.c:1715
 msgid "Status"
 msgstr "Stav"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1922
+#: ../src/gpk-update-viewer.c:1938
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Táto aktualizácia opraví chyby a iné nekritické problémy."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1926
+#: ../src/gpk-update-viewer.c:1942
 msgid "This update is important as it may solve critical problems."
 msgstr "Táto aktualizácia je dôležitá, pretože môže riešiť kritické problémy."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1930
+#: ../src/gpk-update-viewer.c:1946
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
@@ -4187,24 +4296,24 @@ msgstr ""
 "balíka."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1934
+#: ../src/gpk-update-viewer.c:1950
 msgid "This update is blocked."
 msgstr "Táto aktualizácia je zablokovaná."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1946
+#: ../src/gpk-update-viewer.c:1962
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Toto upozornenie bolo vydané %s a naposledy aktualizované %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1953
+#: ../src/gpk-update-viewer.c:1969
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Toto upozornenie bolo vydané %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1975
+#: ../src/gpk-update-viewer.c:1991
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4216,7 +4325,7 @@ msgstr[2] ""
 "Ďalšie informácie o tejto aktualizácii nájdete na týchto webových stránkach:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1983
+#: ../src/gpk-update-viewer.c:1999
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4234,7 +4343,7 @@ msgstr[2] ""
 "webových stránkach:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:1991
+#: ../src/gpk-update-viewer.c:2007
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4250,7 +4359,7 @@ msgstr[2] ""
 "webových stránkach:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2000
+#: ../src/gpk-update-viewer.c:2016
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
@@ -4259,7 +4368,7 @@ msgstr ""
 "počítač."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2004
+#: ../src/gpk-update-viewer.c:2020
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4268,7 +4377,7 @@ msgstr ""
 "prihlásiť."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2011
+#: ../src/gpk-update-viewer.c:2027
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
@@ -4277,7 +4386,7 @@ msgstr ""
 "na produčné nasadenie."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2015
+#: ../src/gpk-update-viewer.c:2031
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4286,7 +4395,7 @@ msgstr ""
 "Prosím, ohláste akékoľvek problémy alebo regresie s ktorými sa stretnete."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2024
+#: ../src/gpk-update-viewer.c:2040
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
@@ -4294,70 +4403,73 @@ msgstr ""
 "Zobrazia sa protokoly vývojárov, keďže pre túto aktualizáciu nie je dostupný "
 "popis:"
 
-#. set loading text
-#: ../src/gpk-update-viewer.c:2060
+#: ../src/gpk-update-viewer.c:2090
 msgid "Loading..."
 msgstr "Načítava sa..."
 
+#: ../src/gpk-update-viewer.c:2093
+msgid "No update details available."
+msgstr "Nie sú dostupné žiadne podrobnosti o aktualizácii."
+
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2100 ../src/gpk-update-viewer.c:2198
-#: ../src/gpk-update-viewer.c:2218
+#: ../src/gpk-update-viewer.c:2125 ../src/gpk-update-viewer.c:2223
+#: ../src/gpk-update-viewer.c:2243
 msgid "Could not get update details"
 msgstr "Nepodarilo sa získať podrobnosti aktualizácie"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2120
+#: ../src/gpk-update-viewer.c:2145
 msgid "Could not get package details"
 msgstr "Nepodarilo sa získať podrobnosti balíka"
 
-#: ../src/gpk-update-viewer.c:2120 ../src/gpk-update-viewer.c:2218
+#: ../src/gpk-update-viewer.c:2145 ../src/gpk-update-viewer.c:2243
 msgid "No results were returned."
 msgstr "Neboli vrátené žiadne výsledky."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2453
+#: ../src/gpk-update-viewer.c:2478
 msgid "Select all"
 msgstr "Vybrať všetky"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2461
+#: ../src/gpk-update-viewer.c:2486
 msgid "Unselect all"
 msgstr "Zrušiť výber všetkých"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2468
+#: ../src/gpk-update-viewer.c:2493
 msgid "Select security updates"
 msgstr "Vybrať bezpečnostné aktualizácie"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2474
+#: ../src/gpk-update-viewer.c:2499
 msgid "Ignore this update"
 msgstr "Ignorovať túto aktualizáciu"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2586
+#: ../src/gpk-update-viewer.c:2610
 msgid "Could not get updates"
 msgstr "Nepodarilo sa získať aktualizácie"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2735
+#: ../src/gpk-update-viewer.c:2763
 msgid "Checking for updates..."
 msgstr "Kontrolujú sa aktualizácie..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3021
+#: ../src/gpk-update-viewer.c:3036
 msgid "Could not get list of distribution upgrades"
 msgstr "Nepodarilo sa získať aktualizácie distribúcie"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3051
+#: ../src/gpk-update-viewer.c:3066
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Je dostupná nová aktualizácia distribúcie „%s“"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3297
+#: ../src/gpk-update-viewer.c:3310
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -4366,7 +4478,7 @@ msgstr ""
 "dôležité aktualizácie systému."
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3367
+#: ../src/gpk-update-viewer.c:3375
 msgid "Software Update Viewer"
 msgstr "Prehliadač aktualizácií softvéru"
 
@@ -4391,6 +4503,15 @@ msgstr "Možnosti ladenia"
 msgid "Show debugging options"
 msgstr "Zobraziť možnosti ladenia"
 
+#~ msgid "Software Updates"
+#~ msgstr "Aktualizácie softvéru"
+
+#~ msgid "_Install Update(s)"
+#~ msgstr "Na_inštalovať aktualizácie"
+
+#~ msgid "Software"
+#~ msgstr "Softvér"
+
 #~ msgid "Package Installer"
 #~ msgstr "Inštalátor balíkov"
 
@@ -4399,226 +4520,3 @@ msgstr "Zobraziť možnosti ladenia"
 
 #~ msgid "Applications"
 #~ msgstr "Aplikácie"
-
-#~| msgid "System"
-#~ msgctxt "Main menu"
-#~ msgid "System"
-#~ msgstr "Systém"
-
-#~ msgid "Preferences"
-#~ msgstr "Nastavenia"
-
-#~ msgid "Administration"
-#~ msgstr "Správa"
-
-#~ msgid "Backend Status"
-#~ msgstr "Stav balíkovacieho systému"
-
-#~ msgid "Backend author:"
-#~ msgstr "Autor balíkovacieho systému:"
-
-#~ msgid "Backend name:"
-#~ msgstr "Názov balíkovacieho systému:"
-
-#~ msgid "Shows more software sources that may be interesting"
-#~ msgstr "Zobrazuje ďalšie zdroje softvéru, ktoré by mohli byť zaujímavé"
-
-#~ msgid "PackageKit Update Applet"
-#~ msgstr "PackageKit - Aktualizačný aplet"
-
-#~ msgid "PackageKit Backend Details Viewer"
-#~ msgstr "PackageKit - Prehliadač podrobností balíkovacieho systému"
-
-#~ msgid "_Preferences"
-#~ msgstr "_Predvoľby"
-
-#~ msgid "_About"
-#~ msgstr "_O programe"
-
-#~ msgid "One package was skipped:"
-#~ msgid_plural "Some packages were skipped:"
-#~ msgstr[0] "Niekoľko balíkov bolo preskočených:"
-#~ msgstr[1] "Jeden balík bol preskočený:"
-#~ msgstr[2] "Niekoľko balíkov bolo preskočených:"
-
-#~ msgid "The system update has completed"
-#~ msgstr "Aktualizácia systému bola dokončená"
-
-#~ msgid "Restart computer now"
-#~ msgstr "Reštartovať počítač teraz"
-
-#~ msgid "GNOME PackageKit Update Icon"
-#~ msgstr "Ikona aktualizácií pre GNOME PackageKit"
-
-#~ msgid "Security update available"
-#~ msgid_plural "Security updates available"
-#~ msgstr[0] "Sú dostupné bezpečnostné aktualizácie"
-#~ msgstr[1] "Je dostupná bezpečnostná aktualizácia"
-#~ msgstr[2] "Sú dostupné bezpečnostné aktualizácie"
-
-#~ msgid "An important update is available for your computer:"
-#~ msgid_plural "Important updates are available for your computer:"
-#~ msgstr[0] "Pre váš počítač sú dostupné dôležité aktualizácie:"
-#~ msgstr[1] "Pre váš počítač je dostupná dôležitá aktualizácia:"
-#~ msgstr[2] "Pre váš počítač sú dostupné dôležité aktualizácie:"
-
-#~ msgid "Install updates"
-#~ msgstr "Nainštalovať aktualizácie"
-
-#~ msgid ""
-#~ "Automatic updates are not being installed as the computer is running on "
-#~ "battery power"
-#~ msgstr ""
-#~ "Automatické aktualizácie sa neinštalujú, pretože počítač beží na batérie"
-
-#~ msgid "Updates not installed"
-#~ msgstr "Aktualizácie sa neinštalujú"
-
-#~ msgid "Install the updates anyway"
-#~ msgstr "Napriek tomu nainštalovať aktualizácie"
-
-#~ msgid "Updates are being installed"
-#~ msgstr "Aktualizácie sa inštalujú"
-
-#~ msgid "Updates are being automatically installed on your computer"
-#~ msgstr "Aktualizácie sa automaticky inštalujú na váš počítač"
-
-#~ msgid "Cancel update"
-#~ msgstr "Zrušiť aktualizáciu"
-
-#~ msgid "There is %d update available"
-#~ msgid_plural "There are %d updates available"
-#~ msgstr[0] "Je dostupných %d aktualizácií"
-#~ msgstr[1] "Je dostupná %d aktualizácia"
-#~ msgstr[2] "Sú dostupné %d aktualizácie"
-
-#~ msgid "Update available"
-#~ msgstr "Je dostupná aktualizácia"
-
-#~ msgid "Update available (on battery)"
-#~ msgstr "Je dostupná aktualizácia (na batérii)"
-
-#~ msgid "Failed to install packages"
-#~ msgstr "Nepodarilo sa nainštalovať balíky"
-
-#~ msgid "Additional software was installed"
-#~ msgstr "Bol nainštalovaný ďalší softvér"
-
-#~ msgid ""
-#~ "You will need to remove and then reinsert the hardware before it will "
-#~ "work correctly."
-#~ msgstr ""
-#~ "Aby hardvér správne fungoval, budete ho musieť vybrať a znova vložiť."
-
-#~ msgid "Your hardware has been set up and is now ready to use."
-#~ msgstr "Váš hardvér bol nastavený a je pripravený na použitie."
-
-#~ msgid ""
-#~ "Additional firmware is required to make hardware in this computer "
-#~ "function correctly."
-#~ msgstr "Aby tento počítač fungoval správne, požaduje ďalší firmvér."
-
-#~ msgid "Additional firmware required"
-#~ msgstr "Požaduje sa ďalší firmvér"
-
-#~ msgid "Install firmware"
-#~ msgstr "Nainštalovať firmvér"
-
-#~ msgid "Ignore devices"
-#~ msgstr "Ignorovať zariadenia"
-
-#~ msgid "Additional packages can be installed to support this hardware"
-#~ msgstr "Je možné nainštalovať ďalšie balíky na podporu tohto hardvéru."
-
-#~ msgid "New hardware attached"
-#~ msgstr "Pripojený nový hardvér"
-
-#~ msgid "A transaction that cannot be interrupted is running"
-#~ msgstr "Beží transakcia, ktorú nemožno prerušiť"
-
-#~ msgid "Exit after a small delay"
-#~ msgstr "Ukončiť po malej chvíli"
-
-#~ msgid "Update Applet"
-#~ msgstr "Aktualizačný aplet"
-
-#~ msgid "Update applet"
-#~ msgstr "Aktualizačný aplet"
-
-#~ msgid "GNOME PackageKit Update Viewer"
-#~ msgstr "PackageKit - Prehliadač aktualizácií pre GNOME"
-
-#~ msgid "Failed to update"
-#~ msgstr "Nepodarilo sa aktualizovať"
-
-#~ msgid "This is due to the %s package being updated."
-#~ msgid_plural "This is due to the following packages being updated: %s."
-#~ msgstr[0] "To je kvôli prebiehajúcej aktualizácii nasledovných balíkov: %s"
-#~ msgstr[1] "To je kvôli prebiehajúcej aktualizácii balíka %s."
-#~ msgstr[2] "To je kvôli prebiehajúcej aktualizácii nasledovných balíkov: %s"
-
-#~ msgid "This is because %i package has been updated."
-#~ msgid_plural "This is because %i packages have been updated."
-#~ msgstr[0] "To je preto, lebo %i balíkov bolo aktualizovaných."
-#~ msgstr[1] "To je preto, lebo %i balík bol aktualizovaný."
-#~ msgstr[2] "To je preto, lebo %i balíky boli aktualizované."
-
-#~ msgid "%i message from the package manager"
-#~ msgid_plural "%i messages from the package manager"
-#~ msgstr[0] "%i správ od správcu balíkov"
-#~ msgstr[1] "%i správa od správcu balíkov"
-#~ msgstr[2] "%i správy od správcu balíkov"
-
-#~ msgid "Package manager error details"
-#~ msgstr "Podrobnosti chyby správcu balíkov"
-
-#~ msgid "Package Manager Messages"
-#~ msgstr "Správy správcu balíkov"
-
-#~ msgid "Message"
-#~ msgstr "Správa"
-
-#~ msgid "_Show messages"
-#~ msgstr "Zobraziť _správy"
-
-#~ msgid "_Log out"
-#~ msgstr "_Odhlásiť sa"
-
-#~ msgid "_Restart computer"
-#~ msgstr "_Reštartovať počítač"
-
-#~ msgid "_Hide this icon"
-#~ msgstr "_Skryť túto ikonu"
-
-#~ msgid "New package manager message"
-#~ msgstr "Nová správa správcu balíkov"
-
-#~ msgid "Package Manager"
-#~ msgstr "Správca balíkov"
-
-#~ msgid "Packages have been removed"
-#~ msgstr "Balíky boli odstránené"
-
-#~ msgid "Packages have been installed"
-#~ msgstr "Balíky boli nainštalované"
-
-#~ msgid "System has been updated"
-#~ msgstr "Systém bol aktualizovaný"
-
-#~ msgid "Task completed"
-#~ msgstr "Úloha dokončená"
-
-#~ msgid "Debug these specific modules"
-#~ msgstr "Ladiť tieto konkrétne moduly"
-
-#~ msgid "Debug these specific functions"
-#~ msgstr "Ladiť tieto konkrétne funkcie"
-
-#~ msgid "Log debugging data to a file"
-#~ msgstr "Zaznamenávať ladiace údaje do súboru"
-
-#~ msgid "Allow applications to invoke the codec installer"
-#~ msgstr "Umožniť aplikáciám vyvolať inštalátor kodekov"
-
-#~ msgid "Allow applications to invoke the font installer"
-#~ msgstr "Umožniť aplikáciám vyvolať inštalátor písiem"
