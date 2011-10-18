@@ -292,13 +292,15 @@ gpk_get_pretty_arch (const gchar *arch)
 
 	/* 32 bit */
 	if (g_str_has_prefix (arch, "i")) {
-		id = "32-bit";
+		/* TRANSLATORS: a 32 bit package */
+		id = _("32-bit");
 		goto out;
 	}
 
 	/* 64 bit */
 	if (g_str_has_suffix (arch, "64")) {
-		id = "64-bit";
+		/* TRANSLATORS: a 64 bit package */
+		id = _("64-bit");
 		goto out;
 	}
 out:
