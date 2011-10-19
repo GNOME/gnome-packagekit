@@ -394,7 +394,7 @@ gpk_task_add_dialog_deps_section (PkTask *task,
 		goto out;
 	}
 
-	tab_page = gtk_vbox_new (FALSE, 6);
+	tab_page = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
 	gtk_container_set_border_width (GTK_CONTAINER (tab_page), 12);
 
 	/* get the header */

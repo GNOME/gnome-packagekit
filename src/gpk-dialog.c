@@ -456,7 +456,7 @@ gpk_dialog_tabbed_download_size_widget (GtkWidget *tab_page, const gchar *title,
 	/* add a hbox with the size for deps screen */
 	size_str = g_format_size (size);
 	text = g_strdup_printf ("%s: %s", title, size_str);
-	hbox = gtk_hbox_new (FALSE, 6);
+	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
 	gtk_container_add_with_properties (GTK_CONTAINER (tab_page), hbox,
 					   "expand", FALSE,
 					   "fill", FALSE,
