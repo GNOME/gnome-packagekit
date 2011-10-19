@@ -1515,7 +1515,7 @@ gpk_update_viewer_reconsider_info (void)
 			gtk_label_set_label (GTK_LABEL(widget), text);
 			g_free (text);
 		} else {
-			text_size = g_format_size_for_display (size_total);
+			text_size = g_format_size (size_total);
 			/* TRANSLATORS: how many updates are selected in the UI, and the size of packages to download */
 			text = g_strdup_printf (ngettext ("%i update selected (%s)",
 							  "%i updates selected (%s)",

@@ -2327,7 +2327,7 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, gpointer us
 	/* if non-zero, set the size */
 	if (size > 0) {
 		/* set the size */
-		value = g_format_size_for_display (size);
+		value = g_format_size (size);
 		if (g_strcmp0 (split[PK_PACKAGE_ID_DATA], "meta") == 0)
 			/* TRANSLATORS: the size of the meta package */
 			gpk_application_add_detail_item (_("Size"), value, NULL);

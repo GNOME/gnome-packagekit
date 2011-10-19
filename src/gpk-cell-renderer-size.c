@@ -62,7 +62,7 @@ gpk_cell_renderer_size_set_property (GObject *object, guint param_id,
 	case PROP_VALUE:
 		cru->value = g_value_get_uint (value);
 		g_free (cru->markup);
-		cru->markup = g_format_size_for_display (cru->value);
+		cru->markup = g_format_size (cru->value);
 		g_object_set (cru, "markup", cru->markup, NULL);
 
 		/* if the size is zero, we hide the markup */
