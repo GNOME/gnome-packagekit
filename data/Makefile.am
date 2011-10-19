@@ -5,9 +5,6 @@ SUBDIRS = icons
 migrationdir = $(datadir)/GConf/gsettings
 dist_migration_DATA = org.gnome.packagekit.gschema.migrate
 
-gtkmoduledir = $(libdir)/gnome-settings-daemon-3.0/gtk-modules
-dist_gtkmodule_DATA = gpk-pk-gtk-module.desktop
-
 @INTLTOOL_DESKTOP_RULE@
 desktopdir = $(datadir)/applications
 desktop_in_files =					\
