@@ -2916,12 +2916,9 @@ static gboolean
 gpk_update_viewer_textview_motion_notify_event (GtkWidget *text_view, GdkEventMotion *event)
 {
 	gint x, y;
-	GdkWindow *window;
 
 	gtk_text_view_window_to_buffer_coords (GTK_TEXT_VIEW (text_view), GTK_TEXT_WINDOW_WIDGET, event->x, event->y, &x, &y);
 	gpk_update_viewer_textview_set_cursor (GTK_TEXT_VIEW (text_view), x, y);
-	window = gtk_widget_get_window (text_view);
-	gdk_window_get_pointer (window, NULL, NULL, NULL);
 	return FALSE;
 }
 
