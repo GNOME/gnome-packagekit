@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-09-28 07:38+0000\n"
-"PO-Revision-Date: 2011-10-06 18:59+0300\n"
+"POT-Creation-Date: 2011-10-18 09:34+0000\n"
+"PO-Revision-Date: 2011-10-30 20:26+0300\n"
 "Last-Translator: Ville-Pekka Vainio <vpvainio@iki.fi>\n"
 "Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
 "Language: fi\n"
@@ -28,7 +28,7 @@ msgstr "Lisää tai poista järjestelmään asennettuja ohjelmistoja"
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
 #: ../src/gpk-application.c:4068 ../src/gpk-log.c:498
-#: ../src/gpk-update-viewer.c:3358
+#: ../src/gpk-update-viewer.c:3363
 msgid "Add/Remove Software"
 msgstr "Lisää tai poista ohjelmistoja"
 
@@ -859,7 +859,7 @@ msgid "Cancel search"
 msgstr "Peru haku"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:4051 ../src/gpk-update-viewer.c:3341
+#: ../src/gpk-application.c:4051 ../src/gpk-update-viewer.c:3346
 msgid "Show the program version and exit"
 msgstr "Näytä ohjelman versio ja lopeta"
 
@@ -868,25 +868,35 @@ msgstr "Näytä ohjelman versio ja lopeta"
 msgid "Package installer"
 msgstr "Pakettien asennin"
 
+#. TRANSLATORS: a 32 bit package
+#: ../src/gpk-common.c:296
+msgid "32-bit"
+msgstr "32-bittinen"
+
+#. TRANSLATORS: a 64 bit package
+#: ../src/gpk-common.c:303
+msgid "64-bit"
+msgstr "64-bittinen"
+
 #. TRANSLATORS: these tools cannot run as root (unknown name)
-#: ../src/gpk-common.c:426
+#: ../src/gpk-common.c:428
 msgid "This application is running as a privileged user"
 msgstr "Tämä ohjelma suoritetaan etuoikeutettuna käyttäjänä"
 
 #. TRANSLATORS: cannot run as root user, and we display the applicaiton name
-#: ../src/gpk-common.c:429
+#: ../src/gpk-common.c:431
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "%s suoritetaan etuoikeutettuna käyttäjänä"
 
 # paremmin?
 #. TRANSLATORS: tell the user off
-#: ../src/gpk-common.c:432
+#: ../src/gpk-common.c:434
 msgid "Package management applications are security sensitive."
 msgstr "Paketinhallintaohjelmat liittyvät järjestelmän turvallisuuteen."
 
 #. TRANSLATORS: and explain why
-#: ../src/gpk-common.c:434
+#: ../src/gpk-common.c:436
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
@@ -895,18 +905,18 @@ msgstr ""
 "välttää turvallisuussyistä."
 
 #. TRANSLATORS: button: allow the user to run this, even when insecure
-#: ../src/gpk-common.c:440
+#: ../src/gpk-common.c:442
 msgid "Continue _Anyway"
 msgstr "Jatka _silti"
 
 #. TRANSLATORS: The actions has just literally happened
-#: ../src/gpk-common.c:510 ../src/gpk-common.c:560
+#: ../src/gpk-common.c:512 ../src/gpk-common.c:562
 #, c-format
 msgid "Now"
 msgstr "Nyt"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:520 ../src/gpk-common.c:570
+#: ../src/gpk-common.c:522 ../src/gpk-common.c:572
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
@@ -914,7 +924,7 @@ msgstr[0] "%i sekunti"
 msgstr[1] "%i sekuntia"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:530 ../src/gpk-common.c:583
+#: ../src/gpk-common.c:532 ../src/gpk-common.c:585
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -922,7 +932,7 @@ msgstr[0] "%i minuutti"
 msgstr[1] "%i minuuttia"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:536 ../src/gpk-common.c:602
+#: ../src/gpk-common.c:538 ../src/gpk-common.c:604
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
@@ -933,45 +943,45 @@ msgstr[1] "%i tuntia"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/gpk-common.c:589 ../src/gpk-common.c:608
+#: ../src/gpk-common.c:591 ../src/gpk-common.c:610
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s %i %s"
 
-#: ../src/gpk-common.c:590 ../src/gpk-common.c:610
+#: ../src/gpk-common.c:592 ../src/gpk-common.c:612
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minuutti"
 msgstr[1] "minuuttia"
 
-#: ../src/gpk-common.c:591
+#: ../src/gpk-common.c:593
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "sekunti"
 msgstr[1] "sekuntia"
 
-#: ../src/gpk-common.c:609
+#: ../src/gpk-common.c:611
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "tunti"
 msgstr[1] "tuntia"
 
-#: ../src/gpk-common.c:636
+#: ../src/gpk-common.c:638
 #, c-format
 msgid "%s and %s"
 msgstr "%s ja %s"
 
-#: ../src/gpk-common.c:639
+#: ../src/gpk-common.c:641
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s ja %s"
 
-#: ../src/gpk-common.c:642
+#: ../src/gpk-common.c:644
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s ja %s"
 
-#: ../src/gpk-common.c:646
+#: ../src/gpk-common.c:648
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s ja %s"
@@ -3858,7 +3868,7 @@ msgid "Failed to get the list of sources"
 msgstr "Lähdeluettelon hakeminen epäonnistui"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3100
+#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3105
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Poistutaan, koska taustajärjestelmätietoja ei voitu hakea"
 
@@ -3959,12 +3969,12 @@ msgid "Set the default output directory"
 msgstr "Aseta tallennushakemiston oletus"
 
 #. TRANSLATORS: we don't have a lot to go on here
-#: ../src/gpk-update-viewer.c:178
+#: ../src/gpk-update-viewer.c:179
 msgid "Failed to process request."
 msgstr "Pyynnön käsittely epäonnistui."
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:206
+#: ../src/gpk-update-viewer.c:207
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "before the changes will be applied."
@@ -3973,12 +3983,12 @@ msgstr ""
 "jotta muutokset tulisivat käyttöön."
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:208 ../src/gpk-update-viewer.c:214
+#: ../src/gpk-update-viewer.c:209 ../src/gpk-update-viewer.c:215
 msgid "Restart Computer"
 msgstr "Käynnistä tietokone uudelleen"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:212
+#: ../src/gpk-update-viewer.c:213
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "to remain secure."
@@ -3987,7 +3997,7 @@ msgstr ""
 "turvallisuussyistä."
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:218
+#: ../src/gpk-update-viewer.c:219
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "before the changes will be applied."
@@ -3996,12 +4006,12 @@ msgstr ""
 "takaisin sisään, jotta muutokset tulisivat käyttöön."
 
 #. TRANSLATORS: the button text for the logout
-#: ../src/gpk-update-viewer.c:220 ../src/gpk-update-viewer.c:226
+#: ../src/gpk-update-viewer.c:221 ../src/gpk-update-viewer.c:227
 msgid "Log Out"
 msgstr "Kirjaudu ulos"
 
 #. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:224
+#: ../src/gpk-update-viewer.c:225
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "to remain secure."
@@ -4010,84 +4020,84 @@ msgstr ""
 "takaisin sisään turvallisuussyistä."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:266
+#: ../src/gpk-update-viewer.c:267
 msgid "Could not restart"
 msgstr "Ei voitu käynnistää uudelleen"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:334
+#: ../src/gpk-update-viewer.c:335
 msgid "Some updates were not installed"
 msgstr "Joitakin päivityksiä ei asennettu"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:403 ../src/gpk-update-viewer.c:414
+#: ../src/gpk-update-viewer.c:404 ../src/gpk-update-viewer.c:415
 msgid "Could not update packages"
 msgstr "Paketteja ei voitu päivittää"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:482 ../src/gpk-update-viewer.c:503
+#: ../src/gpk-update-viewer.c:483 ../src/gpk-update-viewer.c:504
 msgid "Updates installed"
 msgstr "Päivitykset on asennettu"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:492
+#: ../src/gpk-update-viewer.c:493
 msgid "All updates were installed successfully."
 msgstr "Kaikki päivitykset on asennettu."
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:495
+#: ../src/gpk-update-viewer.c:496
 msgid "The selected updates were installed successfully."
 msgstr "Valitut päivitykset on asennettu."
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:713
+#: ../src/gpk-update-viewer.c:714
 msgid "Trivial updates"
 msgstr "Vähäpätöiset päivitykset"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:717
+#: ../src/gpk-update-viewer.c:718
 msgid "Important updates"
 msgstr "Tärkeät päivitykset"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:721
+#: ../src/gpk-update-viewer.c:722
 msgid "Security updates"
 msgstr "Turvallisuuspäivitykset"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:725
+#: ../src/gpk-update-viewer.c:726
 msgid "Bug fix updates"
 msgstr "Ohjelmavirheitä korjaavat päivitykset"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:729
+#: ../src/gpk-update-viewer.c:730
 msgid "Enhancement updates"
 msgstr "Kehittävä päivitykset"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:733
+#: ../src/gpk-update-viewer.c:734
 msgid "Blocked updates"
 msgstr "Estetyt päivitykset"
 
 #. TRANSLATORS: The type of update, i.e. unspecified
-#: ../src/gpk-update-viewer.c:737
+#: ../src/gpk-update-viewer.c:738
 msgid "Other updates"
 msgstr "Muut päivitykset"
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1001
+#: ../src/gpk-update-viewer.c:1002
 msgid "Getting the list of updates"
 msgstr "Haetaan luetteloa päivityksistä"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1242
+#: ../src/gpk-update-viewer.c:1243
 msgid "Could not run upgrade script"
 msgstr "Päivityskomentosarjaa ei voitu suorittaa"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1291
+#: ../src/gpk-update-viewer.c:1292
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4102,39 +4112,39 @@ msgstr[1] ""
 "päivittäminen voi olla kallista."
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1381
+#: ../src/gpk-update-viewer.c:1382
 msgid "There are no updates available"
 msgstr "Yhtään päivitystä ei ole saatavilla"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1439
+#: ../src/gpk-update-viewer.c:1441
 msgid "No updates are available"
 msgstr "Päivityksiä ei ole saatavilla"
 
 #. TRANSLATORS: no network connnection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1441
+#: ../src/gpk-update-viewer.c:1443
 msgid "No network connection was detected."
 msgstr "Verkkoyhteyttä ei tunnistettu."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1458
+#: ../src/gpk-update-viewer.c:1460
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Asenna päivitys"
 msgstr[1] "_Asenna päivitykset"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1466
+#: ../src/gpk-update-viewer.c:1468
 msgid "All software is up to date"
 msgstr "Kaikki ohjelmistot ovat ajan tasalla"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1468
+#: ../src/gpk-update-viewer.c:1470
 msgid "There are no software updates available for your computer at this time."
 msgstr ""
 "Tietokoneeseesi ei ole tällä hetkellä saatavilla yhtään ohjelmistopäivitystä."
 
-#: ../src/gpk-update-viewer.c:1494
+#: ../src/gpk-update-viewer.c:1496
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4142,7 +4152,7 @@ msgstr[0] "%i päivitys on saatavilla"
 msgstr[1] "%i päivitystä on saatavilla"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1510
+#: ../src/gpk-update-viewer.c:1512
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4150,7 +4160,7 @@ msgstr[0] "%i päivitys valittuna"
 msgstr[1] "%i päivitystä valittuna"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1518
+#: ../src/gpk-update-viewer.c:1520
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4158,24 +4168,24 @@ msgstr[0] "%i päivitys valittuna (%s)"
 msgstr[1] "%i päivitystä valittuna (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1715
+#: ../src/gpk-update-viewer.c:1717
 msgid "Status"
 msgstr "Tila"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1938
+#: ../src/gpk-update-viewer.c:1940
 msgid "This update will fix bugs and other non-critical problems."
 msgstr ""
 "Tämä päivitys korjaa ohjelmavirheitä ja muita ongelmia, jotka eivät ole "
 "vakavia."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1942
+#: ../src/gpk-update-viewer.c:1944
 msgid "This update is important as it may solve critical problems."
 msgstr "Tämä päivitys on täkeä, koska se saattaa korjata vakavia ongelmia."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1946
+#: ../src/gpk-update-viewer.c:1948
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
@@ -4183,24 +4193,24 @@ msgstr ""
 "korjaamiseksi."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1950
+#: ../src/gpk-update-viewer.c:1952
 msgid "This update is blocked."
 msgstr "Tämä päivitys on estetty."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1962
+#: ../src/gpk-update-viewer.c:1964
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Tämä ilmoitus julkaistiin %s ja sitä on viimeksi päivitetty %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1969
+#: ../src/gpk-update-viewer.c:1971
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Tämä ilmoitus julkaistiin %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1991
+#: ../src/gpk-update-viewer.c:1993
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4208,7 +4218,7 @@ msgstr[0] "Lisätietoja tästä päivityksestä on tällä verkkosivulla:"
 msgstr[1] "Lisätietoja tästä päivityksestä on näillä verkkosivuilla:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1999
+#: ../src/gpk-update-viewer.c:2001
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4223,7 +4233,7 @@ msgstr[1] ""
 "verkkosivuilla:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2007
+#: ../src/gpk-update-viewer.c:2009
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4233,7 +4243,7 @@ msgstr[1] ""
 "Lisätietoja tästä turvallisuuspäivityksestä on näillä verkkosivuilla:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2016
+#: ../src/gpk-update-viewer.c:2018
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
@@ -4242,7 +4252,7 @@ msgstr ""
 "muutokset tulisivat käyttöön."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2020
+#: ../src/gpk-update-viewer.c:2022
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4251,7 +4261,7 @@ msgstr ""
 "jälkeen, jotta muutokset tulisivat käyttöön."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2027
+#: ../src/gpk-update-viewer.c:2029
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
@@ -4260,7 +4270,7 @@ msgstr ""
 "tuotantokäyttöön."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2031
+#: ../src/gpk-update-viewer.c:2033
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4269,81 +4279,81 @@ msgstr ""
 "kaikista löydetyistä ongelmista vikailmoitus."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2040
+#: ../src/gpk-update-viewer.c:2042
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr ""
 "Näytetään kehityslokit, koska tälle päivitykselle ei ole annettu kuvausta:"
 
-#: ../src/gpk-update-viewer.c:2090
+#: ../src/gpk-update-viewer.c:2092
 msgid "Loading..."
 msgstr "Ladataan…"
 
-#: ../src/gpk-update-viewer.c:2093
+#: ../src/gpk-update-viewer.c:2095
 msgid "No update details available."
 msgstr "Päivitystietoja ei ole saatavilla."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2125 ../src/gpk-update-viewer.c:2223
-#: ../src/gpk-update-viewer.c:2243
+#: ../src/gpk-update-viewer.c:2127 ../src/gpk-update-viewer.c:2225
+#: ../src/gpk-update-viewer.c:2245
 msgid "Could not get update details"
 msgstr "Päivitystietoja ei voitu noutaa"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2145
+#: ../src/gpk-update-viewer.c:2147
 msgid "Could not get package details"
 msgstr "Pakettitietoja ei voitu noutaa"
 
-#: ../src/gpk-update-viewer.c:2145 ../src/gpk-update-viewer.c:2243
+#: ../src/gpk-update-viewer.c:2147 ../src/gpk-update-viewer.c:2245
 msgid "No results were returned."
 msgstr "Ei tuloksia."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2478
+#: ../src/gpk-update-viewer.c:2480
 msgid "Select all"
 msgstr "Valitse kaikki"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2486
+#: ../src/gpk-update-viewer.c:2488
 msgid "Unselect all"
 msgstr "Poista valinta kaikista"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2493
+#: ../src/gpk-update-viewer.c:2495
 msgid "Select security updates"
 msgstr "Valitse turvallisuuspäivitykset"
 
 # TODO check
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2499
+#: ../src/gpk-update-viewer.c:2501
 msgid "Ignore this update"
 msgstr "Älä huomioi tätä päivitystä"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2610
+#: ../src/gpk-update-viewer.c:2612
 msgid "Could not get updates"
 msgstr "Päivityksiä ei voitu noutaa"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2763
+#: ../src/gpk-update-viewer.c:2765
 msgid "Checking for updates..."
 msgstr "Etsitään päivityksiä…"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3036
+#: ../src/gpk-update-viewer.c:3038
 msgid "Could not get list of distribution upgrades"
 msgstr "Jakelupäivitysluetteloiden hakeminen epäonnistui"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3066
+#: ../src/gpk-update-viewer.c:3068
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Jakelun versiopäivitys ”%s” on saatavilla"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3310
+#: ../src/gpk-update-viewer.c:3315
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -4352,7 +4362,7 @@ msgstr ""
 "estetään toistaiseksi."
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3375
+#: ../src/gpk-update-viewer.c:3380
 msgid "Software Update Viewer"
 msgstr "Ohjelmistopäivitysten katselin"
 
