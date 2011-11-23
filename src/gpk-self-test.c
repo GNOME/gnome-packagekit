@@ -39,6 +39,8 @@ main (int argc, char **argv)
 {
 	EggTest *test;
 
+	if (! g_thread_supported ())
+		g_thread_init (NULL);
 
 	g_type_init ();
 	gtk_init (&argc, &argv);
