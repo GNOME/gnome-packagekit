@@ -1797,7 +1797,11 @@ gpk_group_enum_to_icon_name (PkGroupEnum group)
 const gchar *
 gpk_restart_enum_to_icon_name (PkRestartEnum restart)
 {
-	return pk_enum_find_string (enum_restart_icon_name, restart);
+	const gchar *tmp;
+	tmp = pk_enum_find_string (enum_restart_icon_name, restart);
+	if (tmp[0] == '\0')
+		tmp = NULL;
+	return tmp;
 }
 
 /**

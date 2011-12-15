@@ -100,7 +100,7 @@ gpk_cell_renderer_info_set_property (GObject *object, guint param_id,
 		cru->priv->value = g_value_get_uint (value);
 		ret = gpk_cell_renderer_should_show (cru);
 		if (!ret) {
-			g_object_set (cru, "icon-name", "", NULL);
+			g_object_set (cru, "icon-name", NULL, NULL);
 		} else {
 			cru->priv->icon_name = gpk_info_status_enum_to_icon_name (cru->priv->value);
 			g_object_set (cru, "icon-name", cru->priv->icon_name, NULL);
