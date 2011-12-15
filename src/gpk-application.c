@@ -1806,16 +1806,6 @@ gpk_application_quit (GtkApplication *application)
 }
 
 /**
- * gpk_application_delete_event_cb:
- * @event: The event type, unused.
- **/
-static gboolean
-gpk_application_delete_event_cb (GtkWidget *widget, GdkEvent *event, GtkApplication *application)
-{
-	return !gpk_application_quit (application);
-}
-
-/**
  * gpk_application_menu_quit_cb:
  **/
 static void
@@ -3748,10 +3738,6 @@ gpk_application_startup_cb (GtkApplication *application, gpointer user_data)
 	gtk_widget_hide (main_window);
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_INSTALLER);
 	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_INSTALLER);
-
-	/* Get the main window quit */
-	g_signal_connect (main_window, "delete_event",
-			  G_CALLBACK (gpk_application_delete_event_cb), application);
 
 	/* clear */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_clear"));

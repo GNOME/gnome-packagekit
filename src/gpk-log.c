@@ -655,16 +655,6 @@ gpk_log_entry_filter_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_da
 }
 
 /**
- * gpk_log_delete_event_cb:
- **/
-static gboolean
-gpk_log_delete_event_cb (GtkWidget *widget, GdkEvent *event, GtkApplication *application)
-{
-	g_application_release (G_APPLICATION (application));
-	return FALSE;
-}
-
-/**
  * gpk_log_button_close_cb:
  **/
 static void
@@ -719,10 +709,6 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 
 	/* set a size, as the screen allows */
 	gpk_window_set_size_request (window, 1200, 1200);
-
-	/* Get the main window quit */
-	g_signal_connect (window, "delete-event",
-			  G_CALLBACK (gpk_log_delete_event_cb), application);
 
 	/* if command line arguments are set, then setup UI */
 	if (filter != NULL) {

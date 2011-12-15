@@ -819,17 +819,6 @@ gpk_prefs_close_cb (GtkWidget *widget, gpointer data)
 }
 
 /**
- * gpk_prefs_delete_event_cb:
- **/
-static gboolean
-gpk_prefs_delete_event_cb (GtkWidget *widget, GdkEvent *event, GpkPrefsPrivate *priv)
-{
-	gpk_prefs_close_cb (widget, priv);
-	return FALSE;
-}
-
-
-/**
  * gpk_pack_startup_cb:
  **/
 static void
@@ -904,8 +893,6 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (priv->builder, "dialog_prefs"));
-	g_signal_connect (main_window, "delete_event",
-			  G_CALLBACK (gpk_prefs_delete_event_cb), priv);
 	gtk_application_add_window (application, GTK_WINDOW (main_window));
 
 	gtk_widget_show (main_window);

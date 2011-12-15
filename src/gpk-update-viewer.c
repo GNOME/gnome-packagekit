@@ -1244,16 +1244,6 @@ gpk_update_viewer_button_upgrade_cb (GtkWidget *widget, gpointer user_data)
 }
 
 /**
- * gpk_update_viewer_button_delete_event_cb:
- **/
-static gboolean
-gpk_update_viewer_button_delete_event_cb (GtkWidget *widget, GdkEvent *event, gpointer user_data)
-{
-	gpk_update_viewer_quit ();
-	return TRUE;
-}
-
-/**
  * gpk_update_viewer_check_mobile_broadband:
  **/
 static void
@@ -3195,7 +3185,6 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	}
 
 	main_window = GTK_WIDGET(gtk_builder_get_object (builder, "dialog_updates"));
-	g_signal_connect (main_window, "delete_event", G_CALLBACK (gpk_update_viewer_button_delete_event_cb), NULL);
 	gtk_window_set_icon_name (GTK_WINDOW(main_window), GPK_ICON_SOFTWARE_UPDATE);
 	gtk_application_add_window (application, GTK_WINDOW(main_window));
 

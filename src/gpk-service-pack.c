@@ -673,16 +673,6 @@ gpk_pack_radio_copy_cb (GtkWidget *widget2, gpointer data)
 }
 
 /**
- * gpk_pack_delete_event_cb:
- **/
-static gboolean
-gpk_pack_delete_event_cb (GtkWidget *widget, GdkEvent *event, GtkApplication *application)
-{
-	g_application_release (G_APPLICATION (application));
-	return FALSE;
-}
-
-/**
  * gpk_pack_button_close_cb:
  **/
 static void
@@ -735,10 +725,6 @@ gpk_pack_startup_cb (GtkApplication *application, gpointer user_data)
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SERVICE_PACK);
-
-	/* Get the main window quit */
-	g_signal_connect (main_window, "delete-event",
-			  G_CALLBACK (gpk_pack_delete_event_cb), application);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "filechooserbutton_exclude"));
 	filter = gtk_file_filter_new ();
