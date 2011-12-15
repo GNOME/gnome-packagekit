@@ -746,14 +746,15 @@ gpk_update_view_get_info_headers (PkInfoEnum info)
 static void
 gpk_update_viewer_get_parent_for_info (PkInfoEnum info, GtkTreeIter *parent)
 {
-	GtkTreeView *treeview;
-	GtkTreeModel *model;
-	GtkTreeIter iter;
+	gboolean is_package;
+	gboolean ret = FALSE;
 	gboolean valid;
 	gchar *package_id_tmp;
-	gboolean ret = FALSE;
-	PkInfoEnum info_tmp;
 	gchar *title;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	GtkTreeView *treeview;
+	PkInfoEnum info_tmp;
 
 	treeview = GTK_TREE_VIEW(gtk_builder_get_object (builder, "treeview_updates"));
 	model = gtk_tree_view_get_model (treeview);
@@ -777,14 +778,11 @@ gpk_update_viewer_get_parent_for_info (PkInfoEnum info, GtkTreeIter *parent)
 				    GPK_UPDATES_COLUMN_INFO, &info_tmp,
 				    GPK_UPDATES_COLUMN_ID, &package_id_tmp,
 				    -1);
-
-		if (package_id_tmp != NULL) {
-			g_free (package_id_tmp);
-			continue;
-		}
+		is_package = package_id_tmp != NULL;
+		g_free (package_id_tmp);
 
 		/* right section? */
-		if (info_tmp == info) {
+		if (!is_package && info_tmp == info) {
 			*parent = iter;
 			ret = TRUE;
 			break;
