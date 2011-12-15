@@ -505,6 +505,9 @@ gpk_log_add_item (PkTransactionPast *item)
 	else if (g_strcmp0 (cmdline, "/usr/libexec/pk-command-not-found") == 0)
 		/* TRANSLATORS: short name for the command not found plugin */
 		tool = _("Bash - Command Not Found");
+	else if (g_strcmp0 (cmdline, "/usr/libexec/gnome-settings-daemon") == 0)
+		/* TRANSLATORS: user friendly name for gnome-settings-dameon */
+		tool = _("GNOME Session");
 	else
 		tool = cmdline;
 
