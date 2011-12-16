@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2011-10-23 06:52+0000\n"
-"PO-Revision-Date: 2011-10-23 19:52+0100\n"
+"POT-Creation-Date: 2011-12-16 13:21+0000\n"
+"PO-Revision-Date: 2011-12-16 21:51+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "Language: sl\n"
@@ -28,9 +28,9 @@ msgstr "Nameščanje in odstranjevanje programske opreme sistema"
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../data/gpk-application.desktop.in.h:2
 #: ../data/gpk-application.ui.h:2
-#: ../src/gpk-application.c:4066
+#: ../src/gpk-application.c:4054
 #: ../src/gpk-log.c:498
-#: ../src/gpk-update-viewer.c:3358
+#: ../src/gpk-update-viewer.c:3347
 msgid "Add/Remove Software"
 msgstr "Upravljanje programske opreme"
 
@@ -263,17 +263,17 @@ msgstr "Namestitev izbrane programske opreme v sistem"
 #: ../data/gpk-dbus-service.desktop.in.h:2
 #: ../data/gpk-install-local-file.desktop.in.h:2
 #: ../src/gpk-dbus-task.c:3377
-#: ../src/gpk-install-local-file.c:65
-#: ../src/gpk-install-package-name.c:64
-#: ../src/gpk-dbus-service.c:151
-#: ../src/gpk-dbus-service.c:154
+#: ../src/gpk-install-local-file.c:67
+#: ../src/gpk-install-package-name.c:66
+#: ../src/gpk-dbus-service.c:153
+#: ../src/gpk-dbus-service.c:156
 msgid "Software Install"
 msgstr "Nameščanje programske opreme"
 
 #. TRANSLATORS: program name: application to install a catalog of software
 #: ../data/gpk-install-catalog.desktop.in.h:1
-#: ../src/gpk-install-catalog.c:66
 #: ../src/gpk-install-catalog.c:68
+#: ../src/gpk-install-catalog.c:70
 msgid "Catalog Installer"
 msgstr "Namestilnik katalogov"
 
@@ -283,7 +283,7 @@ msgstr "Namestitev kataloga programske opreme v sistem"
 
 #: ../data/gpk-log.desktop.in.h:1
 #: ../data/gpk-log.ui.h:2
-#: ../src/gpk-log.c:838
+#: ../src/gpk-log.c:829
 msgid "Software Log Viewer"
 msgstr "Pregledovalnik dnevnika programske opreme"
 
@@ -325,7 +325,7 @@ msgstr "Trenutno je uporabljeno mobilno omrežje"
 
 #. TRANSLATORS: program name, an application to set per-user policy for updates
 #: ../data/gpk-prefs.ui.h:7
-#: ../src/gpk-prefs.c:947
+#: ../src/gpk-prefs.c:934
 msgid "Software Update Preferences"
 msgstr "Možnosti posodobitev programske opreme"
 
@@ -401,7 +401,7 @@ msgstr "Izbor datoteke seznama paketov"
 
 #. TRANSLATORS: the program name
 #: ../data/gpk-service-pack.ui.h:13
-#: ../src/gpk-service-pack.c:831
+#: ../src/gpk-service-pack.c:817
 msgid "Service Pack Creator"
 msgstr "Ustvarjalnik servisnega paketa popravkov"
 
@@ -653,7 +653,7 @@ msgstr "Ko se okno zapre bodo vse spremembe izgubljene."
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2107
+#: ../src/gpk-application.c:2097
 #: ../src/gpk-enum.c:1156
 #: ../src/gpk-enum.c:1245
 msgid "Installed"
@@ -662,195 +662,195 @@ msgstr "Nameščeno"
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2123
-#: ../src/gpk-application.c:2145
+#: ../src/gpk-application.c:2113
+#: ../src/gpk-application.c:2135
 #: ../src/gpk-dialog.c:151
 #: ../src/gpk-modal-dialog.c:731
 msgid "Name"
 msgstr "Ime"
 
 #. TRANSLATORS: the type of package is a collection (metagroup)
-#: ../src/gpk-application.c:2285
+#: ../src/gpk-application.c:2275
 msgid "Type"
 msgstr "Vrsta"
 
-#: ../src/gpk-application.c:2285
+#: ../src/gpk-application.c:2275
 msgid "Collection"
 msgstr "Zbirka"
 
 #. TRANSLATORS: tooltip: go to the web address
-#: ../src/gpk-application.c:2293
+#: ../src/gpk-application.c:2283
 #, c-format
 msgid "Visit %s"
 msgstr "Povezava s spletno stranjo %s"
 
 #. TRANSLATORS: add an entry to go to the project home page
-#: ../src/gpk-application.c:2298
+#: ../src/gpk-application.c:2288
 msgid "Project"
 msgstr "Projekt"
 
-#: ../src/gpk-application.c:2298
+#: ../src/gpk-application.c:2288
 msgid "Homepage"
 msgstr "Spletna stran"
 
 #. TRANSLATORS: the group the package belongs in
-#: ../src/gpk-application.c:2312
+#: ../src/gpk-application.c:2302
 msgid "Group"
 msgstr "Skupina"
 
 #. TRANSLATORS: the licence string for the package
-#: ../src/gpk-application.c:2318
+#: ../src/gpk-application.c:2308
 msgid "License"
 msgstr "Dovoljenje"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2333
+#: ../src/gpk-application.c:2323
 msgid "Size"
 msgstr "Velikost"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2336
+#: ../src/gpk-application.c:2326
 msgid "Installed size"
 msgstr "Velikost namestitve"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2339
+#: ../src/gpk-application.c:2329
 msgid "Download size"
 msgstr "Velikost prejemanja"
 
 #. TRANSLATORS: where the package came from, the software source name
-#: ../src/gpk-application.c:2348
+#: ../src/gpk-application.c:2338
 msgid "Source"
 msgstr "Vir"
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:2493
+#: ../src/gpk-application.c:2483
 msgid "Selected packages"
 msgstr "Izbrani paketi"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2546
+#: ../src/gpk-application.c:2536
 msgid "Searching by name"
 msgstr "Iskanje po imenu paketa"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2570
+#: ../src/gpk-application.c:2560
 msgid "Searching by description"
 msgstr "Iskanje po opisu paketa"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2594
+#: ../src/gpk-application.c:2584
 msgid "Searching by file"
 msgstr "Iskanje po datotekah v paketu"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2616
+#: ../src/gpk-application.c:2606
 msgid "Search by name"
 msgstr "Iskanje po imenu"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2627
+#: ../src/gpk-application.c:2617
 msgid "Search by description"
 msgstr "Iskanje po opisu"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2638
+#: ../src/gpk-application.c:2628
 msgid "Search by file name"
 msgstr "Iskanje po imenu datoteke"
 
-#: ../src/gpk-application.c:2679
+#: ../src/gpk-application.c:2669
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Objavljeno pod pogoji Splošnega javnega dovoljenja GNU različice 2"
 
-#: ../src/gpk-application.c:2680
+#: ../src/gpk-application.c:2670
 msgid "PackageKit is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "PackageKit je prosta programska oprema; program lahko razširjate in/ali spreminjate pod pogoji Splošnega Javnega Dovoljenja GNU (GNU GPL), kot je objavljen pri organizaciji Free Software Foundation; druga (2) različica dokumenta ali (po lastni presoji) katerikoli kasnejši različici."
 
-#: ../src/gpk-application.c:2684
+#: ../src/gpk-application.c:2674
 msgid "PackageKit is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "PackageKit se razširja v upanju, da bo uporabniku koristen, vendar BREZ ZAGOTOVILA KAKRŠNEGAKOLI JAMSTVA; tudi brez posrednega jamstva CENOVNE VREDNOSTI ali PRIMERNOSTI ZA DOLOČENO UPORABO. Za več podrobnosti si oglejte Splošno Javno Dovoljenje GNU."
 
-#: ../src/gpk-application.c:2688
+#: ../src/gpk-application.c:2678
 msgid "You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 msgstr "Skupaj s programom bi morali prejeti kopijo GNU Splošnega Javnega Dovoljenja; v primeru, da je niste, pišite na Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2694
+#: ../src/gpk-application.c:2684
 msgid "translator-credits"
 msgstr "Matej Urbančič <mateju@svn.gnome.org>"
 
-#: ../src/gpk-application.c:2714
+#: ../src/gpk-application.c:2704
 msgid "PackageKit Website"
 msgstr "Spletišče programa PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2717
+#: ../src/gpk-application.c:2707
 msgid "Package Manager for GNOME"
 msgstr "Upravljalnik paketov za GNOME"
 
 #. TRANSLATORS: single column for the package details, not visible at the moment
-#: ../src/gpk-application.c:3144
+#: ../src/gpk-application.c:3134
 msgid "Text"
 msgstr "Besedilo"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:3168
+#: ../src/gpk-application.c:3158
 msgid "Enter a search word and then click find, or click a group to get started."
 msgstr "Vnesite iskani niz in kliknite gumb za iskanje oziroma kliknite skupino paketov."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:3171
+#: ../src/gpk-application.c:3161
 msgid "Enter a search word and then click find to get started."
 msgstr "Vnesite iskani niz in kliknite gumb za iskanje."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3397
+#: ../src/gpk-application.c:3387
 msgid "Exiting as properties could not be retrieved"
 msgstr "Lastnosti ni mogoče pridobiti"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3516
+#: ../src/gpk-application.c:3506
 msgid "All packages"
 msgstr "Vsi paketi"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3518
+#: ../src/gpk-application.c:3508
 msgid "Show all packages"
 msgstr "Pokaži vse pakete"
 
 #. TRANSLATORS: tooltip on the clear button
-#: ../src/gpk-application.c:3761
+#: ../src/gpk-application.c:3747
 msgid "Clear current selection"
 msgstr "Počisti trenutni izbor"
 
 #. TRANSLATORS: tooltip on the apply button
-#: ../src/gpk-application.c:3786
+#: ../src/gpk-application.c:3772
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "Spremembe niso uveljavljene takoj; uveljavljene bodo s pritiskom na gumb"
 
 #. TRANSLATORS: tooltip on the homepage button
-#: ../src/gpk-application.c:3812
+#: ../src/gpk-application.c:3798
 msgid "Visit home page for selected package"
 msgstr "Obiščite spletno stran izbranega paketa"
 
 #. TRANSLATORS: tooltip on the find button
-#: ../src/gpk-application.c:3920
+#: ../src/gpk-application.c:3906
 msgid "Find packages"
 msgstr "Iskanje paketov"
 
 #. TRANSLATORS: tooltip on the cancel button
-#: ../src/gpk-application.c:3928
+#: ../src/gpk-application.c:3914
 msgid "Cancel search"
 msgstr "Prekliči iskanje"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:4051
-#: ../src/gpk-update-viewer.c:3343
+#: ../src/gpk-application.c:4037
+#: ../src/gpk-update-viewer.c:3330
 msgid "Show the program version and exit"
 msgstr "Pokaži različico nameščenega programa in končaj"
 
 #. are we running privileged
-#: ../src/gpk-application.c:4082
+#: ../src/gpk-application.c:4070
 msgid "Package installer"
 msgstr "Namestilnik paketov"
 
@@ -1768,8 +1768,8 @@ msgstr "Nepodprta različica ozadnjega programa."
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-distro-upgrade.c:773
-#: ../src/gpk-distro-upgrade.c:776
+#: ../src/gpk-distro-upgrade.c:775
+#: ../src/gpk-distro-upgrade.c:778
 msgid "Distribution Upgrade Tool"
 msgstr "Orodje za posodobitev celotne distribucije"
 
@@ -3671,34 +3671,34 @@ msgid "Catalogs files to install"
 msgstr "Datoteke kataloga za namestitev"
 
 #. are we running privileged
-#: ../src/gpk-install-catalog.c:76
+#: ../src/gpk-install-catalog.c:78
 msgid "Catalog installer"
 msgstr "Namestilnik katalogov"
 
-#: ../src/gpk-install-catalog.c:81
+#: ../src/gpk-install-catalog.c:83
 msgid "Failed to install catalog"
 msgstr "Napaka med nameščanjem kataloga"
 
 #. TRANSLATORS: no filename was supplied
-#: ../src/gpk-install-catalog.c:83
+#: ../src/gpk-install-catalog.c:85
 msgid "You need to specify a file name to install"
 msgstr "Določiti je treba ime datoteke za namestitev"
 
 #. TRANSLATORS: This is when the specified DBus method did not execute successfully
-#: ../src/gpk-install-catalog.c:116
-#: ../src/gpk-install-local-file.c:116
-#: ../src/gpk-install-mime-type.c:116
-#: ../src/gpk-install-package-name.c:115
-#: ../src/gpk-install-provide-file.c:116
-msgid "The action could not be completed"
-msgstr "Dejanja ni mogoče končati"
-
-#. TRANSLATORS: we don't have anything more useful to translate. sorry.
 #: ../src/gpk-install-catalog.c:118
 #: ../src/gpk-install-local-file.c:118
 #: ../src/gpk-install-mime-type.c:118
 #: ../src/gpk-install-package-name.c:117
 #: ../src/gpk-install-provide-file.c:118
+msgid "The action could not be completed"
+msgstr "Dejanja ni mogoče končati"
+
+#. TRANSLATORS: we don't have anything more useful to translate. sorry.
+#: ../src/gpk-install-catalog.c:120
+#: ../src/gpk-install-local-file.c:120
+#: ../src/gpk-install-mime-type.c:120
+#: ../src/gpk-install-package-name.c:119
+#: ../src/gpk-install-provide-file.c:120
 msgid "The request failed. More details are available in the detailed report."
 msgstr "Neuspešna zahteva. Več podrobnosti je zapisanih v poročilu."
 
@@ -3707,24 +3707,24 @@ msgstr "Neuspešna zahteva. Več podrobnosti je zapisanih v poročilu."
 msgid "Files to install"
 msgstr "Datoteke za namestitev"
 
-#: ../src/gpk-install-local-file.c:67
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "Namestilnik datotek PackageKit"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-local-file.c:75
+#: ../src/gpk-install-local-file.c:77
 msgid "Local file installer"
 msgstr "Namestilnik krajevnih datotek"
 
 #. TRANSLATORS: could not install a package that contained the file we wanted
 #. TRANSLATORS: nothing done
-#: ../src/gpk-install-local-file.c:81
-#: ../src/gpk-install-provide-file.c:81
+#: ../src/gpk-install-local-file.c:83
+#: ../src/gpk-install-provide-file.c:83
 msgid "Failed to install a package to provide a file"
 msgstr "Prišlo je do napaka med nameščanjem paketa z zahtevano datoteko"
 
 #. TRANSLATORS: nothing selected
-#: ../src/gpk-install-local-file.c:83
+#: ../src/gpk-install-local-file.c:85
 msgid "You need to specify a file to install"
 msgstr "Določiti je treba datoteko za namestitev"
 
@@ -3734,23 +3734,23 @@ msgid "Mime types to install"
 msgstr "Mime vrste za namestitev"
 
 #. TRANSLATORS: program name: application to install a package to provide a mime type
-#: ../src/gpk-install-mime-type.c:65
 #: ../src/gpk-install-mime-type.c:67
+#: ../src/gpk-install-mime-type.c:69
 msgid "Mime Type Installer"
 msgstr "Namestilnik mime vrst"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-mime-type.c:75
+#: ../src/gpk-install-mime-type.c:77
 msgid "Mime type installer"
 msgstr "Namestilnik mime vrst"
 
 #. TRANSLATORS: could not install program supporting this type
-#: ../src/gpk-install-mime-type.c:81
+#: ../src/gpk-install-mime-type.c:83
 msgid "Failed to install a program to handle this file type"
 msgstr "Napaka med nameščanjem programa za upravljanje te vrste datotek"
 
 #. TRANSLATORS: no type given
-#: ../src/gpk-install-mime-type.c:83
+#: ../src/gpk-install-mime-type.c:85
 msgid "You need to specify a mime-type to install"
 msgstr "Določiti je treba mime vrsto za namestitev"
 
@@ -3759,18 +3759,18 @@ msgid "Packages to install"
 msgstr "Paketi za namestitev"
 
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66
-#: ../src/gpk-install-package-name.c:74
+#: ../src/gpk-install-package-name.c:68
+#: ../src/gpk-install-package-name.c:76
 msgid "Package Name Installer"
 msgstr "Namestilnik imen paketov"
 
 #. TRANSLATORS: failed
-#: ../src/gpk-install-package-name.c:80
+#: ../src/gpk-install-package-name.c:82
 msgid "Failed to install package from name"
 msgstr "Napaka med nameščanjem paketa iz imena"
 
 #. TRANSLATORS: nothing was specified
-#: ../src/gpk-install-package-name.c:82
+#: ../src/gpk-install-package-name.c:84
 msgid "You need to specify a package to install"
 msgstr "Določiti je treba paket za namestitev"
 
@@ -3781,14 +3781,14 @@ msgstr "Krajevne datoteke za namestitev"
 
 #. TRANSLATORS: program name, an application to install a file that is needed by an application and is provided by packages
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-provide-file.c:65
 #: ../src/gpk-install-provide-file.c:67
-#: ../src/gpk-install-provide-file.c:75
+#: ../src/gpk-install-provide-file.c:69
+#: ../src/gpk-install-provide-file.c:77
 msgid "Single File Installer"
 msgstr "Namestilnik ene datoteke"
 
 #. TRANSLATORS: nothig was specified
-#: ../src/gpk-install-provide-file.c:83
+#: ../src/gpk-install-provide-file.c:85
 msgid "You need to specify a filename to install"
 msgstr "Določiti je treba ime datoteke za namestitev"
 
@@ -3832,19 +3832,24 @@ msgstr "Ikona posodobitve"
 msgid "Bash - Command Not Found"
 msgstr "Bash - ukaza ni mogoče najti"
 
+#. TRANSLATORS: user friendly name for gnome-settings-dameon
+#: ../src/gpk-log.c:510
+msgid "GNOME Session"
+msgstr "Seja GNOME"
+
 #. TRANSLATORS: preset the GtktextBox with this filter text
-#: ../src/gpk-log.c:821
+#: ../src/gpk-log.c:810
 msgid "Set the filter to this value"
 msgstr "Nastavi filter na to vrednost"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:824
-#: ../src/gpk-prefs.c:938
+#: ../src/gpk-log.c:813
+#: ../src/gpk-prefs.c:925
 msgid "Set the parent window to make this modal"
 msgstr "Določi glavno okno kot vedno na vrhu."
 
 #. are we running privileged
-#: ../src/gpk-log.c:846
+#: ../src/gpk-log.c:837
 msgid "Log viewer"
 msgstr "Pregledovalnik dnevnikov"
 
@@ -3910,7 +3915,7 @@ msgstr "Napaka med pridobivanjem seznama virov"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
 #: ../src/gpk-prefs.c:763
-#: ../src/gpk-update-viewer.c:3102
+#: ../src/gpk-update-viewer.c:3090
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Podrobnosti zaledja programa ni mogoče pridobiti"
 
@@ -3982,32 +3987,32 @@ msgid "Cannot read destination package array"
 msgstr "Ni mogoče prebrati ciljnega seznama skupin paketov"
 
 #. TRANSLATORS: file search type, lists of packages
-#: ../src/gpk-service-pack.c:746
+#: ../src/gpk-service-pack.c:732
 msgid "Package array files"
 msgstr "Datoteke seznama skupin paketov"
 
 #. TRANSLATORS: file search type, service pack destination file type
-#: ../src/gpk-service-pack.c:753
+#: ../src/gpk-service-pack.c:739
 msgid "Service pack files"
 msgstr "Datoteke servisnega paketa popravkov"
 
 #. TRANSLATORS: the constants should not be translated
-#: ../src/gpk-service-pack.c:813
+#: ../src/gpk-service-pack.c:799
 msgid "Set the option, allowable values are 'array', 'updates' and 'package'"
 msgstr "Določitev možnosti; dovoljene vrednosti so 'array' (skupina paketov), 'updates' (posodobitve) and 'package' (paket)"
 
 #. TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack
-#: ../src/gpk-service-pack.c:816
+#: ../src/gpk-service-pack.c:802
 msgid "Add the package name to the text entry box"
 msgstr "Dodaj ime paketa v vnosno besedilno polje"
 
 #. TRANSLATORS: this is the destination computer package array
-#: ../src/gpk-service-pack.c:819
+#: ../src/gpk-service-pack.c:805
 msgid "Set the remote package array filename"
 msgstr "Določi ime oddaljene datoteke skupine paketov"
 
 #. TRANSLATORS: this is the file output directory
-#: ../src/gpk-service-pack.c:822
+#: ../src/gpk-service-pack.c:808
 msgid "Set the default output directory"
 msgstr "Določitev privzete odvodne mape"
 
@@ -4117,18 +4122,18 @@ msgid "Other updates"
 msgstr "Druge posodobitve"
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1002
+#: ../src/gpk-update-viewer.c:1000
 msgid "Getting the list of updates"
 msgstr "Pridobivanje seznama posodobitev"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1243
+#: ../src/gpk-update-viewer.c:1241
 msgid "Could not run upgrade script"
 msgstr "Ni mogoče zagnati skripta posodobitev"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1292
+#: ../src/gpk-update-viewer.c:1280
 msgid "Connectivity is being provided by wireless broadband, and it may be expensive to update this package."
 msgid_plural "Connectivity is being provided by wireless broadband, and it may be expensive to update these packages."
 msgstr[0] "Posodobitev bo izvedena preko brezžične povezave, zato je posodobitev paketov lahko potratna."
@@ -4137,22 +4142,22 @@ msgstr[2] "Posodobitev bo izvedena preko brezžične povezave, zato je posodobit
 msgstr[3] "Posodobitev bo izvedena preko brezžične povezave, zato je posodobitev paketov lahko potratna."
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1382
+#: ../src/gpk-update-viewer.c:1370
 msgid "There are no updates available"
 msgstr "Ni razpoložljivih posodobitev"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1441
+#: ../src/gpk-update-viewer.c:1429
 msgid "No updates are available"
 msgstr "Na voljo ni novih posodobitev"
 
 #. TRANSLATORS: no network connnection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1443
+#: ../src/gpk-update-viewer.c:1431
 msgid "No network connection was detected."
 msgstr "Ni zaznane razpoložljive omrežne povezave."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1460
+#: ../src/gpk-update-viewer.c:1448
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Namesti posodobitve"
@@ -4161,16 +4166,16 @@ msgstr[2] "_Namesti posodobitve"
 msgstr[3] "_Namesti posodobitve"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1468
+#: ../src/gpk-update-viewer.c:1456
 msgid "All software is up to date"
 msgstr "Programska oprema je posodobljena"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1470
+#: ../src/gpk-update-viewer.c:1458
 msgid "There are no software updates available for your computer at this time."
 msgstr "Trenutno ni posebnih posodobitev programske opreme."
 
-#: ../src/gpk-update-viewer.c:1496
+#: ../src/gpk-update-viewer.c:1484
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4180,7 +4185,7 @@ msgstr[2] "Na voljo sta %i posodobitvi"
 msgstr[3] "Na voljo so %i posodobitve"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1512
+#: ../src/gpk-update-viewer.c:1500
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4190,7 +4195,7 @@ msgstr[2] "%i izbrani posodobitvi"
 msgstr[3] "%i izbrane posodobitve"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1520
+#: ../src/gpk-update-viewer.c:1508
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4200,44 +4205,44 @@ msgstr[2] "%i izbrani posodobitvi (%s)"
 msgstr[3] "%i izbrane posodobitve (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1717
+#: ../src/gpk-update-viewer.c:1705
 msgid "Status"
 msgstr "Stanje"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1940
+#: ../src/gpk-update-viewer.c:1928
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Posodobitev odpravlja hrošče in druge manj kritične napake."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1944
+#: ../src/gpk-update-viewer.c:1932
 msgid "This update is important as it may solve critical problems."
 msgstr "Posodobitev je pomembna, saj odpravlja kritične programske napake."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1948
+#: ../src/gpk-update-viewer.c:1936
 msgid "This update is needed to fix a security vulnerability with this package."
 msgstr "Zahtevana je posodobitev za varnostne popravke paketa."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1952
+#: ../src/gpk-update-viewer.c:1940
 msgid "This update is blocked."
 msgstr "Posodobitev je ovirana."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1964
+#: ../src/gpk-update-viewer.c:1952
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Opozorilo je bilo izdano %s in je bilo zadnjič posodobljeno %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1971
+#: ../src/gpk-update-viewer.c:1959
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Opozorilo je bilo izdano %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1993
+#: ../src/gpk-update-viewer.c:1981
 msgid "For more information about this update please visit this website:"
 msgid_plural "For more information about this update please visit these websites:"
 msgstr[0] "Za več podrobnosti o posodobitvi, obiščite spletne strani:"
@@ -4246,7 +4251,7 @@ msgstr[2] "Za več podrobnosti o posodobitvi, obiščite spletni strani:"
 msgstr[3] "Za več podrobnosti o posodobitvi, obiščite spletne strani:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:2001
+#: ../src/gpk-update-viewer.c:1989
 msgid "For more information about bugs fixed by this update please visit this website:"
 msgid_plural "For more information about bugs fixed by this update please visit these websites:"
 msgstr[0] "Za več podrobnosti o odpravljenih napakah, obiščite spletne strani:"
@@ -4255,7 +4260,7 @@ msgstr[2] "Za več podrobnosti o odpravljenih napakah, obiščite spletni strani
 msgstr[3] "Za več podrobnosti o odpravljenih napakah, obiščite spletne strani:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2009
+#: ../src/gpk-update-viewer.c:1997
 msgid "For more information about this security update please visit this website:"
 msgid_plural "For more information about this security update please visit these websites:"
 msgstr[0] "Za več podrobnosti o varnostnih posodobitvah, obiščite spletne strani:"
@@ -4264,104 +4269,104 @@ msgstr[2] "Za več podrobnosti o varnostnih posodobitvah, obiščite spletni str
 msgstr[3] "Za več podrobnosti o varnostnih posodobitvah, obiščite spletne strani:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2018
+#: ../src/gpk-update-viewer.c:2006
 msgid "The computer will have to be restarted after the update for the changes to take effect."
 msgstr "Računalnik bo po posodobitvi treba za uveljavitev sprememb ponovno zagnati."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2022
+#: ../src/gpk-update-viewer.c:2010
 msgid "You will need to log out and back in after the update for the changes to take effect."
 msgstr "Za uveljavitev sprememb se je treba odjaviti in ponovno prijaviti."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2029
+#: ../src/gpk-update-viewer.c:2017
 msgid "The classifaction of this update is unstable which means it is not designed for production use."
 msgstr "Posodobitev je opredeljena kot razvojna različica, kar pomeni, da ni primerna za običajnega uporabnika."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2033
+#: ../src/gpk-update-viewer.c:2021
 msgid "This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter."
 msgstr "To je preizkusna posodobitev in ni primerna za običajno rabo. V primeru težav pošljite poročilo o hroščih."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2042
+#: ../src/gpk-update-viewer.c:2030
 msgid "The developer logs will be shown as no description is available for this update:"
 msgstr "Izpisan bo dnevnik beleženja, saj za posodobitev ni ustreznega opisa:"
 
-#: ../src/gpk-update-viewer.c:2092
+#: ../src/gpk-update-viewer.c:2080
 msgid "Loading..."
 msgstr "Nalaganje ..."
 
-#: ../src/gpk-update-viewer.c:2095
+#: ../src/gpk-update-viewer.c:2083
 msgid "No update details available."
 msgstr "Podrobnosti o posodobitvi niso na voljo."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2127
-#: ../src/gpk-update-viewer.c:2225
-#: ../src/gpk-update-viewer.c:2245
+#: ../src/gpk-update-viewer.c:2115
+#: ../src/gpk-update-viewer.c:2213
+#: ../src/gpk-update-viewer.c:2233
 msgid "Could not get update details"
 msgstr "Ni mogoče pridobiti posodobljenih podrobnosti"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2147
+#: ../src/gpk-update-viewer.c:2135
 msgid "Could not get package details"
 msgstr "Ni mogoče pridobiti podrobnosti paketa"
 
-#: ../src/gpk-update-viewer.c:2147
-#: ../src/gpk-update-viewer.c:2245
+#: ../src/gpk-update-viewer.c:2135
+#: ../src/gpk-update-viewer.c:2233
 msgid "No results were returned."
 msgstr "Ni zadetkov iskanja."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2480
+#: ../src/gpk-update-viewer.c:2468
 msgid "Select all"
 msgstr "Izberi vse"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2488
+#: ../src/gpk-update-viewer.c:2476
 msgid "Unselect all"
 msgstr "Počisti vse"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2495
+#: ../src/gpk-update-viewer.c:2483
 msgid "Select security updates"
 msgstr "Izberi varnostne posodobitve"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2501
+#: ../src/gpk-update-viewer.c:2489
 msgid "Ignore this update"
 msgstr "Prezri posodobitev"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2612
+#: ../src/gpk-update-viewer.c:2600
 msgid "Could not get updates"
 msgstr "Ni mogoče dobiti posodobitev"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2765
+#: ../src/gpk-update-viewer.c:2753
 msgid "Checking for updates..."
 msgstr "Preverjanje za posodobitve ..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3035
+#: ../src/gpk-update-viewer.c:3023
 msgid "Could not get list of distribution upgrades"
 msgstr "Ni mogoče pridobiti seznama posodobitve celotne distribucije"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3065
+#: ../src/gpk-update-viewer.c:3053
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Na voljo je nova posodobitev distribucije na '%s'."
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3312
+#: ../src/gpk-update-viewer.c:3299
 msgid "Other updates are held back as some important system packages need to be installed first."
 msgstr "Preostale posodobitve so zadržane, saj morajo biti najprej nameščeni pomembni sistemski paketi."
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3375
+#: ../src/gpk-update-viewer.c:3364
 msgid "Software Update Viewer"
 msgstr "Pregledovalnik posodobitve programske opreme"
 
@@ -4369,7 +4374,7 @@ msgstr "Pregledovalnik posodobitve programske opreme"
 msgid "Do not exit after the request has been processed"
 msgstr "Ne končaj po končanih opravilih"
 
-#: ../src/gpk-dbus-service.c:156
+#: ../src/gpk-dbus-service.c:158
 msgid "Session DBus service for PackageKit"
 msgstr "Storitev DBus seje programa PackageKit"
 
