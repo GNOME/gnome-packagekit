@@ -34,7 +34,6 @@
 #include <locale.h>
 
 #include "egg-string.h"
-#include "egg-console-kit.h"
 
 #include "gpk-enum.h"
 #include "gpk-common.h"
