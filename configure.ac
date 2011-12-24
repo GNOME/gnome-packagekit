@@ -138,6 +138,42 @@ fi
 AM_CONDITIONAL(HAVE_GUDEV, test x$HAVE_GUDEV = xyes)
 
 dnl ---------------------------------------------------------------------------
+dnl systemd integration
+dnl ---------------------------------------------------------------------------
+AC_ARG_ENABLE([systemd],
+              AS_HELP_STRING([--enable-systemd], [Use systemd]),
+              [with_systemd=$enableval],
+              [with_systemd=auto])
+
+PKG_CHECK_MODULES(SYSTEMD,
+                  [libsystemd-login polkit-gobject-1],
+                  [have_systemd=yes], [have_systemd=no])
+
+AC_MSG_CHECKING([whether to use systemd])
+
+if test x$with_systemd = xauto ; then
+        if test x$have_systemd = xno ; then
+                with_systemd=no
+        else
+                with_systemd=yes
+        fi
+fi
+
+AC_MSG_RESULT($with_systemd)
+
+if test x$with_systemd = xyes; then
+        if test x$have_systemd = xno; then
+                AC_MSG_ERROR([Systemd support explicitly required, but systemd not found])
+        fi
+        AC_DEFINE(HAVE_SYSTEMD, 1, [Define if systemd is used for session tracking])
+fi
+
+AC_SUBST(SYSTEMD_CFLAGS)
+AC_SUBST(SYSTEMD_LIBS)
+
+AM_CONDITIONAL(WITH_SYSTEMD, [test "$with_systemd" = "yes"], [Using systemd])
+
+dnl ---------------------------------------------------------------------------
 dnl - Enable small form factor code
 dnl ---------------------------------------------------------------------------
 AC_ARG_ENABLE(small_form_factor, AS_HELP_STRING([--enable-small-form-factor],[enable small form factor code]),

@@ -26,7 +26,12 @@
 #include <locale.h>
 #include <packagekit-glib2/packagekit.h>
 
+#ifdef HAVE_SYSTEMD
+#include "systemd-proxy.h"
+#else
 #include "egg-console-kit.h"
+#endif
+
 #include "gpk-animated-icon.h"
 #include "gpk-common.h"
 #include "gpk-debug.h"
@@ -40,7 +45,11 @@ enum {
 };
 
 typedef struct {
+#ifdef HAVE_SYSTEMD
+        SystemdProxy    *systemd_proxy;
+#else
 	EggConsoleKit	*console_kit;
+#endif
 	GCancellable	*cancellable;
 	GtkListStore	*distro_upgrade_store;
 	GtkWidget	*assistant;
@@ -108,7 +117,11 @@ gpk_distro_upgrade_restart_response_cb (GtkDialog *dialog, gint response_id, Gpk
 
 	/* restart */
 	if (response_id == GTK_RESPONSE_OK) {
+#ifdef HAVE_SYSTEMD
+                ret = systemd_proxy_restart (priv->systemd_proxy, &error);
+#else
 		ret = egg_console_kit_restart (priv->console_kit, &error);
+#endif
 		if (!ret) {
 			g_warning ("Cannot restart: %s", error->message);
 			g_error_free (error);
@@ -164,8 +177,12 @@ gpk_distro_upgrade_upgrade_system_cb (PkClient *client, GAsyncResult *res, GpkDi
 						  _("When you are ready, you can restart your system and continue the upgrade process."),
 						  _("Make sure you have saved any unsaved work before restarting."));
 
+#ifdef HAVE_SYSTEMD
+        ret = systemd_proxy_can_restart (priv->systemd_proxy, &can_restart, &error);
+#else
 	/* check with ConsoleKit we can restart */
 	ret = egg_console_kit_can_restart (priv->console_kit, &can_restart, &error);
+#endif
 	if (!ret) {
 		g_warning ("cannot get consolekit CanRestart data: %s", error->message);
 		g_error_free (error);
@@ -764,7 +781,11 @@ main (int argc, char *argv[])
 	g_type_init ();
 	gtk_init (&argc, &argv);
 	priv = g_new0 (GpkDistroUpgradePrivate, 1);
+#ifdef HAVE_SYSTEMD
+        priv->systemd_proxy = systemd_proxy_new ();
+#else
 	priv->console_kit = egg_console_kit_new ();
+#endif
 	priv->cancellable = g_cancellable_new ();
 	priv->client = pk_client_new ();
 	g_object_set (priv->client,
@@ -799,7 +820,11 @@ main (int argc, char *argv[])
 out:
 	g_object_unref (priv->cancellable);
 	g_object_unref (priv->client);
+#ifdef HAVE_SYSTEMD
+        systemd_proxy_free (priv->systemd_proxy);
+#else
 	g_object_unref (priv->console_kit);
+#endif
 	g_free (priv);
         if (application)
                 g_object_unref (application);

@@ -32,7 +32,11 @@
 
 #include "egg-string.h"
 #include "egg-markdown.h"
+#ifdef HAVE_SYSTEMD
+#include "systemd-proxy.h"
+#else
 #include "egg-console-kit.h"
+#endif
 
 #include "gpk-cell-renderer-info.h"
 #include "gpk-cell-renderer-restart.h"
@@ -57,7 +61,11 @@ static	guint			 auto_shutdown_id = 0;
 static	guint			 size_total = 0;
 static	guint			 number_total = 0;
 static	PkRestartEnum		 restart_worst = 0;
+#ifdef HAVE_SYSTEMD
+static  SystemdProxy            *proxy = NULL;
+#else
 static	EggConsoleKit		*console = NULL;
+#endif
 static	EggMarkdown		*markdown = NULL;
 static	GCancellable		*cancellable = NULL;
 static	GSettings		*settings = NULL;
@@ -240,7 +248,11 @@ gpk_update_viewer_check_restart (void)
 	/* check to see if restart is possible */
 	if (restart_update == PK_RESTART_ENUM_SYSTEM ||
 	    restart_update == PK_RESTART_ENUM_SECURITY_SYSTEM) {
+#ifdef HAVE_SYSTEMD
+                systemd_proxy_can_restart (proxy, &show_button, NULL);
+#else
 		egg_console_kit_can_restart (console, &show_button, NULL);
+#endif
 	}
 
 	/* only show the button if we can do the action */
@@ -260,8 +272,12 @@ gpk_update_viewer_check_restart (void)
 
 	/* do the action */
 	if (restart_update == PK_RESTART_ENUM_SYSTEM)
+#ifdef HAVE_SYSTEMD
+                ret = systemd_proxy_restart (proxy, &error);
+#else
 		/* use consolekit to restart */
 		ret = egg_console_kit_restart (console, &error);
+#endif
 		if (!ret) {
 			/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
 			gpk_update_viewer_error_dialog (_("Could not restart"), NULL, error->message);
@@ -3149,7 +3165,11 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	restart_update = PK_RESTART_ENUM_NONE;
 
 	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
+#ifdef HAVE_SYSTEMD
+        proxy = systemd_proxy_new ();
+#else
 	console = egg_console_kit_new ();
+#endif
 	cancellable = g_cancellable_new ();
 	markdown = egg_markdown_new ();
 	egg_markdown_set_output (markdown, EGG_MARKDOWN_OUTPUT_PANGO);
@@ -3391,8 +3411,13 @@ main (int argc, char *argv[])
 		g_object_unref (builder);
 	if (cancellable != NULL)
 		g_object_unref (cancellable);
+#ifdef HAVE_SYSTEMD
+        if (proxy != NULL)
+                systemd_proxy_free (proxy);
+#else
 	if (console != NULL)
 		g_object_unref (console);
+#endif
 	if (control != NULL)
 		g_object_unref (control);
 	if (settings != NULL)

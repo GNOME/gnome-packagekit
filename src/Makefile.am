@@ -11,6 +11,7 @@ INCLUDES =						\
 	$(NOTIFY_CFLAGS)				\
 	$(PACKAGEKIT_CFLAGS)				\
 	$(GUDEV_CFLAGS)					\
+	$(SYSTEMD_CFLAGS)				\
 	$(GNOME_MENUS_CFLAGS)				\
 	-DI_KNOW_THE_UPOWER_API_IS_SUBJECT_TO_CHANGE	\
 	-DI_KNOW_THE_PACKAGEKIT_GLIB2_API_IS_SUBJECT_TO_CHANGE	\
@@ -50,8 +51,6 @@ libgpkshared_a_SOURCES =				\
 	egg-string.h					\
 	egg-markdown.c					\
 	egg-markdown.h					\
-	egg-console-kit.c				\
-	egg-console-kit.h				\
 	egg-dbus-monitor.c				\
 	egg-dbus-monitor.h				\
 	gpk-debug.c					\
@@ -90,6 +89,16 @@ libgpkshared_a_SOURCES =				\
 	gpk-error.h					\
 	$(NULL)
 
+if WITH_SYSTEMD
+libgpkshared_a_SOURCES +=				\
+	systemd-proxy.c					\
+	systemd-proxy.h
+else
+libgpkshared_a_SOURCES +=				\
+	egg-console-kit.c				\
+	egg-console-kit.h
+endif
+
 shared_LIBS =						\
 	$(GLIB_LIBS)					\
 	$(GIO_LIBS)					\
@@ -97,6 +106,7 @@ shared_LIBS =						\
 	$(GTK_LIBS)					\
 	$(GUDEV_LIBS)					\
 	$(NOTIFY_LIBS)					\
+	$(SYSTEMD_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(GNOME_MENUS_LIBS)				\
 	$(UPOWER_LIBS)					\
