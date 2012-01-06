@@ -2,61 +2,346 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-packagekit package.
 #
-# Kjartan Maraas <kmaraas@gnome.org>, 2007-2011.
+# Kjartan Maraas <kmaraas@gnome.org>, 2007-2012.
 # Torstein Adolf Winterseth <kvikende@fsfe.org>, 2010.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit 3.3.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-14 22:45+0100\n"
-"PO-Revision-Date: 2011-12-14 22:49+0100\n"
-"Last-Translator: Torstein Adolf Winterseth <kvikende@fsfe.org>\n"
-"Language-Team: Norwegian Bokmål <i18n-nb@lister.ping.uio.no>\n"
+"POT-Creation-Date: 2012-01-06 21:05+0100\n"
+"PO-Revision-Date: 2012-01-06 21:09+0100\n"
+"Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
+"Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 1.1\n"
 
-#: ../data/gpk-application.desktop.in.h:1
-msgid "Add or remove software installed on the system"
-msgstr "Legg til eller fjern programvare på systemet"
+#: ../data/org.gnome.packagekit.gschema.xml.h:1
+msgid "Automatically remove unused dependencies"
+msgstr "Fjern ubrukte avhengigheter automatisk"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:2
+msgid ""
+"When removing a package, also remove those dependencies that are not "
+"required by other packages."
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:3
+msgid "Ask the user if additional packages should be installed"
+msgstr "Spør bruker om ekstra pakker skal installeres"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:4
+msgid "Ask the user if additional packages should be installed."
+msgstr "Spør bruker om ekstra pakker skal installeres."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:5
+msgid "Ask the user if files should be copied to a non-private directory"
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:6
+msgid ""
+"Ask the user if files should be copied to a non-private directory when "
+"installing from a FUSE mount."
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:7
+#, fuzzy
+msgid "If search terms should be completed automatically"
+msgstr "Søk kunne ikke fullføres"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:8
+#, fuzzy
+msgid "If search terms should be completed automatically."
+msgstr "Søk kunne ikke fullføres"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:9
+msgid "Filter using basename in gpk-application"
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:10
+msgid "Filter package lists using basename in gpk-application."
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:11
+#, fuzzy
+msgid "Only show the newest packages in the file lists"
+msgstr "Vis kun nyeste tilgjengelige pakke"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:12
+#, fuzzy
+msgid "Only show the newest packages in the file lists."
+msgstr "Vis kun nyeste tilgjengelige pakke"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:13
+#, fuzzy
+msgid "Only show native packages in the file lists"
+msgstr "Vis kun pakker som passer maskinarkitektur for denne maskinen"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:14
+#, fuzzy
+msgid ""
+"Only show native packages matching the machine architecture in the file "
+"lists."
+msgstr "Vis kun pakker som passer maskinarkitektur for denne maskinen"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:15
+msgid "Show the category group menu"
+msgstr "Vis gruppemeny for kategori"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:16
+msgid ""
+"Show the category group menu. This is more complete and custom to the "
+"distribution, but takes longer to populate."
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:17
+msgid "Show the 'All Packages' group menu"
+msgstr "Vis gruppemenyen «Alle pakker»"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:18
+msgid ""
+"Show the all packages menu item. This takes a long time to populate on most "
+"backends and is not generally required by end users."
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:19
+msgid "The search mode used by default"
+msgstr "Søkemodus som brukes som forvalg"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:20
+msgid ""
+"The search mode used by default. Options are \"name\", \"details\", or \"file"
+"\"."
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:21
+msgid "Show all repositories in the software source viewer"
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:22
+msgid "Show all repositories in the software source viewer."
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:23
+msgid ""
+"Notify the user before a large update is done on a mobile broadband "
+"connection"
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:24
+msgid ""
+"Notify the user before a large update is done on a mobile broadband "
+"connection."
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:25
+msgid "Only show the newest updates in the list"
+msgstr "Vis kun de nyeste oppdateringene i listen"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:26
+msgid ""
+"Only show the newest packages in the update list, and filter out older "
+"updates that are still available."
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:27
+#, fuzzy
+msgid "Scroll to packages as they are downloaded"
+msgstr "Alle pakkene er allerede installert"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:28
+msgid ""
+"Scroll to packages in the update list as they are downloaded or installed."
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:29
+#, fuzzy
+msgid "Allow applications to invoke the font installer"
+msgstr "Ingen programmer var valgt for installasjon"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:30
+#, fuzzy
+msgid "Allow applications to invoke the font installer."
+msgstr "Ingen programmer var valgt for installasjon"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:31
+msgid "Programs that should be ignored when they issue session D-Bus requests"
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:32
+msgid ""
+"Programs that should be ignored when they issue session D-Bus requests, "
+"separated by commas."
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:33
+#, fuzzy
+msgid "Allow applications to invoke the codec installer"
+msgstr "Ingen programmer var valgt for installasjon"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:34
+#, fuzzy
+msgid "Allow applications to invoke the codec installer."
+msgstr "Ingen programmer var valgt for installasjon"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:35
+#, fuzzy
+msgid "Allow applications to invoke the mime type installer"
+msgstr "Ingen programmer var valgt for installasjon"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:36
+#, fuzzy
+msgid "Allow applications to invoke the mime type installer."
+msgstr "Ingen programmer var valgt for installasjon"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:37
+msgid ""
+"When displaying UI from a session DBus request, automatically use these "
+"options by default."
+msgstr ""
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:38
+msgid ""
+"When displaying UI from a session DBus request, force these options to be "
+"turned on."
+msgstr ""
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
-#: ../src/gpk-application.c:4068 ../src/gpk-log.c:498
-#: ../src/gpk-update-viewer.c:3360
+#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
+#: ../src/gpk-application.c:4054 ../src/gpk-log.c:498
+#: ../src/gpk-update-viewer.c:3347
 msgid "Add/Remove Software"
 msgstr "Legg til/fjern programvare"
 
-#: ../data/gpk-application.ui.h:1
-msgid "About this software"
-msgstr "Om denne programvaren"
+#: ../data/gpk-application.desktop.in.h:2
+msgid "Add or remove software installed on the system"
+msgstr "Legg til eller fjern programvare på systemet"
+
+#: ../data/gpk-application.ui.h:2
+msgid "_System"
+msgstr "_System"
 
 #: ../data/gpk-application.ui.h:3
-msgid "Depends on"
-msgstr "Er avhengig av"
+msgid "View previously added or removed software"
+msgstr "Vis programvare som ble lagt til eller fjernet tidligere"
 
 #: ../data/gpk-application.ui.h:4
+msgid "Software Log"
+msgstr "Programvarelogg"
+
+#: ../data/gpk-application.ui.h:5
 msgid "Edit list of software sources"
 msgstr "Rediger listen med programvarekilder"
 
-#: ../data/gpk-application.ui.h:5
-msgid "Execute graphical applications"
-msgstr "Kjør grafiske programmer"
-
-#: ../data/gpk-application.ui.h:6
-msgid "Fi_nd"
-msgstr "Fi_nn"
+#: ../data/gpk-application.ui.h:6 ../data/gpk-prefs.ui.h:12
+msgid "Software Sources"
+msgstr "Programvarekilder"
 
 #: ../data/gpk-application.ui.h:7
-msgid "Get file list"
-msgstr "Hent filliste"
+msgid "Refresh the list of packages on the system"
+msgstr "Oppdater listen med pakker på systemet"
 
 #: ../data/gpk-application.ui.h:8
-msgid "Help with this software"
-msgstr "Hjelp for denne programvaren"
+msgid "Refresh Package Lists"
+msgstr "Oppdater pakkelister"
+
+#: ../data/gpk-application.ui.h:9
+msgid "_Filters"
+msgstr "Filtre"
+
+#: ../data/gpk-application.ui.h:10
+msgid "_Installed"
+msgstr "_Installert"
+
+#: ../data/gpk-application.ui.h:11
+msgid "Only _Installed"
+msgstr "Kun _installerte"
+
+#: ../data/gpk-application.ui.h:12
+msgid "Only _Available"
+msgstr "Kun _tilgjengelige"
+
+#: ../data/gpk-application.ui.h:13
+msgid "_No Filter"
+msgstr "_Uten filter"
+
+#: ../data/gpk-application.ui.h:14
+msgid "_Development"
+msgstr "_Utvikling:"
+
+#: ../data/gpk-application.ui.h:15
+msgid "Only _Development"
+msgstr "Kun _utvikling"
+
+#: ../data/gpk-application.ui.h:16
+msgid "Only _End User Files"
+msgstr "Kun _sluttbrukerfiler"
+
+#: ../data/gpk-application.ui.h:17
+msgid "_Graphical"
+msgstr "_Grafisk:"
+
+#: ../data/gpk-application.ui.h:18
+msgid "Only _Graphical"
+msgstr "Kun _grafiske"
+
+#: ../data/gpk-application.ui.h:19
+msgid "Only _Text"
+msgstr "Kun _tekstbaserte"
+
+#: ../data/gpk-application.ui.h:20
+msgid "_Free"
+msgstr "_Fri"
+
+#: ../data/gpk-application.ui.h:21
+msgid "_Only Free Software"
+msgstr "_Kun fri programvare"
+
+#: ../data/gpk-application.ui.h:22
+msgid "Only _Non-Free Software"
+msgstr "Kun i_kke-fri programvare"
+
+#: ../data/gpk-application.ui.h:23
+msgid "_Source"
+msgstr "_Kilde"
+
+#: ../data/gpk-application.ui.h:24
+msgid "_Only Source Code"
+msgstr "_Kun kildekode"
+
+#: ../data/gpk-application.ui.h:25
+msgid "Only _Non-Source Code"
+msgstr "Kun ute_n kildekode"
+
+#: ../data/gpk-application.ui.h:26
+msgid "Only show one package, not subpackages"
+msgstr "Vis kun en pakke, ikke underpakker"
+
+#: ../data/gpk-application.ui.h:27
+msgid "_Hide Subpackages"
+msgstr "_Skjul underpakker"
+
+#: ../data/gpk-application.ui.h:28
+msgid "Only show the newest available package"
+msgstr "Vis kun nyeste tilgjengelige pakke"
+
+#: ../data/gpk-application.ui.h:29
+msgid "Only _Newest Packages"
+msgstr "Kun de _nyeste pakkene"
+
+#: ../data/gpk-application.ui.h:30
+msgid "Only show packages matching the machine architecture"
+msgstr "Vis kun pakker som passer maskinarkitektur for denne maskinen"
+
+#: ../data/gpk-application.ui.h:31
+msgid "Only N_ative Packages"
+msgstr "Kun pakker for min m_askinarkitektur"
+
+#: ../data/gpk-application.ui.h:32
+msgid "S_election"
+msgstr "_Utvalg"
 
 #. TRANSLATORS: title: installing local files
 #. TRANSLATORS: button: confirm to search for packages
@@ -66,7 +351,7 @@ msgstr "Hjelp for denne programvaren"
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
-#: ../data/gpk-application.ui.h:9 ../src/gpk-dbus-task.c:710
+#: ../data/gpk-application.ui.h:33 ../src/gpk-dbus-task.c:710
 #: ../src/gpk-dbus-task.c:1254 ../src/gpk-dbus-task.c:1473
 #: ../src/gpk-dbus-task.c:1676 ../src/gpk-dbus-task.c:2136
 #: ../src/gpk-dbus-task.c:2474 ../src/gpk-dbus-task.c:2687
@@ -75,155 +360,59 @@ msgstr "Hjelp for denne programvaren"
 msgid "Install"
 msgstr "Installer"
 
-#: ../data/gpk-application.ui.h:10
-msgid "Only N_ative Packages"
-msgstr "Kun pakker for min m_askinarkitektur"
-
-#: ../data/gpk-application.ui.h:11
-msgid "Only _Available"
-msgstr "Kun _tilgjengelige"
-
-#: ../data/gpk-application.ui.h:12
-msgid "Only _Development"
-msgstr "Kun _utvikling"
-
-#: ../data/gpk-application.ui.h:13
-msgid "Only _End User Files"
-msgstr "Kun _sluttbrukerfiler"
-
-#: ../data/gpk-application.ui.h:14
-msgid "Only _Graphical"
-msgstr "Kun _grafiske"
-
-#: ../data/gpk-application.ui.h:15
-msgid "Only _Installed"
-msgstr "Kun _installerte"
-
-#: ../data/gpk-application.ui.h:16
-msgid "Only _Newest Packages"
-msgstr "Kun de _nyeste pakkene"
-
-#: ../data/gpk-application.ui.h:17
-msgid "Only _Non-Free Software"
-msgstr "Kun i_kke-fri programvare"
-
-#: ../data/gpk-application.ui.h:18
-msgid "Only _Non-Source Code"
-msgstr "Kun ute_n kildekode"
-
-#: ../data/gpk-application.ui.h:19
-msgid "Only _Text"
-msgstr "Kun _tekstbaserte"
-
-#: ../data/gpk-application.ui.h:20
-msgid "Only show one package, not subpackages"
-msgstr "Vis kun en pakke, ikke underpakker"
-
-#: ../data/gpk-application.ui.h:21
-msgid "Only show packages matching the machine architecture"
-msgstr "Vis kun pakker som passer maskinarkitektur for denne maskinen"
-
-#: ../data/gpk-application.ui.h:22
-msgid "Only show the newest available package"
-msgstr "Vis kun nyeste tilgjengelige pakke"
-
-#: ../data/gpk-application.ui.h:23
-msgid "Project homepage"
-msgstr "Hjemmeside for prosjektet"
-
-#: ../data/gpk-application.ui.h:24
-msgid "Refresh Package Lists"
-msgstr "Oppdater pakkelister"
-
-#: ../data/gpk-application.ui.h:25
-msgid "Refresh the list of packages on the system"
-msgstr "Oppdater listen med pakker på systemet"
-
 #. TRANSLATORS: button: confirm to search for packages
-#: ../data/gpk-application.ui.h:26 ../src/gpk-dbus-task.c:3100
+#: ../data/gpk-application.ui.h:34 ../src/gpk-dbus-task.c:3100
 #: ../src/gpk-task.c:410
 msgid "Remove"
 msgstr "Fjern"
 
-#: ../data/gpk-application.ui.h:27
-msgid "Required by"
-msgstr "Kreves av"
-
-#: ../data/gpk-application.ui.h:28
-msgid "Run program"
-msgstr "Kjør program"
-
-#: ../data/gpk-application.ui.h:29
-msgid "S_election"
-msgstr "_Utvalg"
-
-#: ../data/gpk-application.ui.h:30
-msgid "Software Log"
-msgstr "Programvarelogg"
-
-#: ../data/gpk-application.ui.h:31 ../data/gpk-prefs.ui.h:6
-msgid "Software Sources"
-msgstr "Programvarekilder"
-
-#: ../data/gpk-application.ui.h:32
-msgid "View previously added or removed software"
-msgstr "Vis programvare som ble lagt til eller fjernet tidligere"
-
-#: ../data/gpk-application.ui.h:33
+#: ../data/gpk-application.ui.h:35
 msgid "Visit the project homepage"
 msgstr "Gå til hjemmesiden for prosjektet"
 
-#: ../data/gpk-application.ui.h:34
-msgid "_Contents"
-msgstr "_Innhold"
-
-#: ../data/gpk-application.ui.h:35
-msgid "_Development"
-msgstr "_Utvikling:"
-
 #: ../data/gpk-application.ui.h:36
-msgid "_Filters"
-msgstr "Filtre"
+msgid "Project homepage"
+msgstr "Hjemmeside for prosjektet"
 
 #: ../data/gpk-application.ui.h:37
-msgid "_Free"
-msgstr "_Fri"
+msgid "Execute graphical applications"
+msgstr "Kjør grafiske programmer"
 
 #: ../data/gpk-application.ui.h:38
-msgid "_Graphical"
-msgstr "_Grafisk:"
+msgid "Run program"
+msgstr "Kjør program"
 
 #: ../data/gpk-application.ui.h:39
+msgid "Get file list"
+msgstr "Hent filliste"
+
+#: ../data/gpk-application.ui.h:40
+msgid "Depends on"
+msgstr "Er avhengig av"
+
+#: ../data/gpk-application.ui.h:41
+msgid "Required by"
+msgstr "Kreves av"
+
+#: ../data/gpk-application.ui.h:42
 msgid "_Help"
 msgstr "_Hjelp"
 
-#: ../data/gpk-application.ui.h:40
-msgid "_Hide Subpackages"
-msgstr "_Skjul underpakker"
-
-#: ../data/gpk-application.ui.h:41
-msgid "_Installed"
-msgstr "_Installert"
-
-#: ../data/gpk-application.ui.h:42
-msgid "_No Filter"
-msgstr "_Uten filter"
-
 #: ../data/gpk-application.ui.h:43
-msgid "_Only Free Software"
-msgstr "_Kun fri programvare"
+msgid "_Contents"
+msgstr "_Innhold"
 
 #: ../data/gpk-application.ui.h:44
-msgid "_Only Source Code"
-msgstr "_Kun kildekode"
+msgid "Help with this software"
+msgstr "Hjelp for denne programvaren"
 
 #: ../data/gpk-application.ui.h:45
-msgid "_Source"
-msgstr "_Kilde"
+msgid "About this software"
+msgstr "Om denne programvaren"
 
 #: ../data/gpk-application.ui.h:46
-msgid "_System"
-msgstr "_System"
+msgid "Fi_nd"
+msgstr "Fi_nn"
 
 #: ../data/gpk-client.ui.h:1
 msgid "Install Package"
@@ -241,20 +430,20 @@ msgstr "Lisensavtale kreves"
 msgid "_Accept Agreement"
 msgstr "Godt_a avtale"
 
-#: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1
-msgid "Install selected software on the system"
-msgstr "Installer valgt programvare på systemet"
-
 #. TRANSLATORS: program name: application to install a package to provide a file
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../data/gpk-dbus-service.desktop.in.h:2
-#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3377
+#: ../data/gpk-dbus-service.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-dbus-task.c:3377
 #: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
 #: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
 msgid "Software Install"
 msgstr "Programvareinstallasjon"
+
+#: ../data/gpk-dbus-service.desktop.in.h:2
+#: ../data/gpk-install-local-file.desktop.in.h:2
+msgid "Install selected software on the system"
+msgstr "Installer valgt programvare på systemet"
 
 #. TRANSLATORS: program name: application to install a catalog of software
 #: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:68
@@ -266,7 +455,7 @@ msgstr "Kataloginstallering"
 msgid "Install a catalog of software on the system"
 msgstr "Installer en katalog med programvare på systemet"
 
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:840
+#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:829
 msgid "Software Log Viewer"
 msgstr "Loggvisning for programvare"
 
@@ -274,154 +463,154 @@ msgstr "Loggvisning for programvare"
 msgid "View past package management tasks"
 msgstr "Vis pakkehåndteringsoppgaver"
 
-#: ../data/gpk-log.ui.h:1
+#: ../data/gpk-log.ui.h:2
 msgid "Filter"
 msgstr "Filter"
 
 #: ../data/gpk-prefs.desktop.in.h:1
+msgid "Software Settings"
+msgstr "Programvareinnstillinger"
+
+#: ../data/gpk-prefs.desktop.in.h:2
 msgid ""
 "Change software update preferences and enable or disable software sources"
 msgstr ""
 "Endre brukervalg for programvareoppdateringer og slå av/på programvarekilder"
 
-#: ../data/gpk-prefs.desktop.in.h:2
-msgid "Software Settings"
-msgstr "Programvareinnstillinger"
-
-#: ../data/gpk-prefs.ui.h:1
-msgid ""
-"A software source contains packages that can be installed on this computer."
-msgstr ""
-"En programvarekilde inneholder pakker som kan installeres på denne "
-"datamaskinen."
+#. TRANSLATORS: program name, an application to set per-user policy for updates
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:934
+msgid "Software Update Preferences"
+msgstr "Brukervalg for programvareoppdatering"
 
 #: ../data/gpk-prefs.ui.h:2
+msgid "_Check Now"
+msgstr "_Sjekk nå"
+
+#: ../data/gpk-prefs.ui.h:3
+msgid "_Automatically install:"
+msgstr "Installer _automatisk:"
+
+#: ../data/gpk-prefs.ui.h:4
 msgid "C_heck for updates:"
 msgstr "S_e etter oppdateringer:"
 
-#: ../data/gpk-prefs.ui.h:3
+#: ../data/gpk-prefs.ui.h:5
 msgid "Check for major _upgrades:"
 msgstr "Se etter større _oppdateringer:"
 
-#: ../data/gpk-prefs.ui.h:4
+#: ../data/gpk-prefs.ui.h:6
 msgid "Check for updates when using mobile broadband"
 msgstr "Se etter oppdateringer når mobilt bredbånd er i bruk"
 
-#: ../data/gpk-prefs.ui.h:5
+#: ../data/gpk-prefs.ui.h:7
 msgid "Currently using mobile broadband"
 msgstr "Bruker mobilt bredbånd"
-
-#. TRANSLATORS: program name, an application to set per-user policy for updates
-#: ../data/gpk-prefs.ui.h:7 ../src/gpk-prefs.c:947
-msgid "Software Update Preferences"
-msgstr "Brukervalg for programvareoppdatering"
 
 #: ../data/gpk-prefs.ui.h:8
 msgid "Update Settings"
 msgstr "Innstillinger for oppdatering"
 
 #: ../data/gpk-prefs.ui.h:9
-msgid "_Automatically install:"
-msgstr "Installer _automatisk:"
-
-#: ../data/gpk-prefs.ui.h:10
-msgid "_Check Now"
-msgstr "_Sjekk nå"
+msgid ""
+"A software source contains packages that can be installed on this computer."
+msgstr ""
+"En programvarekilde inneholder pakker som kan installeres på denne "
+"datamaskinen."
 
 #. shows extra -source, -debuginfo, and -devel software sources
-#: ../data/gpk-prefs.ui.h:12
+#: ../data/gpk-prefs.ui.h:11
 msgid "_Show debug and development software sources"
 msgstr "Vi_s kilder for feilsøkings- og utviklingsprogramvare"
 
-#. TRANSLATORS: column for what was done, e.g. update-system
-#: ../data/gpk-service-pack.ui.h:1 ../src/gpk-log.c:295
-msgid "Action"
-msgstr "Handling"
+#. TRANSLATORS: the program name
+#: ../data/gpk-service-pack.ui.h:1 ../src/gpk-service-pack.c:817
+msgid "Service Pack Creator"
+msgstr "Rediger oppdateringspakker"
 
 #: ../data/gpk-service-pack.ui.h:2
-msgid "Create"
-msgstr "Lag"
-
-#: ../data/gpk-service-pack.ui.h:3
 msgid "Create a copy of this computers package list"
 msgstr "Lag en kopi av denne datamaskinens pakkeliste"
+
+#: ../data/gpk-service-pack.ui.h:3
+msgid "Create an archive of all the pending updates"
+msgstr "Lag et arkiv av alle utestående oppdateringer"
 
 #: ../data/gpk-service-pack.ui.h:4
 msgid "Create an archive of a specific package"
 msgstr "Lag et arkiv av en spesifikk pakke"
 
 #: ../data/gpk-service-pack.ui.h:5
-msgid "Create an archive of all the pending updates"
-msgstr "Lag et arkiv av alle utestående oppdateringer"
+msgid "Multiple packages can be specified using a comma delimited list"
+msgstr "Flere pakker kan oppgis ved å bruke en kommaseparert liste"
 
-#: ../data/gpk-service-pack.ui.h:6
+#. TRANSLATORS: column for what was done, e.g. update-system
+#: ../data/gpk-service-pack.ui.h:6 ../src/gpk-log.c:295
+msgid "Action"
+msgstr "Handling"
+
+#: ../data/gpk-service-pack.ui.h:7
+msgid "Output directory:"
+msgstr "Katalog for utdata:"
+
+#: ../data/gpk-service-pack.ui.h:8
 msgid "Destination package list:"
 msgstr "Pakkeliste som mål:"
 
+#: ../data/gpk-service-pack.ui.h:9
+msgid "Select A Package List File"
+msgstr "Velg en fil med pakkeliste"
+
+#: ../data/gpk-service-pack.ui.h:10
+msgid "Save New Service Pack"
+msgstr "Lagre ny oppdateringspakke"
+
 #. TRANSLATORS: column for what packages were upgraded
-#: ../data/gpk-service-pack.ui.h:7 ../data/gpk-update-viewer.ui.h:1
+#: ../data/gpk-service-pack.ui.h:11 ../data/gpk-update-viewer.ui.h:5
 #: ../src/gpk-log.c:322
 msgid "Details"
 msgstr "Detaljer"
 
-#: ../data/gpk-service-pack.ui.h:8
-msgid "Multiple packages can be specified using a comma delimited list"
-msgstr "Flere pakker kan oppgis ved å bruke en kommaseparert liste"
-
-#: ../data/gpk-service-pack.ui.h:9
-msgid "Output directory:"
-msgstr "Katalog for utdata:"
-
-#: ../data/gpk-service-pack.ui.h:10
+#: ../data/gpk-service-pack.ui.h:12
 msgid "Progress"
 msgstr "Fremdrift"
 
-#: ../data/gpk-service-pack.ui.h:11
-msgid "Save New Service Pack"
-msgstr "Lagre ny oppdateringspakke"
-
-#: ../data/gpk-service-pack.ui.h:12
-msgid "Select A Package List File"
-msgstr "Velg en fil med pakkeliste"
-
-#. TRANSLATORS: the program name
-#: ../data/gpk-service-pack.ui.h:13 ../src/gpk-service-pack.c:831
-msgid "Service Pack Creator"
-msgstr "Rediger oppdateringspakker"
+#: ../data/gpk-service-pack.ui.h:13
+msgid "Create"
+msgstr "Lag"
 
 #: ../data/gpk-signature.ui.h:1
-msgid "Do you recognise the user and trust this key?"
-msgstr "Er brukeren kjent og stoler du på denne nøkkelen?"
+msgid "Software signature is required"
+msgstr "Programvaresignatur kreves"
 
 #: ../data/gpk-signature.ui.h:2
 msgid "Do you trust the source of the packages?"
 msgstr "Stoler du på kilden for pakkene?"
 
 #: ../data/gpk-signature.ui.h:3
-msgid "Package:"
-msgstr "Pakke:"
-
-#: ../data/gpk-signature.ui.h:4
 msgid "Repository name:"
 msgstr "Navn på lager:"
 
-#: ../data/gpk-signature.ui.h:5
+#: ../data/gpk-signature.ui.h:4
 msgid "Signature URL:"
 msgstr "URL til signatur:"
+
+#: ../data/gpk-signature.ui.h:5
+msgid "Signature user identifier:"
+msgstr "Identifikator for signaturbruker:"
 
 #: ../data/gpk-signature.ui.h:6
 msgid "Signature identifier:"
 msgstr "Identifikator for signatur:"
 
 #: ../data/gpk-signature.ui.h:7
-msgid "Signature user identifier:"
-msgstr "Identifikator for signaturbruker:"
+msgid "Package:"
+msgstr "Pakke:"
 
 #: ../data/gpk-signature.ui.h:8
-msgid "Software signature is required"
-msgstr "Programvaresignatur kreves"
+msgid "Do you recognise the user and trust this key?"
+msgstr "Er brukeren kjent og stoler du på denne nøkkelen?"
 
-#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:2
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
 msgid "Software Update"
 msgstr "Programvareoppdatering"
 
@@ -437,6 +626,10 @@ msgstr "Oppgradering av operativsystemet"
 msgid "Upgrade the operating system to a new version"
 msgstr "Oppgrader operativsystemet til en ny versjon"
 
+#: ../data/gpk-update-viewer.ui.h:2
+msgid "_Install Updates"
+msgstr "_Installer oppdateringer"
+
 #: ../data/gpk-update-viewer.ui.h:3
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities and "
@@ -446,10 +639,6 @@ msgstr ""
 "og gir ny funksjonalitet."
 
 #: ../data/gpk-update-viewer.ui.h:4
-msgid "_Install Updates"
-msgstr "_Installer oppdateringer"
-
-#: ../data/gpk-update-viewer.ui.h:5
 msgid "_Upgrade"
 msgstr "_Oppgrader"
 
@@ -635,112 +824,112 @@ msgstr "Disse endringene vil gå tapt hvis du lukker dette vinduet."
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2107 ../src/gpk-enum.c:1156 ../src/gpk-enum.c:1245
+#: ../src/gpk-application.c:2097 ../src/gpk-enum.c:1156 ../src/gpk-enum.c:1245
 msgid "Installed"
 msgstr "Installert"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2123 ../src/gpk-application.c:2145
+#: ../src/gpk-application.c:2113 ../src/gpk-application.c:2135
 #: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
 msgid "Name"
 msgstr "Navn"
 
 #. TRANSLATORS: the type of package is a collection (metagroup)
-#: ../src/gpk-application.c:2285
+#: ../src/gpk-application.c:2275
 msgid "Type"
 msgstr "Type"
 
-#: ../src/gpk-application.c:2285
+#: ../src/gpk-application.c:2275
 msgid "Collection"
 msgstr "Samling"
 
 #. TRANSLATORS: tooltip: go to the web address
-#: ../src/gpk-application.c:2293
+#: ../src/gpk-application.c:2283
 #, c-format
 msgid "Visit %s"
 msgstr "Besøk %s"
 
 #. TRANSLATORS: add an entry to go to the project home page
-#: ../src/gpk-application.c:2298
+#: ../src/gpk-application.c:2288
 msgid "Project"
 msgstr "Prosjekt"
 
-#: ../src/gpk-application.c:2298
+#: ../src/gpk-application.c:2288
 msgid "Homepage"
 msgstr "Hjemmeside"
 
 #. TRANSLATORS: the group the package belongs in
-#: ../src/gpk-application.c:2312
+#: ../src/gpk-application.c:2302
 msgid "Group"
 msgstr "Gruppe"
 
 #. TRANSLATORS: the licence string for the package
-#: ../src/gpk-application.c:2318
+#: ../src/gpk-application.c:2308
 msgid "License"
 msgstr "Lisens"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2333
+#: ../src/gpk-application.c:2323
 msgid "Size"
 msgstr "Størrelse"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2336
+#: ../src/gpk-application.c:2326
 msgid "Installed size"
 msgstr "Installert størrelse"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2339
+#: ../src/gpk-application.c:2329
 msgid "Download size"
 msgstr "Størrelse på nedlasting"
 
 #. TRANSLATORS: where the package came from, the software source name
-#: ../src/gpk-application.c:2348
+#: ../src/gpk-application.c:2338
 msgid "Source"
 msgstr "Kilde"
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:2493
+#: ../src/gpk-application.c:2483
 msgid "Selected packages"
 msgstr "Valgte pakker"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2546
+#: ../src/gpk-application.c:2536
 msgid "Searching by name"
 msgstr "Søker etter navn"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2570
+#: ../src/gpk-application.c:2560
 msgid "Searching by description"
 msgstr "Søker etter beskrivelse"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2594
+#: ../src/gpk-application.c:2584
 msgid "Searching by file"
 msgstr "Søker etter fil"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2616
+#: ../src/gpk-application.c:2606
 msgid "Search by name"
 msgstr "Søk etter navn:"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2627
+#: ../src/gpk-application.c:2617
 msgid "Search by description"
 msgstr "Søk etter beskrivelse"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2638
+#: ../src/gpk-application.c:2628
 msgid "Search by file name"
 msgstr "Søk på filnavn"
 
-#: ../src/gpk-application.c:2679
+#: ../src/gpk-application.c:2669
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Lisensiert under GNU General Public License Version 2"
 
-#: ../src/gpk-application.c:2680
+#: ../src/gpk-application.c:2670
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -748,7 +937,7 @@ msgid ""
 "any later version."
 msgstr ""
 
-#: ../src/gpk-application.c:2684
+#: ../src/gpk-application.c:2674
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -756,7 +945,7 @@ msgid ""
 "more details."
 msgstr ""
 
-#: ../src/gpk-application.c:2688
+#: ../src/gpk-application.c:2678
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -764,87 +953,87 @@ msgid ""
 msgstr ""
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2694
+#: ../src/gpk-application.c:2684
 msgid "translator-credits"
 msgstr ""
 "Kjartan Maraas <kmaraas@gnome.org>\n"
 "Torstein Adolf Winterseth <kvikende@fsfe.org>"
 
-#: ../src/gpk-application.c:2714
+#: ../src/gpk-application.c:2704
 msgid "PackageKit Website"
 msgstr "Nettsted for PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2717
+#: ../src/gpk-application.c:2707
 msgid "Package Manager for GNOME"
 msgstr "Pakkehåndtering for GNOME"
 
 #. TRANSLATORS: single column for the package details, not visible at the moment
-#: ../src/gpk-application.c:3144
+#: ../src/gpk-application.c:3134
 msgid "Text"
 msgstr "Tekst"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:3168
+#: ../src/gpk-application.c:3158
 msgid ""
 "Enter a search word and then click find, or click a group to get started."
 msgstr ""
 "Oppgi et søkeord og klikk på søk eller klikk på en gruppe for å komme i gang."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:3171
+#: ../src/gpk-application.c:3161
 msgid "Enter a search word and then click find to get started."
 msgstr "Oppgi et søkeord og klikk på søk for å komme i gang."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3397
+#: ../src/gpk-application.c:3387
 msgid "Exiting as properties could not be retrieved"
 msgstr "Avslutter siden egenskaper ikke kunne hentes"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3516
+#: ../src/gpk-application.c:3506
 msgid "All packages"
 msgstr "Alle pakker"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3518
+#: ../src/gpk-application.c:3508
 msgid "Show all packages"
 msgstr "Vis alle pakker"
 
 #. TRANSLATORS: tooltip on the clear button
-#: ../src/gpk-application.c:3761
+#: ../src/gpk-application.c:3747
 msgid "Clear current selection"
 msgstr "Tøm utvalget"
 
 #. TRANSLATORS: tooltip on the apply button
-#: ../src/gpk-application.c:3786
+#: ../src/gpk-application.c:3772
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr ""
 "Endringene blir ikke tatt i bruk med det samme. Denne knappen aktiverer alle "
 "endringer"
 
 #. TRANSLATORS: tooltip on the homepage button
-#: ../src/gpk-application.c:3812
+#: ../src/gpk-application.c:3798
 msgid "Visit home page for selected package"
 msgstr "Gå til hjemmesiden for valgt pakke"
 
 #. TRANSLATORS: tooltip on the find button
-#: ../src/gpk-application.c:3920
+#: ../src/gpk-application.c:3906
 msgid "Find packages"
 msgstr "Finn pakker"
 
 #. TRANSLATORS: tooltip on the cancel button
-#: ../src/gpk-application.c:3928
+#: ../src/gpk-application.c:3914
 msgid "Cancel search"
 msgstr "Avbryt søk"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:4051 ../src/gpk-update-viewer.c:3343
+#: ../src/gpk-application.c:4037 ../src/gpk-update-viewer.c:3330
 msgid "Show the program version and exit"
 msgstr "Vis versjon og avslutt"
 
 #. are we running privileged
-#: ../src/gpk-application.c:4084
+#: ../src/gpk-application.c:4070
 msgid "Package installer"
 msgstr "Pakkeinstallering"
 
@@ -2048,7 +2237,9 @@ msgstr "Pakken som blir forsøkt fjernet eller oppdatert er ikke installert."
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "software source."
-msgstr "Pakken som blir endret ble ikke funnet på systemet ditt eller i noen programvarekilde."
+msgstr ""
+"Pakken som blir endret ble ikke funnet på systemet ditt eller i noen "
+"programvarekilde."
 
 #: ../src/gpk-enum.c:554
 msgid "The package that is trying to be installed is already installed."
@@ -2077,7 +2268,8 @@ msgid ""
 "error."
 msgstr ""
 "Gruppelisten kan ikke lastes.\n"
-"Oppdatering av mellomlageret kan hjelpe selv om dette normalt er et problem med programvarekilden."
+"Oppdatering av mellomlageret kan hjelpe selv om dette normalt er et problem "
+"med programvarekilden."
 
 #: ../src/gpk-enum.c:570
 msgid ""
@@ -2153,7 +2345,8 @@ msgid ""
 "This is usually due to mixing packages from different software sources."
 msgstr ""
 "To pakker inneholder samme fil.\n"
-"Dette skjer vanligvis fordi du blander pakker fra forskjellige programvarekilder."
+"Dette skjer vanligvis fordi du blander pakker fra forskjellige "
+"programvarekilder."
 
 #: ../src/gpk-enum.c:618
 msgid ""
@@ -3726,18 +3919,23 @@ msgstr "Oppdateringsikon"
 msgid "Bash - Command Not Found"
 msgstr "Bash - kommandoen ble ikke funnet"
 
+#. TRANSLATORS: user friendly name for gnome-settings-dameon
+#: ../src/gpk-log.c:510
+msgid "GNOME Session"
+msgstr "GNOME økt"
+
 #. TRANSLATORS: preset the GtktextBox with this filter text
-#: ../src/gpk-log.c:821
+#: ../src/gpk-log.c:810
 msgid "Set the filter to this value"
 msgstr "Sett filter til denne verdien"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:824 ../src/gpk-prefs.c:938
+#: ../src/gpk-log.c:813 ../src/gpk-prefs.c:925
 msgid "Set the parent window to make this modal"
 msgstr "Sett opphavsvindu for å gjøre dette modalt"
 
 #. are we running privileged
-#: ../src/gpk-log.c:848
+#: ../src/gpk-log.c:837
 msgid "Log viewer"
 msgstr "Loggvisning"
 
@@ -3802,7 +4000,7 @@ msgid "Failed to get the list of sources"
 msgstr "Klarte ikke å hente liste med kilder"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3102
+#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3090
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Avslutter siden detaljer om motor ikke kunne hentes"
 
@@ -3872,33 +4070,33 @@ msgid "Cannot read destination package array"
 msgstr "Kan ikke lese pakkeliste for mål"
 
 #. TRANSLATORS: file search type, lists of packages
-#: ../src/gpk-service-pack.c:746
+#: ../src/gpk-service-pack.c:732
 msgid "Package array files"
 msgstr "Filer i pakkeliste"
 
 #. TRANSLATORS: file search type, service pack destination file type
-#: ../src/gpk-service-pack.c:753
+#: ../src/gpk-service-pack.c:739
 msgid "Service pack files"
 msgstr "Filer i oppdateringspakke"
 
 #. TRANSLATORS: the constants should not be translated
-#: ../src/gpk-service-pack.c:813
+#: ../src/gpk-service-pack.c:799
 msgid "Set the option, allowable values are 'array', 'updates' and 'package'"
 msgstr ""
 
 #. TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack
-#: ../src/gpk-service-pack.c:816
+#: ../src/gpk-service-pack.c:802
 msgid "Add the package name to the text entry box"
 msgstr "Legg til pakkenavn i tekstoppføringsboksen"
 
 #. TRANSLATORS: this is the destination computer package array
-#: ../src/gpk-service-pack.c:819
+#: ../src/gpk-service-pack.c:805
 #, fuzzy
 msgid "Set the remote package array filename"
 msgstr "Søkte etter pakkenavn"
 
 #. TRANSLATORS: this is the file output directory
-#: ../src/gpk-service-pack.c:822
+#: ../src/gpk-service-pack.c:808
 msgid "Set the default output directory"
 msgstr "Sett forvalgt katalog for utdata"
 
@@ -4020,18 +4218,18 @@ msgid "Other updates"
 msgstr "Andre oppdateringer"
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1002
+#: ../src/gpk-update-viewer.c:1000
 msgid "Getting the list of updates"
 msgstr "Henter liste med oppdateringer"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1243
+#: ../src/gpk-update-viewer.c:1241
 msgid "Could not run upgrade script"
 msgstr "Kunne kjøre skript for oppgradering"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1292
+#: ../src/gpk-update-viewer.c:1280
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4046,39 +4244,39 @@ msgstr[1] ""
 "disse pakkene."
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1382
+#: ../src/gpk-update-viewer.c:1370
 msgid "There are no updates available"
 msgstr "Ingen tilgjengelige oppdateringer"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1441
+#: ../src/gpk-update-viewer.c:1429
 msgid "No updates are available"
 msgstr "Ingen oppdateringer er tilgjengelig"
 
 #. TRANSLATORS: no network connnection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1443
+#: ../src/gpk-update-viewer.c:1431
 msgid "No network connection was detected."
 msgstr "Nettverkstilkobling ble ikke funnet."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1460
+#: ../src/gpk-update-viewer.c:1448
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Installer oppdatering"
 msgstr[1] "_Installer oppdateringer"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1468
+#: ../src/gpk-update-viewer.c:1456
 msgid "All software is up to date"
 msgstr "Alle programmer er oppdatert"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1470
+#: ../src/gpk-update-viewer.c:1458
 msgid "There are no software updates available for your computer at this time."
 msgstr ""
 "Det finnes ingen tilgjengelige oppdateringer for din datamaskin akkurat nå."
 
-#: ../src/gpk-update-viewer.c:1496
+#: ../src/gpk-update-viewer.c:1484
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4086,7 +4284,7 @@ msgstr[0] "%i oppdatering tilgjengelig"
 msgstr[1] "%i oppdateringer tilgjengelig"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1512
+#: ../src/gpk-update-viewer.c:1500
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4094,7 +4292,7 @@ msgstr[0] "%i oppdatering valgt"
 msgstr[1] "%i oppdateringer valgt"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1520
+#: ../src/gpk-update-viewer.c:1508
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4102,22 +4300,22 @@ msgstr[0] "%i oppdatering valgt (%s)"
 msgstr[1] "%i oppdateringer valgt (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1717
+#: ../src/gpk-update-viewer.c:1705
 msgid "Status"
 msgstr "Status"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1940
+#: ../src/gpk-update-viewer.c:1928
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Denne oppdateringen vil rette feil og andre ikke-kritiske problemer."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1944
+#: ../src/gpk-update-viewer.c:1932
 msgid "This update is important as it may solve critical problems."
 msgstr "Denne oppdateringen er viktig da den kan løse kritiske problemer."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1948
+#: ../src/gpk-update-viewer.c:1936
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
@@ -4125,24 +4323,24 @@ msgstr ""
 "denne pakken."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1952
+#: ../src/gpk-update-viewer.c:1940
 msgid "This update is blocked."
 msgstr "Denne oppdateringen er blokkert."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1964
+#: ../src/gpk-update-viewer.c:1952
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Varsling ble gitt på %s og sist oppdatert på %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1971
+#: ../src/gpk-update-viewer.c:1959
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Dette varselet ble utsendt %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1993
+#: ../src/gpk-update-viewer.c:1981
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4150,7 +4348,7 @@ msgstr[0] "Besøk dette nettstedet for mer informasjon om denne oppdateringen:"
 msgstr[1] "Besøk disse nettstedene for mer informasjon om denne oppdateringen:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:2001
+#: ../src/gpk-update-viewer.c:1989
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4165,7 +4363,7 @@ msgstr[1] ""
 "nettstedene:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2009
+#: ../src/gpk-update-viewer.c:1997
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4176,14 +4374,14 @@ msgstr[1] ""
 "For mer informasjon om denne sikkerhetsoppdateringen se disse nettstedene:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2018
+#: ../src/gpk-update-viewer.c:2006
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
 msgstr "Datamaskinen må startes på nytt for at endringene skal tre i kraft."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2022
+#: ../src/gpk-update-viewer.c:2010
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4192,21 +4390,25 @@ msgstr ""
 "kraft."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2029
+#: ../src/gpk-update-viewer.c:2017
 msgid ""
 "The classifaction of this update is unstable which means it is not designed "
 "for production use."
-msgstr "Klassifisering av denne oppdateringen er ustabil hvilket betyr at den ikke er ment for bruk på produksjonssystemer."
+msgstr ""
+"Klassifisering av denne oppdateringen er ustabil hvilket betyr at den ikke "
+"er ment for bruk på produksjonssystemer."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2033
+#: ../src/gpk-update-viewer.c:2021
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
-msgstr "Dette er en testoppdatering, og den er ikke ment for normal bruk. Vennligst rapporter eventuelle problemer du møter på."
+msgstr ""
+"Dette er en testoppdatering, og den er ikke ment for normal bruk. Vennligst "
+"rapporter eventuelle problemer du møter på."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2042
+#: ../src/gpk-update-viewer.c:2030
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
@@ -4214,73 +4416,73 @@ msgstr ""
 "Utviklingsloggene vil bli vist da det ikke finnes beskrivelse for denne "
 "oppdateringen:"
 
-#: ../src/gpk-update-viewer.c:2092
+#: ../src/gpk-update-viewer.c:2080
 msgid "Loading..."
 msgstr "Laster …"
 
-#: ../src/gpk-update-viewer.c:2095
+#: ../src/gpk-update-viewer.c:2083
 msgid "No update details available."
 msgstr "Ingen detaljer om oppdateringer er tilgjengelig."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2127 ../src/gpk-update-viewer.c:2225
-#: ../src/gpk-update-viewer.c:2245
+#: ../src/gpk-update-viewer.c:2115 ../src/gpk-update-viewer.c:2213
+#: ../src/gpk-update-viewer.c:2233
 msgid "Could not get update details"
 msgstr "Kunne ikke hente detaljer om oppdatering"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2147
+#: ../src/gpk-update-viewer.c:2135
 msgid "Could not get package details"
 msgstr "Kunne ikke hente detaljer om pakke"
 
-#: ../src/gpk-update-viewer.c:2147 ../src/gpk-update-viewer.c:2245
+#: ../src/gpk-update-viewer.c:2135 ../src/gpk-update-viewer.c:2233
 msgid "No results were returned."
 msgstr "Ingen resultater ble funnet."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2480
+#: ../src/gpk-update-viewer.c:2468
 msgid "Select all"
 msgstr "Velg alle"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2488
+#: ../src/gpk-update-viewer.c:2476
 msgid "Unselect all"
 msgstr "Velg bort alle"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2495
+#: ../src/gpk-update-viewer.c:2483
 msgid "Select security updates"
 msgstr "Velg sikkerhetsoppdateringer"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2501
+#: ../src/gpk-update-viewer.c:2489
 msgid "Ignore this update"
 msgstr "Ignorer denne oppdateringen"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2612
+#: ../src/gpk-update-viewer.c:2600
 msgid "Could not get updates"
 msgstr "Kunne ikke hente oppdateringer"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2765
+#: ../src/gpk-update-viewer.c:2753
 msgid "Checking for updates..."
 msgstr "Ser etter oppdateringer …"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3035
+#: ../src/gpk-update-viewer.c:3023
 msgid "Could not get list of distribution upgrades"
 msgstr "Fant ikke liste med oppgraderinger for distribusjonen"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3065
+#: ../src/gpk-update-viewer.c:3053
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Ny oppgradering for distribusjonen med navn «%s» er tilgjengelig"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3312
+#: ../src/gpk-update-viewer.c:3299
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -4289,7 +4491,7 @@ msgstr ""
 "installeres først."
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3377
+#: ../src/gpk-update-viewer.c:3364
 msgid "Software Update Viewer"
 msgstr "Vis programvareoppdateringer"
 
