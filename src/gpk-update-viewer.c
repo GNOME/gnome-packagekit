@@ -483,6 +483,30 @@ gpk_update_viewer_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, Gt
 }
 
 /**
+ * gpk_update_viewer_find_iter_model_exact_cb:
+ **/
+static gboolean
+gpk_update_viewer_find_iter_model_exact_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, const PkPackageId *id)
+{
+	gchar *id_tmp = NULL;
+	GtkTreePath **_path = NULL;
+	PkPackageId *id_new;
+	gboolean ret = FALSE;
+
+	_path = (GtkTreePath **) g_object_get_data (G_OBJECT(model), "_path");
+	gtk_tree_model_get (model, iter, GPK_UPDATES_COLUMN_ID, &id_tmp, -1);
+
+	/* only match on the name */
+	id_new = pk_package_id_new_from_string (id_tmp);
+	if (pk_package_id_equal (id_new, id)) {
+		*_path = gtk_tree_path_copy (path);
+		ret = TRUE;
+	}
+	pk_package_id_free (id_new);
+	return ret;
+}
+
+/**
  * gpk_update_viewer_model_get_path:
  **/
 static GtkTreePath *
@@ -490,7 +514,11 @@ gpk_update_viewer_model_get_path (GtkTreeModel *model, const PkPackageId *id)
 {
 	GtkTreePath *path = NULL;
 	g_object_set_data (G_OBJECT(model), "_path", (gpointer) &path);
+	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_update_viewer_find_iter_model_exact_cb, (gpointer) id);
+	if (path != NULL)
+		goto out;
 	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_update_viewer_find_iter_model_cb, (gpointer) id);
+out:
 	g_object_steal_data (G_OBJECT(model), "_path");
 	return path;
 }
