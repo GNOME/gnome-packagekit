@@ -674,32 +674,29 @@ gpk_update_viewer_remove_active_row (GtkTreeModel *model, GtkTreePath *path)
  * gpk_update_viewer_find_iter_model_cb:
  **/
 static gboolean
-gpk_update_viewer_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, const gchar *package_id)
+gpk_update_viewer_find_iter_model_cb (GtkTreeModel *model,
+				      GtkTreePath *path,
+				      GtkTreeIter *iter,
+				      const gchar *package_id)
 {
 	gchar *package_id_tmp = NULL;
 	GtkTreePath **_path = NULL;
 	gboolean ret = FALSE;
-	gchar **split;
-	gchar **split_tmp;
 
-	_path = (GtkTreePath **) g_object_get_data (G_OBJECT(model), "_path");
 	gtk_tree_model_get (model, iter,
 			    GPK_UPDATES_COLUMN_ID, &package_id_tmp,
 			    -1);
 	if (package_id_tmp == NULL)
 		goto out;
 
-	/* only match on the name */
-	split = pk_package_id_split (package_id);
-	split_tmp = pk_package_id_split (package_id_tmp);
-	if (g_strcmp0 (split[PK_PACKAGE_ID_NAME], split_tmp[PK_PACKAGE_ID_NAME]) == 0) {
+	/* match on the package id */
+	if (g_strcmp0 (package_id, package_id_tmp) == 0) {
+		_path = (GtkTreePath **) g_object_get_data (G_OBJECT(model), "_path");
 		*_path = gtk_tree_path_copy (path);
 		ret = TRUE;
 	}
-	g_free (package_id_tmp);
-	g_strfreev (split);
-	g_strfreev (split_tmp);
 out:
+	g_free (package_id_tmp);
 	return ret;
 }
 
@@ -831,12 +828,13 @@ gpk_update_viewer_get_parent_for_info (PkInfoEnum info, GtkTreeIter *parent)
 	}
 }
 
-
 /**
  * gpk_update_viewer_progress_cb:
  **/
 static void
-gpk_update_viewer_progress_cb (PkProgress *progress, PkProgressType type, gpointer user_data)
+gpk_update_viewer_progress_cb (PkProgress *progress,
+			       PkProgressType type,
+			       gpointer user_data)
 {
 	gboolean allow_cancel;
 	PkPackage *package;
