@@ -169,7 +169,7 @@
   <title>Applications</title>
   <para>
     <application>packagekitd</application> is started automatically when it is
-    needed. <command>pkcon</command> offers a versatile commandline interface
+    needed. <command>pkcon</command> offers a versatile command line interface
     to PackageKit.
   </para>
   <para>
@@ -300,12 +300,12 @@
     </para>
     <para>
       To see only installed or only uninstalled software, choose the
-      corresponding menuitem in the <menuchoice><guimenu>Filters</guimenu>
+      corresponding menu item in the <menuchoice><guimenu>Filters</guimenu>
       <guisubmenu>Installed</guisubmenu></menuchoice> menu.
     </para>
     <para>
       To see only software containing applications with a graphical user
-      interface or only applications with a commandline interface, choose a
+      interface or only applications with a command line interface, choose a
       filter from the <menuchoice><guimenu>Filters</guimenu>
       <guisubmenu>Graphical</guisubmenu></menuchoice>
       menu.
@@ -371,13 +371,14 @@
   <title>File Handler Helper</title>
   <para>
     Sometimes you will not have the software on your system to open a particular
-    file. If the file type is not recognised, then applications that can open
+    file. If the file type is not recognized, then applications that can open
     this file type are shown.
   </para>
   <para>
     At this time, only a limited number of results will be shown, as they will
-    need to be rebuilt by the distro to support the extra data needed by PackageKit.
-    This will happen automatically, and soon all suitable applications will be shown.
+    need to be rebuilt by the distribution to support the extra data needed by
+    PackageKit. This will happen automatically, and soon all suitable
+    applications will be shown.
   </para>
 </section>
 
@@ -631,17 +632,17 @@
     <literal>k3b</literal> so that it can burn DVD-RWs.
   </para>
   <para>
-    The <literal>k3b</literal> program has dependancies of <literal>dbus</literal>,
+    The <literal>k3b</literal> program has dependencies of <literal>dbus</literal>,
     <literal>dbus-glib</literal> and <literal>kdebase</literal>.
     Now, if we asked computer A to download <literal>k3b</literal>, it would download
-    <literal>k3b</literal> <emphasis>and</emphasis> <literal>kdebase</literal> but
+    <literal>k3b</literal> <emphasis>and</emphasis> <literal>kdebase</literal>, but
     <emphasis>not</emphasis> <literal>dbus-glib</literal>.
     We need to provide computer A with the information about what packages computer B
     has got installed before we can create the service pack.
   </para>
   <para>
     If we generate a package list on computer B, and the transfer it to
-    computer A on a USB pendrive or CDRW we can download the correct packages.
+    computer A on a USB pendrive or CD-RW we can download the correct packages.
     In this case we would download <literal>k3b</literal> and
     <literal>dbus-glib</literal> and pack it into the new service pack.
   </para>

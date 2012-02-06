@@ -324,8 +324,8 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	gtk_tree_view_append_column (treeview, column);
 	gtk_tree_view_column_set_expand (column, TRUE);
 
-	/* TRANSLATORS: column for the username, e.g. Richard Hughes */
-	column = gtk_tree_view_column_new_with_attributes (_("Username"), renderer,
+	/* TRANSLATORS: column for the user name, e.g. Richard Hughes */
+	column = gtk_tree_view_column_new_with_attributes (_("User name"), renderer,
 							   "markup", GPK_LOG_COLUMN_USER, NULL);
 	gtk_tree_view_append_column (treeview, column);
 	gtk_tree_view_column_set_expand (column, FALSE);
@@ -506,7 +506,7 @@ gpk_log_add_item (PkTransactionPast *item)
 		/* TRANSLATORS: short name for the command not found plugin */
 		tool = _("Bash - Command Not Found");
 	else if (g_strcmp0 (cmdline, "/usr/libexec/gnome-settings-daemon") == 0)
-		/* TRANSLATORS: user friendly name for gnome-settings-dameon */
+		/* TRANSLATORS: user friendly name for gnome-settings-daemon */
 		tool = _("GNOME Session");
 	else
 		tool = cmdline;

@@ -353,7 +353,7 @@ gpk_task_media_change_question (PkTask *task, guint request, PkResults *results)
 
 	priv->current_window = GTK_WINDOW (gtk_message_dialog_new (priv->parent_window,
 								   GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-								   /* TRANSLATORS: this is the window title when a new cd or dvd is required */
+								   /* TRANSLATORS: this is the window title when a new CD or DVD is required */
 								   GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL, _("A media change is required")));
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG(priv->current_window), "%s", message);
 

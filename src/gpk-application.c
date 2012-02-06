@@ -1029,7 +1029,7 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, gpointer us
 					   "%i additional packages are required for %s",
 					   array->len), array->len, name);
 
-	/* TRANSLATORS: message: show the array of dependant packages for this package */
+	/* TRANSLATORS: message: show the array of dependent packages for this package */
 	message = g_strdup_printf (ngettext ("Packages listed below are required for %s to function correctly.",
 					     "Packages listed below are required for %s to function correctly.",
 					     array->len), name);
@@ -1598,7 +1598,7 @@ gpk_application_perform_search_name_details_file (gpointer user_data)
 		/* TODO - make the dialog turn red... */
 		window = GTK_WINDOW (gtk_builder_get_object (builder, "window_manager"));
 		gpk_error_dialog_modal (window,
-					/* TRANSLATORS: title: invlid text in the search bar */
+					/* TRANSLATORS: title: invalid text in the search bar */
 					_("Invalid search text"),
 					/* TRANSLATORS: message: tell the user that's not allowed */
 					_("The search text contains invalid characters"), NULL);
@@ -1641,7 +1641,7 @@ gpk_application_perform_search_name_details_file (gpointer user_data)
 	if (!ret) {
 		window = GTK_WINDOW (gtk_builder_get_object (builder, "window_manager"));
 		gpk_error_dialog_modal (window,
-					/* TRANSLATORS: title: we failed to execute the mthod */
+					/* TRANSLATORS: title: we failed to execute the method */
 					_("The search could not be completed"),
 					/* TRANSLATORS: low level failure, details to follow */
 					_("Running the transaction failed"), error->message);
@@ -3547,7 +3547,7 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, gpointe
 		if (pk_bitfield_contain (roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
 			gpk_application_menu_search_by_description (NULL, NULL);
 		} else {
-			g_warning ("cannont use mode %i as not capable, using name", search_type);
+			g_warning ("cannot use mode %i as not capable, using name", search_type);
 			gpk_application_menu_search_by_name (NULL, NULL);
 		}
 
@@ -3558,13 +3558,13 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, gpointe
 		if (pk_bitfield_contain (roles, PK_ROLE_ENUM_SEARCH_FILE)) {
 			gpk_application_menu_search_by_file (NULL, NULL);
 		} else {
-			g_warning ("cannont use mode %i as not capable, using name", search_type);
+			g_warning ("cannot use mode %i as not capable, using name", search_type);
 			gpk_application_menu_search_by_name (NULL, NULL);
 		}
 
-	/* mode not recognised */
+	/* mode not recognized */
 	} else {
-		g_warning ("cannot recognise mode %i, using name", search_type);
+		g_warning ("cannot recognize mode %i, using name", search_type);
 		gpk_application_menu_search_by_name (NULL, NULL);
 	}
 out:
@@ -3712,7 +3712,7 @@ gpk_application_startup_cb (GtkApplication *application, gpointer user_data)
 	g_signal_connect (control, "notify::network-state",
 			  G_CALLBACK (gpk_application_notify_network_state_cb), NULL);
 
-	/* get localised data from sqlite database */
+	/* get localized data from sqlite database */
 	desktop = pk_desktop_new ();
 	ret = pk_desktop_open_database (desktop, NULL);
 	if (!ret)

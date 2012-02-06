@@ -569,7 +569,7 @@ gpk_pack_button_create_cb (GtkWidget *widget2, gpointer data)
 
 		/* tell the user what we are doing */
 		progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (builder, "progressbar_percentage"));
-		/* TRANSLATORS: progressbar text */
+		/* TRANSLATORS: progress bar text */
 		gtk_progress_bar_set_text (progress_bar, _("Refreshing system package array"));
 
 		/* refresh package array */
@@ -802,7 +802,7 @@ gpm_pack_commandline_cb (GApplication *application,
 		  _("Add the package name to the text entry box"), NULL },
 		{ "with-array", 'p', 0, G_OPTION_ARG_STRING, &with_array,
 		  /* TRANSLATORS: this is the destination computer package array */
-		  _("Set the remote package array filename"), NULL },
+		  _("Set the remote package array file name"), NULL },
 		{ "output", 'p', 0, G_OPTION_ARG_STRING, &output,
 		  /* TRANSLATORS: this is the file output directory */
 		  _("Set the default output directory"), NULL },

@@ -1,5 +1,5 @@
 """
-This module provides widgets to use PackageKit in a GTK application.
+This module provides widgets to use PackageKit in a GTK+ application.
 """
 #Copyright (C) 2008 Sebastian Heinlein <sevel@glatzor.de>
 

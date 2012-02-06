@@ -43,7 +43,7 @@
 #define GNOME_SESSION_MANAGER_PATH		"/org/gnome/SessionManager"
 #define GNOME_SESSION_MANAGER_INTERFACE		"org.gnome.SessionManager"
 
-/* if the dialog is going to cover more than this much of the screen, then maximise it at startup */
+/* if the dialog is going to cover more than this much of the screen, then maximize it at startup */
 #define GPK_SMALL_FORM_FACTOR_SCREEN_PERCENT	75 /* % */
 
 /* static, so local to process */
@@ -426,7 +426,7 @@ gpk_check_privileged_user (const gchar *application_name, gboolean show_ui)
 			/* TRANSLATORS: these tools cannot run as root (unknown name) */
 			title = g_strdup (_("This application is running as a privileged user"));
 		else
-			/* TRANSLATORS: cannot run as root user, and we display the applicaiton name */
+			/* TRANSLATORS: cannot run as root user, and we display the application name */
 			title = g_strdup_printf (_("%s is running as a privileged user"), application_name);
 		message = g_strjoin ("\n",
 				     /* TRANSLATORS: tell the user off */
@@ -493,7 +493,7 @@ gpk_set_animated_icon_from_status (GpkAnimatedIcon *icon, PkStatusEnum status, G
  * gpk_time_to_imprecise_string:
  * @time_secs: The time value to convert in seconds
  *
- * Returns a localised timestring
+ * Returns a localized timestring
  *
  * Return value: The time string, e.g. "2 hours"
  **/
@@ -543,7 +543,7 @@ out:
  * gpk_time_to_localised_string:
  * @time_secs: The time value to convert in seconds
  *
- * Returns a localised timestring
+ * Returns a localized timestring
  *
  * Return value: The time string, e.g. "2 hours 3 minutes"
  **/
@@ -779,7 +779,7 @@ gpk_package_entry_completion_new (void)
 /**
  * gpk_ignore_session_error:
  *
- * Returns true if the error is a remote exception where we cancelled
+ * Returns true if the error is a remote exception where we canceled
  **/
 gboolean
 gpk_ignore_session_error (GError *error)

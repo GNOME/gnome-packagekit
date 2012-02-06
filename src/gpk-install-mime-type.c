@@ -82,7 +82,7 @@ main (int argc, char *argv[])
 		/* TRANSLATORS: could not install program supporting this type */
 		gpk_error_dialog (_("Failed to install a program to handle this file type"),
 				  /* TRANSLATORS: no type given */
-				  _("You need to specify a mime-type to install"), NULL);
+				  _("You need to specify a mime type to install"), NULL);
 		goto out;
 	}
 
@@ -114,7 +114,7 @@ main (int argc, char *argv[])
 				 G_TYPE_INVALID,
 				 G_TYPE_INVALID);
 	if (!ret && !gpk_ignore_session_error (error)) {
-		/* TRANSLATORS: This is when the specified DBus method did not execute successfully */
+		/* TRANSLATORS: This is when the specified D-Bus method did not execute successfully */
 		gpk_error_dialog (_("The action could not be completed"),
 				  /* TRANSLATORS: we don't have anything more useful to translate. sorry. */
 				  _("The request failed. More details are available in the detailed report."),

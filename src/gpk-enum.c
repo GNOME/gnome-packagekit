@@ -395,7 +395,7 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 		text = _("Failed to initialize");
 		break;
 	case PK_ERROR_ENUM_FAILED_FINALISE:
-		text = _("Failed to finalise");
+		text = _("Failed to finalize");
 		break;
 	case PK_ERROR_ENUM_CANNOT_GET_LOCK:
 		text = _("Cannot get lock");
@@ -536,11 +536,11 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 		break;
 	case PK_ERROR_ENUM_NOT_SUPPORTED:
 		text = _("The action is not supported by this backend.\n"
-			 "Please report a bug in your distribution bugtracker as this should not have happened.");
+			 "Please report a bug in your distribution bug tracker as this should not have happened.");
 		break;
 	case PK_ERROR_ENUM_INTERNAL_ERROR:
 		text = _("A problem that we were not expecting has occurred.\n"
-			 "Please report this bug in your distribution bugtracker with the error description.");
+			 "Please report this bug in your distribution bug tracker with the error description.");
 		break;
 	case PK_ERROR_ENUM_GPG_FAILURE:
 		text = _("A security trust relationship could not be made with software source.\n"
@@ -751,7 +751,7 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 		text = _("The list of software sources could not be downloaded.");
 		break;
 	case PK_ERROR_ENUM_CANCELLED_PRIORITY:
-		text = _("The transaction has been cancelled and will be retried when the system is idle.");
+		text = _("The transaction has been canceled and will be retried when the system is idle.");
 		break;
 	default:
 		g_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"
@@ -787,7 +787,7 @@ gpk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 		text = _("A restart will be required due to a security update.");
 		break;
 	default:
-		g_warning ("restart unrecognised: %i", restart);
+		g_warning ("restart unrecognized: %i", restart);
 	}
 	return text;
 }
@@ -819,7 +819,7 @@ gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 		text = _("A restart is required to remain secure.");
 		break;
 	default:
-		g_warning ("restart unrecognised: %i", restart);
+		g_warning ("restart unrecognized: %i", restart);
 	}
 	return text;
 }
@@ -845,7 +845,7 @@ gpk_update_state_enum_to_localised_text (PkUpdateStateEnum state)
 		text = _("Testing");
 		break;
 	default:
-		g_warning ("state unrecognised: %i", state);
+		g_warning ("state unrecognized: %i", state);
 	}
 	return text;
 }
@@ -907,7 +907,7 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 		text = _("Other updates have been held back");
 		break;
 	default:
-		g_warning ("message unrecognised: %i", message);
+		g_warning ("message unrecognized: %i", message);
 	}
 	return text;
 }
@@ -1001,8 +1001,8 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Finished");
 		break;
 	case PK_STATUS_ENUM_CANCEL:
-		/* TRANSLATORS: transaction state, in the process of cancelling */
-		text = _("Cancelling");
+		/* TRANSLATORS: transaction state, in the process of canceling */
+		text = _("Canceling");
 		break;
 	case PK_STATUS_ENUM_DOWNLOAD_REPOSITORY:
 		/* TRANSLATORS: transaction state, downloading metadata */
@@ -1069,7 +1069,7 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		text = _("Copying files");
 		break;
 	default:
-		g_warning ("status unrecognised: %s", pk_status_enum_to_string (status));
+		g_warning ("status unrecognized: %s", pk_status_enum_to_string (status));
 	}
 	return text;
 }
@@ -1111,7 +1111,7 @@ gpk_update_enum_to_localised_text (PkInfoEnum info, guint number)
 		text = g_strdup_printf (ngettext ("%i blocked update", "%i blocked updates", number), number);
 		break;
 	default:
-		g_warning ("update info unrecognised: %s", pk_info_enum_to_string (info));
+		g_warning ("update info unrecognized: %s", pk_info_enum_to_string (info));
 	}
 	return text;
 }
@@ -1171,7 +1171,7 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 		text = _("Untrusted");
 		break;
 	default:
-		g_warning ("info unrecognised: %s", pk_info_enum_to_string (info));
+		g_warning ("info unrecognized: %s", pk_info_enum_to_string (info));
 	}
 	return text;
 }
@@ -1221,7 +1221,7 @@ gpk_info_enum_to_localised_present (PkInfoEnum info)
 		text = _("Decompressing");
 		break;
 	default:
-		g_warning ("info unrecognised: %s", pk_info_enum_to_string (info));
+		g_warning ("info unrecognized: %s", pk_info_enum_to_string (info));
 	}
 	return text;
 }
@@ -1271,7 +1271,7 @@ gpk_info_enum_to_localised_past (PkInfoEnum info)
 		text = _("Decompressed");
 		break;
 	default:
-		g_warning ("info unrecognised: %s", pk_info_enum_to_string (info));
+		g_warning ("info unrecognized: %s", pk_info_enum_to_string (info));
 	}
 	return text;
 }
@@ -1429,15 +1429,15 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		text = _("Upgrading system");
 		break;
 	case PK_ROLE_ENUM_SIMULATE_REPAIR_SYSTEM:
-		/* TRANSLATORS: The role of the transaction, in past tense */
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Simulating the system repair");
 		break;
 	case PK_ROLE_ENUM_REPAIR_SYSTEM:
-		/* TRANSLATORS: The role of the transaction, in past tense */
+		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Repairing the system");
 		break;
 	default:
-		g_warning ("role unrecognised: %s", pk_role_enum_to_string (role));
+		g_warning ("role unrecognized: %s", pk_role_enum_to_string (role));
 	}
 	return text;
 }
@@ -1605,7 +1605,7 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		text = _("Repaired the system");
 		break;
 	default:
-		g_warning ("role unrecognised: %s", pk_role_enum_to_string (role));
+		g_warning ("role unrecognized: %s", pk_role_enum_to_string (role));
 	}
 	return text;
 }
@@ -1672,7 +1672,7 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		break;
 	case PK_GROUP_ENUM_DESKTOP_XFCE:
 		/* TRANSLATORS: The group type */
-		text = _("XFCE desktop");
+		text = _("Xfce desktop");
 		break;
 	case PK_GROUP_ENUM_DESKTOP_OTHER:
 		/* TRANSLATORS: The group type */
@@ -1759,7 +1759,7 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		text = _("Unknown group");
 		break;
 	default:
-		g_warning ("group unrecognised: %i", group);
+		g_warning ("group unrecognized: %i", group);
 	}
 	return text;
 }
@@ -1889,9 +1889,9 @@ gpk_enum_test (gpointer data)
 		return;
 
 	/************************************************************
-	 ****************     localised enums          **************
+	 ****************     localized enums          **************
 	 ************************************************************/
-	egg_test_title (test, "check we convert all the localised past role enums");
+	egg_test_title (test, "check we convert all the localized past role enums");
 	for (i=0; i<PK_ROLE_ENUM_LAST; i++) {
 		string = gpk_role_enum_to_localised_past (i);
 		if (string == NULL) {
@@ -1902,7 +1902,7 @@ gpk_enum_test (gpointer data)
 	egg_test_success (test, NULL);
 
 	/************************************************************/
-	egg_test_title (test, "check we convert all the localised present role enums");
+	egg_test_title (test, "check we convert all the localized present role enums");
 	for (i=0; i<PK_ROLE_ENUM_LAST; i++) {
 		string = gpk_role_enum_to_localised_present (i);
 		if (string == NULL) {
@@ -1946,7 +1946,7 @@ gpk_enum_test (gpointer data)
 	egg_test_success (test, NULL);
 
 	/************************************************************/
-	egg_test_title (test, "check we convert all the localised status enums");
+	egg_test_title (test, "check we convert all the localized status enums");
 	for (i=0; i<PK_STATUS_ENUM_LAST; i++) {
 		string = gpk_status_enum_to_localised_text (i);
 		if (string == NULL) {
@@ -1979,7 +1979,7 @@ gpk_enum_test (gpointer data)
 	egg_test_success (test, NULL);
 
 	/************************************************************/
-	egg_test_title (test, "check we convert all the localised error enums");
+	egg_test_title (test, "check we convert all the localized error enums");
 	for (i=0; i<PK_ERROR_ENUM_LAST; i++) {
 		string = gpk_error_enum_to_localised_text (i);
 		if (string == NULL) {
@@ -1990,7 +1990,7 @@ gpk_enum_test (gpointer data)
 	egg_test_success (test, NULL);
 
 	/************************************************************/
-	egg_test_title (test, "check we convert all the localised error messages");
+	egg_test_title (test, "check we convert all the localized error messages");
 	for (i=0; i<PK_ERROR_ENUM_LAST; i++) {
 		string = gpk_error_enum_to_localised_message (i);
 		if (string == NULL) {
@@ -2001,7 +2001,7 @@ gpk_enum_test (gpointer data)
 	egg_test_success (test, NULL);
 
 	/************************************************************/
-	egg_test_title (test, "check we convert all the localised restart enums");
+	egg_test_title (test, "check we convert all the localized restart enums");
 	for (i=PK_RESTART_ENUM_UNKNOWN+1; i<PK_RESTART_ENUM_LAST; i++) {
 		string = gpk_restart_enum_to_localised_text (i);
 		if (string == NULL) {
@@ -2023,7 +2023,7 @@ gpk_enum_test (gpointer data)
 	egg_test_success (test, NULL);
 
 	/************************************************************/
-	egg_test_title (test, "check we convert all the localised message enums");
+	egg_test_title (test, "check we convert all the localized message enums");
 	for (i=PK_MESSAGE_ENUM_UNKNOWN+1; i<PK_MESSAGE_ENUM_LAST; i++) {
 		string = gpk_message_enum_to_localised_text (i);
 		if (string == NULL) {
@@ -2034,7 +2034,7 @@ gpk_enum_test (gpointer data)
 	egg_test_success (test, NULL);
 
 	/************************************************************/
-	egg_test_title (test, "check we convert all the localised restart future enums");
+	egg_test_title (test, "check we convert all the localized restart future enums");
 	for (i=PK_RESTART_ENUM_UNKNOWN+1; i<PK_RESTART_ENUM_LAST; i++) {
 		string = gpk_restart_enum_to_localised_text_future (i);
 		if (string == NULL) {
@@ -2045,7 +2045,7 @@ gpk_enum_test (gpointer data)
 	egg_test_success (test, NULL);
 
 	/************************************************************/
-	egg_test_title (test, "check we convert all the localised group enums");
+	egg_test_title (test, "check we convert all the localized group enums");
 	for (i=0; i<PK_GROUP_ENUM_LAST; i++) {
 		string = gpk_group_enum_to_localised_text (i);
 		if (string == NULL) {

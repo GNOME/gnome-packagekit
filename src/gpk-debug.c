@@ -175,12 +175,12 @@ gpk_debug_post_parse_hook (GOptionContext *context, GOptionGroup *group, gpointe
 /**
  * gpk_debug_get_option_group:
  *
- * Returns a #GOptionGroup for the commandline arguments recognized
+ * Returns a #GOptionGroup for the command line arguments recognized
  * by debugging. You should add this group to your #GOptionContext
  * with g_option_context_add_group(), if you are using
- * g_option_context_parse() to parse your commandline arguments.
+ * g_option_context_parse() to parse your command line arguments.
  *
- * Returns: a #GOptionGroup for the commandline arguments
+ * Returns: a #GOptionGroup for the command line arguments
  */
 GOptionGroup *
 gpk_debug_get_option_group (void)

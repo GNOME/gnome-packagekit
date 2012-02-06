@@ -52,8 +52,8 @@ gpk_error_dialog_expanded_cb (GObject *object, GParamSpec *param_spec, GtkBuilde
 /**
  * gpk_error_dialog_modal_with_time:
  * @window: the parent dialog
- * @title: the localised text to put in bold as a title
- * @message: the localised text to put as a message
+ * @title: the localized text to put in bold as a title
+ * @message: the localized text to put as a message
  * @details: the geeky text to in the expander, or %NULL if nothing
  *
  * Shows a modal error, and blocks until the user clicks close
@@ -144,8 +144,8 @@ out_build:
 /**
  * gpk_error_dialog_modal:
  * @window: the parent dialog
- * @title: the localised text to put in bold as a title
- * @message: the localised text to put as a message
+ * @title: the localized text to put in bold as a title
+ * @message: the localized text to put as a message
  * @details: the geeky text to in the expander, or %NULL if nothing
  *
  * Shows a modal error, and blocks until the user clicks close
@@ -158,8 +158,8 @@ gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *mess
 
 /**
  * gpk_error_dialog:
- * @title: the localised text to put in bold as a title
- * @message: the localised text to put as a message
+ * @title: the localized text to put in bold as a title
+ * @message: the localized text to put as a message
  * @details: the geeky text to in the expander, or %NULL if nothing
  *
  * Shows a modal error, and blocks until the user clicks close

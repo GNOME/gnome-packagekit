@@ -69,7 +69,7 @@ gpk_dbus_service_object_register (DBusGConnection *connection, GObject *object)
 				 G_TYPE_UINT, &request_name_result,
 				 G_TYPE_INVALID);
 	if (!ret) {
-		/* abort as the DBUS method failed */
+		/* abort as the D-Bus method failed */
 		g_warning ("RequestName failed: %s", error->message);
 		g_error_free (error);
 		return FALSE;
@@ -155,7 +155,7 @@ main (int argc, char *argv[])
 	/* TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state */
 	g_set_application_name (_("Software Install"));
 	context = g_option_context_new (NULL);
-	g_option_context_set_summary (context, _("Session DBus service for PackageKit"));
+	g_option_context_set_summary (context, _("Session D-Bus service for PackageKit"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_add_group (context, gpk_debug_get_option_group ());
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));

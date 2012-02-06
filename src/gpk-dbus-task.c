@@ -290,7 +290,7 @@ gpk_dbus_task_error_msg (GpkDbusTask *dtask, const gchar *title, GError *error)
 {
 	GtkWindow *window;
 	/* TRANSLATORS: default fallback error -- this should never happen */
-	const gchar *message = _("Unknown error. Please refer to the detailed report and report in your distribution bugtracker.");
+	const gchar *message = _("Unknown error. Please refer to the detailed report and report in your distribution bug tracker.");
 	const gchar *details = NULL;
 
 	if (!dtask->priv->show_warning)
@@ -403,7 +403,7 @@ gpk_dbus_task_get_code_from_gerror (const GError *error)
 		goto out;
 	}
 
-	/* not recognised */
+	/* not recognized */
 	if (error->domain != PK_CLIENT_ERROR) {
 		g_warning ("Not a PkClientError error code");
 		goto out;
@@ -2256,7 +2256,7 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts, G
 	for (i=0; i<len; i++) {
 		/* correct prefix */
 		if (!g_str_has_prefix (fonts[i], ":lang=")) {
-			error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "not recognised prefix: '%s'", fonts[i]);
+			error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "not recognized prefix: '%s'", fonts[i]);
 			gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 			g_error_free (error_dbus);
 			goto out;
@@ -2690,7 +2690,7 @@ gpk_dbus_task_catalog_lookup_cb (GObject *object, GAsyncResult *res, GpkDbusTask
 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "Action was cancelled");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "Action was canceled");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -3003,7 +3003,7 @@ gpk_dbus_task_remove_package_by_file_search_file_cb (PkClient *client, GAsyncRes
 	if (array->len == 0) {
 		if (dtask->priv->show_warning) {
 			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
-			/* TRANSLATORS: failed to fild the package for thefile */
+			/* TRANSLATORS: failed to find the package for the file */
 			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to find package for this file"));
 			/* TRANSLATORS: nothing found */
 			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The file could not be found in any packages"));
@@ -3310,7 +3310,7 @@ gpk_dbus_task_set_exec (GpkDbusTask *dtask, const gchar *exec)
 		dtask->priv->parent_icon_name = gpk_desktop_guess_icon_name (dtask->priv->desktop, package);
 		/* fallback to package name */
 		if (dtask->priv->parent_title == NULL) {
-			g_debug ("did not get localised description for %s", package);
+			g_debug ("did not get localized description for %s", package);
 			dtask->priv->parent_title = g_strdup (package);
 		}
 	}
@@ -3372,7 +3372,7 @@ gpk_dbus_task_init (GpkDbusTask *dtask)
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
-	/* only initialise if the application didn't do it before */
+	/* only initialize if the application didn't do it before */
 	if (!notify_is_initted ())
 		notify_init (_("Software Install"));
 

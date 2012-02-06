@@ -223,15 +223,15 @@ gpk_update_viewer_check_restart (void)
 		button = _("Restart Computer");
 
 	} else if (restart_update == PK_RESTART_ENUM_SESSION) {
-		/* TRANSLATORS: the message text for the logout */
+		/* TRANSLATORS: the message text for the log out */
 		message = _("Some of the updates that were installed require you to log out and back in before the changes will be applied.");
-		/* TRANSLATORS: the button text for the logout */
+		/* TRANSLATORS: the button text for the log out */
 		button = _("Log Out");
 
 	} else if (restart_update == PK_RESTART_ENUM_SECURITY_SESSION) {
-		/* TRANSLATORS: the message text for the logout */
+		/* TRANSLATORS: the message text for the log out */
 		message = _("Some of the updates that were installed require you to log out and back in to remain secure.");
-		/* TRANSLATORS: the button text for the logout */
+		/* TRANSLATORS: the button text for the log out */
 		button = _("Log Out");
 
 	} else {
@@ -1441,7 +1441,7 @@ gpk_update_viewer_reconsider_info (void)
 		gpk_update_viewer_modal_error_with_timeout (
 				/* TRANSLATORS: title: nothing to do */
 				_("No updates are available"),
-				/* TRANSLATORS: no network connnection, according to PackageKit */
+				/* TRANSLATORS: no network connection, according to PackageKit */
 				_("No network connection was detected."));
 		goto out;
 	}
@@ -2028,7 +2028,7 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 	/* state */
 	if (state == PK_UPDATE_STATE_ENUM_UNSTABLE) {
 		/* TRANSLATORS: this is the stability status of the update */
-		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("The classifaction of this update is unstable which means it is not designed for production use."), -1, "para", NULL);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("The classification of this update is unstable which means it is not designed for production use."), -1, "para", NULL);
 		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	} else if (state == PK_UPDATE_STATE_ENUM_TESTING) {
 		/* TRANSLATORS: this is the stability status of the update */
