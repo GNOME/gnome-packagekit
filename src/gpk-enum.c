@@ -179,6 +179,8 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES,	"pk-package-delete"},
 	{PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES,	"pk-package-update"},
 	{PK_ROLE_ENUM_UPGRADE_SYSTEM,		"system-software-update"},
+	{PK_ROLE_ENUM_SIMULATE_REPAIR_SYSTEM,	"system-software-update"},
+	{PK_ROLE_ENUM_REPAIR_SYSTEM,		"system-software-update"},
 	{0, NULL}
 };
 
@@ -1426,6 +1428,14 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Upgrading system");
 		break;
+	case PK_ROLE_ENUM_SIMULATE_REPAIR_SYSTEM:
+		/* TRANSLATORS: The role of the transaction, in past tense */
+		text = _("Simulating the system repair");
+		break;
+	case PK_ROLE_ENUM_REPAIR_SYSTEM:
+		/* TRANSLATORS: The role of the transaction, in past tense */
+		text = _("Repairing the system");
+		break;
 	default:
 		g_warning ("role unrecognised: %s", pk_role_enum_to_string (role));
 	}
@@ -1585,6 +1595,14 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 	case PK_ROLE_ENUM_UPGRADE_SYSTEM:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Upgraded system");
+		break;
+	case PK_ROLE_ENUM_SIMULATE_REPAIR_SYSTEM:
+		/* TRANSLATORS: The role of the transaction, in past tense */
+		text = _("Simulated the system repair");
+		break;
+	case PK_ROLE_ENUM_REPAIR_SYSTEM:
+		/* TRANSLATORS: The role of the transaction, in past tense */
+		text = _("Repaired the system");
 		break;
 	default:
 		g_warning ("role unrecognised: %s", pk_role_enum_to_string (role));
@@ -1907,10 +1925,10 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the status animation enums");
-	for (i=PK_ROLE_ENUM_UNKNOWN+1; i<PK_ROLE_ENUM_LAST; i++) {
+	for (i=PK_STATUS_ENUM_UNKNOWN+1; i<PK_STATUS_ENUM_UNKNOWN; i++) {
 		string = gpk_status_enum_to_animation (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
-			egg_test_failed (test, "failed to get %s", pk_role_enum_to_string (i));
+			egg_test_failed (test, "failed to get %s", pk_status_enum_to_string (i));
 			break;
 		}
 	}
@@ -1951,9 +1969,9 @@ gpk_enum_test (gpointer data)
 
 	/************************************************************/
 	egg_test_title (test, "check we convert all the restart icon names enums");
-	for (i=PK_RESTART_ENUM_UNKNOWN+1; i<PK_RESTART_ENUM_LAST; i++) {
+	for (i=PK_RESTART_ENUM_UNKNOWN+1; i<PK_RESTART_ENUM_NONE; i++) {
 		string = gpk_restart_enum_to_icon_name (i);
-		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
+		if (string == NULL) {
 			egg_test_failed (test, "failed to get %s", pk_restart_enum_to_string (i));
 			break;
 		}
