@@ -2206,7 +2206,24 @@ gpk_update_viewer_error_code_cb (PkClient *client, PkErrorCodeEnum code, const g
 static void
 gpk_update_viewer_repo_list_changed_cb (PkClient *client, gpointer data)
 {
+	gboolean ret;
+	GError *error = NULL;
+	PkRoleEnum role = PK_ROLE_ENUM_UNKNOWN;
+
+	/* are we in a transaction */
+	ret = pk_client_get_role (client_primary, &role, NULL, &error);
+	if (!ret) {
+		egg_warning ("failed to get role: %s", error->message);
+		g_error_free (error);
+		goto out;
+	}
+	if (role != PK_ROLE_ENUM_UNKNOWN) {
+		egg_debug ("already in a transaction, so ignoring");
+		goto out;
+	}
 	gpk_update_viewer_get_new_update_list ();
+out:
+	return;
 }
 
 /**
