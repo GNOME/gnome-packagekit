@@ -19,8 +19,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-22 07:16+0200\n"
-"PO-Revision-Date: 2012-02-22 07:16+0200\n"
+"POT-Creation-Date: 2012-02-28 23:33+0200\n"
+"PO-Revision-Date: 2012-02-28 23:33+0200\n"
 "Last-Translator: Alexander Shopov <ash@kambanaira.org>\n"
 "Language-Team: Bulgarian <dict@fsa-bg.org>\n"
 "Language: bg\n"
@@ -29,44 +29,350 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: ../data/gpk-application.desktop.in.h:1
-msgid "Add or remove software installed on the system"
-msgstr "Инсталиране и деинсталиране на софтуер към системата"
+#: ../data/org.gnome.packagekit.gschema.xml.h:1
+msgid "Automatically remove unused dependencies"
+msgstr "Автоматично деинсталиране на освободените зависимости"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:2
+msgid ""
+"When removing a package, also remove those dependencies that are not "
+"required by other packages."
+msgstr ""
+"При деинсталирането на пакет да се деинсталират зависимостите му, които не "
+"са ползвани от други пакети."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:3
+msgid "Ask the user if additional packages should be installed"
+msgstr ""
+"Запитване на потребителя, когато трябва да се инсталират допълнителни пакети"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:4
+msgid "Ask the user if additional packages should be installed."
+msgstr ""
+"Запитване на потребителя, когато трябва да се инсталират допълнителни пакети."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:5
+msgid "Ask the user if files should be copied to a non-private directory"
+msgstr ""
+"Запитване на потребителя, когато файлове трябва да се инсталират в папки, "
+"които са достъпни и от други потребители"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:6
+msgid ""
+"Ask the user if files should be copied to a non-private directory when "
+"installing from a FUSE mount."
+msgstr ""
+"Запитване на потребителя, когато файлове трябва да се инсталират в папки, "
+"които са достъпни и от други потребители при инсталиране от файлова система "
+"монтирана чрез FUSE."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:7
+msgid "If search terms should be completed automatically"
+msgstr "Дали търсеният текст да бъде дописван"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:8
+msgid "If search terms should be completed automatically."
+msgstr "Дали търсеният текст да бъде дописван."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:9
+msgid "Filter using basename in gpk-application"
+msgstr "Филтриране по името на файла в gpk-application"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:10
+msgid "Filter package lists using basename in gpk-application."
+msgstr "Филтриране на списъците с пакети по името на файла в gpk-application."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:11
+msgid "Only show the newest packages in the file lists"
+msgstr "В списъците да се показват само най-новите пакети"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:12
+msgid "Only show the newest packages in the file lists."
+msgstr "В списъците да се показват само най-новите пакети."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:13
+msgid "Only show native packages in the file lists"
+msgstr ""
+"В списъците да се показват само пакетите точно за архитектурата на машината"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:14
+msgid ""
+"Only show native packages matching the machine architecture in the file "
+"lists."
+msgstr ""
+"В списъците да се показват само пакетите точно за архитектурата на машината."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:15
+msgid "Show the category group menu"
+msgstr "Показване на менюто за групите категории"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:16
+msgid ""
+"Show the category group menu. This is more complete and custom to the "
+"distribution, but takes longer to populate."
+msgstr ""
+"Показване на менюто за групите категории. То е по-пълно и съответства на "
+"дистрибуцията, но съставянето му е по-бавно."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:17
+msgid "Show the 'All Packages' group menu"
+msgstr "Показване на групата „Всички пакети“ в менюто"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:18
+msgid ""
+"Show the all packages menu item. This takes a long time to populate on most "
+"backends and is not generally required by end users."
+msgstr ""
+"Показване на групата „Всички пакети“ в менюто. В повечето случаи тя се "
+"съставя по-бавно и по-рядко се използва от потребителите."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:19
+msgid "The search mode used by default"
+msgstr "Стандартен режим на търсене"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:20
+msgid ""
+"The search mode used by default. Options are \"name\", \"details\", or \"file"
+"\"."
+msgstr ""
+"Стандартният режим на търсене. Възможните стойности са „name“ (по име), "
+"„details“ (в подробната информация) или „file“ (по име на файл)."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:21
+msgid "Show all repositories in the software source viewer"
+msgstr "Показване на всички хранилища на пакети"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:22
+msgid "Show all repositories in the software source viewer."
+msgstr "Показване на всички хранилища на пакети."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:23
+msgid ""
+"Notify the user before a large update is done on a mobile broadband "
+"connection"
+msgstr ""
+"Известяване на потребителя преди голямо обновяване по мобилна, широколентова "
+"връзка"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:24
+msgid ""
+"Notify the user before a large update is done on a mobile broadband "
+"connection."
+msgstr ""
+"Известяване на потребителя преди голямо обновяване по мобилна, широколентова "
+"връзка."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:25
+msgid "Only show the newest updates in the list"
+msgstr "В списъка да се показват само най-новите пакети"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:26
+msgid ""
+"Only show the newest packages in the update list, and filter out older "
+"updates that are still available."
+msgstr ""
+"В списъка за обновяване да се показват само най-новите пакети. Старите, но "
+"все още налични, версии да се скриват."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:27
+msgid "Scroll to packages as they are downloaded"
+msgstr "Показване на изтегляните пакети"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:28
+msgid ""
+"Scroll to packages in the update list as they are downloaded or installed."
+msgstr ""
+"Придвижване в списъка с обновленията до пакета, който се изтегля или "
+"инсталира в момента."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:29
+msgid "Allow applications to invoke the font installer"
+msgstr "Приложенията да могат да стартират инсталирането на шрифт"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:30
+msgid "Allow applications to invoke the font installer."
+msgstr "Приложенията да могат да стартират инсталирането на шрифт."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:31
+msgid "Programs that should be ignored when they issue session D-Bus requests"
+msgstr "Програми, чиито заявки по сесийната шина D-Bus ще бъдат пренебрегвани"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:32
+msgid ""
+"Programs that should be ignored when they issue session D-Bus requests, "
+"separated by commas."
+msgstr ""
+"Имена на програми, отделени с „,“, чиито заявки по сесийната шина D-Bus ще "
+"бъдат пренебрегвани."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:33
+msgid "Allow applications to invoke the codec installer"
+msgstr "Приложенията да могат да стартират инсталирането на кодер или декодер"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:34
+msgid "Allow applications to invoke the codec installer."
+msgstr "Приложенията да могат да стартират инсталирането на кодер или декодер."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:35
+msgid "Allow applications to invoke the mime type installer"
+msgstr "Приложенията да могат да стартират инсталирането по вид MIME"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:36
+msgid "Allow applications to invoke the mime type installer."
+msgstr ""
+"Приложенията да могат да стартират инсталирането по вид MIME на поддържаните "
+"документи."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:37
+msgid ""
+"When displaying UI from a session D-Bus request, automatically use these "
+"options by default."
+msgstr ""
+"Автоматично използване на следните настройки при показване на потребителския "
+"интерфейс след заявка по D-Bus"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:38
+msgid ""
+"When displaying UI from a session D-Bus request, force these options to be "
+"turned on."
+msgstr ""
+"Автоматично използване на следните настройки при показване на потребителския "
+"интерфейс след заявка по D-Bus."
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
+#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
 #: ../src/gpk-application.c:4054 ../src/gpk-log.c:498
 #: ../src/gpk-update-viewer.c:3365
 msgid "Add/Remove Software"
 msgstr "Инсталиране/деинсталиране на софтуер"
 
-#: ../data/gpk-application.ui.h:1
-msgid "About this software"
-msgstr "Относно тази програма"
+#: ../data/gpk-application.desktop.in.h:2
+msgid "Add or remove software installed on the system"
+msgstr "Инсталиране и деинсталиране на софтуер към системата"
+
+#: ../data/gpk-application.ui.h:2
+msgid "_System"
+msgstr "_Системни"
 
 #: ../data/gpk-application.ui.h:3
-msgid "Depends on"
-msgstr "Зависи от"
+msgid "View previously added or removed software"
+msgstr "Журнал на инсталирането и деинсталирането на софтуер"
 
 #: ../data/gpk-application.ui.h:4
+msgid "Software Log"
+msgstr "Журнал за софтуера"
+
+#: ../data/gpk-application.ui.h:5
 msgid "Edit list of software sources"
 msgstr "Редактиране на списъка с хранилища"
 
-#: ../data/gpk-application.ui.h:5
-msgid "Execute graphical applications"
-msgstr "Изпълняване на графични приложения"
-
-#: ../data/gpk-application.ui.h:6
-msgid "Fi_nd"
-msgstr "_Търсене"
+#: ../data/gpk-application.ui.h:6 ../data/gpk-prefs.ui.h:12
+msgid "Software Sources"
+msgstr "Хранилища"
 
 #: ../data/gpk-application.ui.h:7
-msgid "Get file list"
-msgstr "Списък на файловете"
+msgid "Refresh the list of packages on the system"
+msgstr "Обновяване на списъка с пакети на системата"
 
 #: ../data/gpk-application.ui.h:8
-msgid "Help with this software"
-msgstr "Помощ за програмата"
+msgid "Refresh Package Lists"
+msgstr "Обновяване на списъците с пакетите"
+
+#: ../data/gpk-application.ui.h:9
+msgid "_Filters"
+msgstr "_Филтри"
+
+#: ../data/gpk-application.ui.h:10
+msgid "_Installed"
+msgstr "_Инсталирани"
+
+#: ../data/gpk-application.ui.h:11
+msgid "Only _Installed"
+msgstr "Само _инсталирани"
+
+#: ../data/gpk-application.ui.h:12
+msgid "Only _Available"
+msgstr "Само _налични"
+
+#: ../data/gpk-application.ui.h:13
+msgid "_No Filter"
+msgstr "_Без филтри"
+
+#: ../data/gpk-application.ui.h:14
+msgid "_Development"
+msgstr "_Разработка"
+
+#: ../data/gpk-application.ui.h:15
+msgid "Only _Development"
+msgstr "Само за _разработчици"
+
+#: ../data/gpk-application.ui.h:16
+msgid "Only _End User Files"
+msgstr "Само за _крайни потребители"
+
+#: ../data/gpk-application.ui.h:17
+msgid "_Graphical"
+msgstr "_Графични"
+
+#: ../data/gpk-application.ui.h:18
+msgid "Only _Graphical"
+msgstr "Само _графични"
+
+#: ../data/gpk-application.ui.h:19
+msgid "Only _Text"
+msgstr "Само _текстови"
+
+#: ../data/gpk-application.ui.h:20
+msgid "_Free"
+msgstr "_Свободни"
+
+#: ../data/gpk-application.ui.h:21
+msgid "_Only Free Software"
+msgstr "Само _свободен софтуер"
+
+#: ../data/gpk-application.ui.h:22
+msgid "Only _Non-Free Software"
+msgstr "Само _несвободен софтуер"
+
+#: ../data/gpk-application.ui.h:23
+msgid "_Source"
+msgstr "_Изходен код"
+
+#: ../data/gpk-application.ui.h:24
+msgid "_Only Source Code"
+msgstr "Само с _изходен код"
+
+#: ../data/gpk-application.ui.h:25
+msgid "Only _Non-Source Code"
+msgstr "Само _без изходен код"
+
+#: ../data/gpk-application.ui.h:26
+msgid "Only show one package, not subpackages"
+msgstr "Да се показва само един пакет, а не и подпакетите"
+
+#: ../data/gpk-application.ui.h:27
+msgid "_Hide Subpackages"
+msgstr "Скриване на _подпакетите"
+
+#: ../data/gpk-application.ui.h:28
+msgid "Only show the newest available package"
+msgstr "Да се показват само най-новите пакети"
+
+#: ../data/gpk-application.ui.h:29
+msgid "Only _Newest Packages"
+msgstr "Само _най-нови пакети"
+
+#: ../data/gpk-application.ui.h:30
+msgid "Only show packages matching the machine architecture"
+msgstr "Да се показват само пакетите подходящи за архитектурата на машината"
+
+#: ../data/gpk-application.ui.h:31
+msgid "Only N_ative Packages"
+msgstr "Само за _конкретната архитектура"
+
+#: ../data/gpk-application.ui.h:32
+msgid "S_election"
+msgstr "_Избор"
 
 #. TRANSLATORS: title: installing local files
 #. TRANSLATORS: button: confirm to search for packages
@@ -76,7 +382,7 @@ msgstr "Помощ за програмата"
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
-#: ../data/gpk-application.ui.h:9 ../src/gpk-dbus-task.c:710
+#: ../data/gpk-application.ui.h:33 ../src/gpk-dbus-task.c:710
 #: ../src/gpk-dbus-task.c:1254 ../src/gpk-dbus-task.c:1473
 #: ../src/gpk-dbus-task.c:1676 ../src/gpk-dbus-task.c:2136
 #: ../src/gpk-dbus-task.c:2474 ../src/gpk-dbus-task.c:2687
@@ -85,155 +391,59 @@ msgstr "Помощ за програмата"
 msgid "Install"
 msgstr "Инсталиране"
 
-#: ../data/gpk-application.ui.h:10
-msgid "Only N_ative Packages"
-msgstr "Само за _конкретната архитектура"
-
-#: ../data/gpk-application.ui.h:11
-msgid "Only _Available"
-msgstr "Само _налични"
-
-#: ../data/gpk-application.ui.h:12
-msgid "Only _Development"
-msgstr "Само за _разработчици"
-
-#: ../data/gpk-application.ui.h:13
-msgid "Only _End User Files"
-msgstr "Само за _крайни потребители"
-
-#: ../data/gpk-application.ui.h:14
-msgid "Only _Graphical"
-msgstr "Само _графични"
-
-#: ../data/gpk-application.ui.h:15
-msgid "Only _Installed"
-msgstr "Само _инсталирани"
-
-#: ../data/gpk-application.ui.h:16
-msgid "Only _Newest Packages"
-msgstr "Само _най-нови пакети"
-
-#: ../data/gpk-application.ui.h:17
-msgid "Only _Non-Free Software"
-msgstr "Само _несвободен софтуер"
-
-#: ../data/gpk-application.ui.h:18
-msgid "Only _Non-Source Code"
-msgstr "Само _без изходен код"
-
-#: ../data/gpk-application.ui.h:19
-msgid "Only _Text"
-msgstr "Само _текстови"
-
-#: ../data/gpk-application.ui.h:20
-msgid "Only show one package, not subpackages"
-msgstr "Да се показва само един пакет, а не и подпакетите"
-
-#: ../data/gpk-application.ui.h:21
-msgid "Only show packages matching the machine architecture"
-msgstr "Да се показват само пакетите подходящи за архитектурата на машината"
-
-#: ../data/gpk-application.ui.h:22
-msgid "Only show the newest available package"
-msgstr "Да се показват само най-новите пакети"
-
-#: ../data/gpk-application.ui.h:23
-msgid "Project homepage"
-msgstr "Уеб страницата на проекта"
-
-#: ../data/gpk-application.ui.h:24
-msgid "Refresh Package Lists"
-msgstr "Обновяване на списъците с пакетите"
-
-#: ../data/gpk-application.ui.h:25
-msgid "Refresh the list of packages on the system"
-msgstr "Обновяване на списъка с пакети на системата"
-
 #. TRANSLATORS: button: confirm to search for packages
-#: ../data/gpk-application.ui.h:26 ../src/gpk-dbus-task.c:3100
+#: ../data/gpk-application.ui.h:34 ../src/gpk-dbus-task.c:3100
 #: ../src/gpk-task.c:410
 msgid "Remove"
 msgstr "Деинсталиране"
 
-#: ../data/gpk-application.ui.h:27
-msgid "Required by"
-msgstr "Изисква се от"
-
-#: ../data/gpk-application.ui.h:28
-msgid "Run program"
-msgstr "Изпълняване на програма"
-
-#: ../data/gpk-application.ui.h:29
-msgid "S_election"
-msgstr "_Избор"
-
-#: ../data/gpk-application.ui.h:30
-msgid "Software Log"
-msgstr "Журнал за софтуера"
-
-#: ../data/gpk-application.ui.h:31 ../data/gpk-prefs.ui.h:6
-msgid "Software Sources"
-msgstr "Хранилища"
-
-#: ../data/gpk-application.ui.h:32
-msgid "View previously added or removed software"
-msgstr "Журнал на инсталирането и деинсталирането на софтуер"
-
-#: ../data/gpk-application.ui.h:33
+#: ../data/gpk-application.ui.h:35
 msgid "Visit the project homepage"
 msgstr "Посещаване на уеб страницата на проекта"
 
-#: ../data/gpk-application.ui.h:34
-msgid "_Contents"
-msgstr "_Ръководство"
-
-#: ../data/gpk-application.ui.h:35
-msgid "_Development"
-msgstr "_Разработка"
-
 #: ../data/gpk-application.ui.h:36
-msgid "_Filters"
-msgstr "_Филтри"
+msgid "Project homepage"
+msgstr "Уеб страницата на проекта"
 
 #: ../data/gpk-application.ui.h:37
-msgid "_Free"
-msgstr "_Свободни"
+msgid "Execute graphical applications"
+msgstr "Изпълняване на графични приложения"
 
 #: ../data/gpk-application.ui.h:38
-msgid "_Graphical"
-msgstr "_Графични"
+msgid "Run program"
+msgstr "Изпълняване на програма"
 
 #: ../data/gpk-application.ui.h:39
+msgid "Get file list"
+msgstr "Списък на файловете"
+
+#: ../data/gpk-application.ui.h:40
+msgid "Depends on"
+msgstr "Зависи от"
+
+#: ../data/gpk-application.ui.h:41
+msgid "Required by"
+msgstr "Изисква се от"
+
+#: ../data/gpk-application.ui.h:42
 msgid "_Help"
 msgstr "Помо_щ"
 
-#: ../data/gpk-application.ui.h:40
-msgid "_Hide Subpackages"
-msgstr "Скриване на _подпакетите"
-
-#: ../data/gpk-application.ui.h:41
-msgid "_Installed"
-msgstr "_Инсталирани"
-
-#: ../data/gpk-application.ui.h:42
-msgid "_No Filter"
-msgstr "_Без филтри"
-
 #: ../data/gpk-application.ui.h:43
-msgid "_Only Free Software"
-msgstr "Само _свободен софтуер"
+msgid "_Contents"
+msgstr "_Ръководство"
 
 #: ../data/gpk-application.ui.h:44
-msgid "_Only Source Code"
-msgstr "Само с _изходен код"
+msgid "Help with this software"
+msgstr "Помощ за програмата"
 
 #: ../data/gpk-application.ui.h:45
-msgid "_Source"
-msgstr "_Изходен код"
+msgid "About this software"
+msgstr "Относно тази програма"
 
 #: ../data/gpk-application.ui.h:46
-msgid "_System"
-msgstr "_Системни"
+msgid "Fi_nd"
+msgstr "_Търсене"
 
 #: ../data/gpk-client.ui.h:1
 msgid "Install Package"
@@ -251,20 +461,20 @@ msgstr "Изисква са приемане на лицензното спор�
 msgid "_Accept Agreement"
 msgstr "_Лицензно споразумение"
 
-#: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1
-msgid "Install selected software on the system"
-msgstr "Инсталиране на избрания софтуер на системата"
-
 #. TRANSLATORS: program name: application to install a package to provide a file
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../data/gpk-dbus-service.desktop.in.h:2
-#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3377
+#: ../data/gpk-dbus-service.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-dbus-task.c:3377
 #: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
 #: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
 msgid "Software Install"
 msgstr "Инсталиране на софтуер"
+
+#: ../data/gpk-dbus-service.desktop.in.h:2
+#: ../data/gpk-install-local-file.desktop.in.h:2
+msgid "Install selected software on the system"
+msgstr "Инсталиране на избрания софтуер на системата"
 
 #. TRANSLATORS: program name: application to install a catalog of software
 #: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:68
@@ -276,7 +486,7 @@ msgstr "Инсталиране на каталог"
 msgid "Install a catalog of software on the system"
 msgstr "Инсталиране на каталог със софтуер на системата"
 
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:829
+#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:829
 msgid "Software Log Viewer"
 msgstr "Преглед на дневника за софтуера"
 
@@ -284,154 +494,154 @@ msgstr "Преглед на дневника за софтуера"
 msgid "View past package management tasks"
 msgstr "Преглед на миналите действия по управление на софтуера"
 
-#: ../data/gpk-log.ui.h:1
+#: ../data/gpk-log.ui.h:2
 msgid "Filter"
 msgstr "Филтриране"
 
 #: ../data/gpk-prefs.desktop.in.h:1
+msgid "Software Settings"
+msgstr "Настройки"
+
+#: ../data/gpk-prefs.desktop.in.h:2
 msgid ""
 "Change software update preferences and enable or disable software sources"
 msgstr ""
 "Промяна на настройките за обновяване на софтуера и включване/изключване на "
 "хранилищата"
 
-#: ../data/gpk-prefs.desktop.in.h:2
-msgid "Software Settings"
-msgstr "Настройки"
-
-#: ../data/gpk-prefs.ui.h:1
-msgid ""
-"A software source contains packages that can be installed on this computer."
-msgstr ""
-"Някое хранилище съдържа пакет, който може да се инсталира на този компютър."
+#. TRANSLATORS: program name, an application to set per-user policy for updates
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:934
+msgid "Software Update Preferences"
+msgstr "Настройки на обновяването на софтуера"
 
 #: ../data/gpk-prefs.ui.h:2
+msgid "_Check Now"
+msgstr "_Проверка сега"
+
+#: ../data/gpk-prefs.ui.h:3
+msgid "_Automatically install:"
+msgstr "_Автоматично инсталиране:"
+
+#: ../data/gpk-prefs.ui.h:4
 msgid "C_heck for updates:"
 msgstr "_Проверка за обновления:"
 
-#: ../data/gpk-prefs.ui.h:3
+#: ../data/gpk-prefs.ui.h:5
 msgid "Check for major _upgrades:"
 msgstr "Проверка за _основни обновления:"
 
-#: ../data/gpk-prefs.ui.h:4
+#: ../data/gpk-prefs.ui.h:6
 msgid "Check for updates when using mobile broadband"
 msgstr "Проверка за обновления, когато се ползва мобилна, широколентова връзка"
 
-#: ../data/gpk-prefs.ui.h:5
+#: ../data/gpk-prefs.ui.h:7
 msgid "Currently using mobile broadband"
 msgstr "В момента се ползва мобилна, широколентова връзка"
-
-#. TRANSLATORS: program name, an application to set per-user policy for updates
-#: ../data/gpk-prefs.ui.h:7 ../src/gpk-prefs.c:934
-msgid "Software Update Preferences"
-msgstr "Настройки на обновяването на софтуера"
 
 #: ../data/gpk-prefs.ui.h:8
 msgid "Update Settings"
 msgstr "Настройки на обновяването"
 
 #: ../data/gpk-prefs.ui.h:9
-msgid "_Automatically install:"
-msgstr "_Автоматично инсталиране:"
-
-#: ../data/gpk-prefs.ui.h:10
-msgid "_Check Now"
-msgstr "_Проверка сега"
+msgid ""
+"A software source contains packages that can be installed on this computer."
+msgstr ""
+"Някое хранилище съдържа пакет, който може да се инсталира на този компютър."
 
 #. shows extra -source, -debuginfo, and -devel software sources
-#: ../data/gpk-prefs.ui.h:12
+#: ../data/gpk-prefs.ui.h:11
 msgid "_Show debug and development software sources"
 msgstr "Показване на _хранилища за изчистване на грешки и тези за разработчици"
 
-#. TRANSLATORS: column for what was done, e.g. update-system
-#: ../data/gpk-service-pack.ui.h:1 ../src/gpk-log.c:295
-msgid "Action"
-msgstr "Действие"
+#. TRANSLATORS: the program name
+#: ../data/gpk-service-pack.ui.h:1 ../src/gpk-service-pack.c:817
+msgid "Service Pack Creator"
+msgstr "Създаване на сервизни пакети"
 
 #: ../data/gpk-service-pack.ui.h:2
-msgid "Create"
-msgstr "Създаване"
-
-#: ../data/gpk-service-pack.ui.h:3
 msgid "Create a copy of this computer's package list"
 msgstr "Създаване на копие на списъка с пакетите на този компютър"
+
+#: ../data/gpk-service-pack.ui.h:3
+msgid "Create an archive of all the pending updates"
+msgstr "Създаване на архив със всички предстоящи обновления"
 
 #: ../data/gpk-service-pack.ui.h:4
 msgid "Create an archive of a specific package"
 msgstr "Създаване на архив с определен пакет"
 
 #: ../data/gpk-service-pack.ui.h:5
-msgid "Create an archive of all the pending updates"
-msgstr "Създаване на архив със всички предстоящи обновления"
+msgid "Multiple packages can be specified using a comma delimited list"
+msgstr "Повече от един пакет маже да се указват в списък с разделител „,“"
 
-#: ../data/gpk-service-pack.ui.h:6
+#. TRANSLATORS: column for what was done, e.g. update-system
+#: ../data/gpk-service-pack.ui.h:6 ../src/gpk-log.c:295
+msgid "Action"
+msgstr "Действие"
+
+#: ../data/gpk-service-pack.ui.h:7
+msgid "Output directory:"
+msgstr "Изходна папка:"
+
+#: ../data/gpk-service-pack.ui.h:8
 msgid "Destination package list:"
 msgstr "Целеви списък с пакети:"
 
+#: ../data/gpk-service-pack.ui.h:9
+msgid "Select a Package List File"
+msgstr "Избор на файл — списък на пакети"
+
+#: ../data/gpk-service-pack.ui.h:10
+msgid "Save New Service Pack"
+msgstr "Запазване на нов сервизен пакет"
+
 #. TRANSLATORS: column for what packages were upgraded
-#: ../data/gpk-service-pack.ui.h:7 ../data/gpk-update-viewer.ui.h:1
+#: ../data/gpk-service-pack.ui.h:11 ../data/gpk-update-viewer.ui.h:5
 #: ../src/gpk-log.c:322
 msgid "Details"
 msgstr "Подробности"
 
-#: ../data/gpk-service-pack.ui.h:8
-msgid "Multiple packages can be specified using a comma delimited list"
-msgstr "Повече от един пакет маже да се указват в списък с разделител „,“"
-
-#: ../data/gpk-service-pack.ui.h:9
-msgid "Output directory:"
-msgstr "Изходна папка:"
-
-#: ../data/gpk-service-pack.ui.h:10
+#: ../data/gpk-service-pack.ui.h:12
 msgid "Progress"
 msgstr "Напредък"
 
-#: ../data/gpk-service-pack.ui.h:11
-msgid "Save New Service Pack"
-msgstr "Запазване на нов сервизен пакет"
-
-#: ../data/gpk-service-pack.ui.h:12
-msgid "Select a Package List File"
-msgstr "Избор на файл — списък на пакети"
-
-#. TRANSLATORS: the program name
-#: ../data/gpk-service-pack.ui.h:13 ../src/gpk-service-pack.c:817
-msgid "Service Pack Creator"
-msgstr "Създаване на сервизни пакети"
+#: ../data/gpk-service-pack.ui.h:13
+msgid "Create"
+msgstr "Създаване"
 
 #: ../data/gpk-signature.ui.h:1
-msgid "Do you recognize the user and trust this key?"
-msgstr "Познавате ли потребителя и имате ли доверие на този ключ?"
+msgid "Software signature is required"
+msgstr "Изисква се подпис на софтуера"
 
 #: ../data/gpk-signature.ui.h:2
 msgid "Do you trust the source of the packages?"
 msgstr "Имате ли доверие на хранилището на пакетите?"
 
 #: ../data/gpk-signature.ui.h:3
-msgid "Package:"
-msgstr "Пакет:"
-
-#: ../data/gpk-signature.ui.h:4
 msgid "Repository name:"
 msgstr "Името на хранилище:"
 
-#: ../data/gpk-signature.ui.h:5
+#: ../data/gpk-signature.ui.h:4
 msgid "Signature URL:"
 msgstr "Адрес на подпис:"
+
+#: ../data/gpk-signature.ui.h:5
+msgid "Signature user identifier:"
+msgstr "Идентификатор на потребител в подписа:"
 
 #: ../data/gpk-signature.ui.h:6
 msgid "Signature identifier:"
 msgstr "Идентификатор на подпис:"
 
 #: ../data/gpk-signature.ui.h:7
-msgid "Signature user identifier:"
-msgstr "Идентификатор на потребител в подписа:"
+msgid "Package:"
+msgstr "Пакет:"
 
 #: ../data/gpk-signature.ui.h:8
-msgid "Software signature is required"
-msgstr "Изисква се подпис на софтуера"
+msgid "Do you recognize the user and trust this key?"
+msgstr "Познавате ли потребителя и имате ли доверие на този ключ?"
 
-#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:2
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
 msgid "Software Update"
 msgstr "Обновление на софтуера"
 
@@ -447,6 +657,10 @@ msgstr "Обновяване на операционната система"
 msgid "Upgrade the operating system to a new version"
 msgstr "Обновяване на операционната система към нова версия"
 
+#: ../data/gpk-update-viewer.ui.h:2
+msgid "_Install Updates"
+msgstr "_Инсталиране на обновленията"
+
 #: ../data/gpk-update-viewer.ui.h:3
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities and "
@@ -456,10 +670,6 @@ msgstr ""
 "и предоставят нови възможности."
 
 #: ../data/gpk-update-viewer.ui.h:4
-msgid "_Install Updates"
-msgstr "_Инсталиране на обновленията"
-
-#: ../data/gpk-update-viewer.ui.h:5
 msgid "_Upgrade"
 msgstr "_Обновяване"
 
