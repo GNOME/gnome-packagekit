@@ -1,62 +1,389 @@
 # translation of eu.po to Basque
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>, 2011.
+# Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>, 2011, 2012.
 # Julen Ruiz Aizpuru <julenx@gmail.com>, 2011.
 msgid ""
 msgstr ""
 "Project-Id-Version: eu\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-09-24 10:58+0200\n"
-"PO-Revision-Date: 2011-09-24 10:56+0200\n"
-"Last-Translator: \n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
+"cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2012-02-20 09:18+0000\n"
+"PO-Revision-Date: 2012-03-04 18:53+0100\n"
+"Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>\n"
 "Language-Team: American English <kde-i18n-doc@kde.org>\n"
-"Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: eu\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 1.0\n"
 "X-Project-Style: gnome\n"
 
-#: ../data/gpk-application.desktop.in.h:1
-msgid "Add or remove software installed on the system"
-msgstr "Gehitu edo kendu sisteman instalatutako softwarea"
+#: ../data/org.gnome.packagekit.gschema.xml.h:1
+msgid "Automatically remove unused dependencies"
+msgstr "Automatikoki kendu erabili gabeko mendekotasunak"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:2
+msgid ""
+"When removing a package, also remove those dependencies that are not "
+"required by other packages."
+msgstr ""
+"Pakete bat kentzean, kendu baita ere beste paketeek behar ez dituzten "
+"mendekotasunak."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:3
+#| msgid "An additional package is required:"
+#| msgid_plural "Additional packages are required:"
+msgid "Ask the user if additional packages should be installed"
+msgstr "Galdetu erabiltzaileari pakete gehigarriak instalatu behar diren"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:4
+#| msgid "An additional package is required:"
+#| msgid_plural "Additional packages are required:"
+msgid "Ask the user if additional packages should be installed."
+msgstr "Galdetu erabiltzaileari pakete gehigarriak instalatu behar diren."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:5
+msgid "Ask the user if files should be copied to a non-private directory"
+msgstr ""
+"Galdetu erabiltzaileari fitxategiak direktorio ez-pribatu batean kopiatu "
+"behar diren"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:6
+msgid ""
+"Ask the user if files should be copied to a non-private directory when "
+"installing from a FUSE mount."
+msgstr ""
+"Galdetu erabiltzaileari fitxategiak direktorio ez-pribatu batean kopiatu "
+"behar diren "
+"FUSE muntai batetik instalatzean."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:7
+#| msgid "The search could not be completed"
+msgid "If search terms should be completed automatically"
+msgstr "Bilaketako terminoak automatikoki osatu behar diren"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:8
+#| msgid "The search could not be completed"
+msgid "If search terms should be completed automatically."
+msgstr "Bilaketako terminoak automatikoki osatu behar diren."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:9
+msgid "Filter using basename in gpk-application"
+msgstr "Iragazi oinarrizko izena erabiliz 'gpk-application'-en"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:10
+msgid "Filter package lists using basename in gpk-application."
+msgstr ""
+"Iragazi paketeen zerrenda oinarrizko izena erabiliz 'gpk-application'-en."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:11
+#| msgid "Only show the newest available package"
+msgid "Only show the newest packages in the file lists"
+msgstr "Pakete berrienak soilik erakutsi fitxategien zerrendan"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:12
+#| msgid "Only show the newest available package"
+msgid "Only show the newest packages in the file lists."
+msgstr "Pakete berrienak soilik erakutsi fitxategien zerrendan."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:13
+#| msgid "Only show packages matching the machine architecture"
+msgid "Only show native packages in the file lists"
+msgstr "Jatorrizko paketeak soilik erakutsi fitxategien zerrendan"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:14
+#| msgid "Only show packages matching the machine architecture"
+msgid ""
+"Only show native packages matching the machine architecture in the file "
+"lists."
+msgstr ""
+"Makinaren arkitekturarekin bat datozten jatorrizko paketeak soilik erakutsi "
+"fitxategien zerrendan."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:15
+msgid "Show the category group menu"
+msgstr "Erakutsi kategoriako taldeen menua"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:16
+msgid ""
+"Show the category group menu. This is more complete and custom to the "
+"distribution, but takes longer to populate."
+msgstr ""
+"Erakutsi kategoriako taldeen menua. Hau askoz ere osatuagoa da "
+"eta banaketarekiko pertsonalizatuagoa, baina denbora gehiago behar du "
+"betetzen."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:17
+msgid "Show the 'All Packages' group menu"
+msgstr "Erakutsi 'Pakete guztiak' taldearen menua"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:18
+msgid ""
+"Show the all packages menu item. This takes a long time to populate on most "
+"backends and is not generally required by end users."
+msgstr ""
+"Erakutsi pakete guztien menuaren elementuak. Motor gehienetan denbora bat "
+"beharko "
+"du betetzeko, eta normalean amaierako erabiltzaileek ez dute erabiltzen."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:19
+msgid "The search mode used by default"
+msgstr "Lehenetsi gisa erabilitako bilaketa modua"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:20
+msgid ""
+"The search mode used by default. Options are \"name\", \"details\", or \"file"
+"\"."
+msgstr ""
+"Lehenetsi gisa erabilitako bilaketa modua. Aukerak: 'name' (izena), "
+"'details' (xehetasunak) edo 'file' (fitxategia)."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:21
+msgid "Show all repositories in the software source viewer"
+msgstr "Erakutsi biltegi guztiak softwareen iturburuaren ikustailean"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:22
+msgid "Show all repositories in the software source viewer."
+msgstr "Erakutsi biltegi guztiak softwareen iturburuaren ikustailean."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:23
+msgid ""
+"Notify the user before a large update is done on a mobile broadband "
+"connection"
+msgstr ""
+"Jakinarazi erabiltzaileari banda-zabal mugikor bateko konexioan eguneraketa "
+"luze bat egin aurretik"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:24
+msgid ""
+"Notify the user before a large update is done on a mobile broadband "
+"connection."
+msgstr ""
+"Jakinarazi erabiltzaileari banda-zabal mugikor bateko konexioan eguneraketa "
+"luze bat egin aurretik."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:25
+#| msgid "Only show the newest available package"
+msgid "Only show the newest updates in the list"
+msgstr "Eguneraketa berrienak soilik erakutsi zerrendan"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:26
+msgid ""
+"Only show the newest packages in the update list, and filter out older "
+"updates that are still available."
+msgstr ""
+"Eguneraketa berrienak soilik erakutsi zerrendan, eta iragazi oraindik "
+"eskuragarri dauden eguneraketa zaharrak."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:27
+#| msgid "All packages are already installed"
+msgid "Scroll to packages as they are downloaded"
+msgstr "Korritu paketeak deskargatzen diren heinean"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:28
+msgid ""
+"Scroll to packages in the update list as they are downloaded or installed."
+msgstr ""
+"Korritu paketeak eguneraketen zerrendan deskargatzen edo instalatzen diren "
+"heinean"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:29
+#| msgid "No applications were chosen to be installed"
+msgid "Allow applications to invoke the font installer"
+msgstr "Baimendu aplikazioei letra-tipoen instalatzaileari deitzea"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:30
+#| msgid "No applications were chosen to be installed"
+msgid "Allow applications to invoke the font installer."
+msgstr "Baimendu aplikazioei letra-tipoen instalatzaileari deitzea."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:31
+msgid "Programs that should be ignored when they issue session D-Bus requests"
+msgstr ""
+"Ez ikusi egin behar diren programak saioko D-Bus eskaerak igortzen "
+"dituztenean"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:32
+msgid ""
+"Programs that should be ignored when they issue session D-Bus requests, "
+"separated by commas."
+msgstr ""
+"Ez ikusi egin behar diren programak saioko D-Bus eskaerak igortzen "
+"dituztenean "
+"(komaz bereiztuta)."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:33
+#| msgid "No applications were chosen to be installed"
+msgid "Allow applications to invoke the codec installer"
+msgstr "Baimendu aplikazioei kodeken instalatzaileari deitzea"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:34
+#| msgid "No applications were chosen to be installed"
+msgid "Allow applications to invoke the codec installer."
+msgstr "Baimendu aplikazioei kodeken instalatzaileari deitzea."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:35
+#| msgid "No applications were chosen to be installed"
+msgid "Allow applications to invoke the mime type installer"
+msgstr "Baimendu aplikazioei MIME moten instalatzaileari deitzea"
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:36
+#| msgid "No applications were chosen to be installed"
+msgid "Allow applications to invoke the mime type installer."
+msgstr "Baimendu aplikazioei MIME moten instalatzaileari deitzea."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:37
+msgid ""
+"When displaying UI from a session D-Bus request, automatically use these "
+"options by default."
+msgstr ""
+"Saioko D-Bus eskaera batetik interfazea bistaratzean, erabili automatikoki "
+"aukera hauek lehenetsi gisa."
+
+#: ../data/org.gnome.packagekit.gschema.xml.h:38
+msgid ""
+"When displaying UI from a session D-Bus request, force these options to be "
+"turned on."
+msgstr ""
+"Saioko D-Bus eskaera batetik interfazea bistaratzean, derrigortu "
+"aukera hauek aktibatzea."
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../data/gpk-application.desktop.in.h:2 ../data/gpk-application.ui.h:2
-#: ../src/gpk-application.c:4068 ../src/gpk-log.c:498
-#: ../src/gpk-update-viewer.c:3358
+#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
+#: ../src/gpk-application.c:4054 ../src/gpk-log.c:498
+#: ../src/gpk-update-viewer.c:3365
 msgid "Add/Remove Software"
 msgstr "Gehitu/Kendu softwarea"
 
-#: ../data/gpk-application.ui.h:1
-msgid "About this software"
-msgstr "Software honi buruz"
+#: ../data/gpk-application.desktop.in.h:2
+msgid "Add or remove software installed on the system"
+msgstr "Gehitu edo kendu sisteman instalatutako softwarea"
+
+#: ../data/gpk-application.ui.h:2
+msgid "_System"
+msgstr "_Sistema"
 
 #: ../data/gpk-application.ui.h:3
-msgid "Depends on"
-msgstr "Hauen mende"
+msgid "View previously added or removed software"
+msgstr "Ikusi aurrez gehitu edo kendutako softwarea"
 
 #: ../data/gpk-application.ui.h:4
+msgid "Software Log"
+msgstr "Softwareen egunkariak"
+
+#: ../data/gpk-application.ui.h:5
 msgid "Edit list of software sources"
 msgstr "Editatu softwareen iturburuen zerrenda"
 
-#: ../data/gpk-application.ui.h:5
-msgid "Execute graphical applications"
-msgstr "Exekutatu aplikazio grafikoak"
-
-#: ../data/gpk-application.ui.h:6
-msgid "Fi_nd"
-msgstr "_Bilatu"
+#: ../data/gpk-application.ui.h:6 ../data/gpk-prefs.ui.h:12
+msgid "Software Sources"
+msgstr "Softwareen iturburuak"
 
 #: ../data/gpk-application.ui.h:7
-msgid "Get file list"
-msgstr "Lortu fitxategien zerrenda"
+msgid "Refresh the list of packages on the system"
+msgstr "Freskatu sistemako paketeen zerrenda"
 
 #: ../data/gpk-application.ui.h:8
-msgid "Help with this software"
-msgstr "Lagundu software honekin"
+msgid "Refresh Package Lists"
+msgstr "Freskatu paketeen zerrendak"
+
+#: ../data/gpk-application.ui.h:9
+msgid "_Filters"
+msgstr "_Iragazkiak"
+
+#: ../data/gpk-application.ui.h:10
+msgid "_Installed"
+msgstr "_Instalatuta"
+
+#: ../data/gpk-application.ui.h:11
+msgid "Only _Installed"
+msgstr "_Instalatutakoak soilik"
+
+#: ../data/gpk-application.ui.h:12
+msgid "Only _Available"
+msgstr "_Eskuragarriak soilik"
+
+#: ../data/gpk-application.ui.h:13
+msgid "_No Filter"
+msgstr "Iragazkirik e_z"
+
+#: ../data/gpk-application.ui.h:14
+msgid "_Development"
+msgstr "_Garapena"
+
+#: ../data/gpk-application.ui.h:15
+msgid "Only _Development"
+msgstr "_Garapenekoak soilik"
+
+#: ../data/gpk-application.ui.h:16
+msgid "Only _End User Files"
+msgstr "_Erabiltzaileentzako fitxategiak soilik"
+
+#: ../data/gpk-application.ui.h:17
+msgid "_Graphical"
+msgstr "_Grafikoa"
+
+#: ../data/gpk-application.ui.h:18
+msgid "Only _Graphical"
+msgstr "Gra_fikoak soilik"
+
+#: ../data/gpk-application.ui.h:19
+msgid "Only _Text"
+msgstr "_Testua soilik"
+
+#: ../data/gpk-application.ui.h:20
+msgid "_Free"
+msgstr "_Libreak"
+
+#: ../data/gpk-application.ui.h:21
+msgid "_Only Free Software"
+msgstr "Software _librea soilik"
+
+#: ../data/gpk-application.ui.h:22
+msgid "Only _Non-Free Software"
+msgstr "E_z-libreak soilik"
+
+#: ../data/gpk-application.ui.h:23
+msgid "_Source"
+msgstr "_Iturburua"
+
+#: ../data/gpk-application.ui.h:24
+msgid "_Only Source Code"
+msgstr "_Kodeen iturburuak soilik"
+
+#: ../data/gpk-application.ui.h:25
+msgid "Only _Non-Source Code"
+msgstr "Iturburuko _koderik gabe soilik"
+
+#: ../data/gpk-application.ui.h:26
+msgid "Only show one package, not subpackages"
+msgstr "Erakutsi pakete bat bakarrik, ez azpipaketeak"
+
+#: ../data/gpk-application.ui.h:27
+msgid "_Hide Subpackages"
+msgstr "E_zkutatu azpipaketeak"
+
+#: ../data/gpk-application.ui.h:28
+msgid "Only show the newest available package"
+msgstr "Pakete eskuragarri berrienak soilik erakutsi"
+
+#: ../data/gpk-application.ui.h:29
+msgid "Only _Newest Packages"
+msgstr "Pakete _berrienak soilik"
+
+#: ../data/gpk-application.ui.h:30
+msgid "Only show packages matching the machine architecture"
+msgstr "Makinaren arkitekturarekin bat datozten paketeak soilik erakutsi"
+
+#: ../data/gpk-application.ui.h:31
+msgid "Only N_ative Packages"
+msgstr "_Jatorrizko paketeak soilik"
+
+#: ../data/gpk-application.ui.h:32
+msgid "S_election"
+msgstr "_Hautapena"
 
 #. TRANSLATORS: title: installing local files
 #. TRANSLATORS: button: confirm to search for packages
@@ -66,7 +393,7 @@ msgstr "Lagundu software honekin"
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
-#: ../data/gpk-application.ui.h:9 ../src/gpk-dbus-task.c:710
+#: ../data/gpk-application.ui.h:33 ../src/gpk-dbus-task.c:710
 #: ../src/gpk-dbus-task.c:1254 ../src/gpk-dbus-task.c:1473
 #: ../src/gpk-dbus-task.c:1676 ../src/gpk-dbus-task.c:2136
 #: ../src/gpk-dbus-task.c:2474 ../src/gpk-dbus-task.c:2687
@@ -75,155 +402,59 @@ msgstr "Lagundu software honekin"
 msgid "Install"
 msgstr "Instalatu"
 
-#: ../data/gpk-application.ui.h:10
-msgid "Only N_ative Packages"
-msgstr "_Jatorrizko paketeak soilik"
-
-#: ../data/gpk-application.ui.h:11
-msgid "Only _Available"
-msgstr "_Eskuragarriak soilik"
-
-#: ../data/gpk-application.ui.h:12
-msgid "Only _Development"
-msgstr "_Garapenekoak soilik"
-
-#: ../data/gpk-application.ui.h:13
-msgid "Only _End User Files"
-msgstr "_Erabiltzaileentzako fitxategiak soilik"
-
-#: ../data/gpk-application.ui.h:14
-msgid "Only _Graphical"
-msgstr "Gra_fikoak soilik"
-
-#: ../data/gpk-application.ui.h:15
-msgid "Only _Installed"
-msgstr "_Instalatutakoak soilik"
-
-#: ../data/gpk-application.ui.h:16
-msgid "Only _Newest Packages"
-msgstr "Pakete _berrienak soilik"
-
-#: ../data/gpk-application.ui.h:17
-msgid "Only _Non-Free Software"
-msgstr "E_z-libreak soilik"
-
-#: ../data/gpk-application.ui.h:18
-msgid "Only _Non-Source Code"
-msgstr "Iturburuko _koderik gabe soilik"
-
-#: ../data/gpk-application.ui.h:19
-msgid "Only _Text"
-msgstr "_Testua soilik"
-
-#: ../data/gpk-application.ui.h:20
-msgid "Only show one package, not subpackages"
-msgstr "Erakutsi pakete bat bakarrik, ez azpipaketeak"
-
-#: ../data/gpk-application.ui.h:21
-msgid "Only show packages matching the machine architecture"
-msgstr "Makinaren arkitekturarekin bat datozten paketeak soilik erakutsi"
-
-#: ../data/gpk-application.ui.h:22
-msgid "Only show the newest available package"
-msgstr "Pakete eskuragarri berrienak soilik erakutsi"
-
-#: ../data/gpk-application.ui.h:23
-msgid "Project homepage"
-msgstr "Proiektuaren webgune nagusia"
-
-#: ../data/gpk-application.ui.h:24
-msgid "Refresh Package Lists"
-msgstr "Freskatu paketeen zerrendak"
-
-#: ../data/gpk-application.ui.h:25
-msgid "Refresh the list of packages on the system"
-msgstr "Freskatu sistemako paketeen zerrenda"
-
 #. TRANSLATORS: button: confirm to search for packages
-#: ../data/gpk-application.ui.h:26 ../src/gpk-dbus-task.c:3100
+#: ../data/gpk-application.ui.h:34 ../src/gpk-dbus-task.c:3100
 #: ../src/gpk-task.c:410
 msgid "Remove"
 msgstr "Kendu"
 
-#: ../data/gpk-application.ui.h:27
-msgid "Required by"
-msgstr "Honek behar du"
-
-#: ../data/gpk-application.ui.h:28
-msgid "Run program"
-msgstr "Exekutatu programa"
-
-#: ../data/gpk-application.ui.h:29
-msgid "S_election"
-msgstr "_Hautapena"
-
-#: ../data/gpk-application.ui.h:30
-msgid "Software Log"
-msgstr "Softwareen egunkariak"
-
-#: ../data/gpk-application.ui.h:31 ../data/gpk-prefs.ui.h:6
-msgid "Software Sources"
-msgstr "Softwareen iturburuak"
-
-#: ../data/gpk-application.ui.h:32
-msgid "View previously added or removed software"
-msgstr "Ikusi aurrez gehitu edo kendutako softwarea"
-
-#: ../data/gpk-application.ui.h:33
+#: ../data/gpk-application.ui.h:35
 msgid "Visit the project homepage"
 msgstr "Bisitatu proiektuaren webgune nagusia"
 
-#: ../data/gpk-application.ui.h:34
-msgid "_Contents"
-msgstr "_Edukia"
-
-#: ../data/gpk-application.ui.h:35
-msgid "_Development"
-msgstr "_Garapena"
-
 #: ../data/gpk-application.ui.h:36
-msgid "_Filters"
-msgstr "_Iragazkiak"
+msgid "Project homepage"
+msgstr "Proiektuaren webgune nagusia"
 
 #: ../data/gpk-application.ui.h:37
-msgid "_Free"
-msgstr "_Libreak"
+msgid "Execute graphical applications"
+msgstr "Exekutatu aplikazio grafikoak"
 
 #: ../data/gpk-application.ui.h:38
-msgid "_Graphical"
-msgstr "_Grafikoa"
+msgid "Run program"
+msgstr "Exekutatu programa"
 
 #: ../data/gpk-application.ui.h:39
+msgid "Get file list"
+msgstr "Lortu fitxategien zerrenda"
+
+#: ../data/gpk-application.ui.h:40
+msgid "Depends on"
+msgstr "Hauen mende"
+
+#: ../data/gpk-application.ui.h:41
+msgid "Required by"
+msgstr "Honek behar du"
+
+#: ../data/gpk-application.ui.h:42
 msgid "_Help"
 msgstr "_Laguntza"
 
-#: ../data/gpk-application.ui.h:40
-msgid "_Hide Subpackages"
-msgstr "E_zkutatu azpipaketeak"
-
-#: ../data/gpk-application.ui.h:41
-msgid "_Installed"
-msgstr "_Instalatuta"
-
-#: ../data/gpk-application.ui.h:42
-msgid "_No Filter"
-msgstr "Iragazkirik e_z"
-
 #: ../data/gpk-application.ui.h:43
-msgid "_Only Free Software"
-msgstr "Software _librea soilik"
+msgid "_Contents"
+msgstr "_Edukia"
 
 #: ../data/gpk-application.ui.h:44
-msgid "_Only Source Code"
-msgstr "_Kodeen iturburuak soilik"
+msgid "Help with this software"
+msgstr "Lagundu software honekin"
 
 #: ../data/gpk-application.ui.h:45
-msgid "_Source"
-msgstr "_Iturburua"
+msgid "About this software"
+msgstr "Software honi buruz"
 
 #: ../data/gpk-application.ui.h:46
-msgid "_System"
-msgstr "_Sistema"
+msgid "Fi_nd"
+msgstr "_Bilatu"
 
 #: ../data/gpk-client.ui.h:1
 msgid "Install Package"
@@ -241,20 +472,20 @@ msgstr "Lizentziaren adostasuna behar da"
 msgid "_Accept Agreement"
 msgstr "_Onartu kontratua"
 
-#: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1
-msgid "Install selected software on the system"
-msgstr "Instalatu hautatutako softwarea sisteman"
-
 #. TRANSLATORS: program name: application to install a package to provide a file
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../data/gpk-dbus-service.desktop.in.h:2
-#: ../data/gpk-install-local-file.desktop.in.h:2 ../src/gpk-dbus-task.c:3377
+#: ../data/gpk-dbus-service.desktop.in.h:1
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-dbus-task.c:3377
 #: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
 #: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
 msgid "Software Install"
 msgstr "Paketeen instalatzailea"
+
+#: ../data/gpk-dbus-service.desktop.in.h:2
+#: ../data/gpk-install-local-file.desktop.in.h:2
+msgid "Install selected software on the system"
+msgstr "Instalatu hautatutako softwarea sisteman"
 
 #. TRANSLATORS: program name: application to install a catalog of software
 #: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:68
@@ -266,7 +497,7 @@ msgstr "Katalogoaren instalatzailea"
 msgid "Install a catalog of software on the system"
 msgstr "Instalatu softwareen katalogo bat sisteman"
 
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:2 ../src/gpk-log.c:840
+#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:829
 msgid "Software Log Viewer"
 msgstr "Softwareen egunkarien ikustailea"
 
@@ -274,155 +505,158 @@ msgstr "Softwareen egunkarien ikustailea"
 msgid "View past package management tasks"
 msgstr "Ikusi pakete-kudeaketaren iraganeko atazak"
 
-#: ../data/gpk-log.ui.h:1
+#: ../data/gpk-log.ui.h:2
 msgid "Filter"
 msgstr "Iragazkia"
 
 #: ../data/gpk-prefs.desktop.in.h:1
+msgid "Software Settings"
+msgstr "Softwarearen ezarpenak"
+
+#: ../data/gpk-prefs.desktop.in.h:2
 msgid ""
 "Change software update preferences and enable or disable software sources"
 msgstr ""
 "Aldatu softwarea eguneratzeko hobespenak eta gaitu/desgaitu softwareen "
 "iturburuak"
 
-#: ../data/gpk-prefs.desktop.in.h:2
-msgid "Software Settings"
-msgstr "Softwarearen ezarpenak"
-
-#: ../data/gpk-prefs.ui.h:1
-msgid ""
-"A software source contains packages that can be installed on this computer."
-msgstr ""
-"Softwareen iturburu batek ordenagailu honetan instala daitezkeen paketeak "
-"ditu."
+#. TRANSLATORS: program name, an application to set per-user policy for updates
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:934
+msgid "Software Update Preferences"
+msgstr "Softwareen eguneraketen hobespenak"
 
 #: ../data/gpk-prefs.ui.h:2
+msgid "_Check Now"
+msgstr "_Begiratu orain"
+
+#: ../data/gpk-prefs.ui.h:3
+msgid "_Automatically install:"
+msgstr "Instalatu _automatikoki:"
+
+#: ../data/gpk-prefs.ui.h:4
 msgid "C_heck for updates:"
 msgstr "Begiratu _eguneraketak:"
 
-#: ../data/gpk-prefs.ui.h:3
+#: ../data/gpk-prefs.ui.h:5
 msgid "Check for major _upgrades:"
 msgstr "Begiratu eguneraketa _nagusiak:"
 
-#: ../data/gpk-prefs.ui.h:4
+#: ../data/gpk-prefs.ui.h:6
 msgid "Check for updates when using mobile broadband"
 msgstr "Begiratu eguneraketak banda-zabalera mugikorra erabiltzean"
 
-#: ../data/gpk-prefs.ui.h:5
+#: ../data/gpk-prefs.ui.h:7
 msgid "Currently using mobile broadband"
 msgstr "Unean banda-zabalera mugikorra erabiltzen"
-
-#. TRANSLATORS: program name, an application to set per-user policy for updates
-#: ../data/gpk-prefs.ui.h:7 ../src/gpk-prefs.c:947
-msgid "Software Update Preferences"
-msgstr "Softwareen eguneraketen hobespenak"
 
 #: ../data/gpk-prefs.ui.h:8
 msgid "Update Settings"
 msgstr "Eguneraketen ezarpenak"
 
 #: ../data/gpk-prefs.ui.h:9
-msgid "_Automatically install:"
-msgstr "Instalatu _automatikoki:"
-
-#: ../data/gpk-prefs.ui.h:10
-msgid "_Check Now"
-msgstr "_Begiratu orain"
+msgid ""
+"A software source contains packages that can be installed on this computer."
+msgstr ""
+"Softwareen iturburu batek ordenagailu honetan instala daitezkeen paketeak "
+"ditu."
 
 #. shows extra -source, -debuginfo, and -devel software sources
-#: ../data/gpk-prefs.ui.h:12
+#: ../data/gpk-prefs.ui.h:11
 msgid "_Show debug and development software sources"
 msgstr "_Erakutsi arazketa eta garapeneko softwareen iturburuak"
 
-#. TRANSLATORS: column for what was done, e.g. update-system
-#: ../data/gpk-service-pack.ui.h:1 ../src/gpk-log.c:295
-msgid "Action"
-msgstr "Ekintza"
+#. TRANSLATORS: the program name
+#: ../data/gpk-service-pack.ui.h:1 ../src/gpk-service-pack.c:817
+msgid "Service Pack Creator"
+msgstr "Zerbitzu-pakete sortzailea"
 
 #: ../data/gpk-service-pack.ui.h:2
-msgid "Create"
-msgstr "Sortu"
+#| msgid "Create a copy of this computers package list"
+msgid "Create a copy of this computer's package list"
+msgstr "Sortu ordenagailu honetako paketeen zerrendaren kopia"
 
 #: ../data/gpk-service-pack.ui.h:3
-msgid "Create a copy of this computers package list"
-msgstr "Sortu ordenagailu honetako paketeen zerrendaren kopia"
+msgid "Create an archive of all the pending updates"
+msgstr "Sortu eguneratzeko zain dauden guztien artxibo bat"
 
 #: ../data/gpk-service-pack.ui.h:4
 msgid "Create an archive of a specific package"
 msgstr "Sortu pakete zehatz baten artxibo bat"
 
 #: ../data/gpk-service-pack.ui.h:5
-msgid "Create an archive of all the pending updates"
-msgstr "Sortu eguneratzeko zain dauden guztien artxibo bat"
+msgid "Multiple packages can be specified using a comma delimited list"
+msgstr "Hainbat pakete zehaz daitezke komaz berezitutako zerrenda erabiliz"
 
-#: ../data/gpk-service-pack.ui.h:6
+#. TRANSLATORS: column for what was done, e.g. update-system
+#: ../data/gpk-service-pack.ui.h:6 ../src/gpk-log.c:295
+msgid "Action"
+msgstr "Ekintza"
+
+#: ../data/gpk-service-pack.ui.h:7
+msgid "Output directory:"
+msgstr "Irteerako direktorioa:"
+
+#: ../data/gpk-service-pack.ui.h:8
 msgid "Destination package list:"
 msgstr "Paketeen zerrendaren helburua:"
 
+#: ../data/gpk-service-pack.ui.h:9
+#| msgid "Select A Package List File"
+msgid "Select a Package List File"
+msgstr "Hautatu pakete-zerrendaren fitxategia"
+
+#: ../data/gpk-service-pack.ui.h:10
+msgid "Save New Service Pack"
+msgstr "Gorde zerbitzu-pakete berria"
+
 #. TRANSLATORS: column for what packages were upgraded
-#: ../data/gpk-service-pack.ui.h:7 ../data/gpk-update-viewer.ui.h:1
+#: ../data/gpk-service-pack.ui.h:11 ../data/gpk-update-viewer.ui.h:5
 #: ../src/gpk-log.c:322
 msgid "Details"
 msgstr "Xehetasunak"
 
-#: ../data/gpk-service-pack.ui.h:8
-msgid "Multiple packages can be specified using a comma delimited list"
-msgstr "Hainbat pakete zehaz daitezke komaz berezitutako zerrenda erabiliz"
-
-#: ../data/gpk-service-pack.ui.h:9
-msgid "Output directory:"
-msgstr "Irteerako direktorioa:"
-
-#: ../data/gpk-service-pack.ui.h:10
+#: ../data/gpk-service-pack.ui.h:12
 msgid "Progress"
 msgstr "Aurrerapena"
 
-#: ../data/gpk-service-pack.ui.h:11
-msgid "Save New Service Pack"
-msgstr "Gorde zerbitzu-pakete berria"
-
-#: ../data/gpk-service-pack.ui.h:12
-msgid "Select A Package List File"
-msgstr "Hautatu pakete-zerrendaren fitxategia"
-
-#. TRANSLATORS: the program name
-#: ../data/gpk-service-pack.ui.h:13 ../src/gpk-service-pack.c:831
-msgid "Service Pack Creator"
-msgstr "Zerbitzu-pakete sortzailea"
+#: ../data/gpk-service-pack.ui.h:13
+msgid "Create"
+msgstr "Sortu"
 
 #: ../data/gpk-signature.ui.h:1
-msgid "Do you recognise the user and trust this key?"
-msgstr "Ezagutzen duzu erabiltzailea eta bere gakoaz fidatzen zara?"
+msgid "Software signature is required"
+msgstr "Softwarearen sinadura behar da"
 
 #: ../data/gpk-signature.ui.h:2
 msgid "Do you trust the source of the packages?"
 msgstr "Paketeen iturburuaz fidatzen zara?"
 
 #: ../data/gpk-signature.ui.h:3
-msgid "Package:"
-msgstr "Paketea:"
-
-#: ../data/gpk-signature.ui.h:4
 msgid "Repository name:"
 msgstr "Biltegiaren izena:"
 
-#: ../data/gpk-signature.ui.h:5
+#: ../data/gpk-signature.ui.h:4
 msgid "Signature URL:"
 msgstr "Sinaduraren URLa:"
+
+#: ../data/gpk-signature.ui.h:5
+msgid "Signature user identifier:"
+msgstr "Sinaduraren erabiltzailearen identifikatzailea:"
 
 #: ../data/gpk-signature.ui.h:6
 msgid "Signature identifier:"
 msgstr "Sinaduraren identifikatzailea:"
 
 #: ../data/gpk-signature.ui.h:7
-msgid "Signature user identifier:"
-msgstr "Sinaduraren erabiltzailearen identifikatzailea:"
+msgid "Package:"
+msgstr "Paketea:"
 
 #: ../data/gpk-signature.ui.h:8
-msgid "Software signature is required"
-msgstr "Softwarearen sinadura behar da"
+#| msgid "Do you recognise the user and trust this key?"
+msgid "Do you recognize the user and trust this key?"
+msgstr "Ezagutzen duzu erabiltzailea eta bere gakoaz fidatzen zara?"
 
-#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:2
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
 msgid "Software Update"
 msgstr "Softwarearen eguneraketa"
 
@@ -438,6 +672,10 @@ msgstr "Sistema eragilearen bertsio-berritzea"
 msgid "Upgrade the operating system to a new version"
 msgstr "Bertsio-berritu sistema eragilea bertsio berriagora"
 
+#: ../data/gpk-update-viewer.ui.h:2
+msgid "_Install Updates"
+msgstr "_Instalatu eguneraketak"
+
 #: ../data/gpk-update-viewer.ui.h:3
 msgid ""
 "Software updates correct errors, eliminate security vulnerabilities and "
@@ -447,10 +685,6 @@ msgstr ""
 "eginbide berriak ematen dituzte."
 
 #: ../data/gpk-update-viewer.ui.h:4
-msgid "_Install Updates"
-msgstr "_Instalatu eguneraketak"
-
-#: ../data/gpk-update-viewer.ui.h:5
 msgid "_Upgrade"
 msgstr "_Bertsio-berritu"
 
@@ -553,7 +787,7 @@ msgid_plural "%i additional packages are required for %s"
 msgstr[0] "%2$s(e)k pakete gehigarri %1$i behar du"
 msgstr[1] "%2$s(e)k %1$i pakete gehigarri behar ditu"
 
-#. TRANSLATORS: message: show the array of dependant packages for this package
+#. TRANSLATORS: message: show the array of dependent packages for this package
 #: ../src/gpk-application.c:1033
 #, c-format
 msgid "Packages listed below are required for %s to function correctly."
@@ -597,7 +831,7 @@ msgstr ""
 msgid "Try again with a different search term."
 msgstr "Saiatu berriro bilaketako beste termino batekin."
 
-#. TRANSLATORS: title: invlid text in the search bar
+#. TRANSLATORS: title: invalid text in the search bar
 #: ../src/gpk-application.c:1602
 msgid "Invalid search text"
 msgstr "Bilaketa testua baliogabea"
@@ -607,7 +841,7 @@ msgstr "Bilaketa testua baliogabea"
 msgid "The search text contains invalid characters"
 msgstr "Bilaketako testuak baliogabeko karaktereak ditu"
 
-#. TRANSLATORS: title: we failed to execute the mthod
+#. TRANSLATORS: title: we failed to execute the method
 #: ../src/gpk-application.c:1645
 msgid "The search could not be completed"
 msgstr "Bilaketa ezin izan da osatu"
@@ -638,112 +872,112 @@ msgstr "Aldaketa horiek galdu egingo dira leiho hau ixten baduzu."
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2107 ../src/gpk-enum.c:1156 ../src/gpk-enum.c:1245
+#: ../src/gpk-application.c:2097 ../src/gpk-enum.c:1158 ../src/gpk-enum.c:1247
 msgid "Installed"
 msgstr "Instalatuta"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2123 ../src/gpk-application.c:2145
+#: ../src/gpk-application.c:2113 ../src/gpk-application.c:2135
 #: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
 msgid "Name"
 msgstr "Izena"
 
 #. TRANSLATORS: the type of package is a collection (metagroup)
-#: ../src/gpk-application.c:2285
+#: ../src/gpk-application.c:2275
 msgid "Type"
 msgstr "Mota"
 
-#: ../src/gpk-application.c:2285
+#: ../src/gpk-application.c:2275
 msgid "Collection"
 msgstr "Bilduma"
 
 #. TRANSLATORS: tooltip: go to the web address
-#: ../src/gpk-application.c:2293
+#: ../src/gpk-application.c:2283
 #, c-format
 msgid "Visit %s"
 msgstr "Bisitatu %s"
 
 #. TRANSLATORS: add an entry to go to the project home page
-#: ../src/gpk-application.c:2298
+#: ../src/gpk-application.c:2288
 msgid "Project"
 msgstr "Proiektua"
 
-#: ../src/gpk-application.c:2298
+#: ../src/gpk-application.c:2288
 msgid "Homepage"
 msgstr "Webgune nagusia"
 
 #. TRANSLATORS: the group the package belongs in
-#: ../src/gpk-application.c:2312
+#: ../src/gpk-application.c:2302
 msgid "Group"
 msgstr "Taldea"
 
 #. TRANSLATORS: the licence string for the package
-#: ../src/gpk-application.c:2318
+#: ../src/gpk-application.c:2308
 msgid "License"
 msgstr "Lizentzia"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2333
+#: ../src/gpk-application.c:2323
 msgid "Size"
 msgstr "Tamaina"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2336
+#: ../src/gpk-application.c:2326
 msgid "Installed size"
 msgstr "Instalatutako tamaina"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2339
+#: ../src/gpk-application.c:2329
 msgid "Download size"
 msgstr "Deskargaren tamaina"
 
 #. TRANSLATORS: where the package came from, the software source name
-#: ../src/gpk-application.c:2348
+#: ../src/gpk-application.c:2338
 msgid "Source"
 msgstr "Iturburua"
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:2493
+#: ../src/gpk-application.c:2483
 msgid "Selected packages"
 msgstr "Hautatutako paketeak"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2546
+#: ../src/gpk-application.c:2536
 msgid "Searching by name"
 msgstr "Bilatu izenaren arabera"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2570
+#: ../src/gpk-application.c:2560
 msgid "Searching by description"
 msgstr "Bilatu azalpenaren arabera"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2594
+#: ../src/gpk-application.c:2584
 msgid "Searching by file"
 msgstr "Bilatu fitxategiaren arabera"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2616
+#: ../src/gpk-application.c:2606
 msgid "Search by name"
 msgstr "Bilatu izenaren arabera"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2627
+#: ../src/gpk-application.c:2617
 msgid "Search by description"
 msgstr "Bilatu azalpenaren arabera"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2638
+#: ../src/gpk-application.c:2628
 msgid "Search by file name"
 msgstr "Bilatu fitxategiaren arabera"
 
-#: ../src/gpk-application.c:2679
+#: ../src/gpk-application.c:2669
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Lizentzia GNU General Public License 2. bertsio pean argitaratua"
 
-#: ../src/gpk-application.c:2680
+#: ../src/gpk-application.c:2670
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -754,7 +988,7 @@ msgstr ""
 "argitaratutako GNU Lizentzia Publiko Orokorraren 2. bertsioan, edo (nahiago "
 "baduzu) beste berriago batean, jasotako baldintzak betez gero."
 
-#: ../src/gpk-application.c:2684
+#: ../src/gpk-application.c:2674
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -766,7 +1000,7 @@ msgstr ""
 "HELBURU PARTIKULARRETARAKO ERABILTZEKO. Argibide gehiago nahi izanez gero, "
 "ikus GNU Lizentzia Publiko Orokorra."
 
-#: ../src/gpk-application.c:2688
+#: ../src/gpk-application.c:2678
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -777,28 +1011,28 @@ msgstr ""
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2694
+#: ../src/gpk-application.c:2684
 msgid "translator-credits"
 msgstr ""
 "Iñaki Larrañaga Murgoitio <dooteo@euskalgnu.org>\n"
 "Julen Ruiz Aizpuru <julenx@gmail.com>"
 
-#: ../src/gpk-application.c:2714
+#: ../src/gpk-application.c:2704
 msgid "PackageKit Website"
 msgstr "PackageKit-en webgunea"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2717
+#: ../src/gpk-application.c:2707
 msgid "Package Manager for GNOME"
 msgstr "GNOMEren pakete-kudeatzailea"
 
 #. TRANSLATORS: single column for the package details, not visible at the moment
-#: ../src/gpk-application.c:3144
+#: ../src/gpk-application.c:3134
 msgid "Text"
 msgstr "Testua"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:3168
+#: ../src/gpk-application.c:3158
 msgid ""
 "Enter a search word and then click find, or click a group to get started."
 msgstr ""
@@ -806,79 +1040,89 @@ msgstr ""
 "batean hasteko."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:3171
+#: ../src/gpk-application.c:3161
 msgid "Enter a search word and then click find to get started."
 msgstr "Sartu bilaketa-hitza eta egin klik bilaketa hasteko."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3397
+#: ../src/gpk-application.c:3387
 msgid "Exiting as properties could not be retrieved"
 msgstr "Irtetzen propietateak ezin izan direlako eskuratu"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3516
+#: ../src/gpk-application.c:3506
 msgid "All packages"
 msgstr "Pakete guztiak"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3518
+#: ../src/gpk-application.c:3508
 msgid "Show all packages"
 msgstr "Erakutsi pakete guztiak"
 
 #. TRANSLATORS: tooltip on the clear button
-#: ../src/gpk-application.c:3761
+#: ../src/gpk-application.c:3747
 msgid "Clear current selection"
 msgstr "Garbitu uneko hautapena"
 
 #. TRANSLATORS: tooltip on the apply button
-#: ../src/gpk-application.c:3786
+#: ../src/gpk-application.c:3772
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr ""
 "Aldaketak ez dira berehala aplikatuko, botoi honek guztiak aplikatzen ditu"
 
 #. TRANSLATORS: tooltip on the homepage button
-#: ../src/gpk-application.c:3812
+#: ../src/gpk-application.c:3798
 msgid "Visit home page for selected package"
 msgstr "Bisitatu hautatutako paketearen webgune nagusia"
 
 #. TRANSLATORS: tooltip on the find button
-#: ../src/gpk-application.c:3920
+#: ../src/gpk-application.c:3906
 msgid "Find packages"
 msgstr "Bilatu paketeak"
 
 #. TRANSLATORS: tooltip on the cancel button
-#: ../src/gpk-application.c:3928
+#: ../src/gpk-application.c:3914
 msgid "Cancel search"
 msgstr "Utzi bilaketa"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:4051 ../src/gpk-update-viewer.c:3341
+#: ../src/gpk-application.c:4037 ../src/gpk-update-viewer.c:3348
 msgid "Show the program version and exit"
 msgstr "Erakutsi programaren bertsioa eta irten"
 
 #. are we running privileged
-#: ../src/gpk-application.c:4084
+#: ../src/gpk-application.c:4070
 msgid "Package installer"
 msgstr "Paketeen instalatzailea"
 
+#. TRANSLATORS: a 32 bit package
+#: ../src/gpk-common.c:295
+msgid "32-bit"
+msgstr "32 bit"
+
+#. TRANSLATORS: a 64 bit package
+#: ../src/gpk-common.c:302
+msgid "64-bit"
+msgstr "64 bit"
+
 #. TRANSLATORS: these tools cannot run as root (unknown name)
-#: ../src/gpk-common.c:426
+#: ../src/gpk-common.c:427
 msgid "This application is running as a privileged user"
 msgstr "Aplikazio hau erabiltzaile pribilegiatu gisa exekutatzen ari da"
 
-#. TRANSLATORS: cannot run as root user, and we display the applicaiton name
-#: ../src/gpk-common.c:429
+#. TRANSLATORS: cannot run as root user, and we display the application name
+#: ../src/gpk-common.c:430
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "%s erabiltzaile pribilegiatu gisa exekutatzen ari da"
 
 #. TRANSLATORS: tell the user off
-#: ../src/gpk-common.c:432
+#: ../src/gpk-common.c:433
 msgid "Package management applications are security sensitive."
 msgstr "Paketeak kudeatzeko aplikazioak segurtasun aldetik sentikorrak dira."
 
 #. TRANSLATORS: and explain why
-#: ../src/gpk-common.c:434
+#: ../src/gpk-common.c:435
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
@@ -887,18 +1131,18 @@ msgstr ""
 "beharko litzateke segurtasuneko arrazoiak direla eta."
 
 #. TRANSLATORS: button: allow the user to run this, even when insecure
-#: ../src/gpk-common.c:440
+#: ../src/gpk-common.c:441
 msgid "Continue _Anyway"
 msgstr "Jarraitu _dena den"
 
 #. TRANSLATORS: The actions has just literally happened
-#: ../src/gpk-common.c:510 ../src/gpk-common.c:560
+#: ../src/gpk-common.c:511 ../src/gpk-common.c:561
 #, c-format
 msgid "Now"
 msgstr "Orain"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:520 ../src/gpk-common.c:570
+#: ../src/gpk-common.c:521 ../src/gpk-common.c:571
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
@@ -906,7 +1150,7 @@ msgstr[0] "segundo %i"
 msgstr[1] "%i segundo"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:530 ../src/gpk-common.c:583
+#: ../src/gpk-common.c:531 ../src/gpk-common.c:584
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -914,7 +1158,7 @@ msgstr[0] "minutu %i"
 msgstr[1] "%i minutu"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:536 ../src/gpk-common.c:602
+#: ../src/gpk-common.c:537 ../src/gpk-common.c:603
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
@@ -925,45 +1169,45 @@ msgstr[1] "%i ordu"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/gpk-common.c:589 ../src/gpk-common.c:608
+#: ../src/gpk-common.c:590 ../src/gpk-common.c:609
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s %i %s"
 
-#: ../src/gpk-common.c:590 ../src/gpk-common.c:610
+#: ../src/gpk-common.c:591 ../src/gpk-common.c:611
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minutu"
 msgstr[1] "minutu"
 
-#: ../src/gpk-common.c:591
+#: ../src/gpk-common.c:592
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "segundo"
 msgstr[1] "segundo"
 
-#: ../src/gpk-common.c:609
+#: ../src/gpk-common.c:610
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "ordu"
 msgstr[1] "ordu"
 
-#: ../src/gpk-common.c:636
+#: ../src/gpk-common.c:637
 #, c-format
 msgid "%s and %s"
 msgstr "%s eta %s"
 
-#: ../src/gpk-common.c:639
+#: ../src/gpk-common.c:640
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s eta %s"
 
-#: ../src/gpk-common.c:642
+#: ../src/gpk-common.c:643
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s eta %s"
 
-#: ../src/gpk-common.c:646
+#: ../src/gpk-common.c:647
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s eta %s"
@@ -989,9 +1233,12 @@ msgstr "Pakete-kudeatzailearen errorearen xehetasunak"
 
 #. TRANSLATORS: default fallback error -- this should never happen
 #: ../src/gpk-dbus-task.c:293
+#| msgid ""
+#| "Unknown error. Please refer to the detailed report and report in your "
+#| "distribution bugtracker."
 msgid ""
 "Unknown error. Please refer to the detailed report and report in your "
-"distribution bugtracker."
+"distribution bug tracker."
 msgstr ""
 "Errore ezezaguna. Mesedez, irakurri txostenaren xehetasunak eta eman "
 "errorearen berri banaketako arazketa-aztarnariari."
@@ -1029,7 +1276,7 @@ msgstr "Huts egin du paketea instalatzean"
 
 #. TRANSLATORS: title: installing packages
 #. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:510 ../src/gpk-enum.c:955
+#: ../src/gpk-dbus-task.c:510 ../src/gpk-enum.c:957
 msgid "Installing packages"
 msgstr "Paketeak instalatzen"
 
@@ -1076,7 +1323,7 @@ msgstr "Paketeak ezin izan dira aurkitu softwareen edozer iturburuetan"
 msgid "More information"
 msgstr "Informazio gehiago"
 
-#: ../src/gpk-dbus-task.c:1142 ../src/gpk-enum.c:336
+#: ../src/gpk-dbus-task.c:1142 ../src/gpk-enum.c:338
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "Paketea jadanik instalatuta dago"
@@ -1174,7 +1421,7 @@ msgstr[1] "Programa batek fitxategiak instalatzea nahi ditu"
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-dbus-task.c:1485 ../src/gpk-dbus-task.c:3112
-#: ../src/gpk-enum.c:1315
+#: ../src/gpk-enum.c:1317
 msgid "Searching for file"
 msgstr "Fitxategia bilatzen"
 
@@ -1447,11 +1694,11 @@ msgstr[1] "Instalatu kontrolatzaile hauek"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2953 ../src/gpk-enum.c:947
+#: ../src/gpk-dbus-task.c:2953 ../src/gpk-enum.c:949
 msgid "Removing packages"
 msgstr "Paketeak kentzen"
 
-#. TRANSLATORS: failed to fild the package for thefile
+#. TRANSLATORS: failed to find the package for the file
 #: ../src/gpk-dbus-task.c:3007
 msgid "Failed to find package for this file"
 msgstr "Huts egin du fitxategiaren paketea bilatzean"
@@ -1512,15 +1759,15 @@ msgid "Do not show this again"
 msgstr "Ez erakutsi hau berriro"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-distro-upgrade.c:139
+#: ../src/gpk-distro-upgrade.c:152
 msgid "Could not upgrade the system"
 msgstr "Ezin izan da sistema bertsio-berritu"
 
-#: ../src/gpk-distro-upgrade.c:160
+#: ../src/gpk-distro-upgrade.c:173
 msgid "The upgrade completed successfully"
 msgstr "Ongi bertsio-berritu da"
 
-#: ../src/gpk-distro-upgrade.c:163
+#: ../src/gpk-distro-upgrade.c:176
 msgid ""
 "Your system now has the required software needed to complete the operating "
 "system upgrade."
@@ -1528,7 +1775,7 @@ msgstr ""
 "Sistemak orain beharrezko software guztia dauka sistema eragilearen bertsio-"
 "berritzea osatzeko."
 
-#: ../src/gpk-distro-upgrade.c:164
+#: ../src/gpk-distro-upgrade.c:177
 msgid ""
 "When you are ready, you can restart your system and continue the upgrade "
 "process."
@@ -1536,33 +1783,33 @@ msgstr ""
 "Prest egondakoan, berrabiarazi ezazu sistema eta jarraitu bertsio-berritzeko "
 "prozesuarekin."
 
-#: ../src/gpk-distro-upgrade.c:165
+#: ../src/gpk-distro-upgrade.c:178
 msgid "Make sure you have saved any unsaved work before restarting."
 msgstr ""
 "Ziurtatu zaitez gorde gabeko lan guztiak gordetzeaz berrabiarazi baino lehen."
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-distro-upgrade.c:177
+#: ../src/gpk-distro-upgrade.c:194
 msgid "Restart Now"
 msgstr "Berrabiarazi orain"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-distro-upgrade.c:294
+#: ../src/gpk-distro-upgrade.c:311
 msgid "Could not get distribution upgrades"
 msgstr "Ezin izan da banaketaren bertsio-berririk eskuratu"
 
 #. TRANSLATORS: nothing to do
-#: ../src/gpk-distro-upgrade.c:315
+#: ../src/gpk-distro-upgrade.c:332
 msgid "No releases available for upgrade"
 msgstr "Ez dago argitalpenik eskuragarri bertsio-berritzeko"
 
 #. TRANSLATORS: this is the window title
-#: ../src/gpk-distro-upgrade.c:376
+#: ../src/gpk-distro-upgrade.c:393
 #, c-format
 msgid "Upgrade your system (%d of %d)"
 msgstr "Bertsio-berritu sistema (%d / %d)"
 
-#: ../src/gpk-distro-upgrade.c:405
+#: ../src/gpk-distro-upgrade.c:422
 msgid ""
 "This assistant will guide you through upgrading your currently installed "
 "operating system to a newer release."
@@ -1570,7 +1817,7 @@ msgstr ""
 "Morroi honek unean instalatutako sistema eragilea argitalpen berriagora "
 "bertsio-berritzeko urratsetan zehar lagunduko dizu."
 
-#: ../src/gpk-distro-upgrade.c:406
+#: ../src/gpk-distro-upgrade.c:423
 msgid ""
 "This process may take several hours to complete, depending on the speed of "
 "your internet connection and the options selected."
@@ -1578,7 +1825,7 @@ msgstr ""
 "Prozesu honek ordu batzuk behar izan dezake osatzen, interneteko konexioaren "
 "abiaduraren eta hautatutako aukeren arabera."
 
-#: ../src/gpk-distro-upgrade.c:407
+#: ../src/gpk-distro-upgrade.c:424
 msgid ""
 "You will be able to continue using your system while this assistant "
 "downloads the packages needed to upgrade your system."
@@ -1586,7 +1833,7 @@ msgstr ""
 "Sistema erabiltzen jarrai dezakezu morroi honek sistema bertsio-berritzeko "
 "beharrezkoak diren paketeak deskargatzen dituen bitartean."
 
-#: ../src/gpk-distro-upgrade.c:408
+#: ../src/gpk-distro-upgrade.c:425
 msgid ""
 "When the download has completed, you will be prompted to restart your system "
 "in order to complete the upgrade process."
@@ -1595,37 +1842,37 @@ msgstr ""
 "berritzeko prozesua osatzeko."
 
 #. TRANSLATORS: this is a intro page title
-#: ../src/gpk-distro-upgrade.c:420
+#: ../src/gpk-distro-upgrade.c:437
 msgid "Upgrade your system"
 msgstr "Bertsio-berritu sistema"
 
-#: ../src/gpk-distro-upgrade.c:470
+#: ../src/gpk-distro-upgrade.c:487
 msgid "Available operating system _releases:"
 msgstr "Sistema eragilearen _argitalpen eskuragarriak:"
 
 #. TRANSLATORS: this is in the combobox
-#: ../src/gpk-distro-upgrade.c:479
+#: ../src/gpk-distro-upgrade.c:496
 msgid "Loading list of upgrades"
 msgstr "Bertsio-berrien zerrenda kargatzea"
 
 #. TRANSLATORS: this is a choose page title
-#: ../src/gpk-distro-upgrade.c:497
+#: ../src/gpk-distro-upgrade.c:514
 msgid "Choose desired operating system version"
 msgstr "Aukeratu sistema eragilearen bertsio gogokoena"
 
 #. label and combobox
-#: ../src/gpk-distro-upgrade.c:527
+#: ../src/gpk-distro-upgrade.c:544
 msgid "The upgrade tool can operate with three different modes:"
 msgstr "Bertsio-berritzeko tresnak hiru modutan lan egin dezake:"
 
-#: ../src/gpk-distro-upgrade.c:557
+#: ../src/gpk-distro-upgrade.c:574
 msgid ""
 "The selected option will require the installer to download additional data."
 msgstr ""
 "Hautatutako aukerak instalatzaileak datu gehigarriak deskargatzea eskatuko "
 "du."
 
-#: ../src/gpk-distro-upgrade.c:558
+#: ../src/gpk-distro-upgrade.c:575
 msgid ""
 "Do not continue with this option if the network will not be available at "
 "upgrade time."
@@ -1634,363 +1881,364 @@ msgstr ""
 "garaian."
 
 #. TRANSLATORS: this is a choose page title
-#: ../src/gpk-distro-upgrade.c:573
+#: ../src/gpk-distro-upgrade.c:590
 msgid "Choose desired download options"
 msgstr "Aukeratu deskargatzeko aukera gogokoenak"
 
-#: ../src/gpk-distro-upgrade.c:590
+#: ../src/gpk-distro-upgrade.c:607
 msgid ""
 "The operating system upgrade tool will now perform the following actions:"
 msgstr ""
 "Sistema eragilea bertsio-berritzeko tresnak orain honako ekintzak landuko "
 "ditu:"
 
-#: ../src/gpk-distro-upgrade.c:591
+#: ../src/gpk-distro-upgrade.c:608
 msgid "Request authentication from a privileged user"
 msgstr "Eskatu autentifikazioa erabiltzaile pribilegiatu batetik"
 
-#: ../src/gpk-distro-upgrade.c:592
+#: ../src/gpk-distro-upgrade.c:609
 msgid "Download installer images"
 msgstr "Deskargatu instalatzailearen irudiak"
 
-#: ../src/gpk-distro-upgrade.c:593
+#: ../src/gpk-distro-upgrade.c:610
 msgid "Download packages"
 msgstr "Deskargatu paketeak"
 
-#: ../src/gpk-distro-upgrade.c:594
+#: ../src/gpk-distro-upgrade.c:611
 msgid "Prepare and test the upgrade"
 msgstr "Prestatu eta probatu bertsio-berritzea"
 
-#: ../src/gpk-distro-upgrade.c:595
+#: ../src/gpk-distro-upgrade.c:612
 msgid "You will have to restart your computer at the end of the upgrade."
 msgstr "Bertsio-berritzearen amaieran sistema berrabiarazi beharko duzu."
 
-#: ../src/gpk-distro-upgrade.c:596
+#: ../src/gpk-distro-upgrade.c:613
 msgid "Press 'Apply' to apply changes."
 msgstr "Sakatu 'Aplikatu' aldaketak aplikatzeko."
 
 #. TRANSLATORS: button text
-#: ../src/gpk-distro-upgrade.c:609
+#: ../src/gpk-distro-upgrade.c:626
 msgid "Confirmation"
 msgstr "Berrespena"
 
 #. TRANSLATORS: title text
-#: ../src/gpk-distro-upgrade.c:641
+#: ../src/gpk-distro-upgrade.c:658
 msgid "Applying changes"
 msgstr "Aldaketak aplikatzea"
 
 #. TRANSLATORS: title, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:703
+#: ../src/gpk-distro-upgrade.c:720
 msgid "Cannot perform operating system upgrade"
 msgstr "Ezin da sistema eragilearen bertsio-berritzerik landu"
 
 #. TRANSLATORS: message, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:715
+#: ../src/gpk-distro-upgrade.c:732
 msgid "Upgrading the operating system is not supported."
 msgstr "Sistemaren eragilearen bertsio-berritzea ez dago onartuta."
 
 #. TRANSLATORS: message, we're unable to do this action as PackageKit is too old
-#: ../src/gpk-distro-upgrade.c:719
+#: ../src/gpk-distro-upgrade.c:736
 msgid "Cannot get operating system upgrade information."
 msgstr "Ezin da sistema eragilea bertsio-berritzeko informaziorik lortu."
 
 #. TRANSLATORS: message, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:723
+#: ../src/gpk-distro-upgrade.c:740
 msgid "Unsupported daemon version."
 msgstr "Onartu gabeko daemon-aren bertsioa."
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-distro-upgrade.c:775 ../src/gpk-distro-upgrade.c:778
+#: ../src/gpk-distro-upgrade.c:796 ../src/gpk-distro-upgrade.c:799
 msgid "Distribution Upgrade Tool"
 msgstr "Banaketaren bertsio-berritzeko tresna"
 
 #. TRANSLATORS: this is compact disk (CD) media
-#: ../src/gpk-enum.c:277
+#: ../src/gpk-enum.c:279
 msgid "CD"
 msgstr "CDa"
 
 #. TRANSLATORS: this is digital versatile disk (DVD) media
-#: ../src/gpk-enum.c:281
+#: ../src/gpk-enum.c:283
 msgid "DVD"
 msgstr "DVDa"
 
 #. TRANSLATORS: this is either CD or DVD media
-#: ../src/gpk-enum.c:285
+#: ../src/gpk-enum.c:287
 msgid "disc"
 msgstr "diskoa"
 
 #. TRANSLATORS: this is generic media of unknown type that we will install from
-#: ../src/gpk-enum.c:289
+#: ../src/gpk-enum.c:291
 msgid "media"
 msgstr "euskarria"
 
-#: ../src/gpk-enum.c:306
+#: ../src/gpk-enum.c:308
 msgid "Failed with unknown error code"
 msgstr "Huts egin du errorearen kode ezezagunarekin"
 
-#: ../src/gpk-enum.c:309
+#: ../src/gpk-enum.c:311
 msgid "No network connection available"
 msgstr "Ez dago sareko konexiorik erabilgarri"
 
-#: ../src/gpk-enum.c:312
+#: ../src/gpk-enum.c:314
 msgid "No package cache is available."
 msgstr "Ez dago paketeen cacherik erabilgarri."
 
-#: ../src/gpk-enum.c:315
+#: ../src/gpk-enum.c:317
 msgid "Out of memory"
 msgstr "Memoriarik ez"
 
-#: ../src/gpk-enum.c:318
+#: ../src/gpk-enum.c:320
 msgid "Failed to create a thread"
 msgstr "Huts egin du haria sortzean"
 
-#: ../src/gpk-enum.c:321
+#: ../src/gpk-enum.c:323
 msgid "Not supported by this backend"
 msgstr "Motor honek ez du onartzen"
 
-#: ../src/gpk-enum.c:324
+#: ../src/gpk-enum.c:326
 msgid "An internal system error has occurred"
 msgstr "Sistema barneko errore bat gertatu da"
 
-#: ../src/gpk-enum.c:327
+#: ../src/gpk-enum.c:329
 msgid "A security signature is not present"
 msgstr "Ez da segurtasunaren sinadura ageri"
 
-#: ../src/gpk-enum.c:330
+#: ../src/gpk-enum.c:332
 msgid "The package is not installed"
 msgstr "Paketea ez da instalatu"
 
-#: ../src/gpk-enum.c:333
+#: ../src/gpk-enum.c:335
 msgid "The package was not found"
 msgstr "Paketea ez da aurkitu"
 
-#: ../src/gpk-enum.c:339
+#: ../src/gpk-enum.c:341
 msgid "The package download failed"
 msgstr "Huts egin du paketearen deskargak"
 
-#: ../src/gpk-enum.c:342
+#: ../src/gpk-enum.c:344
 msgid "The group was not found"
 msgstr "Ez da taldea aurkitu"
 
-#: ../src/gpk-enum.c:345
+#: ../src/gpk-enum.c:347
 msgid "The group list was invalid"
 msgstr "Taldearen zerrenda baliogabea da"
 
-#: ../src/gpk-enum.c:348
+#: ../src/gpk-enum.c:350
 msgid "Dependency resolution failed"
 msgstr "Huts egin du mendekotasunaren ebazpenak"
 
-#: ../src/gpk-enum.c:351
+#: ../src/gpk-enum.c:353
 msgid "Search filter was invalid"
 msgstr "Bilaketako iragazkia baliogabea da"
 
-#: ../src/gpk-enum.c:354
+#: ../src/gpk-enum.c:356
 msgid "The package identifier was not well formed"
 msgstr "Paketearen identifikatzailea ez dago ongi osatuta"
 
-#: ../src/gpk-enum.c:357
+#: ../src/gpk-enum.c:359
 msgid "Transaction error"
 msgstr "Errorea transakzioan"
 
-#: ../src/gpk-enum.c:360
+#: ../src/gpk-enum.c:362
 msgid "Repository name was not found"
 msgstr "Ez da biltegiaren izena aurkitu"
 
-#: ../src/gpk-enum.c:363
+#: ../src/gpk-enum.c:365
 msgid "Could not remove a protected system package"
 msgstr "Ezin izan da sistemaren babestutako pakete bat kendu"
 
-#: ../src/gpk-enum.c:366
+#: ../src/gpk-enum.c:368
 msgid "The action was canceled"
 msgstr "Ekintza bertan behera utzi da"
 
-#: ../src/gpk-enum.c:369
+#: ../src/gpk-enum.c:371
 msgid "The action was forcibly canceled"
 msgstr "Ekintza derrigorrez bertan behera utzi da"
 
-#: ../src/gpk-enum.c:372
+#: ../src/gpk-enum.c:374
 msgid "Reading the configuration file failed"
 msgstr "Huts egin du konfigurazioko fitxategia irakurtzean"
 
-#: ../src/gpk-enum.c:375
+#: ../src/gpk-enum.c:377
 msgid "The action cannot be canceled"
 msgstr "Ekintza ezin da bertan behera utzi"
 
-#: ../src/gpk-enum.c:378
+#: ../src/gpk-enum.c:380
 msgid "Source packages cannot be installed"
 msgstr "Iturburuko paketeak ezin dira instalatu"
 
-#: ../src/gpk-enum.c:381
+#: ../src/gpk-enum.c:383
 msgid "The license agreement failed"
 msgstr "Lizentziaren adostasunak huts egin du"
 
-#: ../src/gpk-enum.c:384
+#: ../src/gpk-enum.c:386
 msgid "Local file conflict between packages"
 msgstr "Lokaleko fitxategien gatazka paketeen artean"
 
-#: ../src/gpk-enum.c:387
+#: ../src/gpk-enum.c:389
 msgid "Packages are not compatible"
 msgstr "Paketeak ez dira bateragarriak"
 
-#: ../src/gpk-enum.c:390
+#: ../src/gpk-enum.c:392
 msgid "Problem connecting to a software source"
 msgstr "Arazoa softwareen iturburu batekin konektatzean"
 
-#: ../src/gpk-enum.c:393
+#: ../src/gpk-enum.c:395
 msgid "Failed to initialize"
 msgstr "Huts egin du hasieratzean"
 
-#: ../src/gpk-enum.c:396
-msgid "Failed to finalise"
+#: ../src/gpk-enum.c:398
+#| msgid "Failed to finalise"
+msgid "Failed to finalize"
 msgstr "Huts egin du amaitzean"
 
-#: ../src/gpk-enum.c:399
+#: ../src/gpk-enum.c:401
 msgid "Cannot get lock"
 msgstr "Ezin da blokeoa eskuratu"
 
-#: ../src/gpk-enum.c:402
+#: ../src/gpk-enum.c:404
 msgid "No packages to update"
 msgstr "Ez dago paketerik eguneratzeko"
 
-#: ../src/gpk-enum.c:405
+#: ../src/gpk-enum.c:407
 msgid "Cannot write repository configuration"
 msgstr "Ezin da biltegiaren konfigurazioa idatzi"
 
-#: ../src/gpk-enum.c:408
+#: ../src/gpk-enum.c:410
 msgid "Local install failed"
 msgstr "Huts egin du lokaleko instalazioak"
 
-#: ../src/gpk-enum.c:411
+#: ../src/gpk-enum.c:413
 msgid "Bad security signature"
 msgstr "Segurtasunaren okerreko sinadura"
 
-#: ../src/gpk-enum.c:414
+#: ../src/gpk-enum.c:416
 msgid "Missing security signature"
 msgstr "Segurtasunaren sinadura falta da"
 
-#: ../src/gpk-enum.c:417
+#: ../src/gpk-enum.c:419
 msgid "Repository configuration invalid"
 msgstr "Biltegiaren konfigurazioa baliogabea"
 
-#: ../src/gpk-enum.c:420
+#: ../src/gpk-enum.c:422
 msgid "Invalid package file"
 msgstr "Paketearen fitxategia baliogabea"
 
-#: ../src/gpk-enum.c:423
+#: ../src/gpk-enum.c:425
 msgid "Package install blocked"
 msgstr "Paketearen instalazioa blokeatuta"
 
-#: ../src/gpk-enum.c:426
+#: ../src/gpk-enum.c:428
 msgid "Package is corrupt"
 msgstr "Paketea hondatuta dago"
 
-#: ../src/gpk-enum.c:429
+#: ../src/gpk-enum.c:431
 msgid "All packages are already installed"
 msgstr "Pakete guztiak jadanik instalatuta daude"
 
-#: ../src/gpk-enum.c:432
+#: ../src/gpk-enum.c:434
 msgid "The specified file could not be found"
 msgstr "Zehaztutako fitxategia ezin izan da aurkitu"
 
-#: ../src/gpk-enum.c:435
+#: ../src/gpk-enum.c:437
 msgid "No more mirrors are available"
 msgstr "Ez dago ispilu gehiagorik erabilgarri"
 
-#: ../src/gpk-enum.c:438
+#: ../src/gpk-enum.c:440
 msgid "No distribution upgrade data is available"
 msgstr "Ez dago banaketa bertsio-berritzeko daturik eskuragarri"
 
-#: ../src/gpk-enum.c:441
+#: ../src/gpk-enum.c:443
 msgid "Package is incompatible with this system"
 msgstr "Paketea ez da bateragarria sistemarekin"
 
-#: ../src/gpk-enum.c:444
+#: ../src/gpk-enum.c:446
 msgid "No space is left on the disk"
 msgstr "Ez dago nahikoa lekurik diskoan"
 
-#. TRANSLATORS: this is the window title when a new cd or dvd is required
-#: ../src/gpk-enum.c:447 ../src/gpk-task.c:357
+#. TRANSLATORS: this is the window title when a new CD or DVD is required
+#: ../src/gpk-enum.c:449 ../src/gpk-task.c:357
 msgid "A media change is required"
 msgstr "Euskarria aldatu egin behar da"
 
-#: ../src/gpk-enum.c:450
+#: ../src/gpk-enum.c:452
 msgid "Authorization failed"
 msgstr "Autorizazioak huts egin du"
 
-#: ../src/gpk-enum.c:453
+#: ../src/gpk-enum.c:455
 msgid "Update not found"
 msgstr "Ez da eguneraketarik aurkitu"
 
-#: ../src/gpk-enum.c:456
+#: ../src/gpk-enum.c:458
 msgid "Cannot install from untrusted source"
 msgstr "Ezin da iturburu ez-fidagarri batetik instalatu"
 
-#: ../src/gpk-enum.c:459
+#: ../src/gpk-enum.c:461
 msgid "Cannot update from untrusted source"
 msgstr "Ezin da iturburu ez-fidagarri batetik eguneratu"
 
-#: ../src/gpk-enum.c:462
+#: ../src/gpk-enum.c:464
 msgid "Cannot get the file list"
 msgstr "Ezin da fitxategien zerrenda lortu"
 
-#: ../src/gpk-enum.c:465
+#: ../src/gpk-enum.c:467
 msgid "Cannot get package requires"
 msgstr "Ezin da paketeak mendekotasunik eskuratu"
 
-#: ../src/gpk-enum.c:468
+#: ../src/gpk-enum.c:470
 msgid "Cannot disable source"
 msgstr "Ezin da iturburua desgaitu"
 
-#: ../src/gpk-enum.c:471
+#: ../src/gpk-enum.c:473
 msgid "The download failed"
 msgstr "Deskargak huts egin du"
 
-#: ../src/gpk-enum.c:474
+#: ../src/gpk-enum.c:476
 msgid "Package failed to configure"
 msgstr "Paketeak huts egin du konfiguratzean"
 
-#: ../src/gpk-enum.c:477
+#: ../src/gpk-enum.c:479
 msgid "Package failed to build"
 msgstr "Paketeak huts egin du eraikitzean"
 
-#: ../src/gpk-enum.c:480
+#: ../src/gpk-enum.c:482
 msgid "Package failed to install"
 msgstr "Paketeak huts egin du instalatzean"
 
-#: ../src/gpk-enum.c:483
+#: ../src/gpk-enum.c:485
 msgid "Package failed to be removed"
 msgstr "Paketeak huts egin du kentzean"
 
-#: ../src/gpk-enum.c:486
+#: ../src/gpk-enum.c:488
 msgid "Update failed due to running process"
 msgstr "Eguneraketak huts egin du exekuzioko prozesuagatik"
 
-#: ../src/gpk-enum.c:489
+#: ../src/gpk-enum.c:491
 msgid "The package database was changed"
 msgstr "Paketearen datu-basea aldatu egin zen"
 
-#: ../src/gpk-enum.c:492
+#: ../src/gpk-enum.c:494
 msgid "Virtual provide type is not supported"
 msgstr "Emandako mota birtuala ez dago onartuta"
 
-#: ../src/gpk-enum.c:495
+#: ../src/gpk-enum.c:497
 msgid "Install root is invalid"
 msgstr "Instalazioaren erroa baliogabea da"
 
-#: ../src/gpk-enum.c:498
+#: ../src/gpk-enum.c:500
 msgid "Cannot fetch install sources"
 msgstr "Ezin dira instalatzeko iturburuak eskuratu"
 
-#: ../src/gpk-enum.c:501
+#: ../src/gpk-enum.c:503
 msgid "Rescheduled due to priority"
 msgstr "Lehentasunagatik birplanifikatuta"
 
-#: ../src/gpk-enum.c:518
+#: ../src/gpk-enum.c:520
 msgid "Failed with unknown error code."
 msgstr "Huts egin du errorearen kode ezezagunarekin."
 
-#: ../src/gpk-enum.c:521
+#: ../src/gpk-enum.c:523
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
@@ -1998,7 +2246,7 @@ msgstr ""
 "Ez dago sareko konexiorik erabilgarri.\n"
 "Egiaztatu sareko konexioaren ezarpenak eta saiatu berriro."
 
-#: ../src/gpk-enum.c:525
+#: ../src/gpk-enum.c:527
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
@@ -2006,7 +2254,7 @@ msgstr ""
 "Paketeen zerrenda berriro eraiki behar da.\n"
 "Hau motorrak egin beharko luke automatikoki."
 
-#: ../src/gpk-enum.c:529
+#: ../src/gpk-enum.c:531
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
@@ -2016,31 +2264,39 @@ msgstr ""
 "da.\n"
 "Berrabiarazi ezazu ordenagailua orain."
 
-#: ../src/gpk-enum.c:533
+#: ../src/gpk-enum.c:535
 msgid "A thread could not be created to service the user request."
 msgstr "Ezin izan da hari bat sortu erabiltzailearen eskaera zerbitzatzeko."
 
-#: ../src/gpk-enum.c:536
+#: ../src/gpk-enum.c:538
+#| msgid ""
+#| "The action is not supported by this backend.\n"
+#| "Please report a bug in your distribution bugtracker as this should not "
+#| "have happened."
 msgid ""
 "The action is not supported by this backend.\n"
-"Please report a bug in your distribution bugtracker as this should not have "
+"Please report a bug in your distribution bug tracker as this should not have "
 "happened."
 msgstr ""
 "Motor honek ez du ekintza onartzen.\n"
 "Mesedez, bidal ezazu akats honi buruzko txosten bat banaketako arazketa-"
 "aztarnariari, honek ez bailuke inoiz gertatu behar."
 
-#: ../src/gpk-enum.c:540
+#: ../src/gpk-enum.c:542
+#| msgid ""
+#| "A problem that we were not expecting has occurred.\n"
+#| "Please report this bug in your distribution bugtracker with the error "
+#| "description."
 msgid ""
 "A problem that we were not expecting has occurred.\n"
-"Please report this bug in your distribution bugtracker with the error "
+"Please report this bug in your distribution bug tracker with the error "
 "description."
 msgstr ""
 "Ustekabeko arazo bat gertatu da.\n"
 "Mesedez, bidal ezazu akats honi buruzko txosten bat banaketako arazketa-"
 "aztarnariari, honek ez bailuke inoiz gertatu behar."
 
-#: ../src/gpk-enum.c:544
+#: ../src/gpk-enum.c:546
 msgid ""
 "A security trust relationship could not be made with software source.\n"
 "Please check your security settings."
@@ -2049,13 +2305,13 @@ msgstr ""
 "iturburuarekin.\n"
 "Egiaztatu zure segurtasuneko ezarpenak."
 
-#: ../src/gpk-enum.c:548
+#: ../src/gpk-enum.c:550
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
 msgstr ""
 "Kentzea edo eguneratzea saiatzen ari den paketea ez dago jadanik instalatuta."
 
-#: ../src/gpk-enum.c:551
+#: ../src/gpk-enum.c:553
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "software source."
@@ -2063,11 +2319,11 @@ msgstr ""
 "Aldatzen ari zen paketea ez da ez sisteman ez bestelako softwareen "
 "iturburuetan aurkitzen."
 
-#: ../src/gpk-enum.c:554
+#: ../src/gpk-enum.c:556
 msgid "The package that is trying to be installed is already installed."
 msgstr "Instalatzea saiatzen ari den paketea jadanik instalatuta dago."
 
-#: ../src/gpk-enum.c:557
+#: ../src/gpk-enum.c:559
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
@@ -2075,7 +2331,7 @@ msgstr ""
 "Paketearen deskargak huts egin du.\n"
 "Egiaztatu sareko konexioak."
 
-#: ../src/gpk-enum.c:561
+#: ../src/gpk-enum.c:563
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
@@ -2083,7 +2339,7 @@ msgstr ""
 "Talde mota ez da aurkitu.\n"
 "Egiaztatu taldeen zerrenda eta saiatu berriro."
 
-#: ../src/gpk-enum.c:565
+#: ../src/gpk-enum.c:567
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source "
@@ -2093,7 +2349,7 @@ msgstr ""
 "Cachea freskatzeak lagun dezake, nahiz eta softwareen iturburuaren errorea "
 "ohi izan."
 
-#: ../src/gpk-enum.c:570
+#: ../src/gpk-enum.c:572
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
@@ -2101,11 +2357,11 @@ msgstr ""
 "Ekintza osatzen baimentzen duen pakete bat ezin izan da aurkitu.\n"
 "Informazio gehiago dago eskuragarri txosten xehean."
 
-#: ../src/gpk-enum.c:574
+#: ../src/gpk-enum.c:576
 msgid "The search filter was not correctly formed."
 msgstr "Bilaketako iragazkia ez da ongi osatu."
 
-#: ../src/gpk-enum.c:577
+#: ../src/gpk-enum.c:579
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
@@ -2114,7 +2370,7 @@ msgstr ""
 "bidaltzean.\n"
 "Barneko errore bat adierazi ohi duenez, honen berri eman beharko litzateke."
 
-#: ../src/gpk-enum.c:581
+#: ../src/gpk-enum.c:583
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
@@ -2122,7 +2378,7 @@ msgstr ""
 "Zehaztu gabeko transakzioko errore bat gertatu da.\n"
 "Informazio gehiago dago eskuragarri txosten xehean."
 
-#: ../src/gpk-enum.c:585
+#: ../src/gpk-enum.c:587
 msgid ""
 "The remote software source name was not found.\n"
 "You may need to enable an item in Software Sources."
@@ -2130,15 +2386,15 @@ msgstr ""
 "Softwareen urruneko iturburuaren izena ez da aurkitu.\n"
 "Elementu bat gaitu behar duzu Softwareen Iturburuetan."
 
-#: ../src/gpk-enum.c:589
+#: ../src/gpk-enum.c:591
 msgid "Removing a protected system package is not allowed."
 msgstr "Sistemako babestutako pakete bat kentzea ez dago baimenduta."
 
-#: ../src/gpk-enum.c:592
+#: ../src/gpk-enum.c:594
 msgid "The action was canceled successfully and no packages were changed."
 msgstr "Ekintza bertan behera ongi utzi da eta ez da paketerik aldatu."
 
-#: ../src/gpk-enum.c:595
+#: ../src/gpk-enum.c:597
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
@@ -2146,7 +2402,7 @@ msgstr ""
 "Ekintza bertan behera ongi utzi da eta ez da paketerik aldatu.\n"
 "Motorrak ez da garbiki irten."
 
-#: ../src/gpk-enum.c:599
+#: ../src/gpk-enum.c:601
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
@@ -2154,11 +2410,11 @@ msgstr ""
 "Paketearen jatorrizko konfigurazioko fitxategia ezin izan da ireki.\n"
 "Ziurtatu zaitez konfigurazioa baliozkoa izateaz."
 
-#: ../src/gpk-enum.c:603
+#: ../src/gpk-enum.c:605
 msgid "The action cannot be canceled at this time."
 msgstr "Oraingoan ekintza ezin da bertan behera utzi."
 
-#: ../src/gpk-enum.c:606
+#: ../src/gpk-enum.c:608
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
@@ -2166,7 +2422,7 @@ msgstr ""
 "Iturburuko paketeak ez dira horrela instalatu ohi izaten.\n"
 "Egiaztatu instalatzea saiatzen ari zaren fitxategiaren hedapena."
 
-#: ../src/gpk-enum.c:610
+#: ../src/gpk-enum.c:612
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
@@ -2174,7 +2430,7 @@ msgstr ""
 "Lizentziaren kontratua ez da onartu.\n"
 "Software hau erabiltzeko lizentzia onartu behar da."
 
-#: ../src/gpk-enum.c:614
+#: ../src/gpk-enum.c:616
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2182,7 +2438,7 @@ msgstr ""
 "Bi paketek fitxategi berdina ematen dute.\n"
 "Paketeak softwareen bi iturburu desberdinetatik nahastean gertatu ohi da."
 
-#: ../src/gpk-enum.c:618
+#: ../src/gpk-enum.c:620
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2190,7 +2446,7 @@ msgstr ""
 "Elkarrekin bateragarriak ez diren hainbat pakete daude.\n"
 "Paketeak softwareen bi iturburu desberdinetatik nahastean gertatu ohi da."
 
-#: ../src/gpk-enum.c:622
+#: ../src/gpk-enum.c:624
 msgid ""
 "There was a (possibly temporary) problem connecting to a software source.\n"
 "Please check the detailed error for further details."
@@ -2199,7 +2455,7 @@ msgstr ""
 "batekin konektatzean.\n"
 "Egiaztatu errorearen xehetasunak informazio gehiagorako."
 
-#: ../src/gpk-enum.c:626
+#: ../src/gpk-enum.c:628
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
@@ -2207,7 +2463,7 @@ msgstr ""
 "Huts egin du paketeen motorra hasieratzean.\n"
 "Aldi berean paketeen beste tresnak erabiltzean gertatu ohi da."
 
-#: ../src/gpk-enum.c:630
+#: ../src/gpk-enum.c:632
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
@@ -2215,7 +2471,7 @@ msgstr ""
 "Huts egin du motorraren instantzia ixtean.\n"
 "Normalean errore honi ezikusi egin daiteke."
 
-#: ../src/gpk-enum.c:634
+#: ../src/gpk-enum.c:636
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
@@ -2223,15 +2479,15 @@ msgstr ""
 "Ezin da paketeen motorraren blokeo esklusiboa lortu.\n"
 "Itxi irekita egon daitezkeen paketeen beste edozer tresna."
 
-#: ../src/gpk-enum.c:638
+#: ../src/gpk-enum.c:640
 msgid "None of the selected packages could be updated."
 msgstr "Hautatutako paketeetariko bat bera ere ezin da eguneratu."
 
-#: ../src/gpk-enum.c:641
+#: ../src/gpk-enum.c:643
 msgid "The repository configuration could not be modified."
 msgstr "Biltegiaren konfigurazioa ezin izan da aldatu."
 
-#: ../src/gpk-enum.c:644
+#: ../src/gpk-enum.c:646
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
@@ -2239,11 +2495,11 @@ msgstr ""
 "Huts egin du fitxategi lokala instalatzean.\n"
 "Informazio gehiago dago eskuragarri txosten xehean."
 
-#: ../src/gpk-enum.c:648
+#: ../src/gpk-enum.c:650
 msgid "The package security signature could not be verified."
 msgstr "Ezin izan da paketearen segurtasuneko sinadura egiaztatu."
 
-#: ../src/gpk-enum.c:651
+#: ../src/gpk-enum.c:653
 msgid ""
 "The package security signature is missing and this package is untrusted.\n"
 "This package was not signed when created."
@@ -2251,11 +2507,11 @@ msgstr ""
 "Paketearen segurtasuneko sinadura falta da eta paketea ez da fidagarria.\n"
 "Pakete hau ez zen sinatu sortu zenean."
 
-#: ../src/gpk-enum.c:655
+#: ../src/gpk-enum.c:657
 msgid "Repository configuration was invalid and could not be read."
 msgstr "Biltegiaren konfigurazioa baliogabekoa da eta ezin izan da irakurri."
 
-#: ../src/gpk-enum.c:658
+#: ../src/gpk-enum.c:660
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
@@ -2263,25 +2519,25 @@ msgstr ""
 "Instalatzea saiatzean ari zaren paketea ez da baliozkoa.\n"
 "Paketearen fitxategia hondatuta egon daiteke, edo ez da pakete egoki bat."
 
-#: ../src/gpk-enum.c:662
+#: ../src/gpk-enum.c:664
 msgid ""
 "Installation of this package prevented by your packaging system's "
 "configuration."
 msgstr "Pakete-sistemaren konfigurazioak pakete hau instalatzea saihesten du."
 
-#: ../src/gpk-enum.c:665
+#: ../src/gpk-enum.c:667
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr ""
 "Deskargatutako paketea hondatuta dago, eta berriro deskargatu behar da."
 
-#: ../src/gpk-enum.c:668
+#: ../src/gpk-enum.c:670
 msgid ""
 "All of the packages selected for install are already installed on the system."
 msgstr ""
 "Instalatzeko hautatutako pakete guztiak jadanik sisteman instalatuta daude."
 
-#: ../src/gpk-enum.c:671
+#: ../src/gpk-enum.c:673
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
@@ -2289,7 +2545,7 @@ msgstr ""
 "Ezin izan da zehaztutako fitxategia sisteman aurkitu.\n"
 "Egiaztatu fitxategiak oraindik existitzen dela eta ez dela ezabatu."
 
-#: ../src/gpk-enum.c:675
+#: ../src/gpk-enum.c:677
 msgid ""
 "Required data could not be found on any of the configured software sources.\n"
 "There were no more download mirrors that could be tried."
@@ -2298,7 +2554,7 @@ msgstr ""
 "iturburuetan.\n"
 "Ez dago deskargako ispilu gehiago saiatzeko."
 
-#: ../src/gpk-enum.c:679
+#: ../src/gpk-enum.c:681
 msgid ""
 "Required upgrade data could not be found in any of the configured software "
 "sources.\n"
@@ -2308,12 +2564,12 @@ msgstr ""
 "softwareen iturburuetan.\n"
 "Banaketaren bertsio-berritzeko zerrenda eskurakaitz egon daiteke."
 
-#: ../src/gpk-enum.c:683
+#: ../src/gpk-enum.c:685
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
 msgstr "Instalatzea saiatzen ari den paketea sistema honekin bateraezina da."
 
-#: ../src/gpk-enum.c:686
+#: ../src/gpk-enum.c:688
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
@@ -2321,11 +2577,11 @@ msgstr ""
 "Ez dago nahikoa lekurik gailuak.\n"
 "Egin leku piskat sistemako diskoan eragiketa hau lantzeko."
 
-#: ../src/gpk-enum.c:690
+#: ../src/gpk-enum.c:692
 msgid "Additional media is required to complete the transaction."
 msgstr "Euskarri gehigarria behar da eragiketa osatzeko."
 
-#: ../src/gpk-enum.c:693
+#: ../src/gpk-enum.c:695
 msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
@@ -2333,7 +2589,7 @@ msgstr ""
 "Huts egin duzu autentifikatzean.\n"
 "Egiaztatu pasahitza edo kontuaren ezarpenak."
 
-#: ../src/gpk-enum.c:697
+#: ../src/gpk-enum.c:699
 msgid ""
 "The specified update could not be found.\n"
 "It could have already been installed or no longer available on the remote "
@@ -2343,27 +2599,27 @@ msgstr ""
 "Agian jadanik instalatuta dago, edo ez dago eskuragarri urruneko "
 "zerbitzarian."
 
-#: ../src/gpk-enum.c:701
+#: ../src/gpk-enum.c:703
 msgid "The package could not be installed from untrusted source."
 msgstr "Ezin izan da iturburu ez-fidagarri batetik paketea instalatu."
 
-#: ../src/gpk-enum.c:704
+#: ../src/gpk-enum.c:706
 msgid "The package could not be updated from untrusted source."
 msgstr "Ezin izan da iturburu ez-fidagarri batetik paketea eguneratu."
 
-#: ../src/gpk-enum.c:707
+#: ../src/gpk-enum.c:709
 msgid "The file list is not available for this package."
 msgstr "Pakete honen fitxategien zerrenda ez dago eskuragarri."
 
-#: ../src/gpk-enum.c:710
+#: ../src/gpk-enum.c:712
 msgid "The information about what requires this package could not be obtained."
 msgstr "Ezin izan da pakete honek behar duenari buruzko informaziorik lortu."
 
-#: ../src/gpk-enum.c:713
+#: ../src/gpk-enum.c:715
 msgid "The specified software source could not be disabled."
 msgstr "Ezin izan da zehaztutako softwareen iturburua desgaitu."
 
-#: ../src/gpk-enum.c:716
+#: ../src/gpk-enum.c:718
 msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
@@ -2371,7 +2627,7 @@ msgstr ""
 "Ezin izan da automatikoki deskargatu, eskuz egin beharko da.\n"
 "Informazio gehiago dago eskuragarri txosten xehean."
 
-#: ../src/gpk-enum.c:720
+#: ../src/gpk-enum.c:722
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
@@ -2379,7 +2635,7 @@ msgstr ""
 "Hautatutako pakete batek huts egin du zuzen konfiguratzean.\n"
 "Informazio gehiago dago eskuragarri txosten xehean."
 
-#: ../src/gpk-enum.c:724
+#: ../src/gpk-enum.c:726
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
@@ -2387,7 +2643,7 @@ msgstr ""
 "Hautatutako pakete batek huts egin du zuzen eraikitzean.\n"
 "Informazio gehiago dago eskuragarri txosten xehean."
 
-#: ../src/gpk-enum.c:728
+#: ../src/gpk-enum.c:730
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
@@ -2395,7 +2651,7 @@ msgstr ""
 "Hautatutako pakete batek huts egin du zuzen instalatzean.\n"
 "Informazio gehiago dago eskuragarri txosten xehean."
 
-#: ../src/gpk-enum.c:732
+#: ../src/gpk-enum.c:734
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
@@ -2403,7 +2659,7 @@ msgstr ""
 "Hautatutako pakete batek huts egin du zuzen kentzean.\n"
 "Informazio gehiago dago eskuragarri txosten xehean."
 
-#: ../src/gpk-enum.c:736
+#: ../src/gpk-enum.c:738
 msgid ""
 "A program is running that has to be closed before the update can proceed.\n"
 "More information is available in the detailed report."
@@ -2412,340 +2668,344 @@ msgstr ""
 "aurretik.\n"
 "Informazio gehiago dago eskuragarri txosten xehean."
 
-#: ../src/gpk-enum.c:740
+#: ../src/gpk-enum.c:742
 msgid "The package database was changed while the request was running."
 msgstr "Paketeen datu-basea aldatu egin da eskaera exekutatzen ari zenean."
 
-#: ../src/gpk-enum.c:743
+#: ../src/gpk-enum.c:745
 msgid "The virtual provide type is not supported by this system."
 msgstr "Sistema honek ez du emandako mota birtuala onartzen."
 
-#: ../src/gpk-enum.c:746
+#: ../src/gpk-enum.c:748
 msgid "The install root is invalid. Please contact your administrator."
 msgstr ""
 "Instalazioaren erroa baliogabea da. Jar zaitez administratzailearekin "
 "harremanetan."
 
-#: ../src/gpk-enum.c:749
+#: ../src/gpk-enum.c:751
 msgid "The list of software sources could not be downloaded."
 msgstr "Ezin izan da software iturrien zerrenda deskargatu."
 
-#: ../src/gpk-enum.c:752
+#: ../src/gpk-enum.c:754
+#| msgid ""
+#| "The transaction has been cancelled and will be retried when the system is "
+#| "idle."
 msgid ""
-"The transaction has been cancelled and will be retried when the system is "
+"The transaction has been canceled and will be retried when the system is "
 "idle."
 msgstr ""
 "Transakzioa bertan behera utzi da eta berriro saiatuko da sistema inaktibo "
 "dagoenean."
 
-#: ../src/gpk-enum.c:770
+#: ../src/gpk-enum.c:772
 msgid "No restart is necessary."
 msgstr "Ez da berrabiarazi behar."
 
-#: ../src/gpk-enum.c:773
+#: ../src/gpk-enum.c:775
 msgid "You will be required to restart this application."
 msgstr "Aplikazio hau berrabiaraztea eskatuko zaizu."
 
-#: ../src/gpk-enum.c:776
+#: ../src/gpk-enum.c:778
 msgid "You will be required to log out and back in."
 msgstr "Saioa amaitu eta berriro hastea eskatuko zaizu."
 
-#: ../src/gpk-enum.c:779
+#: ../src/gpk-enum.c:781
 msgid "A restart will be required."
 msgstr "Berrabiaraztea eskatuko da."
 
-#: ../src/gpk-enum.c:782
+#: ../src/gpk-enum.c:784
 msgid "You will be required to log out and back in due to a security update."
 msgstr ""
 "Saioa amaitu eta berriro hastea eskatuko zaizu, segurtasuneko eguneraketa "
 "bat dela eta."
 
-#: ../src/gpk-enum.c:785
+#: ../src/gpk-enum.c:787
 msgid "A restart will be required due to a security update."
 msgstr "Berrabiaraztea eskatuko zaizu, segurtasuneko eguneraketa bat dela eta."
 
-#: ../src/gpk-enum.c:802
+#: ../src/gpk-enum.c:804
 msgid "No restart is required."
 msgstr "Ez da berrabiarazterik behar."
 
-#: ../src/gpk-enum.c:805
+#: ../src/gpk-enum.c:807
 msgid "A restart is required."
 msgstr "Berrabiarazi behar da."
 
-#: ../src/gpk-enum.c:808
+#: ../src/gpk-enum.c:810
 msgid "You need to log out and log back in."
 msgstr "Saioa amaitu eta berriro hasi behar duzu."
 
-#: ../src/gpk-enum.c:811
+#: ../src/gpk-enum.c:813
 msgid "You need to restart the application."
 msgstr "Aplikazioa berrabiarazi behar duzu."
 
-#: ../src/gpk-enum.c:814
+#: ../src/gpk-enum.c:816
 msgid "You need to log out and log back in to remain secure."
 msgstr "Saioa amaitu eta berriro hasi behar duzu seguru mantentzeko."
 
-#: ../src/gpk-enum.c:817
+#: ../src/gpk-enum.c:819
 msgid "A restart is required to remain secure."
 msgstr "Berrabiarazi behar da seguru mantentzeko."
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:835
+#: ../src/gpk-enum.c:837
 msgid "Stable"
 msgstr "Egonkorra"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:839
+#: ../src/gpk-enum.c:841
 msgid "Unstable"
 msgstr "Desegonkorra"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:843
+#: ../src/gpk-enum.c:845
 msgid "Testing"
 msgstr "Probakoa"
 
-#: ../src/gpk-enum.c:860
+#: ../src/gpk-enum.c:862
 msgid "A mirror is possibly broken"
 msgstr "Baliteke ispilua hautsita egotea"
 
-#: ../src/gpk-enum.c:863
+#: ../src/gpk-enum.c:865
 msgid "The connection was refused"
 msgstr "Konexioa ukatu da"
 
-#: ../src/gpk-enum.c:866
+#: ../src/gpk-enum.c:868
 msgid "The parameter was invalid"
 msgstr "Parametroa baliogabea da"
 
-#: ../src/gpk-enum.c:869
+#: ../src/gpk-enum.c:871
 msgid "The priority was invalid"
 msgstr "Lehentasuna baliogabea da"
 
-#: ../src/gpk-enum.c:872
+#: ../src/gpk-enum.c:874
 msgid "Backend warning"
 msgstr "Motorraren abisua"
 
-#: ../src/gpk-enum.c:875
+#: ../src/gpk-enum.c:877
 msgid "Daemon warning"
 msgstr "Daemon-aren abisua"
 
-#: ../src/gpk-enum.c:878
+#: ../src/gpk-enum.c:880
 msgid "The package list cache is being rebuilt"
 msgstr "Paketeen zerrendaren cachea berriro eraikitzen ari da"
 
-#: ../src/gpk-enum.c:881
+#: ../src/gpk-enum.c:883
 msgid "An untrusted package was installed"
 msgstr "Pakete ez-fidagarri bat instalatu da"
 
-#: ../src/gpk-enum.c:884
+#: ../src/gpk-enum.c:886
 msgid "A newer package exists"
 msgstr "Pakete berriago bat existitzen da"
 
-#: ../src/gpk-enum.c:887
+#: ../src/gpk-enum.c:889
 msgid "Could not find package"
 msgstr "Ezin izan da paketea aurkitu"
 
-#: ../src/gpk-enum.c:890
+#: ../src/gpk-enum.c:892
 msgid "Configuration files were changed"
 msgstr "Konfigurazioko fitxategiak aldatu egin dira"
 
-#: ../src/gpk-enum.c:893
+#: ../src/gpk-enum.c:895
 msgid "Package is already installed"
 msgstr "Paketea jadanik instalatuta dago"
 
-#: ../src/gpk-enum.c:896
+#: ../src/gpk-enum.c:898
 msgid "Automatic cleanup is being ignored"
 msgstr "Garbiketa automatikoari ezikusi egiten ari zaio"
 
-#: ../src/gpk-enum.c:899
+#: ../src/gpk-enum.c:901
 msgid "Software source download failed"
 msgstr "Huts egin du softwareen iturburua deskargatzean"
 
-#: ../src/gpk-enum.c:902
+#: ../src/gpk-enum.c:904
 msgid "This software source is for developers only"
 msgstr "Softwareen iturburu hau garatzaileentzako da soilik"
 
-#: ../src/gpk-enum.c:905
+#: ../src/gpk-enum.c:907
 msgid "Other updates have been held back"
 msgstr "Beste eguneraketak atxikitu egin dira"
 
 #. TRANSLATORS: This is when the transaction status is not known
-#: ../src/gpk-enum.c:923
+#: ../src/gpk-enum.c:925
 msgid "Unknown state"
 msgstr "Egoera ezezaguna"
 
 #. TRANSLATORS: transaction state, the daemon is in the process of starting
-#: ../src/gpk-enum.c:927
+#: ../src/gpk-enum.c:929
 msgid "Starting"
 msgstr "Hasten"
 
 #. TRANSLATORS: transaction state, the transaction is waiting for another to complete
-#: ../src/gpk-enum.c:931
+#: ../src/gpk-enum.c:933
 msgid "Waiting in queue"
 msgstr "Ilaran zain"
 
 #. TRANSLATORS: transaction state, just started
-#: ../src/gpk-enum.c:935
+#: ../src/gpk-enum.c:937
 msgid "Running"
 msgstr "Exekutatzen"
 
 #. TRANSLATORS: transaction state, is querying data
-#: ../src/gpk-enum.c:939
+#: ../src/gpk-enum.c:941
 msgid "Querying"
 msgstr "Ilaratzen"
 
 #. TRANSLATORS: transaction state, getting data from a server
-#: ../src/gpk-enum.c:943
+#: ../src/gpk-enum.c:945
 msgid "Getting information"
 msgstr "Informazioa eskuratzen"
 
 #. TRANSLATORS: transaction state, downloading package files
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:951 ../src/gpk-enum.c:1395
+#: ../src/gpk-enum.c:953 ../src/gpk-enum.c:1397
 msgid "Downloading packages"
 msgstr "Paketeak deskargatzen"
 
 #. TRANSLATORS: transaction state, refreshing internal lists
-#: ../src/gpk-enum.c:959
+#: ../src/gpk-enum.c:961
 msgid "Refreshing software list"
 msgstr "Softwareen zerrenda freskatzen"
 
 #. TRANSLATORS: transaction state, installing updates
-#: ../src/gpk-enum.c:963
+#: ../src/gpk-enum.c:965
 msgid "Installing updates"
 msgstr "Eguneraketak instalatzen"
 
 #. TRANSLATORS: transaction state, removing old packages, and cleaning config files
-#: ../src/gpk-enum.c:967
+#: ../src/gpk-enum.c:969
 msgid "Cleaning up packages"
 msgstr "Paketeak garbitzen"
 
 #. TRANSLATORS: transaction state, obsoleting old packages
-#: ../src/gpk-enum.c:971
+#: ../src/gpk-enum.c:973
 msgid "Obsoleting packages"
 msgstr "Pakete zaharkituak hautematen"
 
 #. TRANSLATORS: transaction state, checking the transaction before we do it
-#: ../src/gpk-enum.c:975
+#: ../src/gpk-enum.c:977
 msgid "Resolving dependencies"
 msgstr "Mendekotasunak ebazten"
 
 #. TRANSLATORS: transaction state, checking if we have all the security keys for the operation
-#: ../src/gpk-enum.c:979
+#: ../src/gpk-enum.c:981
 msgid "Checking signatures"
 msgstr "Sinadurak egiaztatzen"
 
 #. TRANSLATORS: transaction state, when we return to a previous system state
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:983 ../src/gpk-enum.c:1355
+#: ../src/gpk-enum.c:985 ../src/gpk-enum.c:1357
 msgid "Rolling back"
 msgstr "Atzerantz jotzen"
 
 #. TRANSLATORS: transaction state, when we're doing a test transaction
-#: ../src/gpk-enum.c:987
+#: ../src/gpk-enum.c:989
 msgid "Testing changes"
 msgstr "Aldaketak probatzen"
 
 #. TRANSLATORS: transaction state, when we're writing to the system package database
-#: ../src/gpk-enum.c:991
+#: ../src/gpk-enum.c:993
 msgid "Committing changes"
 msgstr "Aldaketak ezartzen"
 
 #. TRANSLATORS: transaction state, requesting data from a server
-#: ../src/gpk-enum.c:995
+#: ../src/gpk-enum.c:997
 msgid "Requesting data"
 msgstr "Datuak eskatzen"
 
 #. TRANSLATORS: transaction state, all done!
-#: ../src/gpk-enum.c:999
+#: ../src/gpk-enum.c:1001
 msgid "Finished"
 msgstr "Amaituta"
 
-#. TRANSLATORS: transaction state, in the process of cancelling
-#: ../src/gpk-enum.c:1003
-msgid "Cancelling"
+#. TRANSLATORS: transaction state, in the process of canceling
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1005 ../src/gpk-enum.c:1353
+msgid "Canceling"
 msgstr "Bertan behera uzten"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1007
+#: ../src/gpk-enum.c:1009
 msgid "Downloading repository information"
 msgstr "Biltegiko informazioa deskargatzen"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1011
+#: ../src/gpk-enum.c:1013
 msgid "Downloading list of packages"
 msgstr "Paketeen zerrenda deskargatzen"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1015
+#: ../src/gpk-enum.c:1017
 msgid "Downloading file lists"
 msgstr "Fitxategien zerrenda deskargatzen"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1019
+#: ../src/gpk-enum.c:1021
 msgid "Downloading lists of changes"
 msgstr "Aldaketen zerrenda deskargatzen"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1023
+#: ../src/gpk-enum.c:1025
 msgid "Downloading groups"
 msgstr "Taldeak deskargatzen"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1027
+#: ../src/gpk-enum.c:1029
 msgid "Downloading update information"
 msgstr "Eguneraketen informazioa deskargatzen"
 
 #. TRANSLATORS: transaction state, repackaging delta files
-#: ../src/gpk-enum.c:1031
+#: ../src/gpk-enum.c:1033
 msgid "Repackaging files"
 msgstr "Fitxategiak birpaketatzen"
 
 #. TRANSLATORS: transaction state, loading databases
-#: ../src/gpk-enum.c:1035
+#: ../src/gpk-enum.c:1037
 msgid "Loading cache"
 msgstr "Cachea kargatzen"
 
 #. TRANSLATORS: transaction state, scanning for running processes
-#: ../src/gpk-enum.c:1039
+#: ../src/gpk-enum.c:1041
 msgid "Scanning installed applications"
 msgstr "Instalatutako aplikazioak eskaneatzen"
 
 #. TRANSLATORS: transaction state, generating a list of packages installed on the system
-#: ../src/gpk-enum.c:1043
+#: ../src/gpk-enum.c:1045
 msgid "Generating package lists"
 msgstr "Paketeen zerrenda sortzen"
 
 #. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
-#: ../src/gpk-enum.c:1047
+#: ../src/gpk-enum.c:1049
 msgid "Waiting for package manager lock"
 msgstr "Pakete-kudeatzailearen blokeoaren zain"
 
 #. TRANSLATORS: waiting for user to type in a password
-#: ../src/gpk-enum.c:1051
+#: ../src/gpk-enum.c:1053
 msgid "Waiting for authentication"
 msgstr "Autentifikazioaren zain"
 
 #. TRANSLATORS: we are updating the list of processes
-#: ../src/gpk-enum.c:1055
+#: ../src/gpk-enum.c:1057
 msgid "Updating the list of running applications"
 msgstr "Exekutatzen ari diren aplikazioen zerrenda eguneratzen"
 
 #. TRANSLATORS: we are checking executable files in use
-#: ../src/gpk-enum.c:1059
+#: ../src/gpk-enum.c:1061
 msgid "Checking for applications currently in use"
 msgstr "Unean erabiltzen ari diren aplikazioak begiratzen"
 
 #. TRANSLATORS: we are checking for libraries in use
-#: ../src/gpk-enum.c:1063
+#: ../src/gpk-enum.c:1065
 msgid "Checking for libraries currently in use"
 msgstr "Unean erabiltzen ari diren liburutegiak begiratzen"
 
 #. TRANSLATORS: we are copying package files to prepare to install
-#: ../src/gpk-enum.c:1067
+#: ../src/gpk-enum.c:1069
 msgid "Copying files"
 msgstr "Fitxategiak kopiatzen"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1085
+#: ../src/gpk-enum.c:1087
 #, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
@@ -2753,7 +3013,7 @@ msgstr[0] "eguneraketa xume %i"
 msgstr[1] "%i eguneraketa xume"
 
 #. TRANSLATORS: type of update in the case that we don't have any data
-#: ../src/gpk-enum.c:1089
+#: ../src/gpk-enum.c:1091
 #, c-format
 msgid "%i update"
 msgid_plural "%i updates"
@@ -2761,7 +3021,7 @@ msgstr[0] "eguneraketa %i"
 msgstr[1] "%i eguneraketa"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1093
+#: ../src/gpk-enum.c:1095
 #, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
@@ -2769,7 +3029,7 @@ msgstr[0] "eguneraketa garrantzitsu %i"
 msgstr[1] "%i eguneraketa garrantzitsu"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1097
+#: ../src/gpk-enum.c:1099
 #, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
@@ -2777,7 +3037,7 @@ msgstr[0] "segurtasuneko eguneraketa %i"
 msgstr[1] "segurtasuneko %i eguneraketa"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1101
+#: ../src/gpk-enum.c:1103
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
@@ -2785,7 +3045,7 @@ msgstr[0] "akatsak konpontzeko eguneraketa %i"
 msgstr[1] "akatsak konpontzeko %i eguneraketa"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1105
+#: ../src/gpk-enum.c:1107
 #, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
@@ -2793,7 +3053,7 @@ msgstr[0] "hobekuntzarako eguneraketa %i"
 msgstr[1] "hobekuntzarako %i eguneraketa"
 
 #. TRANSLATORS: number of updates that cannot be installed due to deps
-#: ../src/gpk-enum.c:1109
+#: ../src/gpk-enum.c:1111
 #, c-format
 msgid "%i blocked update"
 msgid_plural "%i blocked updates"
@@ -2801,645 +3061,665 @@ msgstr[0] "blokeatutako eguneraketa %i"
 msgstr[1] "blokeatutako %i eguneraketa"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1127
+#: ../src/gpk-enum.c:1129
 msgid "Trivial update"
 msgstr "Eguneraketa xumea"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1131
+#: ../src/gpk-enum.c:1133
 msgid "Normal update"
 msgstr "Eguneraketa arrunta"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1135
+#: ../src/gpk-enum.c:1137
 msgid "Important update"
 msgstr "Eguneraketa garrantzitsua"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1139
+#: ../src/gpk-enum.c:1141
 msgid "Security update"
 msgstr "Segurtasuneko eguneraketa"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1143
+#: ../src/gpk-enum.c:1145
 msgid "Bug fix update"
 msgstr "Akatsak konpontzeko eguneraketa"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1147
+#: ../src/gpk-enum.c:1149
 msgid "Enhancement update"
 msgstr "Hobekuntzarako eguneraketa"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1151
+#: ../src/gpk-enum.c:1153
 msgid "Blocked update"
 msgstr "Blokeatutako eguneraketa"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
-#: ../src/gpk-enum.c:1161
+#: ../src/gpk-enum.c:1163
 msgid "Available"
 msgstr "Eskuragarri"
 
 #. TRANSLATORS: The type of package
-#: ../src/gpk-enum.c:1165
+#: ../src/gpk-enum.c:1167
 msgid "Trusted"
 msgstr "Konfiantzazkoa"
 
 #. TRANSLATORS: The type of package
-#: ../src/gpk-enum.c:1169
+#: ../src/gpk-enum.c:1171
 msgid "Untrusted"
 msgstr "Konfiantzarik gabekoa"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1187 ../src/gpk-service-pack.c:441
+#: ../src/gpk-enum.c:1189 ../src/gpk-service-pack.c:441
 msgid "Downloading"
 msgstr "Deskargatzen"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1191
+#: ../src/gpk-enum.c:1193
 msgid "Updating"
 msgstr "Eguneratzen"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1195 ../src/gpk-enum.c:1331
+#: ../src/gpk-enum.c:1197 ../src/gpk-enum.c:1333
 msgid "Installing"
 msgstr "Instalatzen"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1199 ../src/gpk-enum.c:1327
+#: ../src/gpk-enum.c:1201 ../src/gpk-enum.c:1329
 msgid "Removing"
 msgstr "Kentzen"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1203
+#: ../src/gpk-enum.c:1205
 msgid "Cleaning up"
 msgstr "Garbitzen"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1207
+#: ../src/gpk-enum.c:1209
 msgid "Obsoleting"
 msgstr "Zaharkituak hautematen"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1211
+#: ../src/gpk-enum.c:1213
 msgid "Reinstalling"
 msgstr "Berrinstalatzen"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1215
+#: ../src/gpk-enum.c:1217
 msgid "Preparing"
 msgstr "Prestatzen"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1219
+#: ../src/gpk-enum.c:1221
 msgid "Decompressing"
 msgstr "Deskonprimatzen"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1237
+#: ../src/gpk-enum.c:1239
 msgid "Downloaded"
 msgstr "Deskargatuta"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1241
+#: ../src/gpk-enum.c:1243
 msgid "Updated"
 msgstr "Eguneratuta"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1249
+#: ../src/gpk-enum.c:1251
 msgid "Removed"
 msgstr "Kenduta"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1253
+#: ../src/gpk-enum.c:1255
 msgid "Cleaned up"
 msgstr "Garbituta"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1257 ../src/gpk-task.c:415
+#: ../src/gpk-enum.c:1259 ../src/gpk-task.c:415
 msgid "Obsoleted"
 msgstr "Zaharkituak hautemanda"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1261
+#: ../src/gpk-enum.c:1263
 msgid "Reinstalled"
 msgstr "Berrinstalatuta"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1265
+#: ../src/gpk-enum.c:1267
 msgid "Prepared"
 msgstr "Prestatuta"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1269
+#: ../src/gpk-enum.c:1271
 msgid "Decompressed"
 msgstr "Deskonprimatuta"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1287 ../src/gpk-enum.c:1447
+#: ../src/gpk-enum.c:1289 ../src/gpk-enum.c:1457
 msgid "Unknown role type"
 msgstr "Izaera mota ezezaguna"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1291
+#: ../src/gpk-enum.c:1293
 msgid "Getting dependencies"
 msgstr "Mendekotasunak eskuratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1295
+#: ../src/gpk-enum.c:1297
 msgid "Getting update detail"
 msgstr "Eguneraketaren xehetasunak eskuratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1299
+#: ../src/gpk-enum.c:1301
 msgid "Getting details"
 msgstr "Xehetasunak eskuratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1303
+#: ../src/gpk-enum.c:1305
 msgid "Getting requires"
 msgstr "Eskaerak eskuratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1307
+#: ../src/gpk-enum.c:1309
 msgid "Getting updates"
 msgstr "Eguneraketak eskuratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1311
+#: ../src/gpk-enum.c:1313
 msgid "Searching details"
 msgstr "Xehetasunak bilatzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1319
+#: ../src/gpk-enum.c:1321
 msgid "Searching groups"
 msgstr "Taldeak bilatzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1323
+#: ../src/gpk-enum.c:1325
 msgid "Searching for package name"
 msgstr "Paketearen izena bilatzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1335
+#: ../src/gpk-enum.c:1337
 msgid "Installing file"
 msgstr "Fitxategia instalatzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1339
+#: ../src/gpk-enum.c:1341
 msgid "Refreshing package cache"
 msgstr "Paketeen cachea freskatzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1343
+#: ../src/gpk-enum.c:1345
 msgid "Updating packages"
 msgstr "Paketeak eguneratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1347
+#: ../src/gpk-enum.c:1349
 msgid "Updating system"
 msgstr "Sistema eguneratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1351
-msgid "Canceling"
-msgstr "Bertan behera uzten"
-
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1359
+#: ../src/gpk-enum.c:1361
 msgid "Getting list of repositories"
 msgstr "Biltegien zerrenda eskuratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1363
+#: ../src/gpk-enum.c:1365
 msgid "Enabling repository"
 msgstr "Biltegia gaitzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1367
+#: ../src/gpk-enum.c:1369
 msgid "Setting repository data"
 msgstr "Biltegiaren datuak ezartzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1371
+#: ../src/gpk-enum.c:1373
 msgid "Resolving"
 msgstr "Ebazten"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1375
+#: ../src/gpk-enum.c:1377
 msgid "Getting file list"
 msgstr "Fitxategien zerrenda eskuratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1379
+#: ../src/gpk-enum.c:1381
 msgid "Getting what provides"
 msgstr "Eskaintzen duena eskuratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1383
+#: ../src/gpk-enum.c:1385
 msgid "Installing signature"
 msgstr "Sinadura instalatzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1387
+#: ../src/gpk-enum.c:1389
 msgid "Getting package lists"
 msgstr "Paketeen zerrendak eskuratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1391
+#: ../src/gpk-enum.c:1393
 msgid "Accepting EULA"
 msgstr "EULA onartzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1399
+#: ../src/gpk-enum.c:1401
 msgid "Getting distribution upgrade information"
 msgstr "Banaketaren bertsio-berritzearen informazioa eskuratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1403
+#: ../src/gpk-enum.c:1405
 msgid "Getting categories"
 msgstr "Kategoriak eskuratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1407
+#: ../src/gpk-enum.c:1409
 msgid "Getting old transactions"
 msgstr "Transakzio zaharrak eskuratzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1411
+#: ../src/gpk-enum.c:1413
 msgid "Simulating the install of files"
 msgstr "Fitxategien instalazioa simulatzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1415
+#: ../src/gpk-enum.c:1417
 msgid "Simulating the install"
 msgstr "Instalazioa simulatzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1419
+#: ../src/gpk-enum.c:1421
 msgid "Simulating the remove"
 msgstr "Kentzea simulatzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1423
+#: ../src/gpk-enum.c:1425
 msgid "Simulating the update"
 msgstr "Eguneraketa simulatzen"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1427
+#: ../src/gpk-enum.c:1429
 msgid "Upgrading system"
 msgstr "Sistema bertsio-berritzen"
 
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1433
+#| msgid "Simulating the remove"
+msgid "Simulating the system repair"
+msgstr "Sistemaren konponketa simulatzen"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1437
+#| msgid "Updating system"
+msgid "Repairing the system"
+msgstr "Sistema konpontzen"
+
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1451
+#: ../src/gpk-enum.c:1461
 msgid "Got dependencies"
 msgstr "Mendekotasunak lortuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1455
+#: ../src/gpk-enum.c:1465
 msgid "Got update detail"
 msgstr "Eguneraketaren xehetasunak lortuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1459
+#: ../src/gpk-enum.c:1469
 msgid "Got details"
 msgstr "Xehetasunak lortuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1463
+#: ../src/gpk-enum.c:1473
 msgid "Got requires"
 msgstr "Eskaerak lortuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1467
+#: ../src/gpk-enum.c:1477
 msgid "Got updates"
 msgstr "Eguneraketak lortuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1471
+#: ../src/gpk-enum.c:1481
 msgid "Searched for package details"
 msgstr "Paketearen xehetasunak bilatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1475
+#: ../src/gpk-enum.c:1485
 msgid "Searched for file"
 msgstr "Fitxategia bilatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1479
+#: ../src/gpk-enum.c:1489
 msgid "Searched groups"
 msgstr "Taldeak bilatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1483
+#: ../src/gpk-enum.c:1493
 msgid "Searched for package name"
 msgstr "Paketearen izena bilatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1487
+#: ../src/gpk-enum.c:1497
 msgid "Removed packages"
 msgstr "Paketeak kenduta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1491
+#: ../src/gpk-enum.c:1501
 msgid "Installed packages"
 msgstr "Paketeak instalatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1495
+#: ../src/gpk-enum.c:1505
 msgid "Installed local files"
 msgstr "Fitxategi lokalak instalatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1499
+#: ../src/gpk-enum.c:1509
 msgid "Refreshed package cache"
 msgstr "Paketeen cachea freskatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1503
+#: ../src/gpk-enum.c:1513
 msgid "Updated packages"
 msgstr "Paketeak eguneratuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1507
+#: ../src/gpk-enum.c:1517
 msgid "Updated system"
 msgstr "Sistema eguneratuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1511
+#: ../src/gpk-enum.c:1521
 msgid "Canceled"
 msgstr "Bertan behera utzita"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1515
+#: ../src/gpk-enum.c:1525
 msgid "Rolled back"
 msgstr "Atzera jota"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1519
+#: ../src/gpk-enum.c:1529
 msgid "Got list of repositories"
 msgstr "Biltegien zerrenda lortuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1523
+#: ../src/gpk-enum.c:1533
 msgid "Enabled repository"
 msgstr "Biltegia gaituta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1527
+#: ../src/gpk-enum.c:1537
 msgid "Set repository data"
 msgstr "Biltegiaren datuak ezarrita"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1531
+#: ../src/gpk-enum.c:1541
 msgid "Resolved"
 msgstr "Ebatzita"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1535
+#: ../src/gpk-enum.c:1545
 msgid "Got file list"
 msgstr "Fitxategien zerrenda lortuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1539
+#: ../src/gpk-enum.c:1549
 msgid "Got what provides"
 msgstr "Eskaintzen duena lortuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1543
+#: ../src/gpk-enum.c:1553
 msgid "Installed signature"
 msgstr "Sinadura instalatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1547
+#: ../src/gpk-enum.c:1557
 msgid "Got package lists"
 msgstr "Paketeen zerrenda lortuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1551
+#: ../src/gpk-enum.c:1561
 msgid "Accepted EULA"
 msgstr "EULA onartuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1555
+#: ../src/gpk-enum.c:1565
 msgid "Downloaded packages"
 msgstr "Paketeak deskargatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1559
+#: ../src/gpk-enum.c:1569
 msgid "Got distribution upgrades"
 msgstr "Banaketaren bertsio-berritzeak lortuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1563
+#: ../src/gpk-enum.c:1573
 msgid "Got categories"
 msgstr "Kategoriak lortuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1567
+#: ../src/gpk-enum.c:1577
 msgid "Got old transactions"
 msgstr "Transakzio zaharrak lortuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1571
+#: ../src/gpk-enum.c:1581
 msgid "Simulated the install of files"
 msgstr "Fitxategien instalazioa simulatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1575
+#: ../src/gpk-enum.c:1585
 msgid "Simulated the install"
 msgstr "Instalazioa simulatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1579
+#: ../src/gpk-enum.c:1589
 msgid "Simulated the remove"
 msgstr "Kentzea simulatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1583
+#: ../src/gpk-enum.c:1593
 msgid "Simulated the update"
 msgstr "Eguneraketa simulatuta"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1587
+#: ../src/gpk-enum.c:1597
 msgid "Upgraded system"
 msgstr "Sistema bertsio-berrituta"
 
-#. TRANSLATORS: The group type
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1601
+#| msgid "Simulated the remove"
+msgid "Simulated the system repair"
+msgstr "Sistemaren konponketa simulatuta"
+
+#. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1605
+#| msgid "Updated system"
+msgid "Repaired the system"
+msgstr "Sistema konponduta"
+
+#. TRANSLATORS: The group type
+#: ../src/gpk-enum.c:1623
 msgid "Accessibility"
 msgstr "Erabilgarritasuna"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1609
+#: ../src/gpk-enum.c:1627
 msgid "Accessories"
 msgstr "Gehigarriak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1613
+#: ../src/gpk-enum.c:1631
 msgid "Education"
 msgstr "Hezkuntza"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1617
+#: ../src/gpk-enum.c:1635
 msgid "Games"
 msgstr "Jokoak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1621
+#: ../src/gpk-enum.c:1639
 msgid "Graphics"
 msgstr "Grafikoak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1625
+#: ../src/gpk-enum.c:1643
 msgid "Internet"
 msgstr "Internet"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1629
+#: ../src/gpk-enum.c:1647
 msgid "Office"
 msgstr "Bulegoa"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1633 ../src/gpk-task.c:435
+#: ../src/gpk-enum.c:1651 ../src/gpk-task.c:435
 msgid "Other"
 msgstr "Bestelakoak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1637
+#: ../src/gpk-enum.c:1655
 msgid "Programming"
 msgstr "Programazioa"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1641
+#: ../src/gpk-enum.c:1659
 msgid "Multimedia"
 msgstr "Multimedia"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1645
+#: ../src/gpk-enum.c:1663
 msgid "System"
 msgstr "Sistema"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1649
+#: ../src/gpk-enum.c:1667
 msgid "GNOME desktop"
 msgstr "GNOME mahaigaina"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1653
+#: ../src/gpk-enum.c:1671
 msgid "KDE desktop"
 msgstr "KDE mahaigaina"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1657
-msgid "XFCE desktop"
-msgstr "XFCE mahaigaina"
+#: ../src/gpk-enum.c:1675
+#| msgid "XFCE desktop"
+msgid "Xfce desktop"
+msgstr "Xfce mahaigaina"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1661
+#: ../src/gpk-enum.c:1679
 msgid "Other desktops"
 msgstr "Beste mahaigainak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1665
+#: ../src/gpk-enum.c:1683
 msgid "Publishing"
 msgstr "Argitaratzea"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1669
+#: ../src/gpk-enum.c:1687
 msgid "Servers"
 msgstr "Zerbitzariak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1673
+#: ../src/gpk-enum.c:1691
 msgid "Fonts"
 msgstr "Letra-tipoak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1677
+#: ../src/gpk-enum.c:1695
 msgid "Admin tools"
 msgstr "Administrazioko tresnak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1681
+#: ../src/gpk-enum.c:1699
 msgid "Legacy"
 msgstr "Zaharrak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1685
+#: ../src/gpk-enum.c:1703
 msgid "Localization"
 msgstr "Lokalizazioa"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1689
+#: ../src/gpk-enum.c:1707
 msgid "Virtualization"
 msgstr "Birtualizazioa"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1693
+#: ../src/gpk-enum.c:1711
 msgid "Security"
 msgstr "Segurtasuna"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1697
+#: ../src/gpk-enum.c:1715
 msgid "Power management"
 msgstr "Energiaren kudeaketa"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1701
+#: ../src/gpk-enum.c:1719
 msgid "Communication"
 msgstr "Komunikazioa"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1705
+#: ../src/gpk-enum.c:1723
 msgid "Network"
 msgstr "Sarea"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1709
+#: ../src/gpk-enum.c:1727
 msgid "Maps"
 msgstr "Mapak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1713
+#: ../src/gpk-enum.c:1731
 msgid "Software sources"
 msgstr "Softwareen iturburuak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1717
+#: ../src/gpk-enum.c:1735
 msgid "Science"
 msgstr "Zientzia"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1721
+#: ../src/gpk-enum.c:1739
 msgid "Documentation"
 msgstr "Dokumentazioa"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1725
+#: ../src/gpk-enum.c:1743
 msgid "Electronics"
 msgstr "Elektronika"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1729
+#: ../src/gpk-enum.c:1747
 msgid "Package collections"
 msgstr "Pakete bildumak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1733
+#: ../src/gpk-enum.c:1751
 msgid "Vendor"
 msgstr "Hornitzailea"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1737
+#: ../src/gpk-enum.c:1755
 msgid "Newest packages"
 msgstr "Pakete berrienak"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1741
+#: ../src/gpk-enum.c:1759
 msgid "Unknown group"
 msgstr "Talde ezezaguna"
 
@@ -3619,12 +3899,13 @@ msgstr "Katalogoen instalatzailea"
 msgid "Failed to install catalog"
 msgstr "Huts egin du katalogoa instalatzean"
 
-#. TRANSLATORS: no filename was supplied
-#: ../src/gpk-install-catalog.c:85
+#. TRANSLATORS: no file name was supplied
+#. TRANSLATORS: nothing was specified
+#: ../src/gpk-install-catalog.c:85 ../src/gpk-install-provide-file.c:85
 msgid "You need to specify a file name to install"
 msgstr "Fitxategi-izena zehaztu behar duzu instalatzeko"
 
-#. TRANSLATORS: This is when the specified DBus method did not execute successfully
+#. TRANSLATORS: This is when the specified D-Bus method did not execute successfully
 #: ../src/gpk-install-catalog.c:118 ../src/gpk-install-local-file.c:118
 #: ../src/gpk-install-mime-type.c:118 ../src/gpk-install-package-name.c:117
 #: ../src/gpk-install-provide-file.c:118
@@ -3686,7 +3967,8 @@ msgstr "Huts egin du programa bat instalatzean fitxategi mota hau kudeatzeko"
 
 #. TRANSLATORS: no type given
 #: ../src/gpk-install-mime-type.c:85
-msgid "You need to specify a mime-type to install"
+#| msgid "You need to specify a mime-type to install"
+msgid "You need to specify a mime type to install"
 msgstr "MIME mota zehaztu behar duzu instalatzeko"
 
 #: ../src/gpk-install-package-name.c:50
@@ -3720,11 +4002,6 @@ msgstr "Fitxategi lokalak instalatzeko"
 msgid "Single File Installer"
 msgstr "Fitxategi bakunen instalatzailea"
 
-#. TRANSLATORS: nothig was specified
-#: ../src/gpk-install-provide-file.c:85
-msgid "You need to specify a filename to install"
-msgstr "Fitxategi-izena zehaztu behar duzu instalatzeko"
-
 #. TRANSLATORS: strftime formatted please
 #: ../src/gpk-log.c:171
 msgid "%d %B %Y"
@@ -3735,9 +4012,10 @@ msgstr "%Y/%B/%d"
 msgid "Date"
 msgstr "Data"
 
-#. TRANSLATORS: column for the username, e.g. Richard Hughes
+#. TRANSLATORS: column for the user name, e.g. Richard Hughes
 #: ../src/gpk-log.c:328
-msgid "Username"
+#| msgid "Username"
+msgid "User name"
 msgstr "Erabiltzaile-izena"
 
 #. TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs
@@ -3765,18 +4043,24 @@ msgstr "Eguneratu ikonoa"
 msgid "Bash - Command Not Found"
 msgstr "Bash - Komandoa ez da aurkitu"
 
+#. TRANSLATORS: user friendly name for gnome-settings-daemon
+#: ../src/gpk-log.c:510
+#| msgid "GNOME desktop"
+msgid "GNOME Session"
+msgstr "GNOMEren saioa"
+
 #. TRANSLATORS: preset the GtktextBox with this filter text
-#: ../src/gpk-log.c:821
+#: ../src/gpk-log.c:810
 msgid "Set the filter to this value"
 msgstr "Ezarri iragazkia balio honekin"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:824 ../src/gpk-prefs.c:938
+#: ../src/gpk-log.c:813 ../src/gpk-prefs.c:925
 msgid "Set the parent window to make this modal"
 msgstr "Ezarri leiho gurasoa modu hau jartzeko"
 
 #. are we running privileged
-#: ../src/gpk-log.c:848
+#: ../src/gpk-log.c:837
 msgid "Log viewer"
 msgstr "Egunkariaren ikustailea"
 
@@ -3841,7 +4125,7 @@ msgid "Failed to get the list of sources"
 msgstr "Huts egin du iturburuen zerrenda lortzean"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3100
+#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3104
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Irtetzen, motorraren xehetasunak ezin direlako eskuratu"
 
@@ -3892,7 +4176,7 @@ msgstr "Ezin da sistemako paketeen zerrenda kopiatu"
 msgid "No package name selected"
 msgstr "Ez da paketearen izenik hautatu"
 
-#. TRANSLATORS: progressbar text
+#. TRANSLATORS: progress bar text
 #: ../src/gpk-service-pack.c:573
 msgid "Refreshing system package array"
 msgstr "Sistemako paketearen zerrenda freskatzen"
@@ -3911,44 +4195,45 @@ msgid "Cannot read destination package array"
 msgstr "Ezin da helburuko paketeen zerrenda irakurri"
 
 #. TRANSLATORS: file search type, lists of packages
-#: ../src/gpk-service-pack.c:746
+#: ../src/gpk-service-pack.c:732
 msgid "Package array files"
 msgstr "Paketeen zerrendaren fitxategiak"
 
 #. TRANSLATORS: file search type, service pack destination file type
-#: ../src/gpk-service-pack.c:753
+#: ../src/gpk-service-pack.c:739
 msgid "Service pack files"
 msgstr "Zerbitzuko paketeen fitxategiak"
 
 #. TRANSLATORS: the constants should not be translated
-#: ../src/gpk-service-pack.c:813
+#: ../src/gpk-service-pack.c:799
 msgid "Set the option, allowable values are 'array', 'updates' and 'package'"
 msgstr ""
 "Ezarri aukera. Balio erabilgarriak: 'array' (zerrenda), "
 "'updates' (eguneraketak) eta 'package' (paketea)"
 
 #. TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack
-#: ../src/gpk-service-pack.c:816
+#: ../src/gpk-service-pack.c:802
 msgid "Add the package name to the text entry box"
 msgstr "Gehitu paketearen izena testu-koadroan"
 
 #. TRANSLATORS: this is the destination computer package array
-#: ../src/gpk-service-pack.c:819
-msgid "Set the remote package array filename"
+#: ../src/gpk-service-pack.c:805
+#| msgid "Set the remote package array filename"
+msgid "Set the remote package array file name"
 msgstr "Ezarri urruneko paketeen zerrendaren fitxategi-izena"
 
 #. TRANSLATORS: this is the file output directory
-#: ../src/gpk-service-pack.c:822
+#: ../src/gpk-service-pack.c:808
 msgid "Set the default output directory"
 msgstr "Ezarri irteerako direktorio lehenetsia"
 
 #. TRANSLATORS: we don't have a lot to go on here
-#: ../src/gpk-update-viewer.c:178
+#: ../src/gpk-update-viewer.c:187
 msgid "Failed to process request."
 msgstr "Huts egin du eskaera prozesatzean."
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:206
+#: ../src/gpk-update-viewer.c:215
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "before the changes will be applied."
@@ -3957,12 +4242,12 @@ msgstr ""
 "dute aldaketak aplikatu baino lehen."
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:208 ../src/gpk-update-viewer.c:214
+#: ../src/gpk-update-viewer.c:217 ../src/gpk-update-viewer.c:223
 msgid "Restart Computer"
 msgstr "Berrabiarazi ordenagailua"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:212
+#: ../src/gpk-update-viewer.c:221
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "to remain secure."
@@ -3970,8 +4255,8 @@ msgstr ""
 "Instalatu diren eguneraketetako batzuk ordenagailua berrabiaraztea eskatzen "
 "dute seguru mantentzeko."
 
-#. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:218
+#. TRANSLATORS: the message text for the log out
+#: ../src/gpk-update-viewer.c:227
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "before the changes will be applied."
@@ -3979,13 +4264,13 @@ msgstr ""
 "Instalatu diren eguneraketetako batzuk saioa amaitzea eta berriro hastea "
 "eskatzen dizute aldaketak aplikatu baino lehen."
 
-#. TRANSLATORS: the button text for the logout
-#: ../src/gpk-update-viewer.c:220 ../src/gpk-update-viewer.c:226
+#. TRANSLATORS: the button text for the log out
+#: ../src/gpk-update-viewer.c:229 ../src/gpk-update-viewer.c:235
 msgid "Log Out"
 msgstr "Amaitu saioa"
 
-#. TRANSLATORS: the message text for the logout
-#: ../src/gpk-update-viewer.c:224
+#. TRANSLATORS: the message text for the log out
+#: ../src/gpk-update-viewer.c:233
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "to remain secure."
@@ -3994,84 +4279,84 @@ msgstr ""
 "eskatzen dizute seguru mantentzeko."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:266
+#: ../src/gpk-update-viewer.c:283
 msgid "Could not restart"
 msgstr "Ezin izan da berrabiarazi"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:334
+#: ../src/gpk-update-viewer.c:351
 msgid "Some updates were not installed"
 msgstr "Eguneraketa batzuk ez dira instalatu"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:403 ../src/gpk-update-viewer.c:414
+#: ../src/gpk-update-viewer.c:420 ../src/gpk-update-viewer.c:431
 msgid "Could not update packages"
 msgstr "Ezin izan dira paketeak eguneratu"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:482 ../src/gpk-update-viewer.c:503
+#: ../src/gpk-update-viewer.c:499 ../src/gpk-update-viewer.c:520
 msgid "Updates installed"
 msgstr "Eguneraketak instalatuta"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:492
+#: ../src/gpk-update-viewer.c:509
 msgid "All updates were installed successfully."
 msgstr "Eguneraketa guztiak ongi instalatu dira."
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:495
+#: ../src/gpk-update-viewer.c:512
 msgid "The selected updates were installed successfully."
 msgstr "Hautatutako eguneraketak ongi instalatu dira."
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:713
+#: ../src/gpk-update-viewer.c:727
 msgid "Trivial updates"
 msgstr "Eguneraketa xumeak"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:717
+#: ../src/gpk-update-viewer.c:731
 msgid "Important updates"
 msgstr "Eguneraketa garrantzitsuak"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:721
+#: ../src/gpk-update-viewer.c:735
 msgid "Security updates"
 msgstr "Segurtasuneko eguneraketak"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:725
+#: ../src/gpk-update-viewer.c:739
 msgid "Bug fix updates"
 msgstr "Akatsak konpontzeko eguneraketak"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:729
+#: ../src/gpk-update-viewer.c:743
 msgid "Enhancement updates"
 msgstr "Hobekuntzarako eguneraketak"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:733
+#: ../src/gpk-update-viewer.c:747
 msgid "Blocked updates"
 msgstr "Blokeatutako eguneraketak"
 
 #. TRANSLATORS: The type of update, i.e. unspecified
-#: ../src/gpk-update-viewer.c:737
+#: ../src/gpk-update-viewer.c:751
 msgid "Other updates"
 msgstr "Bestelako eguneraketak"
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1001
+#: ../src/gpk-update-viewer.c:1014
 msgid "Getting the list of updates"
 msgstr "Eguneraketen zerrenda eskuratzen"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1242
+#: ../src/gpk-update-viewer.c:1255
 msgid "Could not run upgrade script"
 msgstr "Ezin izan da bertsio-berritzeko script-a exekutatu"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1291
+#: ../src/gpk-update-viewer.c:1294
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4086,38 +4371,38 @@ msgstr[1] ""
 "daiteke pakete hauek eguneratzea."
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1381
+#: ../src/gpk-update-viewer.c:1384
 msgid "There are no updates available"
 msgstr "Ez dago eguneraketarik eskuragarri"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1439
+#: ../src/gpk-update-viewer.c:1443
 msgid "No updates are available"
 msgstr "Ez dago eguneraketarik eskuragarri"
 
-#. TRANSLATORS: no network connnection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1441
+#. TRANSLATORS: no network connection, according to PackageKit
+#: ../src/gpk-update-viewer.c:1445
 msgid "No network connection was detected."
 msgstr "Ez da sareko konexiorik hauteman."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1458
+#: ../src/gpk-update-viewer.c:1462
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Instalatu eguneraketa"
 msgstr[1] "_Instalatu eguneraketak"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1466
+#: ../src/gpk-update-viewer.c:1470
 msgid "All software is up to date"
 msgstr "Software guztia eguneratuta dago"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1468
+#: ../src/gpk-update-viewer.c:1472
 msgid "There are no software updates available for your computer at this time."
 msgstr "Oraingoan, ez dago eguneraketarik eskuragarri ordenagailuarentzako."
 
-#: ../src/gpk-update-viewer.c:1494
+#: ../src/gpk-update-viewer.c:1498
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4125,7 +4410,7 @@ msgstr[0] "Eguneraketa %i eskuragarri"
 msgstr[1] "%i eguneraketa eskuragarri"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1510
+#: ../src/gpk-update-viewer.c:1514
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4133,7 +4418,7 @@ msgstr[0] "Eguneraketa %i hautatuta"
 msgstr[1] "%i eguneraketa hautatuta"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1518
+#: ../src/gpk-update-viewer.c:1522
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4141,46 +4426,46 @@ msgstr[0] "Eguneraketa %i hautatuta (%s)"
 msgstr[1] "%i eguneraketa hautatuta (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1715
+#: ../src/gpk-update-viewer.c:1719
 msgid "Status"
 msgstr "Egoera"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1938
+#: ../src/gpk-update-viewer.c:1942
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Eguneraketa honek akatsak eta beste arazo ez-larriak konponduko ditu."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1942
+#: ../src/gpk-update-viewer.c:1946
 msgid "This update is important as it may solve critical problems."
 msgstr "Eguneraketa hau garrantzitsua da arazo larriak konponduko dituelako."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1946
+#: ../src/gpk-update-viewer.c:1950
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
 "Eguneraketa hau beharrezkoa da pakete honen segurtasun ahulezia konpontzeko."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1950
+#: ../src/gpk-update-viewer.c:1954
 msgid "This update is blocked."
 msgstr "Eguneraketa hau blokeatuta dago."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1962
+#: ../src/gpk-update-viewer.c:1966
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Jakinarazpen honen igorpen-data: %s. Azken eguneraketa: %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1969
+#: ../src/gpk-update-viewer.c:1973
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Jakinarazpen honen igorpen-data: %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1991
+#: ../src/gpk-update-viewer.c:1995
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4190,7 +4475,7 @@ msgstr[1] ""
 "Eguneraketa honi buruzko informazio gehiagorako bisitatu webgune hauek:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:1999
+#: ../src/gpk-update-viewer.c:2003
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4205,7 +4490,7 @@ msgstr[1] ""
 "bisitatu webgune hauek:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2007
+#: ../src/gpk-update-viewer.c:2011
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4218,7 +4503,7 @@ msgstr[1] ""
 "webgune hauek:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2016
+#: ../src/gpk-update-viewer.c:2020
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
@@ -4227,7 +4512,7 @@ msgstr ""
 "izan dezaten."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2020
+#: ../src/gpk-update-viewer.c:2024
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4236,16 +4521,19 @@ msgstr ""
 "eragina izan dezaten."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2027
+#: ../src/gpk-update-viewer.c:2031
+#| msgid ""
+#| "The classifaction of this update is unstable which means it is not "
+#| "designed for production use."
 msgid ""
-"The classifaction of this update is unstable which means it is not designed "
+"The classification of this update is unstable which means it is not designed "
 "for production use."
 msgstr ""
 "Eguneraketa honen sailkapena desegonkorra da, hau da, ez dago eguneroko "
 "ekoizpenerako diseinatuta."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2031
+#: ../src/gpk-update-viewer.c:2035
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4255,81 +4543,81 @@ msgstr ""
 "atzerakaden berri emango bazenu."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2040
+#: ../src/gpk-update-viewer.c:2044
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr ""
 "Garatzaileen egunkaria erakutsiko da eguneraketa honek ez baitu azalpenik:"
 
-#: ../src/gpk-update-viewer.c:2090
+#: ../src/gpk-update-viewer.c:2094
 msgid "Loading..."
 msgstr "Kargatzen..."
 
-#: ../src/gpk-update-viewer.c:2093
+#: ../src/gpk-update-viewer.c:2097
 msgid "No update details available."
 msgstr "Ez dago eguneraketaren xehetasunik eskuragarri."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2125 ../src/gpk-update-viewer.c:2223
-#: ../src/gpk-update-viewer.c:2243
+#: ../src/gpk-update-viewer.c:2129 ../src/gpk-update-viewer.c:2227
+#: ../src/gpk-update-viewer.c:2247
 msgid "Could not get update details"
 msgstr "Ezin izan da eguneraketaren xehetasunik eskuratu"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2145
+#: ../src/gpk-update-viewer.c:2149
 msgid "Could not get package details"
 msgstr "Ezin izan da paketearen xehetasunik eskuratu"
 
-#: ../src/gpk-update-viewer.c:2145 ../src/gpk-update-viewer.c:2243
+#: ../src/gpk-update-viewer.c:2149 ../src/gpk-update-viewer.c:2247
 msgid "No results were returned."
 msgstr "Ez da emaitzarik itzuli."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2478
+#: ../src/gpk-update-viewer.c:2482
 msgid "Select all"
 msgstr "Hautatu denak"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2486
+#: ../src/gpk-update-viewer.c:2490
 msgid "Unselect all"
 msgstr "Desautatu denak"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2493
+#: ../src/gpk-update-viewer.c:2497
 msgid "Select security updates"
 msgstr "Hautatu segurtasuneko eguneraketak"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2499
+#: ../src/gpk-update-viewer.c:2503
 msgid "Ignore this update"
 msgstr "Ezikusi egin eguneraketa honi"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2610
+#: ../src/gpk-update-viewer.c:2614
 msgid "Could not get updates"
 msgstr "Ezin izan dira eguneraketak eskuratu"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2763
+#: ../src/gpk-update-viewer.c:2767
 msgid "Checking for updates..."
 msgstr "Eguneraketak begiratzen..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3036
+#: ../src/gpk-update-viewer.c:3037
 msgid "Could not get list of distribution upgrades"
 msgstr "Ezin izan da banaketako eguneraketen zerrenda eskuratu"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3066
+#: ../src/gpk-update-viewer.c:3067
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr ""
 "Banaketaren bertsio-berritzearen '%s' argitalpen berria eskuragarri dago"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3310
+#: ../src/gpk-update-viewer.c:3317
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -4338,7 +4626,7 @@ msgstr ""
 "garrantzitsu batzuk instalatu behar direlako."
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3375
+#: ../src/gpk-update-viewer.c:3382
 msgid "Software Update Viewer"
 msgstr "Softwareen eguneraketen ikustailea"
 
@@ -4347,8 +4635,9 @@ msgid "Do not exit after the request has been processed"
 msgstr "Ez irten eskaera prozesatu ondoren"
 
 #: ../src/gpk-dbus-service.c:158
-msgid "Session DBus service for PackageKit"
-msgstr "PackageKit-en DBus saioa"
+#| msgid "Session DBus service for PackageKit"
+msgid "Session D-Bus service for PackageKit"
+msgstr "PackageKit-en D-Bus saioa "
 
 #. TRANSLATORS: turn on all debugging
 #: ../src/gpk-debug.c:131
@@ -4362,6 +4651,12 @@ msgstr "Arazketako aukerak"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Erakutsi arazketako aukerak"
+
+#~ msgid "Cancelling"
+#~ msgstr "Bertan behera uzten"
+
+#~ msgid "You need to specify a filename to install"
+#~ msgstr "Fitxategi-izena zehaztu behar duzu instalatzeko"
 
 #~ msgid "Software Updates"
 #~ msgstr "Softwareen eguneraketak"
