@@ -1221,6 +1221,10 @@ gpk_dbus_task_install_package_names (GpkDbusTask *dtask, gchar **packages, GpkDb
 
 	string = g_string_new ("");
 	len = g_strv_length (packages);
+	if (len == 0) {
+		gpk_dbus_task_dbus_return_value (dtask, TRUE);
+		goto out;
+	}
 
 	/* don't use a bullet for one item */
 	if (len == 1) {
