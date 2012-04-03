@@ -850,11 +850,14 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 		goto out;
 	}
 
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_mobile_broadband"));
-	g_settings_bind (priv->settings_gsd,
-			 GSD_SETTINGS_CONNECTION_USE_MOBILE,
-			 widget, "active",
-			 G_SETTINGS_BIND_DEFAULT);
+	/* bind the mobile broadband checkbox */
+	if (priv->settings_gsd != NULL) {
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_mobile_broadband"));
+		g_settings_bind (priv->settings_gsd,
+				 GSD_SETTINGS_CONNECTION_USE_MOBILE,
+				 widget, "active",
+				 G_SETTINGS_BIND_DEFAULT);
+	}
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_close"));
 	g_signal_connect (widget, "clicked",
@@ -867,9 +870,14 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 			  G_CALLBACK (gpk_prefs_check_now_cb), priv);
 
 	/* update the combo boxes */
-	gpk_prefs_update_freq_combo_setup (priv);
-	gpk_prefs_upgrade_freq_combo_setup (priv);
-	gpk_prefs_auto_update_combo_setup (priv);
+	if (priv->settings_gsd != NULL) {
+		gpk_prefs_update_freq_combo_setup (priv);
+		gpk_prefs_upgrade_freq_combo_setup (priv);
+		gpk_prefs_auto_update_combo_setup (priv);
+	} else {
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "notebook_preferences"));
+		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 0);
+	}
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_detail"));
 	g_settings_bind (priv->settings_gpk,
@@ -954,11 +962,30 @@ out:
 }
 
 /**
+ * gpk_prefs_has_gsd_schema:
+ **/
+static gboolean
+gpk_prefs_has_gsd_schema (GpkPrefsPrivate *priv)
+{
+	const char * const *schemas;
+	guint i;
+
+	/* find the schema in the global list */
+	schemas = g_settings_list_schemas ();
+	for (i = 0; schemas[i] != NULL; i++) {
+		if (g_strcmp0 (schemas[i], GSD_SETTINGS_SCHEMA) == 0)
+			return TRUE;
+	}
+	return FALSE;
+}
+
+/**
  * main:
  **/
 int
 main (int argc, char *argv[])
 {
+	gboolean ret;
 	gint status = 0;
 	GpkPrefsPrivate *priv = NULL;
 
@@ -977,7 +1004,6 @@ main (int argc, char *argv[])
 	priv = g_new0 (GpkPrefsPrivate, 1);
 	priv->cancellable = g_cancellable_new ();
 	priv->builder = gtk_builder_new ();
-	priv->settings_gsd = g_settings_new (GSD_SETTINGS_SCHEMA);
 	priv->settings_gpk = g_settings_new (GPK_SETTINGS_SCHEMA);
 	priv->list_store = gtk_list_store_new (GPK_COLUMN_LAST, G_TYPE_BOOLEAN,
 					       G_TYPE_STRING, G_TYPE_STRING,
@@ -986,6 +1012,11 @@ main (int argc, char *argv[])
 	g_object_set (priv->client,
 		      "background", FALSE,
 		      NULL);
+
+	/* have we got a GSD with update schema */
+	ret = gpk_prefs_has_gsd_schema (priv);
+	if (ret)
+		priv->settings_gsd = g_settings_new (GSD_SETTINGS_SCHEMA);
 
 	/* are we already activated? */
 	priv->application = gtk_application_new ("org.freedesktop.PackageKit.Prefs",
@@ -1002,10 +1033,11 @@ main (int argc, char *argv[])
 		g_cancellable_cancel (priv->cancellable);
 		g_object_unref (priv->cancellable);
 		g_object_unref (priv->builder);
-		g_object_unref (priv->settings_gsd);
 		g_object_unref (priv->settings_gpk);
 		g_object_unref (priv->list_store);
 		g_object_unref (priv->client);
+		if (priv->settings_gsd != NULL)
+			g_object_unref (priv->settings_gsd);
 		g_free (priv);
 	}
 	return status;
