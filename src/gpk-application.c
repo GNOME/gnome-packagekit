@@ -3020,6 +3020,30 @@ gpk_application_menu_filter_newest_cb (GtkWidget *widget, gpointer user_data)
 }
 
 /**
+ * gpk_application_menu_filter_supported_cb:
+ * @widget: The GtkWidget object
+ **/
+static void
+gpk_application_menu_filter_supported_cb (GtkWidget *widget, gpointer user_data)
+{
+	gboolean enabled;
+
+	/* save users preference to GSettings */
+	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
+	g_settings_set_boolean (settings,
+			       GPK_SETTINGS_FILTER_SUPPORTED, enabled);
+
+	/* change the filter */
+	if (enabled)
+		pk_bitfield_add (filters_current, PK_FILTER_ENUM_SUPPORTED);
+	else
+		pk_bitfield_remove (filters_current, PK_FILTER_ENUM_SUPPORTED);
+
+	/* refresh the search results */
+	gpk_application_perform_search (NULL);
+}
+
+/**
  * gpk_application_menu_filter_arch_cb:
  * @widget: The GtkWidget object
  **/
@@ -3457,6 +3481,10 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, gpointe
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "menuitem_source"));
 		gtk_widget_hide (widget);
 	}
+	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_SUPPORTED) == FALSE) {
+		widget = GTK_WIDGET (gtk_builder_get_object (builder, "menuitem_supported"));
+		gtk_widget_hide (widget);
+	}
 
 	/* BASENAME, use by default, or hide */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "menuitem_basename"));
@@ -3492,6 +3520,19 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, gpointe
 		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
 		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
 		gpk_application_menu_filter_arch_cb (widget, NULL);
+	} else {
+		gtk_widget_hide (widget);
+	}
+
+	/* SUPPORTED, use by default, or hide */
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "menuitem_supported"));
+	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_SUPPORTED)) {
+		/* set from remembered state */
+		enabled = g_settings_get_boolean (settings,
+						  GPK_SETTINGS_FILTER_SUPPORTED);
+		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
+		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
+		gpk_application_menu_filter_supported_cb (widget, NULL);
 	} else {
 		gtk_widget_hide (widget);
 	}
@@ -3893,10 +3934,15 @@ gpk_application_startup_cb (GtkApplication *application, gpointer user_data)
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_newest_cb), NULL);
 
-	/* newest filter */
+	/* arch filter */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "menuitem_arch"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_arch_cb), NULL);
+
+	/* supported filter */
+	widget = GTK_WIDGET (gtk_builder_get_object (builder, "menuitem_supported"));
+	g_signal_connect (widget, "toggled",
+			  G_CALLBACK (gpk_application_menu_filter_supported_cb), NULL);
 
 	/* simple find button */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_find"));

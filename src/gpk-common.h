@@ -43,6 +43,7 @@ G_BEGIN_DECLS
 #define GPK_SETTINGS_FILTER_ARCH			"filter-arch"
 #define GPK_SETTINGS_FILTER_BASENAME			"filter-basename"
 #define GPK_SETTINGS_FILTER_NEWEST			"filter-newest"
+#define GPK_SETTINGS_FILTER_SUPPORTED			"filter-supported"
 #define GPK_SETTINGS_IGNORED_DBUS_REQUESTS		"ignored-dbus-requests"
 #define GPK_SETTINGS_NOTIFY_MOBILE_CONNECTION		"notify-mobile-connection"
 #define GPK_SETTINGS_ONLY_NEWEST			"only-newest"
