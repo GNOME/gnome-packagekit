@@ -1935,7 +1935,7 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 
 	if (info == PK_INFO_ENUM_ENHANCEMENT) {
 		/* TRANSLATORS: this is the update type, e.g. security */
-		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, ("This update will add new features and expand functionality."), -1, "para", NULL);
+		gtk_text_buffer_insert_with_tags_by_name (text_buffer, &iter, _("This update will add new features and expand functionality."), -1, "para", NULL);
 		gtk_text_buffer_insert (text_buffer, &iter, "\n", -1);
 	} else if (info == PK_INFO_ENUM_BUGFIX) {
 		/* TRANSLATORS: this is the update type, e.g. security */
