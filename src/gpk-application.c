@@ -1867,15 +1867,6 @@ gpk_application_packages_installed_clicked_cb (GtkCellRendererToggle *cell, gcha
 static void gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkApplicationPrivate *priv);
 
 /**
- * gpk_application_button_help_cb:
- **/
-static void
-gpk_application_button_help_cb (GtkWidget *widget_button, GpkApplicationPrivate *priv)
-{
-	gpk_gnome_help ("add-remove");
-}
-
-/**
  * gpk_application_button_clear_cb:
  **/
 static void
@@ -2635,20 +2626,25 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 }
 
 /**
- * gpk_application_menu_help_cb:
+ * gpk_application_activate_help_cb:
  **/
 static void
-gpk_application_menu_help_cb (GtkAction *_action, GpkApplicationPrivate *priv)
+gpk_application_activate_help_cb (GSimpleAction *action,
+				  GVariant *parameter,
+				  gpointer user_data)
 {
 	gpk_gnome_help ("add-remove");
 }
 
 /**
- * gpk_application_menu_about_cb:
+ * gpk_application_activate_about_cb:
  **/
 static void
-gpk_application_menu_about_cb (GtkAction *_action, GpkApplicationPrivate *priv)
+gpk_application_activate_about_cb (GSimpleAction *action,
+				   GVariant *parameter,
+				   gpointer user_data)
 {
+	GpkApplicationPrivate *priv = user_data;
 	GtkWidget *main_window;
 	const char *authors[] = {
 		"Richard Hughes <richard@hughsie.com>",
@@ -3690,7 +3686,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	GtkTreeSelection *selection;
 	gboolean ret;
 	GError *error = NULL;
-	GSList *array;
 	guint retval;
 
 	priv->package_sack = pk_package_sack_new ();
@@ -3785,36 +3780,12 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	/* TRANSLATORS: tooltip on the clear button */
 	gtk_widget_set_tooltip_text (widget, _("Clear current selection"));
 
-	/* help */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_help"));
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_application_button_help_cb), priv);
-
-	/* set F1 = contents */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menu_about"));
-	array = gtk_accel_groups_from_object (G_OBJECT (main_window));
-	if (array != NULL)
-		gtk_menu_set_accel_group (GTK_MENU (widget), GTK_ACCEL_GROUP (array->data));
-
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_help"));
-	gtk_menu_item_set_accel_path (GTK_MENU_ITEM (widget),
-			              "<gpk-application>/menuitem_help");
-	gtk_accel_map_add_entry ("<gpk-application>/menuitem_help", GDK_KEY_F1, 0);
-
 	/* install */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_apply"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_button_apply_cb), priv);
 	/* TRANSLATORS: tooltip on the apply button */
 	gtk_widget_set_tooltip_text (widget, _("Changes are not applied instantly, this button applies all changes"));
-
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_about"));
-	g_signal_connect (widget, "activate",
-			  G_CALLBACK (gpk_application_menu_about_cb), priv);
-
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_help"));
-	g_signal_connect (widget, "activate",
-			  G_CALLBACK (gpk_application_menu_help_cb), priv);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_homepage"));
 	g_signal_connect (widget, "activate",
@@ -4064,6 +4035,8 @@ static GActionEntry gpk_menu_app_entries[] = {
 	{ "refresh",	gpk_application_activate_refresh_cb, NULL, NULL, NULL },
 	{ "log",	gpk_application_activate_log_cb, NULL, NULL, NULL },
 	{ "quit",	gpk_application_activate_quit_cb, NULL, NULL, NULL },
+	{ "help",	gpk_application_activate_help_cb, NULL, NULL, NULL },
+	{ "about",	gpk_application_activate_about_cb, NULL, NULL, NULL },
 };
 
 /**
