@@ -3986,13 +3986,8 @@ gpk_application_startup_cb (GtkApplication *application, gpointer user_data)
 	gpk_application_set_button_find_sensitivity (NULL);
 
 	/* set a size, as much as the screen allows */
-	ret = gpk_window_set_size_request (GTK_WINDOW (main_window), 1000, 1200);
-
-	/* we are small form factor */
-	if (!ret) {
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "hbox_packages"));
-		gtk_box_set_homogeneous (GTK_BOX (widget), FALSE);
-	}
+	gtk_window_set_default_size (GTK_WINDOW (main_window), 800, 400);
+	gtk_window_maximize (GTK_WINDOW (main_window));
 	gtk_widget_show (GTK_WIDGET(main_window));
 
 	/* set details box decent size */
