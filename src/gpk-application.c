@@ -1809,15 +1809,6 @@ gpk_application_quit (GpkApplicationPrivate *priv)
 }
 
 /**
- * gpk_application_menu_quit_cb:
- **/
-static void
-gpk_application_menu_quit_cb (GtkAction *action, GpkApplicationPrivate *priv)
-{
-	gpk_application_quit (priv);
-}
-
-/**
  * gpk_application_text_changed_cb:
  **/
 static gboolean
@@ -2718,15 +2709,18 @@ gpk_application_menu_about_cb (GtkAction *_action, GpkApplicationPrivate *priv)
 }
 
 /**
- * gpk_application_menu_sources_cb:
+ * gpk_application_activate_sources_cb:
  **/
 static void
-gpk_application_menu_sources_cb (GtkAction *_action, GpkApplicationPrivate *priv)
+gpk_application_activate_sources_cb (GSimpleAction *action,
+				     GVariant *parameter,
+				     gpointer user_data)
 {
 	gboolean ret;
-	guint xid;
 	gchar *command;
+	GpkApplicationPrivate *priv = user_data;
 	GtkWidget *window;
+	guint xid;
 
 	/* get xid */
 	window = GTK_WIDGET (gtk_builder_get_object (priv->builder, "window_manager"));
@@ -2742,15 +2736,18 @@ gpk_application_menu_sources_cb (GtkAction *_action, GpkApplicationPrivate *priv
 }
 
 /**
- * gpk_application_menu_log_cb:
+ * gpk_application_activate_log_cb:
  **/
 static void
-gpk_application_menu_log_cb (GtkAction *_action, GpkApplicationPrivate *priv)
+gpk_application_activate_log_cb (GSimpleAction *action,
+				 GVariant *parameter,
+				 gpointer user_data)
 {
 	gboolean ret;
-	guint xid;
 	gchar *command;
+	GpkApplicationPrivate *priv = user_data;
 	GtkWidget *window;
+	guint xid;
 
 	/* get xid */
 	window = GTK_WIDGET (gtk_builder_get_object (priv->builder, "window_manager"));
@@ -2805,11 +2802,15 @@ out:
 }
 
 /**
- * gpk_application_menu_refresh_cb:
+ * gpk_application_activate_refresh_cb:
  **/
 static void
-gpk_application_menu_refresh_cb (GtkAction *_action, GpkApplicationPrivate *priv)
+gpk_application_activate_refresh_cb (GSimpleAction *action,
+				     GVariant *parameter,
+				     gpointer user_data)
 {
+	GpkApplicationPrivate *priv = user_data;
+
 	/* ensure new action succeeds */
 	g_cancellable_reset (priv->cancellable);
 
@@ -3447,18 +3448,6 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 		gtk_widget_hide (widget);
 	}
 
-	/* hide the refresh cache button if we can't do it */
-	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_REFRESH_CACHE) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_refresh"));
-		gtk_widget_hide (widget);
-	}
-
-	/* hide the software-sources button if we can't do it */
-	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_REPO_LIST) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_sources"));
-		gtk_widget_hide (widget);
-	}
-
 	/* hide the filters we can't support */
 	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_INSTALLED) == FALSE) {
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_installed"));
@@ -3771,6 +3760,14 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (priv->builder, "window_manager"));
 	gtk_application_add_window (application, GTK_WINDOW (main_window));
+	gtk_window_set_application (GTK_WINDOW (main_window), application);
+
+{
+       GMenuModel *menu;
+       menu = G_MENU_MODEL (gtk_builder_get_object (priv->builder, "appmenu"));
+       gtk_application_set_app_menu (priv->application, menu);
+}
+
 
 	/* helpers */
 	priv->helper_run = gpk_helper_run_new ();
@@ -3819,18 +3816,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_help_cb), priv);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_sources"));
-	g_signal_connect (widget, "activate",
-			  G_CALLBACK (gpk_application_menu_sources_cb), priv);
-
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_refresh"));
-	g_signal_connect (widget, "activate",
-			  G_CALLBACK (gpk_application_menu_refresh_cb), priv);
-
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_log"));
-	g_signal_connect (widget, "activate",
-			  G_CALLBACK (gpk_application_menu_log_cb), priv);
-
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_homepage"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_homepage_cb), priv);
@@ -3860,10 +3845,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_run"));
 	g_signal_connect (widget, "activate",
 			  G_CALLBACK (gpk_application_menu_run_cb), priv);
-
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_quit"));
-	g_signal_connect (widget, "activate",
-			  G_CALLBACK (gpk_application_menu_quit_cb), priv);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_selection"));
 	gtk_widget_hide (widget);
@@ -4059,6 +4040,32 @@ out:
 	gpk_application_add_welcome (priv);
 }
 
+static void
+gpk_application_activate_quit_cb (GSimpleAction *action,
+				  GVariant *parameter,
+				  gpointer user_data)
+{
+	GpkApplicationPrivate *priv = user_data;
+	gpk_application_quit (priv);
+}
+
+static void
+gpk_application_activate_updates_cb (GSimpleAction *action,
+				     GVariant *parameter,
+				     gpointer user_data)
+{
+	//GpkApplicationPrivate *priv = user_data;
+	// TODO: launch the update program
+}
+
+static GActionEntry gpk_menu_app_entries[] = {
+	{ "updates",	gpk_application_activate_updates_cb, NULL, NULL, NULL },
+	{ "sources",	gpk_application_activate_sources_cb, NULL, NULL, NULL },
+	{ "refresh",	gpk_application_activate_refresh_cb, NULL, NULL, NULL },
+	{ "log",	gpk_application_activate_log_cb, NULL, NULL, NULL },
+	{ "quit",	gpk_application_activate_quit_cb, NULL, NULL, NULL },
+};
+
 /**
  * main:
  **/
@@ -4116,6 +4123,10 @@ main (int argc, char *argv[])
 			  G_CALLBACK (gpk_application_startup_cb), priv);
 	g_signal_connect (priv->application, "activate",
 			  G_CALLBACK (gpk_application_activate_cb), priv);
+	g_action_map_add_action_entries (G_ACTION_MAP (priv->application),
+					 gpk_menu_app_entries,
+					 G_N_ELEMENTS (gpk_menu_app_entries),
+					 priv);
 
 	/* run */
 	status = g_application_run (G_APPLICATION (priv->application), argc, argv);
