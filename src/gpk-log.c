@@ -495,7 +495,7 @@ gpk_log_add_item (PkTransactionPast *item)
 		tool = _("Command line client");
 	else if (g_strcmp0 (cmdline, "gpk-application") == 0)
 		/* TRANSLATORS: short name for gpk-update-viewer */
-		tool = _("Add/Remove Software");
+		tool = _("Install Software");
 	else if (g_strcmp0 (cmdline, "gpk-update-viewer") == 0)
 		/* TRANSLATORS: short name for gpk-update-viewer */
 		tool = _("Update System");

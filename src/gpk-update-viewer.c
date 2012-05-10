@@ -3362,7 +3362,7 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	context = g_option_context_new (NULL);
-	g_option_context_set_summary (context, _("Add/Remove Software"));
+	g_option_context_set_summary (context, _("Update Software"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_add_group (context, gpk_debug_get_option_group ());
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
