@@ -3693,7 +3693,6 @@ gpk_application_startup_cb (GtkApplication *application, gpointer user_data)
 {
 	GtkWidget *main_window;
 	GtkWidget *widget;
-	GtkWidget *image;
 	GtkEntryCompletion *completion;
 	GtkTreeSelection *selection;
 	gboolean ret;
@@ -3800,8 +3799,6 @@ gpk_application_startup_cb (GtkApplication *application, gpointer user_data)
 	gtk_menu_item_set_accel_path (GTK_MENU_ITEM (widget),
 			              "<gpk-application>/menuitem_help");
 	gtk_accel_map_add_entry ("<gpk-application>/menuitem_help", GDK_KEY_F1, 0);
-	image = gtk_image_new_from_stock ("gtk-help", GTK_ICON_SIZE_MENU);
-	gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (widget), image);
 
 	/* install */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_apply"));
