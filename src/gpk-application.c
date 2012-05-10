@@ -1477,18 +1477,11 @@ gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplicationPrivate *priv
 static void
 gpk_application_set_button_find_sensitivity (GpkApplicationPrivate *priv)
 {
-	gboolean sensitive;
 	GtkWidget *widget;
-	const gchar *search;
 
-	/* get the text in the search bar */
+	/* only sensitive if not in the middle of a search */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "entry_text"));
-	search = gtk_entry_get_text (GTK_ENTRY (widget));
-
-	/* only sensitive if not in the middle of a search and has valid text */
-	sensitive = !priv->search_in_progress && !egg_strzero (search);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_find"));
-	gtk_widget_set_sensitive (widget, sensitive);
+	gtk_widget_set_sensitive (widget, !priv->search_in_progress);
 }
 
 /**
@@ -3894,13 +3887,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_supported"));
 	g_signal_connect (widget, "toggled",
 			  G_CALLBACK (gpk_application_menu_filter_supported_cb), priv);
-
-	/* simple find button */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_find"));
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_application_find_cb), priv);
-	/* TRANSLATORS: tooltip on the find button */
-	gtk_widget_set_tooltip_text (widget, _("Find packages"));
 
 	/* search cancel button */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_cancel"));
