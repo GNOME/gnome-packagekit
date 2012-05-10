@@ -2809,258 +2809,6 @@ gpk_application_activate_refresh_cb (GSimpleAction *action,
 }
 
 /**
- * gpk_application_menu_filter_installed_cb:
- * @widget: The GtkWidget object
- **/
-static void
-gpk_application_menu_filter_installed_cb (GtkWidget *widget, GpkApplicationPrivate *priv)
-{
-	const gchar *name;
-
-	name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
-
-	/* only care about new state */
-	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
-		return;
-
-	/* set new filter */
-	if (g_str_has_suffix (name, "_yes")) {
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_INSTALLED);
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_NOT_INSTALLED);
-	} else if (g_str_has_suffix (name, "_no")) {
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_INSTALLED);
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_NOT_INSTALLED);
-	} else {
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_INSTALLED);
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_NOT_INSTALLED);
-	}
-
-	/* refresh the search results */
-	gpk_application_perform_search (priv);
-}
-
-/**
- * gpk_application_menu_filter_devel_cb:
- * @widget: The GtkWidget object
- **/
-static void
-gpk_application_menu_filter_devel_cb (GtkWidget *widget, GpkApplicationPrivate *priv)
-{
-	const gchar *name;
-
-	name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
-
-	/* only care about new state */
-	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
-		return;
-
-	/* set new filter */
-	if (g_str_has_suffix (name, "_yes")) {
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_DEVELOPMENT);
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_NOT_DEVELOPMENT);
-	} else if (g_str_has_suffix (name, "_no")) {
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_DEVELOPMENT);
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_NOT_DEVELOPMENT);
-	} else {
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_DEVELOPMENT);
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_NOT_DEVELOPMENT);
-	}
-
-	/* refresh the search results */
-	g_debug ("search devel clicked");
-	gpk_application_perform_search (priv);
-}
-
-/**
- * gpk_application_menu_filter_gui_cb:
- * @widget: The GtkWidget object
- **/
-static void
-gpk_application_menu_filter_gui_cb (GtkWidget *widget, GpkApplicationPrivate *priv)
-{
-	const gchar *name;
-
-	name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
-
-	/* only care about new state */
-	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
-		return;
-
-	/* set new filter */
-	if (g_str_has_suffix (name, "_yes")) {
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_GUI);
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_NOT_GUI);
-	} else if (g_str_has_suffix (name, "_no")) {
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_GUI);
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_NOT_GUI);
-	} else {
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_GUI);
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_NOT_GUI);
-	}
-
-	/* refresh the search results */
-	gpk_application_perform_search (priv);
-}
-
-/**
- * gpk_application_menu_filter_free_cb:
- * @widget: The GtkWidget object
- **/
-static void
-gpk_application_menu_filter_free_cb (GtkWidget *widget, GpkApplicationPrivate *priv)
-{
-	const gchar *name;
-
-	name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
-
-	/* only care about new state */
-	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
-		return;
-
-	/* set new filter */
-	if (g_str_has_suffix (name, "_yes")) {
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_FREE);
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_NOT_FREE);
-	} else if (g_str_has_suffix (name, "_no")) {
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_FREE);
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_NOT_FREE);
-	} else {
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_FREE);
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_NOT_FREE);
-	}
-
-	/* refresh the search results */
-	gpk_application_perform_search (priv);
-}
-
-/**
- * gpk_application_menu_filter_source_cb:
- * @widget: The GtkWidget object
- **/
-static void
-gpk_application_menu_filter_source_cb (GtkWidget *widget, GpkApplicationPrivate *priv)
-{
-	const gchar *name;
-
-	name = gtk_buildable_get_name (GTK_BUILDABLE (widget));
-
-	/* only care about new state */
-	if (!gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget)))
-		return;
-
-	/* set new filter */
-	if (g_str_has_suffix (name, "_yes")) {
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_SOURCE);
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_NOT_SOURCE);
-	} else if (g_str_has_suffix (name, "_no")) {
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_SOURCE);
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_NOT_SOURCE);
-	} else {
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_SOURCE);
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_NOT_SOURCE);
-	}
-
-	/* refresh the sesource results */
-	gpk_application_perform_search (priv);
-}
-
-/**
- * gpk_application_menu_filter_basename_cb:
- * @widget: The GtkWidget object
- **/
-static void
-gpk_application_menu_filter_basename_cb (GtkWidget *widget, GpkApplicationPrivate *priv)
-{
-	gboolean enabled;
-
-	/* save users preference to GSettings */
-	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
-	g_settings_set_boolean (priv->settings,
-			       GPK_SETTINGS_FILTER_BASENAME, enabled);
-
-	/* change the filter */
-	if (enabled)
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_BASENAME);
-	else
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_BASENAME);
-
-	/* refresh the search results */
-	gpk_application_perform_search (priv);
-}
-
-/**
- * gpk_application_menu_filter_newest_cb:
- * @widget: The GtkWidget object
- **/
-static void
-gpk_application_menu_filter_newest_cb (GtkWidget *widget, GpkApplicationPrivate *priv)
-{
-	gboolean enabled;
-
-	/* save users preference to GSettings */
-	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
-	g_settings_set_boolean (priv->settings,
-			       GPK_SETTINGS_FILTER_NEWEST, enabled);
-
-	/* change the filter */
-	if (enabled)
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_NEWEST);
-	else
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_NEWEST);
-
-	/* refresh the search results */
-	gpk_application_perform_search (priv);
-}
-
-/**
- * gpk_application_menu_filter_supported_cb:
- * @widget: The GtkWidget object
- **/
-static void
-gpk_application_menu_filter_supported_cb (GtkWidget *widget, GpkApplicationPrivate *priv)
-{
-	gboolean enabled;
-
-	/* save users preference to GSettings */
-	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
-	g_settings_set_boolean (priv->settings,
-			       GPK_SETTINGS_FILTER_SUPPORTED, enabled);
-
-	/* change the filter */
-	if (enabled)
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_SUPPORTED);
-	else
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_SUPPORTED);
-
-	/* refresh the search results */
-	gpk_application_perform_search (priv);
-}
-
-/**
- * gpk_application_menu_filter_arch_cb:
- * @widget: The GtkWidget object
- **/
-static void
-gpk_application_menu_filter_arch_cb (GtkWidget *widget, GpkApplicationPrivate *priv)
-{
-	gboolean enabled;
-
-	/* save users preference to GSettings */
-	enabled = gtk_check_menu_item_get_active (GTK_CHECK_MENU_ITEM (widget));
-	g_settings_set_boolean (priv->settings,
-			       GPK_SETTINGS_FILTER_ARCH, enabled);
-
-	/* change the filter */
-	if (enabled)
-		pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_ARCH);
-	else
-		pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_ARCH);
-
-	/* refresh the search results */
-	gpk_application_perform_search (priv);
-}
-
-/**
  * gpk_application_package_row_activated_cb:
  **/
 static void
@@ -3356,7 +3104,7 @@ gpk_application_create_group_array_categories (GpkApplicationPrivate *priv)
  * We might have to do things when the keys change; do them here.
  **/
 static void
-gpk_application_key_changed_cb (GSettings *_settings, const gchar *key, GpkApplicationPrivate *priv)
+gpk_application_key_changed_cb (GSettings *settings, const gchar *key, GpkApplicationPrivate *priv)
 {
 	GtkEntryCompletion *completion;
 	gboolean ret;
@@ -3379,6 +3127,20 @@ gpk_application_key_changed_cb (GSettings *_settings, const gchar *key, GpkAppli
 		} else {
 			gtk_entry_set_completion (entry, NULL);
 		}
+	} else if (g_strcmp0 (key, "filter-newest") == 0) {
+		/* refresh the search results */
+		if (g_settings_get_boolean (priv->settings, key))
+			pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_NEWEST);
+		else
+			pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_NEWEST);
+		gpk_application_perform_search (priv);
+	} else if (g_strcmp0 (key, "filter-arch") == 0) {
+		/* refresh the search results */
+		if (g_settings_get_boolean (priv->settings, key))
+			pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_ARCH);
+		else
+			pk_bitfield_remove (priv->filters_current, PK_FILTER_ENUM_ARCH);
+		gpk_application_perform_search (priv);
 	}
 }
 
@@ -3393,7 +3155,6 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 	PkControl *control = PK_CONTROL(object);
 	gboolean ret;
 	PkBitfield filters;
-	gboolean enabled;
 	GtkTreeIter iter;
 	const gchar *icon_name;
 
@@ -3434,87 +3195,6 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 	/* hide the group selector if we don't support search-groups */
 	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_SEARCH_GROUP) == FALSE) {
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "scrolledwindow_groups"));
-		gtk_widget_hide (widget);
-	}
-
-	/* hide the filters we can't support */
-	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_INSTALLED) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_installed"));
-		gtk_widget_hide (widget);
-	}
-	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_DEVELOPMENT) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_devel"));
-		gtk_widget_hide (widget);
-	}
-	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_GUI) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_gui"));
-		gtk_widget_hide (widget);
-	}
-	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_FREE) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_free"));
-		gtk_widget_hide (widget);
-	}
-	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_ARCH) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_arch"));
-		gtk_widget_hide (widget);
-	}
-	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_SOURCE) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_source"));
-		gtk_widget_hide (widget);
-	}
-	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_SUPPORTED) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_supported"));
-		gtk_widget_hide (widget);
-	}
-
-	/* BASENAME, use by default, or hide */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_basename"));
-	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_BASENAME)) {
-		enabled = g_settings_get_boolean (priv->settings,
-						 GPK_SETTINGS_FILTER_BASENAME);
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
-		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
-		gpk_application_menu_filter_basename_cb (widget, priv);
-	} else {
-		gtk_widget_hide (widget);
-	}
-
-	/* NEWEST, use by default, or hide */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_newest"));
-	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_NEWEST)) {
-		/* set from remembered state */
-		enabled = g_settings_get_boolean (priv->settings,
-						  GPK_SETTINGS_FILTER_NEWEST);
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
-		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
-		gpk_application_menu_filter_newest_cb (widget, priv);
-	} else {
-		gtk_widget_hide (widget);
-	}
-
-	/* ARCH, use by default, or hide */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_arch"));
-	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_ARCH)) {
-		/* set from remembered state */
-		enabled = g_settings_get_boolean (priv->settings,
-						  GPK_SETTINGS_FILTER_ARCH);
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
-		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
-		gpk_application_menu_filter_arch_cb (widget, priv);
-	} else {
-		gtk_widget_hide (widget);
-	}
-
-	/* SUPPORTED, use by default, or hide */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_supported"));
-	if (pk_bitfield_contain (filters, PK_FILTER_ENUM_SUPPORTED)) {
-		/* set from remembered state */
-		enabled = g_settings_get_boolean (priv->settings,
-						  GPK_SETTINGS_FILTER_SUPPORTED);
-		gtk_check_menu_item_set_active (GTK_CHECK_MENU_ITEM (widget), enabled);
-		/* work round a gtk2+ bug: toggled should be fired when doing gtk_check_menu_item_set_active */
-		gpk_application_menu_filter_supported_cb (widget, priv);
-	} else {
 		gtk_widget_hide (widget);
 	}
 
@@ -3673,12 +3353,14 @@ gpk_application_activate_cb (GtkApplication *_application, GpkApplicationPrivate
 static void
 gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *priv)
 {
-	GtkWidget *main_window;
-	GtkWidget *widget;
-	GtkEntryCompletion *completion;
-	GtkTreeSelection *selection;
+	GAction *action;
 	gboolean ret;
 	GError *error = NULL;
+	GMenuModel *menu;
+	GtkEntryCompletion *completion;
+	GtkTreeSelection *selection;
+	GtkWidget *main_window;
+	GtkWidget *widget;
 	guint retval;
 
 	priv->package_sack = pk_package_sack_new ();
@@ -3750,12 +3432,13 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	gtk_application_add_window (application, GTK_WINDOW (main_window));
 	gtk_window_set_application (GTK_WINDOW (main_window), application);
 
-{
-       GMenuModel *menu;
-       menu = G_MENU_MODEL (gtk_builder_get_object (priv->builder, "appmenu"));
-       gtk_application_set_app_menu (priv->application, menu);
-}
-
+	/* setup the application menu */
+	menu = G_MENU_MODEL (gtk_builder_get_object (priv->builder, "appmenu"));
+	gtk_application_set_app_menu (priv->application, menu);
+	action = g_settings_create_action (priv->settings, "filter-newest");
+	g_action_map_add_action (G_ACTION_MAP (priv->application), action);
+	action = g_settings_create_action (priv->settings, "filter-arch");
+	g_action_map_add_action (G_ACTION_MAP (priv->application), action);
 
 	/* helpers */
 	priv->helper_run = gpk_helper_run_new ();
@@ -3812,81 +3495,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_selection"));
 	gtk_widget_hide (widget);
-
-	/* installed filter */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_installed_yes"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_installed_cb), priv);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_installed_no"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_installed_cb), priv);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_installed_both"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_installed_cb), priv);
-
-	/* devel filter */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_devel_yes"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_devel_cb), priv);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_devel_no"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_devel_cb), priv);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_devel_both"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_devel_cb), priv);
-
-	/* gui filter */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_gui_yes"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_gui_cb), priv);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_gui_no"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_gui_cb), priv);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_gui_both"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_gui_cb), priv);
-
-	/* free filter */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_free_yes"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_free_cb), priv);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_free_no"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_free_cb), priv);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_free_both"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_free_cb), priv);
-
-	/* source filter */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_source_yes"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_source_cb), priv);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_source_no"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_source_cb), priv);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_source_both"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_source_cb), priv);
-
-	/* basename filter */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_basename"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_basename_cb), priv);
-
-	/* newest filter */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_newest"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_newest_cb), priv);
-
-	/* arch filter */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_arch"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_arch_cb), priv);
-
-	/* supported filter */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_supported"));
-	g_signal_connect (widget, "toggled",
-			  G_CALLBACK (gpk_application_menu_filter_supported_cb), priv);
 
 	/* search cancel button */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_cancel"));
@@ -4016,13 +3624,13 @@ gpk_application_activate_updates_cb (GSimpleAction *action,
 }
 
 static GActionEntry gpk_menu_app_entries[] = {
-	{ "updates",	gpk_application_activate_updates_cb, NULL, NULL, NULL },
-	{ "sources",	gpk_application_activate_sources_cb, NULL, NULL, NULL },
-	{ "refresh",	gpk_application_activate_refresh_cb, NULL, NULL, NULL },
-	{ "log",	gpk_application_activate_log_cb, NULL, NULL, NULL },
-	{ "quit",	gpk_application_activate_quit_cb, NULL, NULL, NULL },
-	{ "help",	gpk_application_activate_help_cb, NULL, NULL, NULL },
-	{ "about",	gpk_application_activate_about_cb, NULL, NULL, NULL },
+	{ "updates",		gpk_application_activate_updates_cb, NULL, NULL, NULL },
+	{ "sources",		gpk_application_activate_sources_cb, NULL, NULL, NULL },
+	{ "refresh",		gpk_application_activate_refresh_cb, NULL, NULL, NULL },
+	{ "log",		gpk_application_activate_log_cb, NULL, NULL, NULL },
+	{ "quit",		gpk_application_activate_quit_cb, NULL, NULL, NULL },
+	{ "help",		gpk_application_activate_help_cb, NULL, NULL, NULL },
+	{ "about",		gpk_application_activate_about_cb, NULL, NULL, NULL },
 };
 
 /**
