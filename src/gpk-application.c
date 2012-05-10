@@ -3555,8 +3555,6 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, gpointe
 	/* add these at the top of the array */
 	if (pk_bitfield_contain (groups, PK_GROUP_ENUM_COLLECTIONS))
 		gpk_application_group_add_data (PK_GROUP_ENUM_COLLECTIONS);
-	if (pk_bitfield_contain (groups, PK_GROUP_ENUM_NEWEST))
-		gpk_application_group_add_data (PK_GROUP_ENUM_NEWEST);
 
 	/* add group item for selected items */
 	gpk_application_group_add_selected (NULL);
