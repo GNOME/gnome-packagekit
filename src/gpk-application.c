@@ -641,6 +641,10 @@ gpk_application_status_changed_timeout_cb (GpkApplicationPrivate *priv)
 	text = gpk_status_enum_to_localised_text (priv->status_last);
 	gtk_label_set_label (GTK_LABEL (widget), text);
 
+	/* show cancel button */
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_cancel"));
+	gtk_widget_show (widget);
+
 	/* set icon */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "image_status"));
 	gtk_image_set_from_icon_name (GTK_IMAGE (widget),
@@ -680,6 +684,10 @@ gpk_application_progress_cb (PkProgress *progress, PkProgressType type, GpkAppli
 			/* re-enable UI */
 			widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "treeview_packages"));
 			gtk_widget_set_sensitive (widget, TRUE);
+
+			/* hide the cancel button */
+			widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_cancel"));
+			gtk_widget_hide (widget);
 
 			/* make apply button sensitive */
 			widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_apply"));
@@ -3434,7 +3442,7 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_cancel"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_cancel_cb), priv);
-	gtk_widget_set_sensitive (widget, FALSE);
+	gtk_widget_hide (widget);
 
 	/* the fancy text entry widget */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "entry_text"));

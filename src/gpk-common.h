@@ -72,7 +72,7 @@ G_BEGIN_DECLS
 #define GPK_ICON_SERVICE_PACK			"gpk-service-pack"
 
 /* any status that is slower than this will not be shown in the UI */
-#define GPK_UI_STATUS_SHOW_DELAY		250 /* ms */
+#define GPK_UI_STATUS_SHOW_DELAY		750 /* ms */
 
 void		 gpk_common_test			(gpointer	 data);
 void		 gtk_text_buffer_insert_markup		(GtkTextBuffer	*buffer,
