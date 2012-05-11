@@ -2458,7 +2458,7 @@ gpk_application_group_add_selected (GpkApplicationPrivate *priv)
 	gtk_tree_store_append (priv->groups_store, &iter, NULL);
 	gtk_tree_store_set (priv->groups_store, &iter,
 			    /* TRANSLATORS: this is a menu group of packages in the queue */
-			    GROUPS_COLUMN_NAME, _("Selected packages"),
+			    GROUPS_COLUMN_NAME, _("Pending"),
 			    GROUPS_COLUMN_SUMMARY, NULL,
 			    GROUPS_COLUMN_ID, "selected",
 			    GROUPS_COLUMN_ICON, "edit-find",
