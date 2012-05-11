@@ -306,67 +306,6 @@ gpk_application_get_checkbox_enable (GpkApplicationPrivate *priv, PkBitfield sta
 }
 
 /**
- * gpk_application_set_buttons_apply_clear:
- **/
-static void
-gpk_application_set_buttons_apply_clear (GpkApplicationPrivate *priv)
-{
-	GtkWidget *widget;
-	GtkTreeView *treeview;
-	gboolean valid;
-	GtkTreeIter iter;
-	GtkTreeModel *model;
-	PkBitfield state;
-	gboolean enabled;
-	gchar *package_id;
-	gint len;
-	GPtrArray *array;
-
-	/* okay to apply? */
-	array = pk_package_sack_get_array (priv->package_sack);
-	len = array->len;
-	g_ptr_array_unref (array);
-
-	if (len == 0) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_apply"));
-		gtk_widget_set_sensitive (widget, FALSE);
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_clear"));
-		gtk_widget_set_sensitive (widget, FALSE);
-		priv->action = GPK_ACTION_NONE;
-	} else {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_apply"));
-		gtk_widget_set_sensitive (widget, TRUE);
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_clear"));
-		gtk_widget_set_sensitive (widget, TRUE);
-	}
-
-	/* correct the enabled state */
-	treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_packages"));
-	model = gtk_tree_view_get_model (treeview);
-	valid = gtk_tree_model_get_iter_first (model, &iter);
-
-	/* for all current items, reset the state if in the array */
-	while (valid) {
-		gtk_tree_model_get (model, &iter,
-				    PACKAGES_COLUMN_STATE, &state,
-				    PACKAGES_COLUMN_ID, &package_id,
-				    -1);
-
-		/* we never show the checkbox for the search helper */
-		if (package_id == NULL) {
-			enabled = FALSE;
-		} else {
-			enabled = gpk_application_get_checkbox_enable (priv, state);
-		}
-		g_free (package_id);
-
-		/* set visible */
-		gtk_list_store_set (GTK_LIST_STORE (model), &iter, PACKAGES_COLUMN_CHECKBOX_VISIBLE, enabled, -1);
-		valid = gtk_tree_model_iter_next (model, &iter);
-	}
-}
-
-/**
  * gpk_application_get_selected_package:
  **/
 static gboolean
@@ -403,6 +342,117 @@ out:
 }
 
 /**
+ * gpk_application_group_add_selected:
+ **/
+static void
+gpk_application_group_add_selected (GpkApplicationPrivate *priv)
+{
+	gboolean ret;
+	gchar *id = NULL;
+	GtkTreeIter iter;
+
+	ret = gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->groups_store), &iter);
+	if (!ret)
+		goto out;
+	gtk_tree_model_get (GTK_TREE_MODEL (priv->groups_store), &iter,
+			    GROUPS_COLUMN_ID, &id,
+			    -1);
+	if (g_strcmp0 (id, "selected") == 0)
+		goto out;
+	gtk_tree_store_insert (priv->groups_store, &iter, NULL, 0);
+	gtk_tree_store_set (priv->groups_store, &iter,
+			    /* TRANSLATORS: this is a menu group of packages in the queue */
+			    GROUPS_COLUMN_NAME, _("Pending"),
+			    GROUPS_COLUMN_SUMMARY, NULL,
+			    GROUPS_COLUMN_ID, "selected",
+			    GROUPS_COLUMN_ICON, "edit-find",
+			    GROUPS_COLUMN_ACTIVE, TRUE,
+			    -1);
+out:
+	g_free (id);
+}
+
+/**
+ * gpk_application_group_remove_selected:
+ **/
+static void
+gpk_application_group_remove_selected (GpkApplicationPrivate *priv)
+{
+	gboolean ret;
+	gchar *id = NULL;
+	GtkTreeIter iter;
+
+	ret = gtk_tree_model_get_iter_first (GTK_TREE_MODEL (priv->groups_store), &iter);
+	if (!ret)
+		goto out;
+	gtk_tree_model_get (GTK_TREE_MODEL (priv->groups_store), &iter,
+			    GROUPS_COLUMN_ID, &id,
+			    -1);
+	if (g_strcmp0 (id, "selected") != 0)
+		goto out;
+	gtk_tree_store_remove (priv->groups_store, &iter);
+out:
+	g_free (id);
+}
+
+/**
+ * gpk_application_change_queue_status:
+ **/
+static void
+gpk_application_change_queue_status (GpkApplicationPrivate *priv)
+{
+	GtkWidget *widget;
+	GtkTreeView *treeview;
+	gboolean valid;
+	GtkTreeIter iter;
+	GtkTreeModel *model;
+	PkBitfield state;
+	gboolean enabled;
+	gchar *package_id;
+
+	/* show and hide the action widgets */
+	if (pk_package_sack_get_size (priv->package_sack) > 0) {
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_apply"));
+		gtk_widget_show (widget);
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_clear"));
+		gtk_widget_show (widget);
+		gpk_application_group_add_selected (priv);
+	} else {
+		priv->action = GPK_ACTION_NONE;
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_apply"));
+		gtk_widget_hide (widget);
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_clear"));
+		gtk_widget_hide (widget);
+		gpk_application_group_remove_selected (priv);
+	}
+
+	/* correct the enabled state */
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_packages"));
+	model = gtk_tree_view_get_model (treeview);
+	valid = gtk_tree_model_get_iter_first (model, &iter);
+
+	/* for all current items, reset the state if in the array */
+	while (valid) {
+		gtk_tree_model_get (model, &iter,
+				    PACKAGES_COLUMN_STATE, &state,
+				    PACKAGES_COLUMN_ID, &package_id,
+				    -1);
+
+		/* we never show the checkbox for the search helper */
+		if (package_id == NULL) {
+			enabled = FALSE;
+		} else {
+			enabled = gpk_application_get_checkbox_enable (priv, state);
+		}
+		g_free (package_id);
+
+		/* set visible */
+		gtk_list_store_set (GTK_LIST_STORE (model), &iter, PACKAGES_COLUMN_CHECKBOX_VISIBLE, enabled, -1);
+		valid = gtk_tree_model_iter_next (model, &iter);
+	}
+}
+
+/**
  * gpk_application_install:
  **/
 static gboolean
@@ -430,11 +480,12 @@ gpk_application_install (GpkApplicationPrivate *priv)
 			gpk_application_allow_install (priv, FALSE);
 			gpk_application_allow_remove (priv, TRUE);
 			gpk_application_packages_checkbox_invert (priv);
-			gpk_application_set_buttons_apply_clear (priv);
-			return TRUE;
+			ret = TRUE;
+			goto out;
 		}
 		g_warning ("wrong mode and not in array");
-		return FALSE;
+		ret = FALSE;
+		goto out;
 	}
 
 	/* already added */
@@ -461,8 +512,10 @@ gpk_application_install (GpkApplicationPrivate *priv)
 	gpk_application_allow_install (priv, FALSE);
 	gpk_application_allow_remove (priv, TRUE);
 	gpk_application_packages_checkbox_invert (priv);
-	gpk_application_set_buttons_apply_clear (priv);
 out:
+	/* add the selected group if there are any packages in the queue */
+	gpk_application_change_queue_status (priv);
+
 	g_free (package_id_selected);
 	g_free (summary_selected);
 	return ret;
@@ -744,11 +797,12 @@ gpk_application_remove (GpkApplicationPrivate *priv)
 			gpk_application_allow_install (priv, TRUE);
 			gpk_application_allow_remove (priv, FALSE);
 			gpk_application_packages_checkbox_invert (priv);
-			gpk_application_set_buttons_apply_clear (priv);
-			return TRUE;
+			ret = TRUE;
+			goto out;
 		}
 		g_warning ("wrong mode and not in array");
-		return FALSE;
+		ret = FALSE;
+		goto out;
 	}
 
 	/* already added */
@@ -772,8 +826,9 @@ gpk_application_remove (GpkApplicationPrivate *priv)
 	gpk_application_allow_install (priv, TRUE);
 	gpk_application_allow_remove (priv, FALSE);
 	gpk_application_packages_checkbox_invert (priv);
-	gpk_application_set_buttons_apply_clear (priv);
 out:
+	/* add the selected group if there are any packages in the queue */
+	gpk_application_change_queue_status (priv);
 	g_free (package_id_selected);
 	g_free (summary_selected);
 	return TRUE;
@@ -1550,7 +1605,6 @@ gpk_application_search_cb (PkClient *client, GAsyncResult *res, GpkApplicationPr
 	gtk_widget_set_sensitive (widget, TRUE);
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_apply"));
 	gtk_widget_set_sensitive (widget, TRUE);
-	gpk_application_set_buttons_apply_clear (priv);
 out:
 	/* mark find button sensitive */
 	priv->search_in_progress = FALSE;
@@ -1907,7 +1961,8 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplicationPrivate
 	selection = gtk_tree_view_get_selection (treeview);
 	gpk_application_packages_treeview_clicked_cb (selection, priv);
 
-	gpk_application_set_buttons_apply_clear (priv);
+	priv->action = GPK_ACTION_NONE;
+	gpk_application_change_queue_status (priv);
 }
 
 /**
@@ -1954,7 +2009,7 @@ gpk_application_install_packages_cb (PkTask *task, GAsyncResult *res, GpkApplica
 	/* clear if success */
 	pk_package_sack_clear (priv->package_sack);
 	priv->action = GPK_ACTION_NONE;
-	gpk_application_set_buttons_apply_clear (priv);
+	gpk_application_change_queue_status (priv);
 out:
 	if (error_code != NULL)
 		g_object_unref (error_code);
@@ -2003,7 +2058,7 @@ gpk_application_remove_packages_cb (PkTask *task, GAsyncResult *res, GpkApplicat
 	/* clear if success */
 	pk_package_sack_clear (priv->package_sack);
 	priv->action = GPK_ACTION_NONE;
-	gpk_application_set_buttons_apply_clear (priv);
+	gpk_application_change_queue_status (priv);
 out:
 	if (error_code != NULL)
 		g_object_unref (error_code);
@@ -2428,25 +2483,6 @@ gpk_application_group_add_data (GpkApplicationPrivate *priv, PkGroupEnum group)
 			    GROUPS_COLUMN_SUMMARY, NULL,
 			    GROUPS_COLUMN_ID, pk_group_enum_to_string (group),
 			    GROUPS_COLUMN_ICON, icon_name,
-			    GROUPS_COLUMN_ACTIVE, TRUE,
-			    -1);
-}
-
-/**
- * gpk_application_group_add_selected:
- **/
-static void
-gpk_application_group_add_selected (GpkApplicationPrivate *priv)
-{
-	GtkTreeIter iter;
-
-	gtk_tree_store_append (priv->groups_store, &iter, NULL);
-	gtk_tree_store_set (priv->groups_store, &iter,
-			    /* TRANSLATORS: this is a menu group of packages in the queue */
-			    GROUPS_COLUMN_NAME, _("Pending"),
-			    GROUPS_COLUMN_SUMMARY, NULL,
-			    GROUPS_COLUMN_ID, "selected",
-			    GROUPS_COLUMN_ICON, "edit-find",
 			    GROUPS_COLUMN_ACTIVE, TRUE,
 			    -1);
 }
@@ -3202,9 +3238,6 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 	if (pk_bitfield_contain (priv->groups, PK_GROUP_ENUM_COLLECTIONS))
 		gpk_application_group_add_data (priv, PK_GROUP_ENUM_COLLECTIONS);
 
-	/* add group item for selected items */
-	gpk_application_group_add_selected (priv);
-
 	/* add a separator */
 	gtk_tree_store_append (priv->groups_store, &iter, NULL);
 	gtk_tree_store_set (priv->groups_store, &iter,
@@ -3569,7 +3602,7 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 
 	/* set current action */
 	priv->action = GPK_ACTION_NONE;
-	gpk_application_set_buttons_apply_clear (priv);
+	gpk_application_change_queue_status (priv);
 
 	/* hide details */
 	gpk_application_clear_details (priv);
