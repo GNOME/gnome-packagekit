@@ -216,8 +216,8 @@ static void
 gpk_application_allow_install (GpkApplicationPrivate *priv, gboolean allow)
 {
 	GtkWidget *widget;
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_install"));
-	gtk_widget_set_sensitive (widget, allow);
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_install"));
+	gtk_widget_set_visible (widget, allow);
 }
 
 /**
@@ -227,8 +227,8 @@ static void
 gpk_application_allow_remove (GpkApplicationPrivate *priv, gboolean allow)
 {
 	GtkWidget *widget;
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_remove"));
-	gtk_widget_set_sensitive (widget, allow);
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_remove"));
+	gtk_widget_set_visible (widget, allow);
 }
 
 /**
@@ -2253,25 +2253,10 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 		gpk_application_add_detail_item (priv, _("Type"), _("Collection"), NULL);
 
 	/* homepage */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_homepage"));
-	if (egg_strzero (url) == FALSE) {
-		gtk_widget_set_sensitive (widget, TRUE);
-
-		/* TRANSLATORS: tooltip: go to the web address */
-		text = g_strdup_printf (_("Visit %s"), url);
-		gtk_widget_set_tooltip_text (widget, text);
-		g_free (text);
-
-		/* TRANSLATORS: add an entry to go to the project home page */
-		gpk_application_add_detail_item (priv, _("Project"), _("Homepage"), url);
-
-		/* save the url for the button */
-		g_free (priv->homepage_url);
-		priv->homepage_url = g_strdup (url);
-
-	} else {
-		gtk_widget_set_sensitive (widget, FALSE);
-	}
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_homepage"));
+	g_free (priv->homepage_url);
+	priv->homepage_url = g_strdup (url);
+	gtk_widget_set_visible (widget, url != NULL);
 
 	/* group */
 	if (group != PK_GROUP_ENUM_UNKNOWN) {
@@ -2352,7 +2337,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 		/* we cannot now add it */
 		gpk_application_allow_install (priv, FALSE);
 		gpk_application_allow_remove (priv, FALSE);
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_selection"));
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "hbox_packages"));
 		gtk_widget_hide (widget);
 
 		/* hide details */
@@ -2371,7 +2356,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	}
 
 	/* show the menu item */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_selection"));
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "hbox_packages"));
 	gtk_widget_show (widget);
 
 	show_install = (state == 0 ||
@@ -2393,8 +2378,8 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 
 	/* only show run menuitem for installed programs */
 	ret = pk_bitfield_contain (state, GPK_STATE_INSTALLED);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_run"));
-	gtk_widget_set_sensitive (widget, ret);
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_run"));
+	gtk_widget_set_visible (widget, ret);
 
 	/* ensure new action succeeds */
 	g_cancellable_reset (priv->cancellable);
@@ -3180,15 +3165,15 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 		gtk_widget_hide (widget);
 	}
 	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_FILES) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_files"));
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_files"));
 		gtk_widget_hide (widget);
 	}
 	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_depends"));
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_depends"));
 		gtk_widget_hide (widget);
 	}
 	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_requires"));
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_requires"));
 		gtk_widget_hide (widget);
 	}
 
@@ -3463,37 +3448,37 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	/* TRANSLATORS: tooltip on the apply button */
 	gtk_widget_set_tooltip_text (widget, _("Changes are not applied instantly, this button applies all changes"));
 
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_homepage"));
-	g_signal_connect (widget, "activate",
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_homepage"));
+	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_menu_homepage_cb), priv);
 	/* TRANSLATORS: tooltip on the homepage button */
 	gtk_widget_set_tooltip_text (widget, _("Visit home page for selected package"));
 
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_files"));
-	g_signal_connect (widget, "activate",
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_files"));
+	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_menu_files_cb), priv);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_install"));
-	g_signal_connect (widget, "activate",
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_install"));
+	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_menu_install_cb), priv);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_remove"));
-	g_signal_connect (widget, "activate",
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_remove"));
+	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_menu_remove_cb), priv);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_depends"));
-	g_signal_connect (widget, "activate",
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_depends"));
+	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_menu_depends_cb), priv);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_requires"));
-	g_signal_connect (widget, "activate",
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_requires"));
+	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_menu_requires_cb), priv);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_run"));
-	g_signal_connect (widget, "activate",
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_run"));
+	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_menu_run_cb), priv);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "menuitem_selection"));
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "hbox_packages"));
 	gtk_widget_hide (widget);
 
 	/* search cancel button */
@@ -3539,10 +3524,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	gtk_window_set_default_size (GTK_WINDOW (main_window), 800, 400);
 	gtk_window_maximize (GTK_WINDOW (main_window));
 	gtk_widget_show (GTK_WIDGET(main_window));
-
-	/* set details box decent size */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "hbox_packages"));
-	gtk_widget_set_size_request (widget, -1, 120);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "treeview_packages"));
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
