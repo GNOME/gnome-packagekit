@@ -852,45 +852,6 @@ gpk_application_menu_remove_cb (GtkAction *action, GpkApplicationPrivate *priv)
 }
 
 /**
- * gpk_application_menu_run_cb:
- **/
-static void
-gpk_application_menu_run_cb (GtkAction *action, GpkApplicationPrivate *priv)
-{
-	gchar **package_ids;
-	GtkTreeView *treeview;
-	GtkTreeModel *model;
-	GtkTreeIter iter;
-	GtkTreeSelection *selection;
-	PkBitfield state;
-	gboolean ret;
-	gchar *package_id = NULL;
-
-	/* get selection */
-	treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_packages"));
-	selection = gtk_tree_view_get_selection (treeview);
-	ret = gtk_tree_selection_get_selected (selection, &model, &iter);
-	if (!ret) {
-		g_warning ("no selection");
-		return;
-	}
-
-	/* get item */
-	gtk_tree_model_get (model, &iter,
-			    PACKAGES_COLUMN_ID, &package_id,
-			    PACKAGES_COLUMN_STATE, &state, -1);
-
-	/* only if installed */
-	if (pk_bitfield_contain (state, GPK_STATE_INSTALLED)) {
-		/* run this single package id */
-		package_ids = pk_package_ids_from_id (package_id);
-		gpk_helper_run_show (priv->helper_run, package_ids);
-		g_strfreev (package_ids);
-	}
-	g_free (package_id);
-}
-
-/**
  * gpk_application_get_requires_cb:
  **/
 static void
@@ -2344,7 +2305,6 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	GtkWidget *widget;
 	GtkTreeModel *model;
 	GtkTreeIter iter;
-	gboolean ret;
 	gboolean show_install = TRUE;
 	gboolean show_remove = TRUE;
 	PkBitfield state;
@@ -2403,11 +2363,6 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	/* clear the description text */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "textview_description"));
 	gpk_application_set_text_buffer (widget, NULL);
-
-	/* only show run menuitem for installed programs */
-	ret = pk_bitfield_contain (state, GPK_STATE_INSTALLED);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_run"));
-	gtk_widget_set_visible (widget, ret);
 
 	/* ensure new action succeeds */
 	g_cancellable_reset (priv->cancellable);
@@ -3430,10 +3385,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_requires"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_menu_requires_cb), priv);
-
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_run"));
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_application_menu_run_cb), priv);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "hbox_packages"));
 	gtk_widget_hide (widget);
