@@ -3490,8 +3490,19 @@ gpk_application_activate_updates_cb (GSimpleAction *action,
 				     GVariant *parameter,
 				     gpointer user_data)
 {
-	//GpkApplicationPrivate *priv = user_data;
-	// TODO: launch the update program
+	gboolean ret;
+	gchar *command;
+	GError *error = NULL;
+
+	command = g_build_filename (BINDIR, "gpk-update-viewer", NULL);
+	g_debug ("running: %s", command);
+	ret = g_spawn_command_line_async (command, &error);
+	if (!ret) {
+		g_warning ("spawn of %s failed: %s", command, error->message);
+		g_error_free (error);
+	}
+	g_free (command);
+
 }
 
 static GActionEntry gpk_menu_app_entries[] = {
