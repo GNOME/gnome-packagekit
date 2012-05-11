@@ -3438,21 +3438,15 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_clear"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_button_clear_cb), priv);
-	/* TRANSLATORS: tooltip on the clear button */
-	gtk_widget_set_tooltip_text (widget, _("Clear current selection"));
 
 	/* install */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_apply"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_button_apply_cb), priv);
-	/* TRANSLATORS: tooltip on the apply button */
-	gtk_widget_set_tooltip_text (widget, _("Changes are not applied instantly, this button applies all changes"));
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_homepage"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_menu_homepage_cb), priv);
-	/* TRANSLATORS: tooltip on the homepage button */
-	gtk_widget_set_tooltip_text (widget, _("Visit home page for selected package"));
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_files"));
 	g_signal_connect (widget, "clicked",
@@ -3486,8 +3480,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_application_cancel_cb), priv);
 	gtk_widget_set_sensitive (widget, FALSE);
-	/* TRANSLATORS: tooltip on the cancel button */
-	gtk_widget_set_tooltip_text (widget, _("Cancel search"));
 
 	/* the fancy text entry widget */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "entry_text"));
