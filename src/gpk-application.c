@@ -640,19 +640,10 @@ gpk_application_status_changed_timeout_cb (GpkApplicationPrivate *priv)
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_status"));
 	text = gpk_status_enum_to_localised_text (priv->status_last);
 	gtk_label_set_label (GTK_LABEL (widget), text);
+	gtk_widget_show (widget);
 
 	/* show cancel button */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_cancel"));
-	gtk_widget_show (widget);
-
-	/* set icon */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "image_status"));
-	gtk_image_set_from_icon_name (GTK_IMAGE (widget),
-				      gpk_status_enum_to_icon_name (priv->status_last),
-				      GTK_ICON_SIZE_BUTTON);
-
-	/* show containing box */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "hbox_status"));
 	gtk_widget_show (widget);
 
 	/* never repeat */
@@ -699,7 +690,7 @@ gpk_application_progress_cb (PkProgress *progress, PkProgressType type, GpkAppli
 				priv->status_id = 0;
 			}
 
-			widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "hbox_status"));
+			widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_status"));
 			gtk_widget_hide (widget);
 			widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "progressbar_progress"));
 			gtk_widget_hide (widget);
