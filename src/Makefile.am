@@ -181,8 +181,6 @@ gpk_dbus_service_LDADD =				\
 
 gpk_application_SOURCES =				\
 	gpk-application.c				\
-	gpk-cell-renderer-uri.c				\
-	gpk-cell-renderer-uri.h				\
 	$(NULL)
 
 gpk_application_LDADD =					\

@@ -38,7 +38,6 @@
 #include "egg-markdown.h"
 #include "egg-string.h"
 
-#include "gpk-cell-renderer-uri.h"
 #include "gpk-common.h"
 #include "gpk-common.h"
 #include "gpk-desktop.h"
@@ -88,7 +87,6 @@ typedef struct {
 	GtkApplication		*application;
 	GSettings		*settings;
 	GtkBuilder		*builder;
-	GtkListStore		*details_store;
 	GtkListStore		*packages_store;
 	GtkTreeStore		*groups_store;
 	guint			 details_event_id;
@@ -128,13 +126,6 @@ enum {
 	GROUPS_COLUMN_ID,
 	GROUPS_COLUMN_ACTIVE,
 	GROUPS_COLUMN_LAST
-};
-
-enum {
-	DETAIL_COLUMN_TITLE,
-	DETAIL_COLUMN_TEXT,
-	DETAIL_COLUMN_URI,
-	DETAIL_COLUMN_LAST
 };
 
 static void gpk_application_perform_search (GpkApplicationPrivate *priv);
@@ -1170,58 +1161,15 @@ gpk_application_get_full_repo_name (GpkApplicationPrivate *priv, const gchar *da
 }
 
 /**
- * gpk_application_add_detail_item:
- **/
-static void
-gpk_application_add_detail_item (GpkApplicationPrivate *priv, const gchar *title, const gchar *text, const gchar *uri)
-{
-	gchar *markup;
-	GtkTreeView *treeview;
-	GtkTreeIter iter;
-	GtkTreeSelection *selection;
-
-	/* we don't need to clear anymore */
-	if (priv->details_event_id > 0) {
-		g_source_remove (priv->details_event_id);
-		priv->details_event_id = 0;
-	}
-
-	/* format */
-	markup = g_strdup_printf ("<b>%s:</b>", title);
-
-	g_debug ("%s %s %s", markup, text, uri);
-	gtk_list_store_append (priv->details_store, &iter);
-	gtk_list_store_set (priv->details_store, &iter,
-			    DETAIL_COLUMN_TITLE, markup,
-			    DETAIL_COLUMN_TEXT, text,
-			    DETAIL_COLUMN_URI, uri,
-			    -1);
-
-	g_free (markup);
-
-	treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_detail"));
-	selection = gtk_tree_view_get_selection (treeview);
-	gtk_tree_selection_set_mode (selection, GTK_SELECTION_NONE);
-	gtk_tree_view_columns_autosize (treeview);
-}
-
-/**
- * gpk_application_clear_details_really:
+ * gpk_application_clear_details_cb:
  **/
 static gboolean
-gpk_application_clear_details_really (GpkApplicationPrivate *priv)
+gpk_application_clear_details_cb (GpkApplicationPrivate *priv)
 {
 	GtkWidget *widget;
 
-	/* hide details */
-	gtk_list_store_clear (priv->details_store);
-
-	/* clear the old text */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "textview_description"));
-	gpk_application_set_text_buffer (widget, NULL);
-
 	/* hide dead widgets */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "scrolledwindow_detail"));
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "grid_details"));
 	gtk_widget_hide (widget);
 
 	/* never repeat */
@@ -1238,7 +1186,7 @@ gpk_application_clear_details (GpkApplicationPrivate *priv)
 	if (priv->details_event_id > 0)
 		g_source_remove (priv->details_event_id);
 	priv->details_event_id =
-		g_timeout_add (200, (GSourceFunc) gpk_application_clear_details_really, priv);
+		g_timeout_add (200, (GSourceFunc) gpk_application_clear_details_cb, priv);
 	g_source_set_name_by_id (priv->details_event_id,
 				 "[GpkApplication] clear-details");
 }
@@ -1598,8 +1546,6 @@ gpk_application_search_cb (PkClient *client, GAsyncResult *res, GpkApplicationPr
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "treeview_groups"));
 	gtk_widget_set_sensitive (widget, TRUE);
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "textview_description"));
-	gtk_widget_set_sensitive (widget, TRUE);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "treeview_detail"));
 	gtk_widget_set_sensitive (widget, TRUE);
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "entry_text"));
 	gtk_widget_set_sensitive (widget, TRUE);
@@ -2240,7 +2186,6 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	gchar *text;
 	gchar *value;
 	const gchar *repo_name;
-	const gchar *group_text;
 	gboolean installed;
 	gchar **split = NULL;
 	GtkWindow *window;
@@ -2283,11 +2228,9 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	/* only choose the first item */
 	item = g_ptr_array_index (array, 0);
 
-	/* hide to start */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "scrolledwindow_detail"));
+	/* show to start */
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "grid_details"));
 	gtk_widget_show (widget);
-
-	gtk_list_store_clear (priv->details_store);
 
 	/* get data */
 	g_object_get (item,
@@ -2302,28 +2245,24 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	split = pk_package_id_split (package_id);
 	installed = g_str_has_prefix (split[PK_PACKAGE_ID_DATA], "installed");
 
-	/* if a collection, mark as such */
-	if (g_strcmp0 (split[PK_PACKAGE_ID_DATA], "meta") == 0)
-		/* TRANSLATORS: the type of package is a collection (metagroup) */
-		gpk_application_add_detail_item (priv, _("Type"), _("Collection"), NULL);
-
 	/* homepage */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_homepage"));
 	g_free (priv->homepage_url);
 	priv->homepage_url = g_strdup (url);
 	gtk_widget_set_visible (widget, url != NULL);
 
-	/* group */
-	if (group != PK_GROUP_ENUM_UNKNOWN) {
-		group_text = gpk_group_enum_to_localised_text (group);
-		/* TRANSLATORS: the group the package belongs in */
-		gpk_application_add_detail_item (priv, _("Group"), group_text, NULL);
-	}
-
-	/* group */
-	if (!egg_strzero (license)) {
-		/* TRANSLATORS: the licence string for the package */
-		gpk_application_add_detail_item (priv, _("License"), license, NULL);
+	/* licence */
+	if (license != NULL) {
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_licence_title"));
+		gtk_widget_show (widget);
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_licence"));
+		gtk_label_set_label (GTK_LABEL (widget), license);
+		gtk_widget_show (widget);
+	} else {
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_licence_title"));
+		gtk_widget_hide (widget);
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_licence"));
+		gtk_widget_hide (widget);
 	}
 
 	/* set the description */
@@ -2334,26 +2273,45 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 
 	/* if non-zero, set the size */
 	if (size > 0) {
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_size_title"));
 		/* set the size */
-		value = g_format_size (size);
-		if (g_strcmp0 (split[PK_PACKAGE_ID_DATA], "meta") == 0)
+		if (g_strcmp0 (split[PK_PACKAGE_ID_DATA], "meta") == 0) {
 			/* TRANSLATORS: the size of the meta package */
-			gpk_application_add_detail_item (priv, _("Size"), value, NULL);
-		else if (installed)
+			gtk_label_set_label (GTK_LABEL (widget), _("Size"));
+		} else if (installed) {
 			/* TRANSLATORS: the installed size in bytes of the package */
-			gpk_application_add_detail_item (priv, _("Installed size"), value, NULL);
-		else
+			gtk_label_set_label (GTK_LABEL (widget), _("Installed size"));
+		} else {
 			/* TRANSLATORS: the download size of the package */
-			gpk_application_add_detail_item (priv, _("Download size"), value, NULL);
+			gtk_label_set_label (GTK_LABEL (widget), _("Download size"));
+		}
+		gtk_widget_show (widget);
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_size"));
+		value = g_format_size (size);
+		gtk_label_set_label (GTK_LABEL (widget), value);
+		gtk_widget_show (widget);
 		g_free (value);
+	} else {
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_size_title"));
+		gtk_widget_hide (widget);
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_size"));
+		gtk_widget_hide (widget);
 	}
 
 	/* set the repo text, or hide if installed */
 	if (!installed && g_strcmp0 (split[PK_PACKAGE_ID_DATA], "meta") != 0) {
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_source_title"));
+		gtk_widget_show (widget);
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_source"));
 		/* get the full name of the repo from the repo_id */
 		repo_name = gpk_application_get_full_repo_name (priv, split[PK_PACKAGE_ID_DATA]);
-		/* TRANSLATORS: where the package came from, the software source name */
-		gpk_application_add_detail_item (priv, _("Source"), repo_name, NULL);
+		gtk_label_set_label (GTK_LABEL (widget), repo_name);
+		gtk_widget_show (widget);
+	} else {
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_source_title"));
+		gtk_widget_hide (widget);
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_source"));
+		gtk_widget_hide (widget);
 	}
 out:
 	g_free (package_id);
@@ -2384,6 +2342,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	PkBitfield state;
 	gchar **package_ids = NULL;
 	gchar *package_id = NULL;
+	gchar *summary = NULL;
 
 	/* This will only work in single or browse selection mode! */
 	if (!gtk_tree_selection_get_selected (selection, &model, &iter)) {
@@ -2404,11 +2363,16 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	gtk_tree_model_get (model, &iter,
 			    PACKAGES_COLUMN_STATE, &state,
 			    PACKAGES_COLUMN_ID, &package_id,
+			    PACKAGES_COLUMN_SUMMARY, &summary,
 			    -1);
 	if (package_id == NULL) {
 		g_debug ("ignoring help click");
 		goto out;
 	}
+
+	/* set the summary as we know it already */
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_summary"));
+	gtk_label_set_label (GTK_LABEL (widget), summary);
 
 	/* show the menu item */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "hbox_packages"));
@@ -2428,8 +2392,9 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	gpk_application_allow_install (priv, show_install);
 	gpk_application_allow_remove (priv, show_remove);
 
-	/* hide details */
-	gpk_application_clear_details (priv);
+	/* clear the description text */
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "textview_description"));
+	gpk_application_set_text_buffer (widget, NULL);
 
 	/* only show run menuitem for installed programs */
 	ret = pk_bitfield_contain (state, GPK_STATE_INSTALLED);
@@ -2446,6 +2411,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 				     (GAsyncReadyCallback) gpk_application_get_details_cb, priv);
 out:
 	g_free (package_id);
+	g_free (summary);
 	g_strfreev (package_ids);
 }
 
@@ -2882,46 +2848,6 @@ gpk_application_group_row_separator_func (GtkTreeModel *model, GtkTreeIter *iter
 	ret = g_strcmp0 (name, "separator") == 0;
 	g_free (name);
 	return ret;
-}
-
-/**
- * gpk_application_treeview_renderer_clicked:
- **/
-static void
-gpk_application_treeview_renderer_clicked (GtkCellRendererToggle *cell, gchar *uri, GpkApplicationPrivate *priv)
-{
-	g_debug ("clicked %s", uri);
-	gpk_gnome_open (uri);
-}
-
-/**
- * gpk_application_treeview_add_columns_description:
- **/
-static void
-gpk_application_treeview_add_columns_description (GpkApplicationPrivate *priv)
-{
-	GtkCellRenderer *renderer;
-	GtkTreeViewColumn *column;
-	GtkTreeView *treeview;
-
-	treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_detail"));
-
-	/* title */
-	column = gtk_tree_view_column_new ();
-	renderer = gtk_cell_renderer_text_new ();
-	gtk_tree_view_column_pack_start (column, renderer, FALSE);
-	gtk_tree_view_column_add_attribute (column, renderer, "markup", DETAIL_COLUMN_TITLE);
-	gtk_tree_view_append_column (treeview, column);
-
-	/* column for uris */
-	renderer = gpk_cell_renderer_uri_new ();
-	g_signal_connect (renderer, "clicked", G_CALLBACK (gpk_application_treeview_renderer_clicked), priv);
-	/* TRANSLATORS: single column for the package details, not visible at the moment */
-	column = gtk_tree_view_column_new_with_attributes (_("Text"), renderer,
-							   "text", DETAIL_COLUMN_TEXT,
-							   "uri", DETAIL_COLUMN_URI, NULL);
-	gtk_tree_view_append_column (treeview, column);
-	gtk_tree_view_columns_autosize (treeview);
 }
 
 /**
@@ -3407,10 +3333,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 					   G_TYPE_STRING,
 					   G_TYPE_STRING,
 					   G_TYPE_BOOLEAN);
-	priv->details_store = gtk_list_store_new (DETAIL_COLUMN_LAST,
-					    G_TYPE_STRING,
-					    G_TYPE_STRING,
-					    G_TYPE_STRING);
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -3554,13 +3476,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 	g_signal_connect (GTK_TREE_VIEW (widget), "row-activated",
 			  G_CALLBACK (gpk_application_package_row_activated_cb), priv);
-
-	/* use a array store for the extra data */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "treeview_detail"));
-	gtk_tree_view_set_model (GTK_TREE_VIEW (widget), GTK_TREE_MODEL (priv->details_store));
-
-	/* add columns to the tree view */
-	gpk_application_treeview_add_columns_description (priv);
 
 	/* sorted */
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (priv->packages_store),
@@ -3710,8 +3625,6 @@ main (int argc, char *argv[])
 
 	if (priv->packages_store != NULL)
 		g_object_unref (priv->packages_store);
-	if (priv->details_store != NULL)
-		g_object_unref (priv->details_store);
 	if (priv->control != NULL)
 		g_object_unref (priv->control);
 	if (priv->task != NULL)
