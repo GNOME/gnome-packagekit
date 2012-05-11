@@ -646,6 +646,10 @@ gpk_application_status_changed_timeout_cb (GpkApplicationPrivate *priv)
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_cancel"));
 	gtk_widget_show (widget);
 
+	/* show progressbar */
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "progressbar_progress"));
+	gtk_widget_show (widget);
+
 	/* never repeat */
 	priv->status_id = 0;
 	return FALSE;
@@ -716,7 +720,6 @@ gpk_application_progress_cb (PkProgress *progress, PkProgressType type, GpkAppli
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "progressbar_progress"));
 		if (percentage > 0) {
 			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0f);
-			gtk_widget_show (widget);
 		} else {
 			gtk_widget_hide (widget);
 		}
