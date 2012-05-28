@@ -3472,6 +3472,10 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	priv->action = GPK_ACTION_NONE;
 	gpk_application_change_queue_status (priv);
 
+	/* sync toggles */
+	gpk_application_key_changed_cb (priv->settings, "filter-newest", priv);
+	gpk_application_key_changed_cb (priv->settings, "filter-arch", priv);
+
 	/* hide details */
 	gpk_application_clear_details (priv);
 out:
