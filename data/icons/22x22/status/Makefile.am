@@ -26,7 +26,6 @@ icons_DATA = 				\
 	pk-update-normal.png		\
 	pk-update-security.png		\
 	pk-refresh-cache.png		\
-	pk-rollback.png			\
 	pk-service-pack.png		\
 	pk-setup.png			\
 	pk-wait.png

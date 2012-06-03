@@ -86,7 +86,6 @@ static const PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_REMOVE,			"pk-package-delete"},
 	{PK_STATUS_ENUM_REPACKAGING,		"pk-package-cleanup"},
 	{PK_STATUS_ENUM_REQUEST,		"pk-package-search"},
-	{PK_STATUS_ENUM_ROLLBACK,		"pk-package-info"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_RUNNING,		"pk-setup"},
 	{PK_STATUS_ENUM_SCAN_APPLICATIONS,	"pk-package-search"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_SETUP,			"pk-setup"},
@@ -127,7 +126,6 @@ static const PkEnumMatch enum_status_animation[] = {
 	{PK_STATUS_ENUM_REMOVE,			"pk-action-removing"},
 	{PK_STATUS_ENUM_REPACKAGING,		"pk-package-info"},
 	{PK_STATUS_ENUM_REQUEST,		"process-working"},
-	{PK_STATUS_ENUM_ROLLBACK,		"pk-action-removing"},
 	{PK_STATUS_ENUM_RUNNING,		"pk-setup"},
 	{PK_STATUS_ENUM_SCAN_APPLICATIONS,	"pk-action-searching"},
 	{PK_STATUS_ENUM_SETUP,			"pk-package-info"},
@@ -166,7 +164,6 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_REPO_ENABLE,		"pk-package-sources"},
 	{PK_ROLE_ENUM_REPO_SET_DATA,		"pk-package-sources"},
 	{PK_ROLE_ENUM_RESOLVE,			"pk-package-search"},
-	{PK_ROLE_ENUM_ROLLBACK,			"pk-rollback"},
 	{PK_ROLE_ENUM_SEARCH_DETAILS,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_FILE,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_GROUP,		"pk-package-search"},
@@ -980,10 +977,6 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		/* TRANSLATORS: transaction state, checking if we have all the security keys for the operation */
 		text = _("Checking signatures");
 		break;
-	case PK_STATUS_ENUM_ROLLBACK:
-		/* TRANSLATORS: transaction state, when we return to a previous system state */
-		text = _("Rolling back");
-		break;
 	case PK_STATUS_ENUM_TEST_COMMIT:
 		/* TRANSLATORS: transaction state, when we're doing a test transaction */
 		text = _("Testing changes");
@@ -1352,10 +1345,6 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Canceling");
 		break;
-	case PK_ROLE_ENUM_ROLLBACK:
-		/* TRANSLATORS: The role of the transaction, in present tense */
-		text = _("Rolling back");
-		break;
 	case PK_ROLE_ENUM_GET_REPO_LIST:
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting list of repositories");
@@ -1519,10 +1508,6 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 	case PK_ROLE_ENUM_CANCEL:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Canceled");
-		break;
-	case PK_ROLE_ENUM_ROLLBACK:
-		/* TRANSLATORS: The role of the transaction, in past tense */
-		text = _("Rolled back");
 		break;
 	case PK_ROLE_ENUM_GET_REPO_LIST:
 		/* TRANSLATORS: The role of the transaction, in past tense */
