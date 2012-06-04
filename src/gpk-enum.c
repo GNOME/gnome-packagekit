@@ -251,7 +251,6 @@ static const PkEnumMatch enum_message_icon_name[] = {
 	{PK_MESSAGE_ENUM_BACKEND_ERROR,		"dialog-error"},
 	{PK_MESSAGE_ENUM_DAEMON_ERROR,		"dialog-error"},
 	{PK_MESSAGE_ENUM_CACHE_BEING_REBUILT,	"dialog-information"},
-	{PK_MESSAGE_ENUM_UNTRUSTED_PACKAGE,	"dialog-warning"},
 	{PK_MESSAGE_ENUM_NEWER_PACKAGE_EXISTS,	"dialog-information"},
 	{PK_MESSAGE_ENUM_COULD_NOT_FIND_PACKAGE,"dialog-error"},
 	{PK_MESSAGE_ENUM_CONFIG_FILES_CHANGED,	"dialog-information"},
@@ -875,9 +874,6 @@ gpk_message_enum_to_localised_text (PkMessageEnum message)
 		break;
 	case PK_MESSAGE_ENUM_CACHE_BEING_REBUILT:
 		text = _("The package list cache is being rebuilt");
-		break;
-	case PK_MESSAGE_ENUM_UNTRUSTED_PACKAGE:
-		text = _("An untrusted package was installed");
 		break;
 	case PK_MESSAGE_ENUM_NEWER_PACKAGE_EXISTS:
 		text = _("A newer package exists");
