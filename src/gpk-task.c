@@ -470,6 +470,7 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 	const gchar *title;
 	const gchar *message = NULL;
 	GtkNotebook *tabbed_widget = NULL;
+	PkBitfield transaction_flags = 0;
 
 	/* save the current request */
 	priv->request = request;
@@ -478,10 +479,11 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 	g_object_get (results,
 		      "role", &role,
 		      "inputs", &inputs,
+		      "transaction-flags", &transaction_flags,
 		      NULL);
 
 	/* allow skipping of deps except when we remove other packages */
-	if (role != PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES) {
+	if (role != PK_ROLE_ENUM_REMOVE_PACKAGES) {
 		/* have we previously said we don't want to be shown the confirmation */
 		ret = g_settings_get_boolean (priv->settings, GPK_SETTINGS_SHOW_DEPENDS);
 		if (!ret) {
@@ -495,22 +497,22 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 	title = _("Additional confirmation required");
 
 	/* per-role messages */
-	if (role == PK_ROLE_ENUM_SIMULATE_INSTALL_PACKAGES) {
+	if (role == PK_ROLE_ENUM_INSTALL_PACKAGES) {
 
 		/* TRANSLATORS: message text of a dependency dialog */
 		message = ngettext ("To install this package, additional software also has to be modified.",
 				    "To install these packages, additional software also has to be modified.", inputs);
-	} else if (role == PK_ROLE_ENUM_SIMULATE_REMOVE_PACKAGES) {
+	} else if (role == PK_ROLE_ENUM_REMOVE_PACKAGES) {
 
 		/* TRANSLATORS: message text of a dependency dialog */
 		message = ngettext ("To remove this package, additional software also has to be modified.",
 				    "To remove these packages, additional software also has to be modified.", inputs);
-	} else if (role == PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES) {
+	} else if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
 
 		/* TRANSLATORS: message text of a dependency dialog */
 		message = ngettext ("To update this package, additional software also has to be modified.",
 				    "To update these packages, additional software also has to be modified.", inputs);
-	} else if (role == PK_ROLE_ENUM_SIMULATE_INSTALL_FILES) {
+	} else if (role == PK_ROLE_ENUM_INSTALL_FILES) {
 
 		/* TRANSLATORS: message text of a dependency dialog */
 		message = ngettext ("To install this file, additional software also has to be modified.",

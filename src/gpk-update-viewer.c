@@ -936,7 +936,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 		gtk_tree_model_get_iter (model, &iter, path);
 
 		/* if we are adding deps, then select the checkbox */
-		if (role == PK_ROLE_ENUM_SIMULATE_UPDATE_PACKAGES) {
+		if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
 			gtk_tree_store_set (array_store_updates, &iter,
 					    GPK_UPDATES_COLUMN_SELECT, TRUE,
 					    -1);
