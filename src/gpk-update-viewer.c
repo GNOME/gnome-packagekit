@@ -840,7 +840,6 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 	PkPackage *package;
 	gchar *text;
 	gint percentage;
-	gint subpercentage;
 	GtkWidget *widget;
 	PkInfoEnum info;
 	PkRoleEnum role;
@@ -852,7 +851,6 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 		      "role", &role,
 		      "status", &status,
 		      "percentage", &percentage,
-		      "subpercentage", &subpercentage,
 		      "package", &package,
 		      "allow-cancel", &allow_cancel,
 		      NULL);
@@ -1028,44 +1026,50 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 
 	} else if (type == PK_PROGRESS_TYPE_PERCENTAGE) {
 
+		widget = GTK_WIDGET(gtk_builder_get_object (builder, "progressbar_progress"));
+		gtk_widget_show (widget);
+		if (percentage != -1)
+			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
+
+	} else if (type == PK_PROGRESS_TYPE_ITEM_PROGRESS) {
+
+#if PK_CHECK_VERSION(0,8,1)
 		GtkTreeView *treeview;
 		GtkTreeModel *model;
 		GtkTreeIter iter;
 		GtkTreePath *path;
 		guint size;
 		guint size_display;
+		PkItemProgress *item_progress;
 
-		widget = GTK_WIDGET(gtk_builder_get_object (builder, "progressbar_progress"));
-		gtk_widget_show (widget);
-		if (percentage != -1)
-			gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (widget), (gfloat) percentage / 100.0);
+		g_object_get (progress,
+			      "item-progress", &item_progress,
+			      NULL);
 
 		treeview = GTK_TREE_VIEW(gtk_builder_get_object (builder, "treeview_updates"));
 		model = gtk_tree_view_get_model (treeview);
-
-		if (package_id_last == NULL) {
-			g_debug ("no last package");
-			return;
-		}
-
-		path = gpk_update_viewer_model_get_path (model, package_id_last);
+		path = gpk_update_viewer_model_get_path (model,
+							 pk_item_progress_get_package_id (item_progress));
 		if (path == NULL) {
-			g_debug ("not found ID for package");
-			return;
+			g_debug ("not found ID for %s",
+				 pk_item_progress_get_package_id (item_progress));
+			goto out;
 		}
 
 		gtk_tree_model_get_iter (model, &iter, path);
 		gtk_tree_model_get (model, &iter,
 				    GPK_UPDATES_COLUMN_SIZE, &size,
 				    -1);
-		if (subpercentage > 0) {
-			size_display = size - ((size * subpercentage) / 100);
+		percentage = pk_item_progress_get_percentage (item_progress);
+		if (percentage > 0) {
+			size_display = size - ((size * percentage) / 100);
 			gtk_tree_store_set (array_store_updates, &iter,
-					    GPK_UPDATES_COLUMN_PERCENTAGE, subpercentage,
+					    GPK_UPDATES_COLUMN_PERCENTAGE, percentage,
 					    GPK_UPDATES_COLUMN_SIZE_DISPLAY, size_display,
 					    -1);
 		}
 		gtk_tree_path_free (path);
+#endif
 
 	} else if (type == PK_PROGRESS_TYPE_ALLOW_CANCEL) {
 		gboolean idle;
