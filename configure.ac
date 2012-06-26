@@ -101,7 +101,7 @@ dnl - Check library dependencies
 dnl ---------------------------------------------------------------------------
 PKG_CHECK_MODULES(PACKAGEKIT, packagekit-glib2 >= 0.6.5)
 PKG_CHECK_MODULES(GLIB, \
- glib-2.0 >= 2.14.0
+ glib-2.0 >= 2.32.0
  gobject-2.0
  gio-2.0 >= 2.25.9
  gio-unix-2.0)
