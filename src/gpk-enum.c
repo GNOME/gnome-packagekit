@@ -493,6 +493,12 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 	case PK_ERROR_ENUM_CANCELLED_PRIORITY:
 		text = _("Rescheduled due to priority");
 		break;
+	case PK_ERROR_ENUM_UNFINISHED_TRANSACTION:
+		text = _("Unfinished transaction");
+		break;
+	case PK_ERROR_ENUM_LOCK_REQUIRED:
+		text = _("Lock required");
+		break;
 	default:
 		g_warning ("Unknown error");
 	}
@@ -741,8 +747,14 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 	case PK_ERROR_ENUM_CANNOT_FETCH_SOURCES:
 		text = _("The list of software sources could not be downloaded.");
 		break;
+	case PK_ERROR_ENUM_UNFINISHED_TRANSACTION:
+		text = _("A previous package management transaction was interrupted.");
+		break;
 	case PK_ERROR_ENUM_CANCELLED_PRIORITY:
 		text = _("The transaction has been canceled and will be retried when the system is idle.");
+		break;
+	case PK_ERROR_ENUM_LOCK_REQUIRED:
+		text = _("A package manager lock is required.");
 		break;
 	default:
 		g_warning ("Unknown error, please report a bug at " GPK_BUGZILLA_URL ".\n"

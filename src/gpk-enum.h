@@ -58,7 +58,11 @@ typedef enum {
 /* constants defined in previous versions */
 #if (!PK_CHECK_VERSION(0,7,2))
 #define PK_ROLE_ENUM_REPAIR_SYSTEM			(PK_ROLE_ENUM_UPGRADE_SYSTEM+1)
-#define PK_ROLE_ENUM_SIMULATE_REPAIR_SYSTEM		(PK_ROLE_ENUM_REPAIR_SYSTEM+1)
+#endif
+
+#if (!PK_CHECK_VERSION(0,8,1))
+#define PK_ERROR_ENUM_UNFINISHED_TRANSACTION		(PK_ERROR_ENUM_CANCELLED_PRIORITY+1)
+#define PK_ERROR_ENUM_LOCK_REQUIRED			(PK_ERROR_ENUM_UNFINISHED_TRANSACTION+1)
 #endif
 
 void		 gpk_enum_test				(gpointer	 data);
