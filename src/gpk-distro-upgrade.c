@@ -210,7 +210,6 @@ out:
 static void
 gpk_distro_upgrade_assistant_apply_cb (GtkWidget *widget, GpkDistroUpgradePrivate *priv)
 {
-#if PK_CHECK_VERSION(0,6,11)
 	GtkTreeIter iter;
 	gchar *id;
 	PkUpgradeKindEnum upgrade_kind = PK_UPGRADE_KIND_ENUM_MINIMAL;
@@ -238,7 +237,6 @@ gpk_distro_upgrade_assistant_apply_cb (GtkWidget *widget, GpkDistroUpgradePrivat
 					(PkProgressCallback) gpk_distro_upgrade_progress_cb, priv,
 					(GAsyncReadyCallback) gpk_distro_upgrade_upgrade_system_cb, priv);
 	g_free (id);
-#endif
 }
 
 /**
@@ -261,10 +259,8 @@ gpk_distro_upgrade_add_item_to_list (GpkDistroUpgradePrivate *priv, PkDistroUpgr
 	const gchar *id = NULL;
 	const gchar *summary = NULL;
 
-#if PK_CHECK_VERSION(0,6,11)
 	id = pk_distro_upgrade_get_id (distro_upgrade);
 	summary = pk_distro_upgrade_get_summary (distro_upgrade);
-#endif
 
 	/* add item */
 	gtk_list_store_append (priv->distro_upgrade_store, &iter);
@@ -338,12 +334,10 @@ gpk_distro_upgrade_get_distro_upgrades_cb (PkClient *client, GAsyncResult *res, 
 	show_unstable = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->checkbutton));
 	for (i=0; i<array->len; i++) {
 		distro_upgrade = g_ptr_array_index (array, i);
-#if PK_CHECK_VERSION(0,6,11)
 		if (show_unstable ||
 		    pk_distro_upgrade_get_state (distro_upgrade) == PK_DISTRO_UPGRADE_ENUM_STABLE) {
 			gpk_distro_upgrade_add_item_to_list (priv, distro_upgrade);
 		}
-#endif
 	}
 	gtk_widget_set_sensitive (GTK_WIDGET (priv->combobox), TRUE);
 	gtk_assistant_set_page_complete (GTK_ASSISTANT (priv->assistant), priv->page_choose_vbox, TRUE);
@@ -723,7 +717,6 @@ gpk_distro_upgrade_activate_cb (GApplication *application, GpkDistroUpgradePriva
 	g_object_get (control,
 		      "roles", &priv->roles,
 		      NULL);
-#if PK_CHECK_VERSION(0,6,11)
 	ret = pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES);
 	if (ret) {
 		ret = pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_UPGRADE_SYSTEM);
@@ -735,11 +728,6 @@ gpk_distro_upgrade_activate_cb (GApplication *application, GpkDistroUpgradePriva
 		/* TRANSLATORS: message, we're unable to do this action as PackageKit is too old */
 		message = _("Cannot get operating system upgrade information.");
 	}
-#else
-	/* TRANSLATORS: message, we're unable to do this action */
-	message = _("Unsupported daemon version.");
-	ret = FALSE;
-#endif
 	if (!ret) {
 		GtkWidget *dialog;
 		dialog = gtk_message_dialog_new (GTK_WINDOW (priv->assistant),

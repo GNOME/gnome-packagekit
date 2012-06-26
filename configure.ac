@@ -99,7 +99,7 @@ GLIB_GSETTINGS
 dnl ---------------------------------------------------------------------------
 dnl - Check library dependencies
 dnl ---------------------------------------------------------------------------
-PKG_CHECK_MODULES(PACKAGEKIT, packagekit-glib2 >= 0.6.5)
+PKG_CHECK_MODULES(PACKAGEKIT, packagekit-glib2 >= 0.7.0)
 PKG_CHECK_MODULES(GLIB, \
  glib-2.0 >= 2.32.0
  gobject-2.0
