@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit.master.as\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug."
 "cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-06-17 11:18+0000\n"
-"PO-Revision-Date: 2012-06-22 16:19+0530\n"
+"POT-Creation-Date: 2012-06-26 10:55+0000\n"
+"PO-Revision-Date: 2012-06-27 22:02+0530\n"
 "Last-Translator: Nilamdyuti Goswami <ngoswami@redhat.com>\n"
 "Language-Team: as_IN <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
@@ -330,8 +330,8 @@ msgstr "চুক্তি গ্ৰহণ কৰক (_A)"
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
 #: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-dbus-task.c:3381
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-install-package-name.c:66
-#: ../src/gpk-dbus-service.c:153 ../src/gpk-dbus-service.c:156
+#: ../src/gpk-install-local-file.c:65 ../src/gpk-install-package-name.c:64
+#: ../src/gpk-dbus-service.c:151 ../src/gpk-dbus-service.c:154
 msgid "Software Install"
 msgstr "চফ্টৱেৰ ইনস্টল"
 
@@ -341,8 +341,8 @@ msgid "Install selected software on the system"
 msgstr "চিস্টেমত নিৰ্বাচিত চফ্টৱেৰ ইনস্টল কৰক"
 
 #. TRANSLATORS: program name: application to install a catalog of software
-#: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:68
-#: ../src/gpk-install-catalog.c:70
+#: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:66
+#: ../src/gpk-install-catalog.c:68
 msgid "Catalog Installer"
 msgstr "সূচী ইনস্টলাৰ"
 
@@ -350,7 +350,7 @@ msgstr "সূচী ইনস্টলাৰ"
 msgid "Install a catalog of software on the system"
 msgstr "চিস্টেমত উপস্থিত চফ্টৱেৰৰ সূচী ইনস্টল কৰক"
 
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:829
+#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:827
 msgid "Software Log Viewer"
 msgstr "চফ্টৱেৰ লগ দৰ্শক"
 
@@ -716,7 +716,7 @@ msgstr "এই উইন্ডো বন্ধ কৰিলে এই পৰি�
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2039 ../src/gpk-enum.c:1142 ../src/gpk-enum.c:1231
+#: ../src/gpk-application.c:2039 ../src/gpk-enum.c:1154 ../src/gpk-enum.c:1243
 msgid "Installed"
 msgstr "ইনস্টল কৰা"
 
@@ -854,7 +854,7 @@ msgid "Show all packages"
 msgstr "সকলো পেকেইজ দেখুৱাওক"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3540 ../src/gpk-update-viewer.c:3348
+#: ../src/gpk-application.c:3540 ../src/gpk-update-viewer.c:3430
 msgid "Show the program version and exit"
 msgstr "অনুপ্ৰয়োগৰ সংস্কৰণ প্ৰদৰ্শন কৰি প্ৰস্থান কৰক"
 
@@ -1039,7 +1039,7 @@ msgstr "পেকেইজ ইনস্টল কৰিবলৈ ব্যৰ্
 
 #. TRANSLATORS: title: installing packages
 #. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:510 ../src/gpk-enum.c:945
+#: ../src/gpk-dbus-task.c:510 ../src/gpk-enum.c:957
 msgid "Installing packages"
 msgstr "পেকেইজ ইনস্টল কৰা হৈছে"
 
@@ -1200,7 +1200,7 @@ msgstr[1] "এটা প্ৰগ্ৰামে নথিপত্ৰসমূ�
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-dbus-task.c:1489 ../src/gpk-dbus-task.c:3116
-#: ../src/gpk-enum.c:1301
+#: ../src/gpk-enum.c:1313
 msgid "Searching for file"
 msgstr "নথিপত্ৰ সন্ধান কৰা হৈছে"
 
@@ -1469,7 +1469,7 @@ msgstr[1] "নিম্নলিখিত ড্ৰাইভাৰসমূহ �
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2957 ../src/gpk-enum.c:937
+#: ../src/gpk-dbus-task.c:2957 ../src/gpk-enum.c:949
 msgid "Removing packages"
 msgstr "পেকেইজ আতৰোৱা হৈছে"
 
@@ -1572,22 +1572,22 @@ msgid "Restart Now"
 msgstr "এতিয়া পুনৰাম্ভ কৰক"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-distro-upgrade.c:311
+#: ../src/gpk-distro-upgrade.c:307
 msgid "Could not get distribution upgrades"
 msgstr "বিতৰন উন্নয়নসমূহ পোৱা নাযায়"
 
 #. TRANSLATORS: nothing to do
-#: ../src/gpk-distro-upgrade.c:332
+#: ../src/gpk-distro-upgrade.c:328
 msgid "No releases available for upgrade"
 msgstr "উন্নয়নৰ বাবে কোনো উন্মোচন উপলব্ধ নাই"
 
 #. TRANSLATORS: this is the window title
-#: ../src/gpk-distro-upgrade.c:393
+#: ../src/gpk-distro-upgrade.c:387
 #, c-format
 msgid "Upgrade your system (%d of %d)"
 msgstr "আপোনাৰ চিস্টেম উন্নত কৰক (%d ৰ %d)"
 
-#: ../src/gpk-distro-upgrade.c:422
+#: ../src/gpk-distro-upgrade.c:416
 msgid ""
 "This assistant will guide you through upgrading your currently installed "
 "operating system to a newer release."
@@ -1595,7 +1595,7 @@ msgstr ""
 "এই সহায়কে আপোনাক আপোনাৰ বৰ্তমানে ইনস্টল অপাৰেটিং চিস্টেমক এটা নতুন উন্মোচনলে উন্নত "
 "কৰিবলে সহায় কৰিব।"
 
-#: ../src/gpk-distro-upgrade.c:423
+#: ../src/gpk-distro-upgrade.c:417
 msgid ""
 "This process may take several hours to complete, depending on the speed of "
 "your internet connection and the options selected."
@@ -1603,7 +1603,7 @@ msgstr ""
 "এই প্ৰক্ৰিয়া সম্পূৰ্ণ হবলে বহু ঘন্টা লাগিব পাৰে, আপোনাৰ ইন্টাৰনেট গতি আৰু নিৰ্বাচন কৰা "
 "বিকল্পসমূহৰ উপৰত নিৰ্ভৰ কৰি।"
 
-#: ../src/gpk-distro-upgrade.c:424
+#: ../src/gpk-distro-upgrade.c:418
 msgid ""
 "You will be able to continue using your system while this assistant "
 "downloads the packages needed to upgrade your system."
@@ -1611,7 +1611,7 @@ msgstr ""
 "আপুনি আপোনাৰ চিস্টেম ব্যৱহাৰ কৰা চলাই থাকিব পাৰিব যিমান সময় এই সহায়কে আপোনাৰ "
 "চিস্টেম উন্নত কৰিবলে প্ৰয়োজনীয় পেকেইজসমূহ ডাউনল'ড কৰে।"
 
-#: ../src/gpk-distro-upgrade.c:425
+#: ../src/gpk-distro-upgrade.c:419
 msgid ""
 "When the download has completed, you will be prompted to restart your system "
 "in order to complete the upgrade process."
@@ -1620,105 +1620,100 @@ msgstr ""
 "কৰাৰ বাবে কোৱা হব। "
 
 #. TRANSLATORS: this is a intro page title
-#: ../src/gpk-distro-upgrade.c:437
+#: ../src/gpk-distro-upgrade.c:431
 msgid "Upgrade your system"
 msgstr "আপোনাৰ চিস্টেম উন্নত কৰক"
 
-#: ../src/gpk-distro-upgrade.c:487
+#: ../src/gpk-distro-upgrade.c:481
 msgid "Available operating system _releases:"
 msgstr "উপলব্ধ অপাৰেটিং চিস্টেম উন্মোচনসমূহ (_r):"
 
 #. TRANSLATORS: this is in the combobox
-#: ../src/gpk-distro-upgrade.c:496
+#: ../src/gpk-distro-upgrade.c:490
 msgid "Loading list of upgrades"
 msgstr "উন্নয়নসমূহৰ তালিকা ল'ড কৰা হৈছে"
 
 #. TRANSLATORS: this is a choose page title
-#: ../src/gpk-distro-upgrade.c:514
+#: ../src/gpk-distro-upgrade.c:508
 msgid "Choose desired operating system version"
 msgstr "পছন্দৰ অপাৰেটিং চিস্টেম সংস্কৰণ নিৰ্বাচন কৰক"
 
 #. label and combobox
-#: ../src/gpk-distro-upgrade.c:544
+#: ../src/gpk-distro-upgrade.c:538
 msgid "The upgrade tool can operate with three different modes:"
 msgstr "উন্নয়ন সঁজুলিয়ে তিনিটা পৃথক অৱস্থাত কাৰ্য্য কৰিব পাৰে:"
 
-#: ../src/gpk-distro-upgrade.c:574
+#: ../src/gpk-distro-upgrade.c:568
 msgid "The selected option will require the installer to download additional data."
 msgstr "নিৰ্বাচিত বিকল্পৰ অতিৰিক্ত তথ্য ডাউনল'ড কৰিবলে ইনস্টলাৰৰ প্ৰয়োজন হব।"
 
-#: ../src/gpk-distro-upgrade.c:575
+#: ../src/gpk-distro-upgrade.c:569
 msgid ""
 "Do not continue with this option if the network will not be available at "
 "upgrade time."
 msgstr "যদি নেটৱাৰ্ক উন্নয়ন সময়ত উপলব্ধ নাই এই বিকল্পৰ সৈতে আগনাবাঢ়িব।"
 
 #. TRANSLATORS: this is a choose page title
-#: ../src/gpk-distro-upgrade.c:590
+#: ../src/gpk-distro-upgrade.c:584
 msgid "Choose desired download options"
 msgstr "পছন্দৰ ডাউনল'ড বিকল্পসমূহ বাছক"
 
-#: ../src/gpk-distro-upgrade.c:607
+#: ../src/gpk-distro-upgrade.c:601
 msgid "The operating system upgrade tool will now perform the following actions:"
 msgstr "অপাৰেটিং চিস্টেম উন্নয়ন সঁজুলিয়ে এতিয়া নিম্নলিখিত কাৰ্য্যসমূহ পৰিৱেশন কৰিব:"
 
-#: ../src/gpk-distro-upgrade.c:608
+#: ../src/gpk-distro-upgrade.c:602
 msgid "Request authentication from a privileged user"
 msgstr "এজন অব্যাহত ব্যৱহাৰকাৰীৰ পৰা প্ৰমাণীকৰণ অনুৰোধ কৰক"
 
-#: ../src/gpk-distro-upgrade.c:609
+#: ../src/gpk-distro-upgrade.c:603
 msgid "Download installer images"
 msgstr "ইনস্টলাৰ ছবিসমূহ ডাউনল'ড কৰক"
 
-#: ../src/gpk-distro-upgrade.c:610
+#: ../src/gpk-distro-upgrade.c:604
 msgid "Download packages"
 msgstr "পেকেইজসমূহ ডাউনল'ড কৰক"
 
-#: ../src/gpk-distro-upgrade.c:611
+#: ../src/gpk-distro-upgrade.c:605
 msgid "Prepare and test the upgrade"
 msgstr "উন্নয়ন প্ৰস্তুত আৰু নিৰীক্ষণ কৰক"
 
-#: ../src/gpk-distro-upgrade.c:612
+#: ../src/gpk-distro-upgrade.c:606
 msgid "You will have to restart your computer at the end of the upgrade."
 msgstr "উন্নয়নৰ শেষত আপুনি আপোনাৰ কমপিউটাৰ পুনৰাম্ভ কৰিব লাগিব।"
 
-#: ../src/gpk-distro-upgrade.c:613
+#: ../src/gpk-distro-upgrade.c:607
 msgid "Press 'Apply' to apply changes."
 msgstr "পৰিৱৰ্তনসমূহ প্ৰয়োগ কৰিবলে 'প্ৰয়োগ কৰক' ত ক্লিক কৰক।"
 
 #. TRANSLATORS: button text
-#: ../src/gpk-distro-upgrade.c:626
+#: ../src/gpk-distro-upgrade.c:620
 msgid "Confirmation"
 msgstr "নিশ্চিতকৰণ"
 
 #. TRANSLATORS: title text
-#: ../src/gpk-distro-upgrade.c:658
+#: ../src/gpk-distro-upgrade.c:652
 msgid "Applying changes"
 msgstr "পৰিৱৰ্তনসমূহ প্ৰয়োগ কৰা হৈছে"
 
 #. TRANSLATORS: title, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:720
+#: ../src/gpk-distro-upgrade.c:714
 msgid "Cannot perform operating system upgrade"
 msgstr "অপাৰেটিং চিস্টেম উন্নয়ন পৰিৱেশন কৰিব নোৱাৰি"
 
 #. TRANSLATORS: message, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:732
+#: ../src/gpk-distro-upgrade.c:725
 msgid "Upgrading the operating system is not supported."
 msgstr "অপাৰেটিং চিস্টেম উন্নত কৰা সমৰ্থিত নহয়।"
 
 #. TRANSLATORS: message, we're unable to do this action as PackageKit is too old
-#: ../src/gpk-distro-upgrade.c:736
+#: ../src/gpk-distro-upgrade.c:729
 msgid "Cannot get operating system upgrade information."
 msgstr "অপাৰেটিং চিস্টেম উন্নয়ন তথ্য প্ৰাপ্ত কৰিব নোৱাৰি।"
 
-#. TRANSLATORS: message, we're unable to do this action
-#: ../src/gpk-distro-upgrade.c:740
-msgid "Unsupported daemon version."
-msgstr "অসমৰ্থিত ডিমন সংস্কৰণ।"
-
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-distro-upgrade.c:796 ../src/gpk-distro-upgrade.c:799
+#: ../src/gpk-distro-upgrade.c:782 ../src/gpk-distro-upgrade.c:785
 msgid "Distribution Upgrade Tool"
 msgstr "বিতৰন উন্নয়ন সঁজুলি"
 
@@ -2003,11 +1998,21 @@ msgstr "ইনস্টল উৎসসমূহ প্ৰাপ্ত কৰি
 msgid "Rescheduled due to priority"
 msgstr "প্ৰাথমিকতাৰ বাবে পুনৰ সূচনা কৰা হল"
 
-#: ../src/gpk-enum.c:511
+#: ../src/gpk-enum.c:497
+#| msgid "Running the transaction failed"
+msgid "Unfinished transaction"
+msgstr "অসম্পূৰ্ণ লেন-দেন"
+
+#: ../src/gpk-enum.c:500
+#| msgid "EULA required"
+msgid "Lock required"
+msgstr "লক প্ৰয়োজনীয়"
+
+#: ../src/gpk-enum.c:517
 msgid "Failed with unknown error code."
 msgstr "অজ্ঞাত ত্ৰুটি ক'ডৰ সৈতে ব্যৰ্থ হল।"
 
-#: ../src/gpk-enum.c:514
+#: ../src/gpk-enum.c:520
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
@@ -2015,7 +2020,7 @@ msgstr ""
 "কোনো নেটৱাৰ্ক সংযোগ উপলব্ধ নহয়।\n"
 "অনুগ্ৰহ কৰি আপোনাৰ সংযোগ সংহতিসমূহ পৰীক্ষা কৰি পুনঃ চেষ্টা কৰক।"
 
-#: ../src/gpk-enum.c:518
+#: ../src/gpk-enum.c:524
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
@@ -2023,7 +2028,7 @@ msgstr ""
 "পেকেইজৰ তালিকা পুনঃ সৃষ্টি কৰা প্ৰয়োজনীয়।\n"
 "বেকএন্ডৰ দ্বাৰা এইটো স্বচালিতভাবে নিৰ্মিত হোৱা উচিত।"
 
-#: ../src/gpk-enum.c:522
+#: ../src/gpk-enum.c:528
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
@@ -2032,11 +2037,11 @@ msgstr ""
 "ব্যৱহাৰকাৰীৰ অনুৰোধসমূহ চাবলে দায়িত্ববান সেৱাৰ বাবে মেমৰি অৱশিষ্ট নাই।\n"
 "অনুগ্ৰহ কৰি কমপিউটাৰ পুনাৰম্ভ কৰক।"
 
-#: ../src/gpk-enum.c:526
+#: ../src/gpk-enum.c:532
 msgid "A thread could not be created to service the user request."
 msgstr "ব্যৱহাৰকাৰী অনুৰোধ ব্যৱস্থাপনাৰ বাবে এটা থ্ৰেড সৃষ্টি কৰা নাযায়।"
 
-#: ../src/gpk-enum.c:529
+#: ../src/gpk-enum.c:535
 msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug in your distribution bug tracker as this should not have "
@@ -2046,7 +2051,7 @@ msgstr ""
 "আপোনাৰ বিতৰণৰ বাগ ট্ৰেকাৰত অনুগ্ৰহ কৰি এটা বাগ প্ৰতিবেদন কৰক কাৰণ এইটো হ'ব লগিয়া "
 "নাছিল।"
 
-#: ../src/gpk-enum.c:533
+#: ../src/gpk-enum.c:539
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug in your distribution bug tracker with the error "
@@ -2055,7 +2060,7 @@ msgstr ""
 "অপ্ৰত্যাশিত এটা সমস্যা দেখা দিছে।\n"
 "আপোনাৰ বিতৰণৰ বাগ ট্ৰেকাৰত ভুলৰ বিৱৰণৰ লগত অনুগ্ৰহ কৰি এটা বাগ প্ৰতিবেদন কৰক।"
 
-#: ../src/gpk-enum.c:537
+#: ../src/gpk-enum.c:543
 msgid ""
 "A security trust relationship could not be made with software source.\n"
 "Please check your security settings."
@@ -2063,11 +2068,11 @@ msgstr ""
 "চফ্টৱেৰ উৎসৰ সৈতে নিৰাপদ বিশ্বস্ত সম্পৰ্ক স্থাপন কৰা নাযায়।\n"
 "অনুগ্ৰহ কৰি আপোনাৰ সুৰক্ষা সংহতিসমূহ পৰীক্ষা কৰক।"
 
-#: ../src/gpk-enum.c:541
+#: ../src/gpk-enum.c:547
 msgid "The package that is trying to be removed or updated is not already installed."
 msgstr "আতৰাবলে বা আপডেইট কৰাৰ বাবে চেষ্টা কৰা পেকেইজ ইতিমধ্যে ইনস্টল্ড নাই।"
 
-#: ../src/gpk-enum.c:544
+#: ../src/gpk-enum.c:550
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "software source."
@@ -2075,11 +2080,11 @@ msgstr ""
 "পৰিবৰ্তনৰ বাবে চিহ্নিত পেকেইজ আপোনাৰ কমপিউটাৰ বা অন্য কোনো চফ্টৱেৰ ভঁৰালত পোৱা "
 "নাযায়।"
 
-#: ../src/gpk-enum.c:547
+#: ../src/gpk-enum.c:553
 msgid "The package that is trying to be installed is already installed."
 msgstr "ইনস্টল কৰাৰ বাবে চিহ্নিত পেকেইজ ইতিমধ্যে ইনস্টল্ড আছে।"
 
-#: ../src/gpk-enum.c:550
+#: ../src/gpk-enum.c:556
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
@@ -2087,7 +2092,7 @@ msgstr ""
 "পেকেইজ ডাউনল'ড কৰিবলৈ ব্যৰ্থ।\n"
 "অনুগ্ৰহ কৰি নেটৱাৰ্ক সংযোগ পৰীক্ষা কৰক।"
 
-#: ../src/gpk-enum.c:554
+#: ../src/gpk-enum.c:560
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
@@ -2095,7 +2100,7 @@ msgstr ""
 "দলৰ ধৰণ পোৱা নাযায়।\n"
 "অনুগ্ৰহ কৰি দলৰ তালিকা পৰীক্ষা কৰি পুনঃ চেষ্টা কৰক।"
 
-#: ../src/gpk-enum.c:558
+#: ../src/gpk-enum.c:564
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source "
@@ -2104,7 +2109,7 @@ msgstr ""
 "দলৰ তালিকা ল'ড কৰা নাযায়।\n"
 "এইটো সাধাৰণতে চফ্টৱেৰৰ উৎসৰ ত্ৰুটি হ'লেও, ক্যাশ সতেজ কৰিলেও সহায় পাব পাৰে।"
 
-#: ../src/gpk-enum.c:563
+#: ../src/gpk-enum.c:569
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
@@ -2112,11 +2117,11 @@ msgstr ""
 "কাৰ্য্য সম্পন্ন কৰাৰ বাবে প্ৰযোজ্য কোনো পেকেইজ পোৱা নাযায়।\n"
 "বিৱৰিত সংবাদত অধিক তথ্য উপস্থিত আছে।"
 
-#: ../src/gpk-enum.c:567
+#: ../src/gpk-enum.c:573
 msgid "The search filter was not correctly formed."
 msgstr "সন্ধান পৰিস্ৰাৱক সঠিকৰূপে গঠিত নহয়।"
 
-#: ../src/gpk-enum.c:570
+#: ../src/gpk-enum.c:576
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
@@ -2124,7 +2129,7 @@ msgstr ""
 "চাৰ্ভাৰলৈ প্ৰেৰণ কৰাৰ সময়ত পেকেইজ পৰিচয়ক সঠিক ৰূপে গঠিত নাছিল।\n"
 "সাধাৰণত অভ্যন্তৰীণ ত্ৰুটি ফলত এইটো দেখা দিয়ে আৰু এই ত্ৰুটি সম্পৰ্কে সূচিত কৰা উচিত।"
 
-#: ../src/gpk-enum.c:574
+#: ../src/gpk-enum.c:580
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
@@ -2132,7 +2137,7 @@ msgstr ""
 "কাৰ্য্য এটা অধাৰ্য্যত সমস্যা দেখা দিছে।\n"
 "বিৱৰিত সংবাদত অধিক তথ্য উপস্থিত আছে।"
 
-#: ../src/gpk-enum.c:578
+#: ../src/gpk-enum.c:584
 msgid ""
 "The remote software source name was not found.\n"
 "You may need to enable an item in Software Sources."
@@ -2140,15 +2145,15 @@ msgstr ""
 "দূৰবৰ্তী চফ্টৱেৰ উৎসৰ নাম পোৱা নাযায়।\n"
 "আপুনি চফ্টৱেৰৰ উৎসত কোনো মান সক্ৰিয় কৰিব লাগিবও পাৰে।"
 
-#: ../src/gpk-enum.c:582
+#: ../src/gpk-enum.c:588
 msgid "Removing a protected system package is not allowed."
 msgstr "সংৰক্ষিত চিস্টেম পেকেইজ আতৰোৱাৰ অনুমতি নাই।"
 
-#: ../src/gpk-enum.c:585
+#: ../src/gpk-enum.c:591
 msgid "The action was canceled successfully and no packages were changed."
 msgstr "কাৰ্য্য সফলতাৰে বাতিল কৰা হৈছে আৰু কোনো পেকেইজ পৰিবৰ্তিত নহয়।"
 
-#: ../src/gpk-enum.c:588
+#: ../src/gpk-enum.c:594
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
@@ -2156,7 +2161,7 @@ msgstr ""
 "কাৰ্য্য সফলতাৰে বাতিল কৰা হৈছে আৰু কোনো পেকেইজ পৰিবৰ্তিত নহয়। বেকএন্ড সঠিকৰূপে বন্ধ "
 "কৰা নহয়।"
 
-#: ../src/gpk-enum.c:592
+#: ../src/gpk-enum.c:598
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
@@ -2164,11 +2169,11 @@ msgstr ""
 "স্থানীয় পেকেইজ সংৰূপৰ নথিপত্ৰ খোলা নাযায়।\n"
 "সংৰূপ বৈধ হয় নে নহয় অনুগ্ৰহ কৰি পৰীক্ষা কৰক।"
 
-#: ../src/gpk-enum.c:596
+#: ../src/gpk-enum.c:602
 msgid "The action cannot be canceled at this time."
 msgstr "এই মুহূৰ্তে কাৰ্য্য বাতিল কৰা নাযাব।"
 
-#: ../src/gpk-enum.c:599
+#: ../src/gpk-enum.c:605
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
@@ -2176,7 +2181,7 @@ msgstr ""
 "সাধাৰণত এই পদ্ধতিত উৎস পেকেইজ ইনস্টল কৰা নহয়।\n"
 "ইনস্টল কৰাৰ বাবে চিহ্নিত নথিপত্ৰৰ সম্প্ৰসাৰণ পৰীক্ষা কৰক।"
 
-#: ../src/gpk-enum.c:603
+#: ../src/gpk-enum.c:609
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
@@ -2184,7 +2189,7 @@ msgstr ""
 "অনুজ্ঞা চুক্তিপত্ৰত সন্মতি জ্ঞাপন কৰা নহয়।\n"
 "এই চফ্টৱেৰ ব্যৱহাৰৰ বাবে অনুজ্ঞাৰ চৰ্ত গ্ৰহণ কৰা প্ৰয়োজনীয়।"
 
-#: ../src/gpk-enum.c:607
+#: ../src/gpk-enum.c:613
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2192,7 +2197,7 @@ msgstr ""
 "দুটা পেকেইজে একেই নথিপত্ৰ দিয়ে।\n"
 "বিভিন্ন চফ্টৱেৰ উৎসৰ পৰা পেকেইজ মিলোৱাৰ ফলত এইটো হ'ব পাৰে।"
 
-#: ../src/gpk-enum.c:611
+#: ../src/gpk-enum.c:617
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software sources."
@@ -2200,7 +2205,7 @@ msgstr ""
 "একাধিক বিসঙ্গত পেকেইজ উপস্থিত আছে।\n"
 "বিভিন্ন চফ্টৱেৰ উৎসৰ পৰা পেকেইজ মিলোৱাৰ ফলত এইটো হ'ব পাৰে।"
 
-#: ../src/gpk-enum.c:615
+#: ../src/gpk-enum.c:621
 msgid ""
 "There was a (possibly temporary) problem connecting to a software source.\n"
 "Please check the detailed error for further details."
@@ -2208,7 +2213,7 @@ msgstr ""
 "চফ্টৱেৰ উৎসৰ সৈতে সংযোগ স্থাপন কৰিবলৈ এটা (সম্ভৱত সাময়িক) সমস্যা দেখা দিছে ।\n"
 "বিস্তাৰিত তথ্য জনাৰ বাবে অনুগ্ৰহ কৰি ত্ৰুটিৰ বিৱৰণ চাওক।"
 
-#: ../src/gpk-enum.c:619
+#: ../src/gpk-enum.c:625
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
@@ -2217,7 +2222,7 @@ msgstr ""
 "একেই সময়তে পেকেইজ সৃষ্টিৰ কিছুমান সামগ্ৰী ব্যৱহাৰ কৰিলে এই পৰিস্থিতিয়ে দেখা দিব "
 "পাৰে।"
 
-#: ../src/gpk-enum.c:623
+#: ../src/gpk-enum.c:629
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
@@ -2225,7 +2230,7 @@ msgstr ""
 "বেকএন্ড উদাহৰণ বন্ধ কৰিবলৈ ব্যৰ্থ।\n"
 "এই ত্ৰুটি সাধাৰণতে উপেক্ষা কৰা যাব।"
 
-#: ../src/gpk-enum.c:627
+#: ../src/gpk-enum.c:633
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
@@ -2233,15 +2238,15 @@ msgstr ""
 "পেকেইজ সৃষ্টিৰ বেকএন্ডৰ ওপৰত স্বতন্ত্ৰ লক প্ৰাপ্ত কৰিবলৈ ব্যৰ্থ।\n"
 "অনুগ্ৰহ কৰি পেকেইজ সৃষ্টিৰ অন্য কোনো চলি থকা কিংবদন্তি সামগ্ৰী বন্ধ কৰক।"
 
-#: ../src/gpk-enum.c:631
+#: ../src/gpk-enum.c:637
 msgid "None of the selected packages could be updated."
 msgstr "নিৰ্বাচিত পেকেইজসমূহৰ এটাও আপডেইট কৰা নাযায়।"
 
-#: ../src/gpk-enum.c:634
+#: ../src/gpk-enum.c:640
 msgid "The repository configuration could not be modified."
 msgstr "ভঁৰাল সংৰূপ পৰিবৰ্তন কৰা নাযায়।"
 
-#: ../src/gpk-enum.c:637
+#: ../src/gpk-enum.c:643
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
@@ -2249,11 +2254,11 @@ msgstr ""
 "স্থানীয় নথিপত্ৰ ইনস্টল কৰিবলৈ ব্যৰ্থ।\n"
 "বিৱৰিত সংবাদত অধিক তথ্য উপলব্ধ।"
 
-#: ../src/gpk-enum.c:641
+#: ../src/gpk-enum.c:647
 msgid "The package security signature could not be verified."
 msgstr "পেকেইজৰ সুৰক্ষা স্বাক্ষৰ সতাসত্য নিৰূপণ কৰিব নোৱাৰি।"
 
-#: ../src/gpk-enum.c:644
+#: ../src/gpk-enum.c:650
 msgid ""
 "The package security signature is missing and this package is untrusted.\n"
 "This package was not signed when created."
@@ -2261,11 +2266,11 @@ msgstr ""
 "পেকেইজৰ সুৰক্ষা স্বাক্ষৰ অনুপস্থিত আৰু এই পেকেইজ বিশ্বস্ত নহয়।\n"
 "পেকেইজৰ সৃষ্টিৰ সময়ত সেইটো স্বাক্ষৰিত নাছিল।"
 
-#: ../src/gpk-enum.c:648
+#: ../src/gpk-enum.c:654
 msgid "Repository configuration was invalid and could not be read."
 msgstr "ভঁৰাল সংৰূপ বৈধ নাছিল আৰু পঢ়া নাযায়।"
 
-#: ../src/gpk-enum.c:651
+#: ../src/gpk-enum.c:657
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
@@ -2273,21 +2278,21 @@ msgstr ""
 "ইনস্টলৰ বাবে চিহ্নিত পেকেইজ বৈধ নহয়।\n"
 "পেকেইজ সম্ভৱতঃ ক্ষতিগ্ৰস্ত, অথবা সঠিক পেকেইজ নহয় ।"
 
-#: ../src/gpk-enum.c:655
+#: ../src/gpk-enum.c:661
 msgid ""
 "Installation of this package prevented by your packaging system's "
 "configuration."
 msgstr "পেকেইজ কৰা চিস্টেমৰ সংৰূপ দ্বাৰা এই পেকেইজৰ ইনস্টল প্ৰতিৰোধ কৰা হৈছে।"
 
-#: ../src/gpk-enum.c:658
+#: ../src/gpk-enum.c:664
 msgid "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr "ডাউনল'ড কৰা পেকেইজ ক্ষতিগ্ৰস্ত আৰু এইটো পুনঃ ডাউনল'ড কৰা প্ৰয়োজনীয়।"
 
-#: ../src/gpk-enum.c:661
+#: ../src/gpk-enum.c:667
 msgid "All of the packages selected for install are already installed on the system."
 msgstr "ইনস্টলৰ বাবে নিৰ্বাচিত সকলো পেকেইজ ইতিমধ্যে চিস্টেমত ইনস্টল্ড আছে।"
 
-#: ../src/gpk-enum.c:664
+#: ../src/gpk-enum.c:670
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
@@ -2295,7 +2300,7 @@ msgstr ""
 "চিস্টেমত চিহ্নিত নথিপত্ৰ পোৱা নাযায়।\n"
 "নথিপত্ৰ আছে নে নাই অনুগ্ৰহ কৰি পৰীক্ষা কৰক।"
 
-#: ../src/gpk-enum.c:668
+#: ../src/gpk-enum.c:674
 msgid ""
 "Required data could not be found on any of the configured software sources.\n"
 "There were no more download mirrors that could be tried."
@@ -2303,7 +2308,7 @@ msgstr ""
 "সংৰূপণ কৰা কোনো চফ্টৱেৰৰ উৎসত প্ৰয়োজনীয় তথ্য পোৱা নাযায়।\n"
 "অতিৰিক্ত কোনো ডাউনল'ড মিৰৰত সন্ধান কৰা সম্ভৱ নহয়।"
 
-#: ../src/gpk-enum.c:672
+#: ../src/gpk-enum.c:678
 msgid ""
 "Required upgrade data could not be found in any of the configured software "
 "sources.\n"
@@ -2312,11 +2317,11 @@ msgstr ""
 "সংৰূপণ কৰা কোনো চফ্টৱেৰৰ উৎসত প্ৰয়োজনীয় তথ্য পোৱা নাযায়।\n"
 "অতিৰিক্ত কোনো ডাউনল'ড মিৰৰত সন্ধান কৰা সম্ভৱ নহয়।"
 
-#: ../src/gpk-enum.c:676
+#: ../src/gpk-enum.c:682
 msgid "The package that is trying to be installed is incompatible with this system."
 msgstr "ইনস্টল কৰাৰ বাবে চেষ্টা কৰা পেকেইজ চিস্টেমৰ সৈতে অসংগত।"
 
-#: ../src/gpk-enum.c:679
+#: ../src/gpk-enum.c:685
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
@@ -2324,11 +2329,11 @@ msgstr ""
 "এই ডিভাইচত পৰ্যাপ্ত স্থান অনুপস্থিত।\n"
 "চিহ্নিত কৰ্ম সঞ্চালনৰ বাবে চিস্টেম ডিস্কৰ কিছুমান স্থান ৰিক্ত কৰক।"
 
-#: ../src/gpk-enum.c:683
+#: ../src/gpk-enum.c:689
 msgid "Additional media is required to complete the transaction."
 msgstr "এই বস্তু সঞ্চালনৰ বাবে অতিৰিক্ত প্লাগিনৰ প্ৰয়োজন।"
 
-#: ../src/gpk-enum.c:686
+#: ../src/gpk-enum.c:692
 msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
@@ -2336,7 +2341,7 @@ msgstr ""
 "প্ৰমাণীকৰণৰ বাবে সঠিক পৰিচয় উপলব্ধ কৰা হোৱা নাই।\n"
 "অনুগ্ৰহ কৰি পাছৱাৰ্ড বা একাওন্টৰ সংহতি পৰীক্ষা কৰক।"
 
-#: ../src/gpk-enum.c:690
+#: ../src/gpk-enum.c:696
 msgid ""
 "The specified update could not be found.\n"
 "It could have already been installed or no longer available on the remote "
@@ -2345,27 +2350,27 @@ msgstr ""
 "নিৰ্দিষ্ট আপডেইট পোৱা নগল।\n"
 "ই হয়তো ইতিমধ্যে ইনস্টল কৰা আছে অথবা দূৰৰ চাৰ্ভাৰত উপলব্ধ নাই।"
 
-#: ../src/gpk-enum.c:694
+#: ../src/gpk-enum.c:700
 msgid "The package could not be installed from untrusted source."
 msgstr "অবিশ্বস্ত উৎসৰ পৰা পেকেইজ ইনস্টল কৰা নাযায়।"
 
-#: ../src/gpk-enum.c:697
+#: ../src/gpk-enum.c:703
 msgid "The package could not be updated from untrusted source."
 msgstr "অবিশ্বস্ত উৎসৰ পৰা পেকেইজ আপডেইট কৰা নাযায়।"
 
-#: ../src/gpk-enum.c:700
+#: ../src/gpk-enum.c:706
 msgid "The file list is not available for this package."
 msgstr "এই পেকেইজৰ বাবে কোনো নথিপত্ৰৰ তালিকা পোৱা নাযায়।"
 
-#: ../src/gpk-enum.c:703
+#: ../src/gpk-enum.c:709
 msgid "The information about what requires this package could not be obtained."
 msgstr "কোন ক্ষেত্ৰত এই পেকেইজ প্ৰয়োজনীয় সেইটো জনা নাযায়।"
 
-#: ../src/gpk-enum.c:706
+#: ../src/gpk-enum.c:712
 msgid "The specified software source could not be disabled."
 msgstr "ধাৰ্য্য চফ্টৱেৰ উৎস অসামৰ্থবান কৰা নাযায়।"
 
-#: ../src/gpk-enum.c:709
+#: ../src/gpk-enum.c:715
 msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
@@ -2373,7 +2378,7 @@ msgstr ""
 "ডাউনল'ড স্বচালিতভাৱে কৰিব পৰা নগল আৰু হস্তচালিতভাৱে কৰিব লাগিব।\n"
 "বিৱৰিত সংবাদত অধিক তথ্য আছে।"
 
-#: ../src/gpk-enum.c:713
+#: ../src/gpk-enum.c:719
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
@@ -2381,7 +2386,7 @@ msgstr ""
 "নিৰ্বাচন কৰা পেকেইজসমূহৰ এটা সঠিকভাৱে সংৰূপণ কৰিবলে ব্যৰ্থ হল।\n"
 "অধিক তথ্য বিৱৰিত সংবাদত আছে।"
 
-#: ../src/gpk-enum.c:717
+#: ../src/gpk-enum.c:723
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
@@ -2389,7 +2394,7 @@ msgstr ""
 "নিৰ্বাচিত পেকেইজসমূহৰ এটা সঠিকভাৱে সৃষ্টি কৰিবলে ব্যৰ্থ হল।\n"
 "অধিক তথ্য বিৱৰিত সংবাদত আছে।"
 
-#: ../src/gpk-enum.c:721
+#: ../src/gpk-enum.c:727
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
@@ -2397,7 +2402,7 @@ msgstr ""
 "নিৰ্বাচন কৰা পেকেইজসমূহৰ এটা সঠিকভাৱে ইনস্টল কৰিবলে ব্যৰ্থ হল।\n"
 "অধিক তথ্য বিৱৰিত সংবাদত আছে।"
 
-#: ../src/gpk-enum.c:725
+#: ../src/gpk-enum.c:731
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
@@ -2405,7 +2410,7 @@ msgstr ""
 "নিৰ্বাচিত পেকেইজসমূহৰ এটাক সঠিকভাৱে আতৰাব পৰা নগল।\n"
 "অধিক তথ্য বিৱৰিত সংবাদত আছে।"
 
-#: ../src/gpk-enum.c:729
+#: ../src/gpk-enum.c:735
 msgid ""
 "A program is running that has to be closed before the update can proceed.\n"
 "More information is available in the detailed report."
@@ -2413,325 +2418,334 @@ msgstr ""
 "এটা প্ৰগ্ৰাম চলি আছে যাক আপডেইট আগবঢ়াৰ আগত বন্ধ কৰিব লাগিব।\n"
 "অধিক তথ্য বিৱৰিত সংবাদত আছে।"
 
-#: ../src/gpk-enum.c:733
+#: ../src/gpk-enum.c:739
 msgid "The package database was changed while the request was running."
 msgstr "অনুৰোধ চলি থাকোতে পেকেইজ ডাটাবেইচ সলনি কৰা হৈছিল।"
 
-#: ../src/gpk-enum.c:736
+#: ../src/gpk-enum.c:742
 msgid "The virtual provide type is not supported by this system."
 msgstr "ভাৰছুৱেল প্ৰদান ধৰণ এই চিস্টেম দ্বাৰা সমৰ্থিত নহয়।"
 
-#: ../src/gpk-enum.c:739
+#: ../src/gpk-enum.c:745
 msgid "The install root is invalid. Please contact your administrator."
 msgstr "ইনস্টল ৰুট অবৈধ। অনুগ্ৰহ কৰি প্ৰশাসকক যোগাযোগ কৰক।"
 
-#: ../src/gpk-enum.c:742
+#: ../src/gpk-enum.c:748
 msgid "The list of software sources could not be downloaded."
 msgstr "চফ্টৱেৰ উৎসসমূহৰ তালিকা ডাউনল'ড কৰিব পৰা নগল।"
 
-#: ../src/gpk-enum.c:745
+#: ../src/gpk-enum.c:751
+msgid "A previous package management transaction was interrupted."
+msgstr "আগতে এটা পেকেইজ ব্যৱস্থাপনা লেন-দেন বাধাগ্ৰস্থ হৈছিল।"
+
+#: ../src/gpk-enum.c:754
 msgid ""
 "The transaction has been canceled and will be retried when the system is "
 "idle."
 msgstr "এই লেন-দেন বাতিল কৰা হৈছে আৰু চিস্টেম অলস থাকোতে পুনৰ চেষ্টা কৰা হব।"
 
-#: ../src/gpk-enum.c:763
+#: ../src/gpk-enum.c:757
+#| msgid "A media change is required"
+msgid "A package manager lock is required."
+msgstr "এটা পেকেইজ ব্যৱস্থাপক লক প্ৰয়োজনীয়।"
+
+#: ../src/gpk-enum.c:775
 msgid "No restart is necessary."
 msgstr "পুনাৰম্ভ কৰা প্ৰয়োজনীয় নহয়।"
 
-#: ../src/gpk-enum.c:766
+#: ../src/gpk-enum.c:778
 msgid "You will be required to restart this application."
 msgstr "অনুপ্ৰয়োগ পুনাৰম্ভ কৰা প্ৰয়োজনীয়।"
 
-#: ../src/gpk-enum.c:769
+#: ../src/gpk-enum.c:781
 msgid "You will be required to log out and back in."
 msgstr "লগআউট কৰি লগিন কৰা প্ৰয়োজনীয়।"
 
-#: ../src/gpk-enum.c:772
+#: ../src/gpk-enum.c:784
 msgid "A restart will be required."
 msgstr "পুনাৰম্ভ কৰা প্ৰয়োজনীয়।"
 
-#: ../src/gpk-enum.c:775
+#: ../src/gpk-enum.c:787
 msgid "You will be required to log out and back in due to a security update."
 msgstr "সুৰক্ষা আপডেইটৰ কাৰণে লগআউট কৰি লগিন কৰা প্ৰয়োজনীয়।"
 
-#: ../src/gpk-enum.c:778
+#: ../src/gpk-enum.c:790
 msgid "A restart will be required due to a security update."
 msgstr "সুৰক্ষা আপডেইটৰ কাৰণে পুনাৰম্ভ কৰা প্ৰয়োজনীয়।"
 
-#: ../src/gpk-enum.c:795
+#: ../src/gpk-enum.c:807
 msgid "No restart is required."
 msgstr "পুনাৰম্ভ কৰা প্ৰয়োজনীয় নহয়।"
 
-#: ../src/gpk-enum.c:798
+#: ../src/gpk-enum.c:810
 msgid "A restart is required."
 msgstr "পুনাৰম্ভ কৰা প্ৰয়োজনীয়।"
 
-#: ../src/gpk-enum.c:801
+#: ../src/gpk-enum.c:813
 msgid "You need to log out and log back in."
 msgstr "প্ৰস্থান কৰি পুনৰ প্ৰৱেশ কৰা প্ৰয়োজনীয়।"
 
-#: ../src/gpk-enum.c:804
+#: ../src/gpk-enum.c:816
 msgid "You need to restart the application."
 msgstr "অনুপ্ৰয়োগ পুনাৰম্ভ কৰা প্ৰয়োজনীয়।"
 
-#: ../src/gpk-enum.c:807
+#: ../src/gpk-enum.c:819
 msgid "You need to log out and log back in to remain secure."
 msgstr "সুৰক্ষিত থকাৰ বাবে প্ৰস্থান কৰি পুনৰ প্ৰৱেশ কৰা প্ৰয়োজনীয়।"
 
-#: ../src/gpk-enum.c:810
+#: ../src/gpk-enum.c:822
 msgid "A restart is required to remain secure."
 msgstr "সুৰক্ষিত থকাৰ বাবে পুনাৰম্ভ কৰা প্ৰয়োজনীয়।"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:828
+#: ../src/gpk-enum.c:840
 msgid "Stable"
 msgstr "স্থিৰ"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:832
+#: ../src/gpk-enum.c:844
 msgid "Unstable"
 msgstr "অস্থিৰ"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:836
+#: ../src/gpk-enum.c:848
 msgid "Testing"
 msgstr "পৰীক্ষা কৰা হৈছে"
 
-#: ../src/gpk-enum.c:853
+#: ../src/gpk-enum.c:865
 msgid "A mirror is possibly broken"
 msgstr "সম্ভৱতঃ এটা মিৰৰ ভাঙিছে"
 
-#: ../src/gpk-enum.c:856
+#: ../src/gpk-enum.c:868
 msgid "The connection was refused"
 msgstr "সংযোগ প্ৰত্যাখ্যান কৰা হৈছে"
 
-#: ../src/gpk-enum.c:859
+#: ../src/gpk-enum.c:871
 msgid "The parameter was invalid"
 msgstr "প্ৰাচল অবৈধ আছিল"
 
-#: ../src/gpk-enum.c:862
+#: ../src/gpk-enum.c:874
 msgid "The priority was invalid"
 msgstr "প্ৰাথমিকতা অবৈধ আছিল"
 
-#: ../src/gpk-enum.c:865
+#: ../src/gpk-enum.c:877
 msgid "Backend warning"
 msgstr "বেকএন্ড সতৰ্কবাৰ্তা"
 
-#: ../src/gpk-enum.c:868
+#: ../src/gpk-enum.c:880
 msgid "Daemon warning"
 msgstr "ডিমন সতৰ্কবাৰ্তা"
 
-#: ../src/gpk-enum.c:871
+#: ../src/gpk-enum.c:883
 msgid "The package list cache is being rebuilt"
 msgstr "পেকেইজ তালিকাৰ ক্যাশ পুনঃ নিৰ্মিত হৈছে"
 
-#: ../src/gpk-enum.c:874
+#: ../src/gpk-enum.c:886
 msgid "A newer package exists"
 msgstr "এটা নতুন পেকেইজ উপস্থিত"
 
-#: ../src/gpk-enum.c:877
+#: ../src/gpk-enum.c:889
 msgid "Could not find package"
 msgstr "পেকেইজ পোৱা নাযায়"
 
-#: ../src/gpk-enum.c:880
+#: ../src/gpk-enum.c:892
 msgid "Configuration files were changed"
 msgstr "সংৰূপ নথিপত্ৰসমূহ পৰিবৰ্তিত হৈছে"
 
-#: ../src/gpk-enum.c:883
+#: ../src/gpk-enum.c:895
 msgid "Package is already installed"
 msgstr "পেকেইজ ইতিমধ্যে ইনস্টল্ড আছে"
 
-#: ../src/gpk-enum.c:886
+#: ../src/gpk-enum.c:898
 msgid "Automatic cleanup is being ignored"
 msgstr "স্বচালিত পৰিশোধন ব্যৱস্থা উপেক্ষা কৰা হৈছে"
 
-#: ../src/gpk-enum.c:889
+#: ../src/gpk-enum.c:901
 msgid "Software source download failed"
 msgstr "চফ্টৱেৰ উৎস ডাউনল'ড ব্যৰ্থ হল"
 
-#: ../src/gpk-enum.c:892
+#: ../src/gpk-enum.c:904
 msgid "This software source is for developers only"
 msgstr "এই চফ্টৱেৰ উৎস কেৱল উন্নয়নকাৰীসমূহৰ বাবে"
 
-#: ../src/gpk-enum.c:895
+#: ../src/gpk-enum.c:907
 msgid "Other updates have been held back"
 msgstr "অন্য আপডেইটসমূহ ধৰি থোৱা হৈছে"
 
 #. TRANSLATORS: This is when the transaction status is not known
-#: ../src/gpk-enum.c:913
+#: ../src/gpk-enum.c:925
 msgid "Unknown state"
 msgstr "অজ্ঞাত অৱস্থা"
 
 #. TRANSLATORS: transaction state, the daemon is in the process of starting
-#: ../src/gpk-enum.c:917
+#: ../src/gpk-enum.c:929
 msgid "Starting"
 msgstr "উন্নয়ন কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, the transaction is waiting for another to complete
-#: ../src/gpk-enum.c:921
+#: ../src/gpk-enum.c:933
 msgid "Waiting in queue"
 msgstr "শাৰীত অপেক্ষাৰত"
 
 #. TRANSLATORS: transaction state, just started
-#: ../src/gpk-enum.c:925
+#: ../src/gpk-enum.c:937
 msgid "Running"
 msgstr "কাৰ্য্য সঞ্চালন কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, is querying data
-#: ../src/gpk-enum.c:929
+#: ../src/gpk-enum.c:941
 msgid "Querying"
 msgstr "সন্ধান কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, getting data from a server
-#: ../src/gpk-enum.c:933
+#: ../src/gpk-enum.c:945
 msgid "Getting information"
 msgstr "তথ্য আহৰণ কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, downloading package files
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:941 ../src/gpk-enum.c:1377
+#: ../src/gpk-enum.c:953 ../src/gpk-enum.c:1389
 msgid "Downloading packages"
 msgstr "পেকেইজ ডাউনল'ড কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, refreshing internal lists
-#: ../src/gpk-enum.c:949
+#: ../src/gpk-enum.c:961
 msgid "Refreshing software list"
 msgstr "চফ্টৱেৰ তালিকা সতেজ কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, installing updates
-#: ../src/gpk-enum.c:953
+#: ../src/gpk-enum.c:965
 msgid "Installing updates"
 msgstr "আপডেইটসমূহ ইনস্টল কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, removing old packages, and cleaning config files
-#: ../src/gpk-enum.c:957
+#: ../src/gpk-enum.c:969
 msgid "Cleaning up packages"
 msgstr "পেকেইজসমূহ আতৰোৱা হৈছে"
 
 #. TRANSLATORS: transaction state, obsoleting old packages
-#: ../src/gpk-enum.c:961
+#: ../src/gpk-enum.c:973
 msgid "Obsoleting packages"
 msgstr "পেকেইজসমূহ অবচিত কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, checking the transaction before we do it
-#: ../src/gpk-enum.c:965
+#: ../src/gpk-enum.c:977
 msgid "Resolving dependencies"
 msgstr "নিৰ্ভৰতা সমাধান কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, checking if we have all the security keys for the operation
-#: ../src/gpk-enum.c:969
+#: ../src/gpk-enum.c:981
 msgid "Checking signatures"
 msgstr "স্বাক্ষৰ পৰীক্ষা কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, when we're doing a test transaction
-#: ../src/gpk-enum.c:973
+#: ../src/gpk-enum.c:985
 msgid "Testing changes"
 msgstr "পৰিবৰ্তনসমূহ পৰীক্ষা কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, when we're writing to the system package database
-#: ../src/gpk-enum.c:977
+#: ../src/gpk-enum.c:989
 msgid "Committing changes"
 msgstr "পৰিবৰ্তনসমূহ সংৰক্ষণ কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, requesting data from a server
-#: ../src/gpk-enum.c:981
+#: ../src/gpk-enum.c:993
 msgid "Requesting data"
 msgstr "তথ্যৰ অনুৰোধ কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, all done!
-#: ../src/gpk-enum.c:985
+#: ../src/gpk-enum.c:997
 msgid "Finished"
 msgstr "সমাপ্ত"
 
 #. TRANSLATORS: transaction state, in the process of canceling
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:989 ../src/gpk-enum.c:1337
+#: ../src/gpk-enum.c:1001 ../src/gpk-enum.c:1349
 msgid "Canceling"
 msgstr "বাতিল কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:993
+#: ../src/gpk-enum.c:1005
 msgid "Downloading repository information"
 msgstr "ভঁৰাল তথ্য ডাউনল'ড কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:997
+#: ../src/gpk-enum.c:1009
 msgid "Downloading list of packages"
 msgstr "পেকেইজ তালিকা ডাউনল'ড কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1001
+#: ../src/gpk-enum.c:1013
 msgid "Downloading file lists"
 msgstr "নথিপত্ৰৰ তালিকা ডাউনল'ড কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1005
+#: ../src/gpk-enum.c:1017
 msgid "Downloading lists of changes"
 msgstr "পৰিবৰ্তনৰ তালিকা ডাউনল'ড কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1009
+#: ../src/gpk-enum.c:1021
 msgid "Downloading groups"
 msgstr "দল ডাউনল'ড কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1013
+#: ../src/gpk-enum.c:1025
 msgid "Downloading update information"
 msgstr "আপডেইট তথ্য ডাউনল'ড কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, repackaging delta files
-#: ../src/gpk-enum.c:1017
+#: ../src/gpk-enum.c:1029
 msgid "Repackaging files"
 msgstr "পুনঃ নথিপত্ৰক পেকেইজ কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, loading databases
-#: ../src/gpk-enum.c:1021
+#: ../src/gpk-enum.c:1033
 msgid "Loading cache"
 msgstr "ক্যাশ ল'ড কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, scanning for running processes
-#: ../src/gpk-enum.c:1025
+#: ../src/gpk-enum.c:1037
 msgid "Scanning installed applications"
 msgstr "ইনস্টল্ড অনুপ্ৰয়োগসমূহ স্কেন কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, generating a list of packages installed on the system
-#: ../src/gpk-enum.c:1029
+#: ../src/gpk-enum.c:1041
 msgid "Generating package lists"
 msgstr "পেকেইজ তালিকা সৃজন কৰা হৈছে"
 
 #. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
-#: ../src/gpk-enum.c:1033
+#: ../src/gpk-enum.c:1045
 msgid "Waiting for package manager lock"
 msgstr "পেকেইজ ব্যৱস্থাপক লকৰ অপেক্ষা কৰা হৈছে"
 
 #. TRANSLATORS: waiting for user to type in a password
-#: ../src/gpk-enum.c:1037
+#: ../src/gpk-enum.c:1049
 msgid "Waiting for authentication"
 msgstr "প্ৰমাণীকৰণৰ অপেক্ষা কৰা হৈছে"
 
 #. TRANSLATORS: we are updating the list of processes
-#: ../src/gpk-enum.c:1041
+#: ../src/gpk-enum.c:1053
 msgid "Updating the list of running applications"
 msgstr "চলি থকা অনুপ্ৰয়োগৰ তালিকা আপডেইট কৰা হৈছে"
 
 #. TRANSLATORS: we are checking executable files in use
-#: ../src/gpk-enum.c:1045
+#: ../src/gpk-enum.c:1057
 msgid "Checking for applications currently in use"
 msgstr "বৰ্তমানে ব্যৱহৃত অনুপ্ৰয়োগ পৰীক্ষা কৰা হৈছে"
 
 #. TRANSLATORS: we are checking for libraries in use
-#: ../src/gpk-enum.c:1049
+#: ../src/gpk-enum.c:1061
 msgid "Checking for libraries currently in use"
 msgstr "বৰ্তমানে ব্যৱহৃত লাইব্ৰেৰি পৰীক্ষা কৰা হৈছে"
 
 #. TRANSLATORS: we are copying package files to prepare to install
-#: ../src/gpk-enum.c:1053
+#: ../src/gpk-enum.c:1065
 msgid "Copying files"
 msgstr "নথিপত্ৰসমূহ কপি কৰা হৈছে"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1071
+#: ../src/gpk-enum.c:1083
 #, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
@@ -2739,7 +2753,7 @@ msgstr[0] "%i সামান্য উন্নয়ন"
 msgstr[1] "%i সামান্য উন্নয়ন"
 
 #. TRANSLATORS: type of update in the case that we don't have any data
-#: ../src/gpk-enum.c:1075
+#: ../src/gpk-enum.c:1087
 #, c-format
 msgid "%i update"
 msgid_plural "%i updates"
@@ -2747,7 +2761,7 @@ msgstr[0] "%i আপডেইট"
 msgstr[1] "%i আপডেইটসমূহ"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1079
+#: ../src/gpk-enum.c:1091
 #, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
@@ -2755,7 +2769,7 @@ msgstr[0] "%i গুৰুত্বপূৰ্ণ আপডেইট"
 msgstr[1] "%i গুৰুত্বপূৰ্ণ আপডেইটসমূহ"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1083
+#: ../src/gpk-enum.c:1095
 #, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
@@ -2763,7 +2777,7 @@ msgstr[0] "%i সুৰক্ষা আপডেইট"
 msgstr[1] "%i সুৰক্ষা আপডেইটসমূহ"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1087
+#: ../src/gpk-enum.c:1099
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
@@ -2771,7 +2785,7 @@ msgstr[0] "%i বাগ ঠিক কৰা আপডেইট"
 msgstr[1] "%i বাগ ঠিক কৰা আপডেইটসমূহ"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1091
+#: ../src/gpk-enum.c:1103
 #, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
@@ -2779,7 +2793,7 @@ msgstr[0] "%i সম্প্ৰসাৰন আপডেইট"
 msgstr[1] "%i সম্প্ৰসাৰন আপডেইটসমূহ"
 
 #. TRANSLATORS: number of updates that cannot be installed due to deps
-#: ../src/gpk-enum.c:1095
+#: ../src/gpk-enum.c:1107
 #, c-format
 msgid "%i blocked update"
 msgid_plural "%i blocked updates"
@@ -2787,605 +2801,605 @@ msgstr[0] "প্ৰতিৰোধ কৰা %i আপডেইট"
 msgstr[1] "প্ৰতিৰোধ কৰা %i আপডেইটসমূহ"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1113
+#: ../src/gpk-enum.c:1125
 msgid "Trivial update"
 msgstr "সামান্য আপডেইট"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1117
+#: ../src/gpk-enum.c:1129
 msgid "Normal update"
 msgstr "সামান্য আপডেইট"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1121
+#: ../src/gpk-enum.c:1133
 msgid "Important update"
 msgstr "গুৰুত্বপূৰ্ণ আপডেইট"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1125
+#: ../src/gpk-enum.c:1137
 msgid "Security update"
 msgstr "সুৰক্ষা আপডেইট"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1129
+#: ../src/gpk-enum.c:1141
 msgid "Bug fix update"
 msgstr "বাগ ঠিক কৰা আপডেইট"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1133
+#: ../src/gpk-enum.c:1145
 msgid "Enhancement update"
 msgstr "সম্প্ৰসাৰন আপডেইট"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1137
+#: ../src/gpk-enum.c:1149
 msgid "Blocked update"
 msgstr "প্ৰতিৰোধ কৰা আপডেইট"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
-#: ../src/gpk-enum.c:1147
+#: ../src/gpk-enum.c:1159
 msgid "Available"
 msgstr "উপলব্ধ"
 
 #. TRANSLATORS: The type of package
-#: ../src/gpk-enum.c:1151
+#: ../src/gpk-enum.c:1163
 msgid "Trusted"
 msgstr "ভৰষা কৰিব পাৰি"
 
 #. TRANSLATORS: The type of package
-#: ../src/gpk-enum.c:1155
+#: ../src/gpk-enum.c:1167
 msgid "Untrusted"
 msgstr "অবিস্বাসী"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1173 ../src/gpk-service-pack.c:441
+#: ../src/gpk-enum.c:1185 ../src/gpk-service-pack.c:441
 msgid "Downloading"
 msgstr "ডাউনল'ড কৰা হৈছে"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1177
+#: ../src/gpk-enum.c:1189
 msgid "Updating"
 msgstr "আপডেইট কৰা হৈছে"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1181 ../src/gpk-enum.c:1317
+#: ../src/gpk-enum.c:1193 ../src/gpk-enum.c:1329
 msgid "Installing"
 msgstr "ইনস্টল কৰা হৈছে"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1185 ../src/gpk-enum.c:1313
+#: ../src/gpk-enum.c:1197 ../src/gpk-enum.c:1325
 msgid "Removing"
 msgstr "আতৰোৱা হৈছে"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1189
+#: ../src/gpk-enum.c:1201
 msgid "Cleaning up"
 msgstr "পৰিষ্কাৰ কৰা হৈছে"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1193
+#: ../src/gpk-enum.c:1205
 msgid "Obsoleting"
 msgstr "অবচিত কৰা হৈছে"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1197
+#: ../src/gpk-enum.c:1209
 msgid "Reinstalling"
 msgstr "পুনৰ ইনস্টল কৰা হৈছে"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1201
+#: ../src/gpk-enum.c:1213
 msgid "Preparing"
 msgstr "প্ৰস্তুত কৰা হৈছে"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1205
+#: ../src/gpk-enum.c:1217
 msgid "Decompressing"
 msgstr "অসংকোচিত কৰা হৈছে"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1223
+#: ../src/gpk-enum.c:1235
 msgid "Downloaded"
 msgstr "ডাউনল'ড কৰা হৈছে"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1227
+#: ../src/gpk-enum.c:1239
 msgid "Updated"
 msgstr "আপডেইট কৰা হৈছে"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1235
+#: ../src/gpk-enum.c:1247
 msgid "Removed"
 msgstr "আতৰোৱা হৈছে"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1239
+#: ../src/gpk-enum.c:1251
 msgid "Cleaned up"
 msgstr "পৰিষ্কাৰ কৰা হৈছে"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1243 ../src/gpk-task.c:415
+#: ../src/gpk-enum.c:1255 ../src/gpk-task.c:415
 msgid "Obsoleted"
 msgstr "অবচিত কৰা হৈছে"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1247
+#: ../src/gpk-enum.c:1259
 msgid "Reinstalled"
 msgstr "পুনৰ ইনস্টল্ড হল"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1251
+#: ../src/gpk-enum.c:1263
 msgid "Prepared"
 msgstr "প্ৰস্তুত কৰা হল"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1255
+#: ../src/gpk-enum.c:1267
 msgid "Decompressed"
 msgstr "অসংকোচিত কৰা হল"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1273 ../src/gpk-enum.c:1417
+#: ../src/gpk-enum.c:1285 ../src/gpk-enum.c:1429
 msgid "Unknown role type"
 msgstr "ভুমিকাৰ ধৰণ অজ্ঞাত"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1277
+#: ../src/gpk-enum.c:1289
 msgid "Getting dependencies"
 msgstr "নিৰ্ভৰতাসমূহ প্ৰাপ্ত কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1281
+#: ../src/gpk-enum.c:1293
 msgid "Getting update detail"
 msgstr "আপডেইটৰ বিৱৰণ প্ৰাপ্ত কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1285
+#: ../src/gpk-enum.c:1297
 msgid "Getting details"
 msgstr "বিৱৰণসমূহ প্ৰাপ্ত কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1289
+#: ../src/gpk-enum.c:1301
 msgid "Getting requires"
 msgstr "প্ৰাপ্ত কৰাৰ বাবে প্ৰয়োজনীয়"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1293
+#: ../src/gpk-enum.c:1305
 msgid "Getting updates"
 msgstr "আপডেইটসমূহ প্ৰাপ্ত কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1297
+#: ../src/gpk-enum.c:1309
 msgid "Searching details"
 msgstr "বিৱৰণসমূহ সন্ধান কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1305
+#: ../src/gpk-enum.c:1317
 msgid "Searching groups"
 msgstr "দল সন্ধান কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1309
+#: ../src/gpk-enum.c:1321
 msgid "Searching for package name"
 msgstr "পেকেইজৰ নাম সন্ধান কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1321
+#: ../src/gpk-enum.c:1333
 msgid "Installing file"
 msgstr "নথিপত্ৰ ইনস্টল কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1325
+#: ../src/gpk-enum.c:1337
 msgid "Refreshing package cache"
 msgstr "পেকেইজ ক্যাশ সতেজ কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1329
+#: ../src/gpk-enum.c:1341
 msgid "Updating packages"
 msgstr "পেকেইজসমূহ আপডেইট কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1333
+#: ../src/gpk-enum.c:1345
 msgid "Updating system"
 msgstr "চিস্টেম আপডেইট কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1341
+#: ../src/gpk-enum.c:1353
 msgid "Getting list of repositories"
 msgstr "ভঁৰালৰ তালিকা প্ৰাপ্ত কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1345
+#: ../src/gpk-enum.c:1357
 msgid "Enabling repository"
 msgstr "ভঁৰাল সামৰ্থবান কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1349
+#: ../src/gpk-enum.c:1361
 msgid "Setting repository data"
 msgstr "ভঁৰাল তথ্য সংহতি কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1353
+#: ../src/gpk-enum.c:1365
 msgid "Resolving"
 msgstr "সমাধান কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1357
+#: ../src/gpk-enum.c:1369
 msgid "Getting file list"
 msgstr "নথিপত্ৰৰ তালিকা প্ৰাপ্ত কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1361
+#: ../src/gpk-enum.c:1373
 msgid "Getting what provides"
 msgstr "উপলব্ধকাৰী প্ৰাপ্ত কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1365
+#: ../src/gpk-enum.c:1377
 msgid "Installing signature"
 msgstr "স্বাক্ষৰ ইনস্টল কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1369
+#: ../src/gpk-enum.c:1381
 msgid "Getting package lists"
 msgstr "পেকেইজ তালিকা প্ৰাপ্ত কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1373
+#: ../src/gpk-enum.c:1385
 msgid "Accepting EULA"
 msgstr "EULA গ্ৰহণ কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1381
+#: ../src/gpk-enum.c:1393
 msgid "Getting distribution upgrade information"
 msgstr "বিতৰণৰ উন্নয়ন তথ্য প্ৰাপ্ত কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1385
+#: ../src/gpk-enum.c:1397
 msgid "Getting categories"
 msgstr "বিভাগ প্ৰাপ্ত কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1389
+#: ../src/gpk-enum.c:1401
 msgid "Getting old transactions"
 msgstr "পুৰনি লেন-দেন প্ৰাপ্ত কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1393
+#: ../src/gpk-enum.c:1405
 msgid "Upgrading system"
 msgstr "চিস্টেম উন্নত কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1397
+#: ../src/gpk-enum.c:1409
 msgid "Repairing the system"
 msgstr "চিস্টেম মেৰামতি কৰা"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1421
+#: ../src/gpk-enum.c:1433
 msgid "Got dependencies"
 msgstr "নিৰ্ভৰতা প্ৰাপ্ত হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1425
+#: ../src/gpk-enum.c:1437
 msgid "Got update detail"
 msgstr "আপডেইটৰ বিৱৰণ প্ৰাপ্ত হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1429
+#: ../src/gpk-enum.c:1441
 msgid "Got details"
 msgstr "বিৱৰণ প্ৰাপ্ত হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1433
+#: ../src/gpk-enum.c:1445
 msgid "Got requires"
 msgstr "প্ৰয়োজনীয় প্ৰাপ্ত হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1437
+#: ../src/gpk-enum.c:1449
 msgid "Got updates"
 msgstr "আপডেইটসমূহ প্ৰাপ্ত হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1441
+#: ../src/gpk-enum.c:1453
 msgid "Searched for package details"
 msgstr "পেকেইজৰ বিৱৰণ সন্ধান কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1445
+#: ../src/gpk-enum.c:1457
 msgid "Searched for file"
 msgstr "নথিপত্ৰ সন্ধান কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1449
+#: ../src/gpk-enum.c:1461
 msgid "Searched groups"
 msgstr "দলসমূহ সন্ধান কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1453
+#: ../src/gpk-enum.c:1465
 msgid "Searched for package name"
 msgstr "পেকেইজৰ নাম সন্ধান কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1457
+#: ../src/gpk-enum.c:1469
 msgid "Removed packages"
 msgstr "আতৰোৱা পেকেইজসমূহ"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1461
+#: ../src/gpk-enum.c:1473
 msgid "Installed packages"
 msgstr "ইনস্টল্ড পেকেইজসমূহ"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1465
+#: ../src/gpk-enum.c:1477
 msgid "Installed local files"
 msgstr "ইনস্টল্ড স্থানীয় নথিপত্ৰসমূহ"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1469
+#: ../src/gpk-enum.c:1481
 msgid "Refreshed package cache"
 msgstr "সতেজ কৰা পেকেইজ ক্যাশ"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1473
+#: ../src/gpk-enum.c:1485
 msgid "Updated packages"
 msgstr "আপডেইটেড পেকেইজ"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1477
+#: ../src/gpk-enum.c:1489
 msgid "Updated system"
 msgstr "আপডেইটেড চিস্টেম"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1481
+#: ../src/gpk-enum.c:1493
 msgid "Canceled"
 msgstr "বাতিল কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1485
+#: ../src/gpk-enum.c:1497
 msgid "Got list of repositories"
 msgstr "ভঁৰালৰ তালিকা প্ৰাপ্ত হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1489
+#: ../src/gpk-enum.c:1501
 msgid "Enabled repository"
 msgstr "সামৰ্থবান ভঁৰাল"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1493
+#: ../src/gpk-enum.c:1505
 msgid "Set repository data"
 msgstr "ভঁৰাল তথ্য সংহতি কৰক"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1497
+#: ../src/gpk-enum.c:1509
 msgid "Resolved"
 msgstr "সমাধান কৰা হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1501
+#: ../src/gpk-enum.c:1513
 msgid "Got file list"
 msgstr "নথিপত্ৰৰ তালিকা পোৱা গৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1505
+#: ../src/gpk-enum.c:1517
 msgid "Got what provides"
 msgstr "উপলব্ধকাৰী প্ৰাপ্ত হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1509
+#: ../src/gpk-enum.c:1521
 msgid "Installed signature"
 msgstr "ইনস্টল্ড স্বাক্ষৰ"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1513
+#: ../src/gpk-enum.c:1525
 msgid "Got package lists"
 msgstr "পেকেইজ তালিকা পোৱা গৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1517
+#: ../src/gpk-enum.c:1529
 msgid "Accepted EULA"
 msgstr "গ্ৰহণ কৰা EULA"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1521
+#: ../src/gpk-enum.c:1533
 msgid "Downloaded packages"
 msgstr "ডাউনল'ড কৰা পেকেইজসমূহ"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1525
+#: ../src/gpk-enum.c:1537
 msgid "Got distribution upgrades"
 msgstr "বিতৰণৰ উন্নয়ন প্ৰাপ্ত হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1529
+#: ../src/gpk-enum.c:1541
 msgid "Got categories"
 msgstr "বিভাগ প্ৰাপ্ত হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1533
+#: ../src/gpk-enum.c:1545
 msgid "Got old transactions"
 msgstr "পুৰনি লেন-দেন প্ৰাপ্ত হৈছে"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1537
+#: ../src/gpk-enum.c:1549
 msgid "Upgraded system"
 msgstr "চিস্টেম উন্নত কৰা হল"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1541
+#: ../src/gpk-enum.c:1553
 msgid "Repaired the system"
 msgstr "চিস্টেম মেৰামতি কৰা হল"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1559
+#: ../src/gpk-enum.c:1571
 msgid "Accessibility"
 msgstr "অভিগম্যতা"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1563
+#: ../src/gpk-enum.c:1575
 msgid "Accessories"
 msgstr "আনুষঙ্গিকসমূহ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1567
+#: ../src/gpk-enum.c:1579
 msgid "Education"
 msgstr "শিক্ষা"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1571
+#: ../src/gpk-enum.c:1583
 msgid "Games"
 msgstr "খেলসমূহ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1575
+#: ../src/gpk-enum.c:1587
 msgid "Graphics"
 msgstr "গ্ৰাফিক্স"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1579
+#: ../src/gpk-enum.c:1591
 msgid "Internet"
 msgstr "ইন্টাৰনেট"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1583
+#: ../src/gpk-enum.c:1595
 msgid "Office"
 msgstr "কাৰ্য্যালয়"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1587 ../src/gpk-task.c:435
+#: ../src/gpk-enum.c:1599 ../src/gpk-task.c:435
 msgid "Other"
 msgstr "অন্য"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1591
+#: ../src/gpk-enum.c:1603
 msgid "Programming"
 msgstr "প্ৰগ্ৰামিং"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1595
+#: ../src/gpk-enum.c:1607
 msgid "Multimedia"
 msgstr "বহুমাধ্যম"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1599
+#: ../src/gpk-enum.c:1611
 msgid "System"
 msgstr "চিস্টেম"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1603
+#: ../src/gpk-enum.c:1615
 msgid "GNOME desktop"
 msgstr "GNOME ডেস্কটপ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1607
+#: ../src/gpk-enum.c:1619
 msgid "KDE desktop"
 msgstr "KDE ডেস্কটপ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1611
+#: ../src/gpk-enum.c:1623
 msgid "Xfce desktop"
 msgstr "Xfce ডেস্কটপ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1615
+#: ../src/gpk-enum.c:1627
 msgid "Other desktops"
 msgstr "অন্য ডেস্কটপসমূহ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1619
+#: ../src/gpk-enum.c:1631
 msgid "Publishing"
 msgstr "প্ৰকাশন"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1623
+#: ../src/gpk-enum.c:1635
 msgid "Servers"
 msgstr "চাৰ্ভাৰসমূহ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1627
+#: ../src/gpk-enum.c:1639
 msgid "Fonts"
 msgstr "ফন্টসমূহ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1631
+#: ../src/gpk-enum.c:1643
 msgid "Admin tools"
 msgstr "প্ৰশাসনিক সঁজুলিসমূহ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1635
+#: ../src/gpk-enum.c:1647
 msgid "Legacy"
 msgstr "কিংবদন্তি"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1639
+#: ../src/gpk-enum.c:1651
 msgid "Localization"
 msgstr "স্থানীয়কৰণ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1643
+#: ../src/gpk-enum.c:1655
 msgid "Virtualization"
 msgstr "ভাৰ্ছুৱেলাইজেষণ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1647
+#: ../src/gpk-enum.c:1659
 msgid "Security"
 msgstr "সুৰক্ষা"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1651
+#: ../src/gpk-enum.c:1663
 msgid "Power management"
 msgstr "বিদ্যুৎ ব্যৱস্থাপনা"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1655
+#: ../src/gpk-enum.c:1667
 msgid "Communication"
 msgstr "যোগাযোগ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1659
+#: ../src/gpk-enum.c:1671
 msgid "Network"
 msgstr "নেটৱাৰ্ক"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1663
+#: ../src/gpk-enum.c:1675
 msgid "Maps"
 msgstr "মানচিত্ৰসমূহ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1667
+#: ../src/gpk-enum.c:1679
 msgid "Software sources"
 msgstr "চফ্টৱেৰৰ উৎসসমূহ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1671
+#: ../src/gpk-enum.c:1683
 msgid "Science"
 msgstr "বিজ্ঞান"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1675
+#: ../src/gpk-enum.c:1687
 msgid "Documentation"
 msgstr "তথ্যচিত্ৰ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1679
+#: ../src/gpk-enum.c:1691
 msgid "Electronics"
 msgstr "ইলেকট্ৰনিক্স"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1683
+#: ../src/gpk-enum.c:1695
 msgid "Package collections"
 msgstr "পেকেইজ সংগ্ৰহসমূহ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1687
+#: ../src/gpk-enum.c:1699
 msgid "Vendor"
 msgstr "বিক্ৰেতা"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1691
+#: ../src/gpk-enum.c:1703
 msgid "Newest packages"
 msgstr "শেহতীয়া পেকেইজসমূহ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1695
+#: ../src/gpk-enum.c:1707
 msgid "Unknown group"
 msgstr "অজ্ঞাত দল"
 
@@ -3550,31 +3564,31 @@ msgid "Catalogs files to install"
 msgstr "ইনস্টল কৰিবলৈ সূচী নথিপত্ৰ"
 
 #. are we running privileged
-#: ../src/gpk-install-catalog.c:78
+#: ../src/gpk-install-catalog.c:76
 msgid "Catalog installer"
 msgstr "সূচী ইনস্টলাৰ"
 
-#: ../src/gpk-install-catalog.c:83
+#: ../src/gpk-install-catalog.c:81
 msgid "Failed to install catalog"
 msgstr "সূচী ইনস্টল কৰিবলৈ ব্যৰ্থ"
 
 #. TRANSLATORS: no file name was supplied
 #. TRANSLATORS: nothing was specified
-#: ../src/gpk-install-catalog.c:85 ../src/gpk-install-provide-file.c:85
+#: ../src/gpk-install-catalog.c:83 ../src/gpk-install-provide-file.c:83
 msgid "You need to specify a file name to install"
 msgstr "ইনস্টল কৰাৰ বাবে নথিপত্ৰৰ নাম উল্লেখ কৰা প্ৰয়োজনীয়"
 
 #. TRANSLATORS: This is when the specified D-Bus method did not execute successfully
-#: ../src/gpk-install-catalog.c:118 ../src/gpk-install-local-file.c:118
-#: ../src/gpk-install-mime-type.c:118 ../src/gpk-install-package-name.c:117
-#: ../src/gpk-install-provide-file.c:118
+#: ../src/gpk-install-catalog.c:116 ../src/gpk-install-local-file.c:116
+#: ../src/gpk-install-mime-type.c:116 ../src/gpk-install-package-name.c:115
+#: ../src/gpk-install-provide-file.c:116
 msgid "The action could not be completed"
 msgstr "কাৰ্য্য সম্পূৰ্ণ কৰিব পৰা নগল"
 
 #. TRANSLATORS: we don't have anything more useful to translate. sorry.
-#: ../src/gpk-install-catalog.c:120 ../src/gpk-install-local-file.c:120
-#: ../src/gpk-install-mime-type.c:120 ../src/gpk-install-package-name.c:119
-#: ../src/gpk-install-provide-file.c:120
+#: ../src/gpk-install-catalog.c:118 ../src/gpk-install-local-file.c:118
+#: ../src/gpk-install-mime-type.c:118 ../src/gpk-install-package-name.c:117
+#: ../src/gpk-install-provide-file.c:118
 msgid "The request failed. More details are available in the detailed report."
 msgstr "অনুৰোধ ব্যৰ্থ হল। বিৱৰিত সংবাদত অধিক তথ্য উপলব্ধ।"
 
@@ -3583,23 +3597,23 @@ msgstr "অনুৰোধ ব্যৰ্থ হল। বিৱৰিত স�
 msgid "Files to install"
 msgstr "ইনস্টল কৰিবলৈ নথিপত্ৰসমূহ"
 
-#: ../src/gpk-install-local-file.c:69
+#: ../src/gpk-install-local-file.c:67
 msgid "PackageKit File Installer"
 msgstr "PackageKit নথিপত্ৰ ইনস্টলাৰ"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-local-file.c:77
+#: ../src/gpk-install-local-file.c:75
 msgid "Local file installer"
 msgstr "স্থানীয় নথিপত্ৰ ইনস্টলাৰ"
 
 #. TRANSLATORS: could not install a package that contained the file we wanted
 #. TRANSLATORS: nothing done
-#: ../src/gpk-install-local-file.c:83 ../src/gpk-install-provide-file.c:83
+#: ../src/gpk-install-local-file.c:81 ../src/gpk-install-provide-file.c:81
 msgid "Failed to install a package to provide a file"
 msgstr "নথিপত্ৰ উপলব্ধ কৰাৰ বাবে এটা পেকেইজ ইনস্টল কৰিবলৈ ব্যৰ্থ"
 
 #. TRANSLATORS: nothing selected
-#: ../src/gpk-install-local-file.c:85
+#: ../src/gpk-install-local-file.c:83
 msgid "You need to specify a file to install"
 msgstr "ইনস্টল কৰাৰ বাবে নথিপত্ৰ ধাৰ্য্য কৰা প্ৰয়োজনীয়"
 
@@ -3609,22 +3623,22 @@ msgid "Mime types to install"
 msgstr "ইনস্টল কৰিবলে Mime ধৰণসমূহইনস্টল"
 
 #. TRANSLATORS: program name: application to install a package to provide a mime type
-#: ../src/gpk-install-mime-type.c:67 ../src/gpk-install-mime-type.c:69
+#: ../src/gpk-install-mime-type.c:65 ../src/gpk-install-mime-type.c:67
 msgid "Mime Type Installer"
 msgstr "Mime ধৰণ ইনস্টলাৰ"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-mime-type.c:77
+#: ../src/gpk-install-mime-type.c:75
 msgid "Mime type installer"
 msgstr "Mime ধৰণ ইনস্টলাৰ"
 
 #. TRANSLATORS: could not install program supporting this type
-#: ../src/gpk-install-mime-type.c:83
+#: ../src/gpk-install-mime-type.c:81
 msgid "Failed to install a program to handle this file type"
 msgstr "নথিপত্ৰ উপলব্ধ কৰাৰ বাবে এটা পেকেইজ ইনস্টল কৰিবলৈ ব্যৰ্থ"
 
 #. TRANSLATORS: no type given
-#: ../src/gpk-install-mime-type.c:85
+#: ../src/gpk-install-mime-type.c:83
 msgid "You need to specify a mime type to install"
 msgstr "আপুনি ইনস্টল কৰিবলে এটা mime ধৰণ ধাৰ্য্য কৰিব লাগিব"
 
@@ -3633,17 +3647,17 @@ msgid "Packages to install"
 msgstr "ইনস্টল কৰিবলে পেকেইজসমূহ"
 
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:68 ../src/gpk-install-package-name.c:76
+#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:74
 msgid "Package Name Installer"
 msgstr "পেকেইজৰ নাম ইনস্টলাৰ"
 
 #. TRANSLATORS: failed
-#: ../src/gpk-install-package-name.c:82
+#: ../src/gpk-install-package-name.c:80
 msgid "Failed to install package from name"
 msgstr "নাম প্ৰয়োগ কৰি পেকেইজ ইনস্টল কৰিবলৈ ব্যৰ্থ"
 
 #. TRANSLATORS: nothing was specified
-#: ../src/gpk-install-package-name.c:84
+#: ../src/gpk-install-package-name.c:82
 msgid "You need to specify a package to install"
 msgstr "ইনস্টল কৰাৰ বাবে এটা পেকেইজ ধাৰ্য্য কৰা প্ৰয়োজনীয়"
 
@@ -3654,8 +3668,8 @@ msgstr "ইনস্টল কৰিবলে স্থানীয় নথিপ
 
 #. TRANSLATORS: program name, an application to install a file that is needed by an application and is provided by packages
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-provide-file.c:67 ../src/gpk-install-provide-file.c:69
-#: ../src/gpk-install-provide-file.c:77
+#: ../src/gpk-install-provide-file.c:65 ../src/gpk-install-provide-file.c:67
+#: ../src/gpk-install-provide-file.c:75
 msgid "Single File Installer"
 msgstr "এটা নথিপত্ৰ ইনস্টলাৰ"
 
@@ -3715,7 +3729,7 @@ msgid "Set the parent window to make this modal"
 msgstr "ইয়াকে modal ৰূপে ধাৰ্য্য কৰাৰ বাবে উপধায়ক উইন্ডো ধাৰ্য্য কৰক"
 
 #. are we running privileged
-#: ../src/gpk-log.c:837
+#: ../src/gpk-log.c:835
 msgid "Log viewer"
 msgstr "লগ দৰ্শক"
 
@@ -3780,7 +3794,7 @@ msgid "Failed to get the list of sources"
 msgstr "উৎসসমূহৰ তালিকা প্ৰাপ্ত কৰিবলে ব্যৰ্থ হল"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3104
+#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3186
 msgid "Exiting as backend details could not be retrieved"
 msgstr "বেকএন্ডৰ তথ্য প্ৰাপ্ত নোহোৱাৰ ফলত প্ৰস্থান কৰা হৈছে"
 
@@ -3997,18 +4011,18 @@ msgid "Other updates"
 msgstr "অন্য আপডেইটসমূহ"
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1014
+#: ../src/gpk-update-viewer.c:1012
 msgid "Getting the list of updates"
 msgstr "আপডেইটসমূহৰ তালিকা প্ৰাপ্ত কৰা হৈছে"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1255
+#: ../src/gpk-update-viewer.c:1259
 msgid "Could not run upgrade script"
 msgstr "উন্নয়ন স্ক্ৰিপ্ট চলাব নোৱাৰি"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1294
+#: ../src/gpk-update-viewer.c:1298
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4023,38 +4037,38 @@ msgstr[1] ""
 "হব পাৰে।"
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1384
+#: ../src/gpk-update-viewer.c:1388
 msgid "There are no updates available"
 msgstr "কোনো আপডেইট উপলব্ধ নাই"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1443
+#: ../src/gpk-update-viewer.c:1447
 msgid "No updates are available"
 msgstr "কোনো আপডেইট উপলব্ধ নাই"
 
 #. TRANSLATORS: no network connection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1445
+#: ../src/gpk-update-viewer.c:1449
 msgid "No network connection was detected."
 msgstr "কোনো নেটৱাৰ্ক সংযোগ পোৱা নগল।"
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1462
+#: ../src/gpk-update-viewer.c:1466
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "আপডেইট ইনস্টল কৰক (_I)"
 msgstr[1] "আপডেইটসমূহ ইনস্টল কৰক (_I)"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1470
+#: ../src/gpk-update-viewer.c:1474
 msgid "All software is up to date"
 msgstr "সকলো চফ্টৱেৰ উন্নত"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1472
+#: ../src/gpk-update-viewer.c:1476
 msgid "There are no software updates available for your computer at this time."
 msgstr "আপোনাৰ কমপিউটাৰৰ বাবে নিম্নলিখিত গুৰুত্বপূৰ্ণ উন্নয়ন আছে:"
 
-#: ../src/gpk-update-viewer.c:1498
+#: ../src/gpk-update-viewer.c:1502
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4062,7 +4076,7 @@ msgstr[0] "%i আপডেইট উপলব্ধ"
 msgstr[1] "%i আপডেইটসমূহ উপলব্ধ"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1514
+#: ../src/gpk-update-viewer.c:1518
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4070,7 +4084,7 @@ msgstr[0] "%i আপডেইট নিৰ্বাচিত"
 msgstr[1] "%i আপডেইটসমূহ নিৰ্বাচিত"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1522
+#: ../src/gpk-update-viewer.c:1526
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4078,56 +4092,56 @@ msgstr[0] "%i আপডেইট নিৰ্বাচিত (%s)"
 msgstr[1] "%i আপডেইটসমূহ নিৰ্বাচিত (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1719
+#: ../src/gpk-update-viewer.c:1723
 msgid "Status"
 msgstr "অৱস্থা"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1938
+#: ../src/gpk-update-viewer.c:1983
 msgid "This update will add new features and expand functionality."
 msgstr "এই আপডেইটে নতুন বৈশিষ্টসমূহ যোগ কৰিব আৰু কাৰ্য্যকৰীতা বৃদ্ধি কৰিব।"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1942
+#: ../src/gpk-update-viewer.c:1987
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "এই আপডেইটৰ সহায়ত বাগ আৰু অন্য কম গুৰুত্বপূৰ্ণ সমস্যা সংশোধন কৰা যাব"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1946
+#: ../src/gpk-update-viewer.c:1991
 msgid "This update is important as it may solve critical problems."
 msgstr "এই গুৰুত্বপূৰ্ণ আপডেইটৰ সহায়ত কিছুমান গুৰুতৰ সমস্যা সংশোধন কৰা সম্ভৱ হ'ব।"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1950
+#: ../src/gpk-update-viewer.c:1995
 msgid "This update is needed to fix a security vulnerability with this package."
 msgstr "এই পেকেইজৰ সুৰক্ষাৰ এটা সমস্যা সংশোধনৰ বাবে এই আপডেইটৰ প্ৰয়োজন।"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1954
+#: ../src/gpk-update-viewer.c:1999
 msgid "This update is blocked."
 msgstr "এই আপডেইট প্ৰতিৰোধ কৰা আছে।"
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1966
+#: ../src/gpk-update-viewer.c:2011
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "%s ত অধিসূচনা দিয়া হৈছে আৰু %s ত সৰ্বশেষ আপডেইট কৰা হৈছে।"
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:1973
+#: ../src/gpk-update-viewer.c:2018
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "%s ত অধিসূচনা দিয়া হৈছে।"
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:1995
+#: ../src/gpk-update-viewer.c:2040 ../src/gpk-update-viewer.c:2064
 msgid "For more information about this update please visit this website:"
 msgid_plural "For more information about this update please visit these websites:"
 msgstr[0] "এই আপডেইট সম্পৰ্কে অধিক বিৱৰণৰ বাবে নিম্নলিখিত ৱেবছাইট চাওক:"
 msgstr[1] "এই আপডেইট সম্পৰ্কে অধিক বিৱৰণৰ বাবে নিম্নলিখিত ৱেবছাইটসমূহ চাওক:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:2003
+#: ../src/gpk-update-viewer.c:2047 ../src/gpk-update-viewer.c:2072
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4141,7 +4155,7 @@ msgstr[1] ""
 "চাওক:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2011
+#: ../src/gpk-update-viewer.c:2054 ../src/gpk-update-viewer.c:2080
 msgid "For more information about this security update please visit this website:"
 msgid_plural ""
 "For more information about this security update please visit these websites:"
@@ -4149,21 +4163,21 @@ msgstr[0] "এই সুৰক্ষা আপডেইট সম্পৰ্ক
 msgstr[1] "এই সুৰক্ষা আপডেইট সম্পৰ্কে অধিক বিৱৰণৰ বাবে নিম্নলিখিত ৱেবছাইটসমূহ চাওক:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2020
+#: ../src/gpk-update-viewer.c:2089
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
 msgstr "আপডেইটৰ ফলত হোৱা পৰিবৰ্তনসমূহ প্ৰয়োগ কৰাৰ বাবে কমপিউটাৰ পুনাৰম্ভ কৰা প্ৰয়োজনীয়।"
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2024
+#: ../src/gpk-update-viewer.c:2093
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
 msgstr "এই আপডেইটৰ ফলত হোৱা পৰিবৰ্তনসমূহ প্ৰয়োগ কৰাৰ বাবে লগআউট কৰি লগিন কৰা প্ৰয়োজনীয়"
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2031
+#: ../src/gpk-update-viewer.c:2100
 msgid ""
 "The classification of this update is unstable which means it is not designed "
 "for production use."
@@ -4171,7 +4185,7 @@ msgstr ""
 "এই আপডেইটৰ শ্ৰেণীবিভাজন অস্থিৰ যাৰ অৰ্থ এই যে ই উৎপাদন ব্যৱহাৰৰ বাবে ৰূপাঙ্কীত নহয়।"
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2035
+#: ../src/gpk-update-viewer.c:2104
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4180,79 +4194,79 @@ msgstr ""
 "পূৰ্ববৰ্তী সমস্যা দেখা দিলে অনুগ্ৰহ কৰি সেইটো সম্পৰ্কে সূচিত কৰক।"
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2044
+#: ../src/gpk-update-viewer.c:2113
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr "এই আপডেইট সম্পৰ্কে কোনো বিৱৰণ অনুপস্থিত থকাৰ ফলত উন্নয়নকৰ কামৰ লগ দেখুৱাওক:"
 
-#: ../src/gpk-update-viewer.c:2094
+#: ../src/gpk-update-viewer.c:2167
 msgid "Loading..."
 msgstr "ল'ড কৰা হৈছে..."
 
-#: ../src/gpk-update-viewer.c:2097
+#: ../src/gpk-update-viewer.c:2170
 msgid "No update details available."
 msgstr "কোনো আপডেইট বিৱৰণ উপলব্ধ নাই।"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2129 ../src/gpk-update-viewer.c:2227
-#: ../src/gpk-update-viewer.c:2247
+#: ../src/gpk-update-viewer.c:2202 ../src/gpk-update-viewer.c:2300
+#: ../src/gpk-update-viewer.c:2320
 msgid "Could not get update details"
 msgstr "আপডেইট বিৱৰণসমূহ প্ৰাপ্ত কৰিব নোৱাৰি"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2149
+#: ../src/gpk-update-viewer.c:2222
 msgid "Could not get package details"
 msgstr "পেকেইজ বিৱৰণসমূহ প্ৰাপ্ত কৰিব নোৱাৰি"
 
-#: ../src/gpk-update-viewer.c:2149 ../src/gpk-update-viewer.c:2247
+#: ../src/gpk-update-viewer.c:2222 ../src/gpk-update-viewer.c:2320
 msgid "No results were returned."
 msgstr "কোনো ফলাফল পোৱা নগল।"
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2482
+#: ../src/gpk-update-viewer.c:2555
 msgid "Select all"
 msgstr "সকলো নিৰ্বাচন কৰক"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2490
+#: ../src/gpk-update-viewer.c:2563
 msgid "Unselect all"
 msgstr "সকলো নিৰ্বাচন বাতিল কৰক"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2497
+#: ../src/gpk-update-viewer.c:2570
 msgid "Select security updates"
 msgstr "সুৰক্ষা আপডেইটসমূহ বাছক"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2503
+#: ../src/gpk-update-viewer.c:2576
 msgid "Ignore this update"
 msgstr "এই আপডেইট উপেক্ষা কৰক"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2614
+#: ../src/gpk-update-viewer.c:2687
 msgid "Could not get updates"
 msgstr "আপডেইটসমূহ প্ৰাপ্ত কৰা নগল"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2767
+#: ../src/gpk-update-viewer.c:2840
 msgid "Checking for updates..."
 msgstr "আপডেইটসমূহৰ বাবে নীৰিক্ষণ কৰা হৈছে..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3037
+#: ../src/gpk-update-viewer.c:3119
 msgid "Could not get list of distribution upgrades"
 msgstr "বিতৰন উন্নয়নসমূহৰ তালিকা পোৱা নগল"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3067
+#: ../src/gpk-update-viewer.c:3149
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "নতুন বিতৰণৰ উন্নয়ন উন্মোচন '%s' উপলব্ধ"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3317
+#: ../src/gpk-update-viewer.c:3399
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -4260,12 +4274,12 @@ msgstr ""
 "অন্য আপডেইটসমূহ ৰখাই থোৱা হৈছে যিহেতু কিছুমান গুৰুত্বপূৰ্ণ পেকেইজসমূহক প্ৰথমতে ইনস্টল "
 "কৰিব লাগিব।"
 
-#: ../src/gpk-update-viewer.c:3365
+#: ../src/gpk-update-viewer.c:3445
 msgid "Update Software"
 msgstr "চফ্টৱেৰ আপডেইট কৰক"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3382
+#: ../src/gpk-update-viewer.c:3462
 msgid "Software Update Viewer"
 msgstr "চফ্টৱেৰ আপডেইট দৰ্শক"
 
@@ -4273,7 +4287,7 @@ msgstr "চফ্টৱেৰ আপডেইট দৰ্শক"
 msgid "Do not exit after the request has been processed"
 msgstr "অনুৰোধ প্ৰক্ৰিয়াকৰণ হোৱাৰ পিছত প্ৰস্থান নকৰিব"
 
-#: ../src/gpk-dbus-service.c:158
+#: ../src/gpk-dbus-service.c:156
 msgid "Session D-Bus service for PackageKit"
 msgstr "PackageKit ৰ বাবে অধিবেশন D-Bus সেৱা"
 
@@ -4289,6 +4303,9 @@ msgstr "ডিবাগিং বিকল্পসমূহ"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "ডিবাগিং বিকল্পসমূহ দেখুৱাওক"
+
+#~ msgid "Unsupported daemon version."
+#~ msgstr "অসমৰ্থিত ডিমন সংস্কৰণ।"
 
 #~ msgid "Add/Remove Software"
 #~ msgstr "চফ্টৱেৰ যোগ কৰক/আতৰাওক"
@@ -4738,9 +4755,6 @@ msgstr "ডিবাগিং বিকল্পসমূহ দেখুৱা�
 
 #~ msgid "Restart computer now"
 #~ msgstr "এতিয়া কমপিউটাৰক পুনাৰম্ভ কৰক"
-
-#~ msgid "EULA required"
-#~ msgstr "     প্ৰয়োজনীয়"
 
 #~ msgid "Signature required"
 #~ msgstr "স্বাক্ষৰ প্ৰয়োজনীয়"
