@@ -158,20 +158,6 @@ gpk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, GpkPrefsPrivate *priv)
 }
 
 /**
- * gpk_prefs_update_combo_changed:
- **/
-static void
-gpk_prefs_update_combo_changed (GtkWidget *widget, GpkPrefsPrivate *priv)
-{
-	GpkUpdateEnum update;
-
-	update = gtk_combo_box_get_active (GTK_COMBO_BOX (widget));
-	if (update == -1)
-		return;
-	g_settings_set_enum (priv->settings_gsd, GSD_SETTINGS_AUTO_UPDATE_TYPE, update);
-}
-
-/**
  * gpk_prefs_update_freq_combo_setup:
  **/
 static void
@@ -244,35 +230,6 @@ gpk_prefs_upgrade_freq_combo_setup (GpkPrefsPrivate *priv)
 	/* only do this after else we redraw the window */
 	g_signal_connect (G_OBJECT (widget), "changed",
 			  G_CALLBACK (gpk_prefs_upgrade_freq_combo_changed), priv);
-}
-
-/**
- * gpk_prefs_auto_update_combo_setup:
- **/
-static void
-gpk_prefs_auto_update_combo_setup (GpkPrefsPrivate *priv)
-{
-	gboolean is_writable;
-	GpkUpdateEnum update;
-	GtkWidget *widget;
-
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "combobox_install"));
-	is_writable = g_settings_is_writable (priv->settings_gsd, GSD_SETTINGS_AUTO_UPDATE_TYPE);
-	update = g_settings_get_enum (priv->settings_gsd, GSD_SETTINGS_AUTO_UPDATE_TYPE);
-
-	/* do we have permission to write? */
-	gtk_widget_set_sensitive (widget, is_writable);
-
-	/* use a simple text model */
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_UPDATE_ALL_TEXT);
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_UPDATE_SECURITY_TEXT);
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_UPDATE_NONE_TEXT);
-	/* we can do this as it's the same order */
-	gtk_combo_box_set_active (GTK_COMBO_BOX (widget), update);
-
-	/* only do this after else we redraw the window */
-	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (gpk_prefs_update_combo_changed), priv);
 }
 
 /**
@@ -850,11 +807,16 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 		goto out;
 	}
 
-	/* bind the mobile broadband checkbox */
+	/* bind the mobile broadband and battery checkbox */
 	if (priv->settings_gsd != NULL) {
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_mobile_broadband"));
 		g_settings_bind (priv->settings_gsd,
 				 GSD_SETTINGS_CONNECTION_USE_MOBILE,
+				 widget, "active",
+				 G_SETTINGS_BIND_DEFAULT);
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_battery_power"));
+		g_settings_bind (priv->settings_gsd,
+				 GSD_SETTINGS_UPDATE_BATTERY,
 				 widget, "active",
 				 G_SETTINGS_BIND_DEFAULT);
 	}
@@ -873,7 +835,6 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 	if (priv->settings_gsd != NULL) {
 		gpk_prefs_update_freq_combo_setup (priv);
 		gpk_prefs_upgrade_freq_combo_setup (priv);
-		gpk_prefs_auto_update_combo_setup (priv);
 	} else {
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "notebook_preferences"));
 		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 0);
