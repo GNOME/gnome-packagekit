@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-06-26 10:55+0000\n"
-"PO-Revision-Date: 2012-06-26 19:44+0200\n"
+"POT-Creation-Date: 2012-06-29 15:38+0000\n"
+"PO-Revision-Date: 2012-07-02 16:56+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "MIME-Version: 1.0\n"
@@ -135,8 +135,8 @@ msgid ""
 "The search mode used by default. Options are \"name\", \"details\", or \"file"
 "\"."
 msgstr ""
-"El modo de búsqueda usado de forma predeterminada. Las opciones son "
-"«nombre», «detalles» o «archivo»."
+"El modo de búsqueda usado de forma predeterminada. Las opciones son «nombre», "
+"«detalles» o «archivo»."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:23
 msgid "Show all repositories in the software source viewer"
@@ -395,7 +395,7 @@ msgstr ""
 "desactivar los repositorios de software"
 
 #. TRANSLATORS: program name, an application to set per-user policy for updates
-#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:942
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:903
 msgid "Software Update Preferences"
 msgstr "Preferencias de actualización de software"
 
@@ -404,20 +404,21 @@ msgid "_Check Now"
 msgstr "_Comprobar ahora"
 
 #: ../data/gpk-prefs.ui.h:3
-msgid "_Automatically download:"
-msgstr "Descargar _automáticamente:"
-
-#: ../data/gpk-prefs.ui.h:4
 msgid "C_heck for updates:"
 msgstr "Comprobar si _hay actualizaciones:"
 
-#: ../data/gpk-prefs.ui.h:5
+#: ../data/gpk-prefs.ui.h:4
 msgid "Check for major _upgrades:"
 msgstr "Comprobar si hay actualizaciones _importantes:"
 
-#: ../data/gpk-prefs.ui.h:6
+#: ../data/gpk-prefs.ui.h:5
 msgid "Check for updates when using mobile broadband"
 msgstr "Buscar actualizaciones cuando se use banda ancha móvil"
+
+#: ../data/gpk-prefs.ui.h:6
+#| msgid "C_heck for updates:"
+msgid "Check for updates on battery power"
+msgstr "Comprobar si hay actualizaciones en modo batería"
 
 #: ../data/gpk-prefs.ui.h:7
 msgid "Currently using mobile broadband"
@@ -2065,12 +2066,10 @@ msgid "Rescheduled due to priority"
 msgstr "Reprogramado debido a la prioridad"
 
 #: ../src/gpk-enum.c:497
-#| msgid "Running the transaction failed"
 msgid "Unfinished transaction"
 msgstr "Transacción no terminada"
 
 #: ../src/gpk-enum.c:500
-#| msgid "EULA required"
 msgid "Lock required"
 msgstr "Bloqueo requerido"
 
@@ -2541,7 +2540,6 @@ msgstr ""
 "La transacción se ha cancelado y se reintentará cuando el sistema esté libre."
 
 #: ../src/gpk-enum.c:757
-#| msgid "A media change is required"
 msgid "A package manager lock is required."
 msgstr "Se requiere un bloqueo del gestor de paquetes."
 
@@ -3834,7 +3832,7 @@ msgid "Set the filter to this value"
 msgstr "Establecer el filtro a este valor"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:813 ../src/gpk-prefs.c:933
+#: ../src/gpk-log.c:813 ../src/gpk-prefs.c:894
 msgid "Set the parent window to make this modal"
 msgstr "Establecer la ventana padre para hacer esta modal"
 
@@ -3884,31 +3882,31 @@ msgid "Nothing"
 msgstr "Nada"
 
 #. TRANSLATORS: for one reason or another, we could not enable or disable a software source
-#: ../src/gpk-prefs.c:509
+#: ../src/gpk-prefs.c:466
 msgid "Failed to change status"
 msgstr "Falló al cambiar el estado"
 
 #. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-prefs.c:584
+#: ../src/gpk-prefs.c:541
 msgid "Enabled"
 msgstr "Activado"
 
 #. TRANSLATORS: column for the source description
-#: ../src/gpk-prefs.c:593
+#: ../src/gpk-prefs.c:550
 msgid "Software Source"
 msgstr "Repositorios de software"
 
 #. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-prefs.c:655
+#: ../src/gpk-prefs.c:612
 msgid "Failed to get the list of sources"
 msgstr "Falló al obtener la lista de fuentes"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:763 ../src/gpk-update-viewer.c:3186
+#: ../src/gpk-prefs.c:720 ../src/gpk-update-viewer.c:3186
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Saliendo puesto que no se pudieron obtener los detalles del «backend»"
 
-#: ../src/gpk-prefs.c:797
+#: ../src/gpk-prefs.c:754
 msgid "Getting software source list not supported by backend"
 msgstr ""
 "El «backend» no soporta la obtención de listas de repositorios de software"
@@ -4438,6 +4436,9 @@ msgstr "Opciones de depuración"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Mostrar las opciones de depuración"
+
+#~ msgid "_Automatically download:"
+#~ msgstr "Descargar _automáticamente:"
 
 #~ msgid "Unsupported daemon version."
 #~ msgstr "La versión del demonio no está soportada."
