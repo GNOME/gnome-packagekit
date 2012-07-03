@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-06-26 10:55+0000\n"
-"PO-Revision-Date: 2012-06-28 18:20+0200\n"
+"POT-Creation-Date: 2012-06-29 15:38+0000\n"
+"PO-Revision-Date: 2012-07-03 15:56+0200\n"
 "Last-Translator: Tom Tryfonidis <tomtryf@gmail.com>\n"
 "Language-Team: Greek Translation Team\n"
 "MIME-Version: 1.0\n"
@@ -181,9 +181,6 @@ msgid "When displaying UI from a session D-Bus request, automatically use these 
 msgstr "Αυτόματη χρήση αυτών των επιλογών, όποτε εμφανίζονται διεπαφές χρήστη UI εξαιτίας αιτημάτων D-Bus της συνεδρίας."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:40
-#| msgid ""
-#| "When displaying UI from a session DBus request, force these options to be "
-#| "turned on"
 msgid "When displaying UI from a session D-Bus request, force these options to be turned on."
 msgstr "Υποχρεωτική ενεργοποίηση αυτών των επιλογών, όποτε εμφανίζονται διεπαφές χρήστη UI εξαιτίας αιτημάτων D-Bus της συνεδρίας."
 
@@ -350,7 +347,7 @@ msgstr "Αλλαγή των προτιμήσεων ενημερώσεων λογ
 
 #. TRANSLATORS: program name, an application to set per-user policy for updates
 #: ../data/gpk-prefs.ui.h:1
-#: ../src/gpk-prefs.c:942
+#: ../src/gpk-prefs.c:903
 msgid "Software Update Preferences"
 msgstr "Προτιμήσεις ενημερώσεων λογισμικού"
 
@@ -359,20 +356,21 @@ msgid "_Check Now"
 msgstr "Έ_λεγχος τώρα"
 
 #: ../data/gpk-prefs.ui.h:3
-msgid "_Automatically download:"
-msgstr "_Αυτόματη λήψη:"
-
-#: ../data/gpk-prefs.ui.h:4
 msgid "C_heck for updates:"
 msgstr "Έ_λεγχος για ενημερώσεις:"
 
-#: ../data/gpk-prefs.ui.h:5
+#: ../data/gpk-prefs.ui.h:4
 msgid "Check for major _upgrades:"
 msgstr "Έλεγχος για _σημαντικές αναβαθμίσεις:"
 
-#: ../data/gpk-prefs.ui.h:6
+#: ../data/gpk-prefs.ui.h:5
 msgid "Check for updates when using mobile broadband"
 msgstr "Έλεγχος για ενημερώσεις όταν χρησιμοποιείται κινητή ευρυζωνική σύνδεση"
+
+#: ../data/gpk-prefs.ui.h:6
+#| msgid "C_heck for updates:"
+msgid "Check for updates on battery power"
+msgstr "Έλεγχος για ενημερώσεις όταν τροφοδοτείται από τη μπαταρία"
 
 #: ../data/gpk-prefs.ui.h:7
 msgid "Currently using mobile broadband"
@@ -697,7 +695,7 @@ msgstr "Οι αλλαγές αυτές θα χαθούν, αν κλείσετε 
 #: ../src/gpk-enum.c:1154
 #: ../src/gpk-enum.c:1243
 msgid "Installed"
-msgstr "Εγκατεστημένο"
+msgstr "Εγκατεστημένα"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
@@ -1963,12 +1961,10 @@ msgid "Rescheduled due to priority"
 msgstr "Αναπροσαρμογή λόγω προτεραιότητας"
 
 #: ../src/gpk-enum.c:497
-#| msgid "Running the transaction failed"
 msgid "Unfinished transaction"
 msgstr "Ημιτελής εργασία"
 
 #: ../src/gpk-enum.c:500
-#| msgid "Got requires"
 msgid "Lock required"
 msgstr "Απαιτείται κλείδωμα"
 
@@ -2383,7 +2379,6 @@ msgid "The transaction has been canceled and will be retried when the system is 
 msgstr "Η συναλλαγή έχει ακυρωθεί και θα επαναληφθεί όταν το σύστημα θα είναι αδρανές."
 
 #: ../src/gpk-enum.c:757
-#| msgid "A media change is required"
 msgid "A package manager lock is required."
 msgstr "Απαιτείται κλείδωμα του διαχειριστή πακέτων."
 
@@ -3686,7 +3681,7 @@ msgstr "Να οριστεί αυτή η τιμή για το φίλτρο"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
 #: ../src/gpk-log.c:813
-#: ../src/gpk-prefs.c:933
+#: ../src/gpk-prefs.c:894
 msgid "Set the parent window to make this modal"
 msgstr "Να οριστεί το γονικό του παράθυρο για να παραμένει πάντα στο προσκήνιο"
 
@@ -3736,32 +3731,32 @@ msgid "Nothing"
 msgstr "Ποτέ"
 
 #. TRANSLATORS: for one reason or another, we could not enable or disable a software source
-#: ../src/gpk-prefs.c:509
+#: ../src/gpk-prefs.c:466
 msgid "Failed to change status"
 msgstr "Απέτυχε η αλλαγή της κατάστασης"
 
 #. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-prefs.c:584
+#: ../src/gpk-prefs.c:541
 msgid "Enabled"
 msgstr "Ενεργή"
 
 #. TRANSLATORS: column for the source description
-#: ../src/gpk-prefs.c:593
+#: ../src/gpk-prefs.c:550
 msgid "Software Source"
 msgstr "Πηγή λογισμικού"
 
 #. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-prefs.c:655
+#: ../src/gpk-prefs.c:612
 msgid "Failed to get the list of sources"
 msgstr "Αποτυχία  λήψης της λίστας των πηγών λογισμικού"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:763
+#: ../src/gpk-prefs.c:720
 #: ../src/gpk-update-viewer.c:3186
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Έξοδος, γιατί δεν ήταν δυνατή η ανάκτηση περισσότερων λεπτομερειών για το σύστημα υποστήριξης"
 
-#: ../src/gpk-prefs.c:797
+#: ../src/gpk-prefs.c:754
 msgid "Getting software source list not supported by backend"
 msgstr "Η λήψη της λίστας πηγών λογισμικού δεν υποστηρίζεται από το σύστημα υποστήριξης"
 
@@ -4228,6 +4223,9 @@ msgstr "Επιλογές αποσφαλμάτωσης"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Προβολή επιλογών αποσφαλμάτωσης"
+
+#~ msgid "_Automatically download:"
+#~ msgstr "_Αυτόματη λήψη:"
 
 #~ msgid "Unsupported daemon version."
 #~ msgstr "Μη υποστηριζόμενη έκδοση δαίμονα."
