@@ -134,8 +134,7 @@ gpk_task_untrusted_question (PkTask *task, guint request, PkResults *results)
 
 	/* message */
 	g_object_get (results, "role", &role, NULL);
-	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
-	    role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
+	if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
 		message = g_strdup_printf ("%s\n%s\n\n%s\n%s",
 					   /* TRANSLATORS: is not GPG signed */
 					   _("The software is not signed by a trusted provider."),

@@ -879,8 +879,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 		model = gtk_tree_view_get_model (treeview);
 
 		/* enable or disable the correct spinners */
-		if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
-		    role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
+		if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
 			path = gpk_update_viewer_model_get_path (model, package_id);
 			if (path != NULL) {
 				if (info == PK_INFO_ENUM_FINISHED)
@@ -948,8 +947,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 		}
 
 		/* only change the status when we're doing the actual update */
-		if (role == PK_ROLE_ENUM_UPDATE_PACKAGES ||
-		    role == PK_ROLE_ENUM_UPDATE_SYSTEM) {
+		if (role == PK_ROLE_ENUM_UPDATE_PACKAGES) {
 			/* if the info is finished, change the status to past tense */
 			if (info == PK_INFO_ENUM_FINISHED) {
 				/* clear the remaining size */
@@ -1226,15 +1224,9 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer user_data)
 	package_ids = pk_ptr_array_to_strv (array);
 
 	/* the backend is able to do UpdatePackages */
-	if (pk_bitfield_contain (roles, PK_ROLE_ENUM_UPDATE_PACKAGES)) {
-		pk_task_update_packages_async (task, package_ids, cancellable,
-					       (PkProgressCallback) gpk_update_viewer_progress_cb, NULL,
-					       (GAsyncReadyCallback) gpk_update_viewer_update_packages_cb, NULL);
-	} else {
-		pk_task_update_system_async (task, cancellable,
-					     (PkProgressCallback) gpk_update_viewer_progress_cb, NULL,
-					     (GAsyncReadyCallback) gpk_update_viewer_update_packages_cb, NULL);
-	}
+	pk_task_update_packages_async (task, package_ids, cancellable,
+				       (PkProgressCallback) gpk_update_viewer_progress_cb, NULL,
+				       (GAsyncReadyCallback) gpk_update_viewer_update_packages_cb, NULL);
 
 	/* from now on ignore updates-changed signals */
 	ignore_updates_changed = TRUE;
