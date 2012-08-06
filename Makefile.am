@@ -14,9 +14,7 @@ EXTRA_DIST =						\
 	intltool-extract.in				\
 	intltool-merge.in				\
 	intltool-update.in				\
-	omf.make					\
-	xmldocs.make					\
-	gnome-doc-utils.make
+	omf.make
 
 clean-local :
 	rm -f *~

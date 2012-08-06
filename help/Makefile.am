@@ -1,10 +1,8 @@
-include $(top_srcdir)/gnome-doc-utils.make
-dist-hook: doc-dist-hook
+@YELP_HELP_RULES@
 
-DOC_MODULE = gnome-packagekit
-DOC_ENTITIES = legal.xml
-DOC_INCLUDES = 
-DOC_FIGURES = \
+HELP_ID = gnome-packagekit
+HELP_FILES = legal.xml index.docbook
+HELP_MEDIA = \
 	figures/gpk-application-groups.png \
 	figures/gpk-client-copy-local.png \
 	figures/gpk-eula.png \
@@ -22,5 +20,5 @@ DOC_FIGURES = \
 	figures/gpk-service-pack-example.png \
 	figures/gpk-updates-warning.png
 
-DOC_LINGUAS = de el es fr gl oc pa pl sl sv zh_CN
+HELP_LINGUAS = de el es fr gl oc pa pl sl sv zh_CN
 

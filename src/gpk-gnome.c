@@ -60,9 +60,9 @@ gpk_gnome_help (const gchar *link_id)
 	gboolean ret = TRUE;
 
 	if (link_id)
-		uri = g_strconcat ("ghelp:gnome-packagekit?", link_id, NULL);
+		uri = g_strconcat ("help:gnome-packagekit?", link_id, NULL);
 	else
-		uri = g_strdup ("ghelp:gnome-packagekit");
+		uri = g_strdup ("help:gnome-packagekit");
 	g_debug ("opening uri %s", uri);
 
 	gtk_show_uri (NULL, uri, GDK_CURRENT_TIME, &error);
