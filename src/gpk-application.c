@@ -3259,6 +3259,7 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	GError *error = NULL;
 	GMenuModel *menu;
 	GtkEntryCompletion *completion;
+	GtkStyleContext *context;
 	GtkTreeSelection *selection;
 	GtkWidget *main_window;
 	GtkWidget *widget;
@@ -3445,6 +3446,11 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 
 	/* add columns to the tree view */
 	gpk_application_packages_add_columns (priv);
+
+	/* make the header draggable */
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "toolbar_header"));
+	context = gtk_widget_get_style_context (widget);
+	gtk_style_context_add_class (context, GTK_STYLE_CLASS_MENUBAR);
 
 	/* set up the groups checkbox */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "treeview_groups"));
