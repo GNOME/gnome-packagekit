@@ -1675,8 +1675,6 @@ out:
 static void
 gpk_application_perform_search (GpkApplicationPrivate *priv)
 {
-	GtkWidget *widget;
-
 	/*if we are in the middle of a search, just return*/
 	if (priv->search_in_progress == TRUE)
 		return;
@@ -1684,14 +1682,6 @@ gpk_application_perform_search (GpkApplicationPrivate *priv)
 	/* just shown the welcome screen */
 	if (priv->search_mode == GPK_MODE_UNKNOWN)
 		return;
-
-	if (priv->search_mode == GPK_MODE_NAME_DETAILS_FILE ||
-	    priv->search_mode == GPK_MODE_GROUP ||
-	    priv->search_mode == GPK_MODE_SELECTED) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder,
-							     "scrolledwindow_groups"));
-		gtk_widget_set_sensitive (widget, FALSE);
-	}
 
 	g_debug ("CLEAR search");
 	gpk_application_clear_details (priv);
@@ -2824,10 +2814,10 @@ gpk_application_add_welcome (GpkApplicationPrivate *priv)
 	/* enter something nice */
 	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
 		/* TRANSLATORS: welcome text if we can click the group array */
-		welcome = _("Enter a search word and then click find, or click a group to get started.");
+		welcome = _("Enter a search word or click a category to get started.");
 	} else {
 		/* TRANSLATORS: welcome text if we have to search by name */
-		welcome = _("Enter a search word and then click find to get started.");
+		welcome = _("Enter a search word to get started.");
 	}
 	gtk_list_store_set (priv->packages_store, &iter,
 			    PACKAGES_COLUMN_STATE, state,
@@ -3169,6 +3159,9 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 		g_warning ("cannot recognize mode %i, using name", priv->search_type);
 		gpk_application_menu_search_by_name (NULL, priv);
 	}
+
+	/* welcome */
+	gpk_application_add_welcome (priv);
 out:
 	return;
 }
@@ -3323,7 +3316,7 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	if (retval == 0) {
 		g_warning ("failed to load ui: %s", error->message);
 		g_error_free (error);
-		goto out;
+		return;
 	}
 
 	main_window = GTK_WIDGET (gtk_builder_get_object (priv->builder, "window_manager"));
@@ -3484,9 +3477,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 
 	/* hide details */
 	gpk_application_clear_details (priv);
-out:
-	/* welcome */
-	gpk_application_add_welcome (priv);
 }
 
 static void
