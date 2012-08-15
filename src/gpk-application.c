@@ -1990,7 +1990,9 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplicationPrivate *priv)
 
 		/* make apply button insensitive */
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_apply"));
-		gtk_widget_set_sensitive (widget, FALSE);
+		gtk_widget_set_visible (widget, FALSE);
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_clear"));
+		gtk_widget_set_visible (widget, FALSE);
 
 	} else if (priv->action == GPK_ACTION_REMOVE) {
 		autoremove = g_settings_get_boolean (priv->settings, GPK_SETTINGS_ENABLE_AUTOREMOVE);
@@ -2006,7 +2008,9 @@ gpk_application_button_apply_cb (GtkWidget *widget, GpkApplicationPrivate *priv)
 
 		/* make apply button insensitive */
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_apply"));
-		gtk_widget_set_sensitive (widget, FALSE);
+		gtk_widget_set_visible (widget, FALSE);
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_clear"));
+		gtk_widget_set_visible (widget, FALSE);
 	}
 	g_strfreev (package_ids);
 	return;
