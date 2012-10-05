@@ -1463,14 +1463,16 @@ gpk_update_viewer_reconsider_info (void)
 	gtk_button_set_label (GTK_BUTTON (widget), title);
 
 	/* no updates */
-	len = update_array->len;
-	if (len == 0) {
-		gpk_update_viewer_modal_error_with_timeout (
-				/* TRANSLATORS: title: nothing to do */
-				_("All software is up to date"),
-				/* TRANSLATORS: tell the user the problem */
-				_("There are no software updates available for your computer at this time."));
-		goto out;
+	if (update_array != NULL) {
+		len = update_array->len;
+		if (len == 0) {
+			gpk_update_viewer_modal_error_with_timeout (
+					/* TRANSLATORS: title: nothing to do */
+					_("All software is up to date"),
+					/* TRANSLATORS: tell the user the problem */
+					_("There are no software updates available for your computer at this time."));
+			goto out;
+		}
 	}
 
 	/* use correct status pane */
