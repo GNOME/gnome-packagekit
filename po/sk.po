@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-10-09 12:16+0000\n"
-"PO-Revision-Date: 2012-09-02 19:05+0200\n"
+"POT-Creation-Date: 2012-10-14 17:21+0000\n"
+"PO-Revision-Date: 2012-10-14 22:37+0200\n"
 "Last-Translator: Ivan Masár <helix84@centrum.sk>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:1
 msgid "Automatically remove unused dependencies"
@@ -106,21 +107,21 @@ msgstr ""
 # PM: používame ponuku už dosť dlho min dva roky ale ak niekto trva na menu nepovažujem to za veľký prehrešok
 # MČ: ak je tá ponuka pomenovaná „kategória“, tak by som to dal do úvodzoviek, inak by som to skloňoval.
 # PM: originál mi znie skor ako kategória skupinového menu, naozaj je to dobre? asi treba nahlásiť bug
+# IM: Zjednodušil som to, takto to nič nestráca na presnosti.
 #: ../data/org.gnome.packagekit.gschema.xml.h:17
-#, fuzzy
 msgid "Show the category group menu"
-msgstr "Zobraziť skupinovú ponuku kategória"
+msgstr "Zobraziť ponuku kategórií"
 
 # MČ: V iných prekladoch sa stretávam skôr s pojmom „ponuka“ namiesto „menu“
 # MČ: ak je tá ponuka pomenovaná „kategória“, tak by som to dal do úvodzoviek, inak by som to skloňoval.
+# IM: Zjednodušil som to, takto to nič nestráca na presnosti.
 #: ../data/org.gnome.packagekit.gschema.xml.h:18
-#, fuzzy
 msgid ""
 "Show the category group menu. This is more complete and custom to the "
 "distribution, but takes longer to populate."
 msgstr ""
-"Zobraziť skupinovú ponuku kategória. Je úplnejšie a prispôsobené distribúcii, "
-"ale jeho naplnenie trvá dlhšie."
+"Zobraziť ponuku kategórií. Je úplnejšia a prispôsobená distribúcii, ale jej "
+"naplnenie trvá dlhšie."
 
 # MČ: V iných prekladoch sa stretávam skôr s pojmom „ponuka“ namiesto „menu“
 #: ../data/org.gnome.packagekit.gschema.xml.h:19
@@ -149,7 +150,7 @@ msgstr ""
 "„details“ a súbor - „file“"
 
 # MČ: nie som si istý, prečo sa nepoužíva pojem repozitár. Jazyk sa vyvíja.
-# PM: snažíme sa vyhýbať cudzím slovám, tak asi preto. 
+# PM: snažíme sa vyhýbať cudzím slovám, tak asi preto.
 #: ../data/org.gnome.packagekit.gschema.xml.h:23
 msgid "Show all repositories in the software source viewer"
 msgstr "Zobraziť v prehliadači zdrojov softvéru všetky zdroje softvéru"
@@ -209,19 +210,18 @@ msgstr "Povoliť aplikáciám vyvolať inštalátor písiem."
 # MČ: Skôr by som preložil „reláciou D-Bus“, myslím si, že požiadavky sa posielajú cez D-Bus a nie D-Bus posiela požiadavky, ale možno sa mýlim.
 # PM: na tom čo hovorí Majo niečo bude, minimálne to stojí za preverenie
 #: ../data/org.gnome.packagekit.gschema.xml.h:33
-#, fuzzy
 msgid "Programs that should be ignored when they issue session D-Bus requests"
-msgstr "Programy, ktoré sa majú ignorovať, keď pošlú požiadavky relácie D-Bus"
+msgstr ""
+"Programy, ktoré sa majú ignorovať, keď pošlú požiadavky prostredníctvom "
+"relácie D-Bus"
 
-# MČ: Skôr by som preložil „reláciou D-Bus“, myslím si, že požiadavky sa posielajú cez D-Bus a nie D-Bus posiela požiadavky, ale možno sa mýlim.
 #: ../data/org.gnome.packagekit.gschema.xml.h:34
-#, fuzzy
 msgid ""
 "Programs that should be ignored when they issue session D-Bus requests, "
 "separated by commas."
 msgstr ""
-"Programy, ktoré sa majú ignorovať, keď pošlú požiadavky relácie D-Bus, "
-"oddelené čiarkami."
+"Programy, ktoré sa majú ignorovať, keď pošlú požiadavky prostredníctvom "
+"relácie D-Bus, oddelené čiarkami."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:35
 msgid "Allow applications to invoke the codec installer"
@@ -244,7 +244,7 @@ msgid ""
 "When displaying UI from a session D-Bus request, automatically use these "
 "options by default."
 msgstr ""
-"Pri zobrazovaní používateľského rozhrania z požiadavky relácie D-Bus "
+"Pri zobrazovaní používateľského rozhrania z požiadavky reláciou D-Bus "
 "predvolene automaticky použiť tieto voľby."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:40
@@ -252,14 +252,12 @@ msgid ""
 "When displaying UI from a session D-Bus request, force these options to be "
 "turned on."
 msgstr ""
-"Pri zobrazovaní používateľského rozhrania z požiadavky relácie D-Bus vynútiť "
-"zapnutie týchto volieb."
+"Pri zobrazovaní používateľského rozhrania z požiadavky reláciou D-Bus "
+"vynútiť zapnutie týchto volieb."
 
 #: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
-#, fuzzy
-#| msgid "Software Log"
 msgid "Software"
-msgstr "Protokol softvéru"
+msgstr "Softvér"
 
 #: ../data/gpk-application.desktop.in.h:2
 msgid "Add or remove software installed on the system"
@@ -437,10 +435,8 @@ msgstr ""
 "pripojenie"
 
 #: ../data/gpk-prefs.ui.h:6
-#, fuzzy
-#| msgid "C_heck for updates:"
 msgid "Check for updates on battery power"
-msgstr "_Kontrolovať dostupnosť aktualizácií:"
+msgstr "Kontrolovať aktualizácie pri napájaní z batérie"
 
 #: ../data/gpk-prefs.ui.h:7
 msgid "Currently using mobile broadband"
@@ -898,17 +894,13 @@ msgstr "Správca balíkov pre GNOME"
 
 #. TRANSLATORS: welcome text if we can click the group array
 #: ../src/gpk-application.c:2821
-#, fuzzy
-#| msgid "Enter a search word and then click find to get started."
 msgid "Enter a search word or click a category to get started."
-msgstr "Zadajte hľadané slovo a začnite kliknutím na Nájsť."
+msgstr "Zadajte hľadané slovo a začnite kliknutím na kategóriu"
 
 #. TRANSLATORS: welcome text if we have to search by name
 #: ../src/gpk-application.c:2824
-#, fuzzy
-#| msgid "Enter a search word and then click find to get started."
 msgid "Enter a search word to get started."
-msgstr "Zadajte hľadané slovo a začnite kliknutím na Nájsť."
+msgstr "Začnite zadaním hľadaného slova."
 
 #. TRANSLATORS: daemon is broken
 #: ../src/gpk-application.c:3063
@@ -2147,17 +2139,14 @@ msgid "Rescheduled due to priority"
 msgstr "Naplánovanie zmenené z dôvodu priority"
 
 # PS: nie je vhodné rovnako prekladať action aj transaction. Na transakcii nie je nič zlé...
+# IM: Stratil som kontext tohto komentára. Mám tu transakcia, takže to pokladám za vyriešené.
 #: ../src/gpk-enum.c:496
-#, fuzzy
-#| msgid "Running the transaction failed"
 msgid "Unfinished transaction"
 msgstr "Spustenie transakcie zlyhalo"
 
 #: ../src/gpk-enum.c:499
-#, fuzzy
-#| msgid "Got requires"
 msgid "Lock required"
-msgstr "Získané závislosti"
+msgstr "Je potrebný zámok"
 
 #: ../src/gpk-enum.c:516
 msgid "Failed with unknown error code."
@@ -2611,7 +2600,7 @@ msgstr "Zoznam zdrojov softvéru nebolo možné stiahnuť."
 
 #: ../src/gpk-enum.c:750
 msgid "A previous package management transaction was interrupted."
-msgstr ""
+msgstr "Predošlá transakcia správy balíkov bola prerušená."
 
 #: ../src/gpk-enum.c:753
 msgid ""
@@ -2622,10 +2611,8 @@ msgstr ""
 "systému."
 
 #: ../src/gpk-enum.c:756
-#, fuzzy
-#| msgid "A media change is required"
 msgid "A package manager lock is required."
-msgstr "Je potrebná výmena nosiča"
+msgstr "Je potrebný zámok správcu balíkov."
 
 #: ../src/gpk-enum.c:774
 msgid "No restart is necessary."
