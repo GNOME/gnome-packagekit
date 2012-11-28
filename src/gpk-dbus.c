@@ -334,6 +334,7 @@ gpk_dbus_create_task (GpkDbus *dbus, guint32 xid, const gchar *interaction, DBus
 	gchar *sender;
 	gchar *exec;
 	guint timestamp = 0;
+	gboolean ret;
 
 	task = gpk_dbus_task_new ();
 
@@ -349,8 +350,9 @@ gpk_dbus_create_task (GpkDbus *dbus, guint32 xid, const gchar *interaction, DBus
 
 	/* try to get the user time of the window */
 	if (xid != 0) {
-		gpk_x11_set_xid (dbus->priv->x11, xid);
-		timestamp = gpk_x11_get_user_time (dbus->priv->x11);
+		ret = gpk_x11_set_xid (dbus->priv->x11, xid);
+		if (ret)
+			timestamp = gpk_x11_get_user_time (dbus->priv->x11);
 	}
 
 	/* set the context for the return values */

@@ -54,6 +54,8 @@ gpk_x11_set_xid (GpkX11 *x11, guint32 xid)
 	g_return_val_if_fail (GPK_IS_X11 (x11), FALSE);
 
 	window = gdk_x11_window_foreign_new_for_display (x11->priv->gdk_display, xid);
+	if (window == NULL)
+		return FALSE;
 
 	/* save the x state */
 	x11->priv->display = GDK_DISPLAY_XDISPLAY (x11->priv->gdk_display);
