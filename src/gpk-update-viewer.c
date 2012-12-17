@@ -2158,7 +2158,7 @@ gpk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer user_dat
 	/* set loading text */
 	if (item != NULL) {
 		g_debug ("selected row is: %s, %p", package_id, item);
-		gtk_text_buffer_set_text (text_buffer, _("Loading..."), -1);
+		gtk_text_buffer_set_text (text_buffer, _("Loading…"), -1);
 		gpk_update_viewer_populate_details (item);
 	} else {
 		gtk_text_buffer_set_text (text_buffer, _("No update details available."), -1);
@@ -2831,7 +2831,7 @@ gpk_update_viewer_get_new_update_array (void)
 
 	widget = GTK_WIDGET(gtk_builder_get_object (builder, "label_header_title"));
 	/* TRANSLATORS: this is the header */
-	text = g_strdup_printf ("<big><b>%s</b></big>", _("Checking for updates..."));
+	text = g_strdup_printf ("<big><b>%s</b></big>", _("Checking for updates…"));
 	gtk_label_set_label (GTK_LABEL(widget), text);
 
 	/* only show newest updates? */
