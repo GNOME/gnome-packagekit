@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-08-15 12:14+0000\n"
-"PO-Revision-Date: 2012-08-22 21:59+0300\n"
+"POT-Creation-Date: 2012-12-17 11:12+0000\n"
+"PO-Revision-Date: 2012-12-20 23:32+0300\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lithuanian <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -181,13 +181,16 @@ msgstr "Kai rodoma sąsaja iš seanso D-Bus užklausos, priverstinai naudoti ši
 
 #: ../data/gpk-application.desktop.in.h:1
 #: ../data/gpk-application.ui.h:1
-#| msgid "Software Log"
 msgid "Software"
 msgstr "Programinės įranga"
 
 #: ../data/gpk-application.desktop.in.h:2
 msgid "Add or remove software installed on the system"
 msgstr "Įdiegti ar šalinti sistemoje įdiegtą programinę įrangą"
+
+#: ../data/gpk-application.desktop.in.h:3
+msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
+msgstr "Atnaujinimai;Šaltiniai;Saugyklos;Nustatymai;Įdiegti;"
 
 #: ../data/gpk-application.ui.h:2
 msgid "Changes are not applied instantly, this button applies all changes"
@@ -202,7 +205,6 @@ msgid "Cancel search"
 msgstr "Atšaukti paiešką"
 
 #: ../data/gpk-application.ui.h:5
-#| msgid "License"
 msgid "Licence"
 msgstr "Licencija"
 
@@ -216,7 +218,6 @@ msgid "Install Package"
 msgstr "Įdiegti paketą"
 
 #: ../data/gpk-application.ui.h:8
-#| msgid "Removed packages"
 msgid "Remove Package"
 msgstr "Pašalinti paketą"
 
@@ -225,27 +226,22 @@ msgid "Visit home page for selected package"
 msgstr "Aplankyti pasirinkto paketo tinklalapį"
 
 #: ../data/gpk-application.ui.h:10
-#| msgid "Visit the project homepage"
 msgid "Visit Project Website"
 msgstr "Aplankyti projekto tinklapį"
 
 #: ../data/gpk-application.ui.h:11
-#| msgid "No files"
 msgid "Files"
 msgstr "Failai"
 
 #: ../data/gpk-application.ui.h:12
-#| msgid "Removed packages"
 msgid "Required Packages"
 msgstr "Reikalingi paketai"
 
 #: ../data/gpk-application.ui.h:13
-#| msgid "Newest packages"
 msgid "Dependent Packages"
 msgstr "Priklausomi paketai"
 
 #: ../data/gpk-application.ui.h:14
-#| msgid "C_heck for updates:"
 msgid "Check for Updates"
 msgstr "Tikrinti, ar yra atnaujinimų"
 
@@ -263,22 +259,18 @@ msgid "Software Log"
 msgstr "Programinės įrangos žurnalai"
 
 #: ../data/gpk-application.ui.h:18
-#| msgid "Only _Newest Packages"
 msgid "Only Newest Versions"
 msgstr "Tik naujausios versijos"
 
 #: ../data/gpk-application.ui.h:19
-#| msgid "Only N_ative Packages"
 msgid "Only Native Packages"
 msgstr "Tik savieji paketai"
 
 #: ../data/gpk-application.ui.h:20
-#| msgid "_Help"
 msgid "Help"
 msgstr "Žinynas"
 
 #: ../data/gpk-application.ui.h:21
-#| msgid "Software Install"
 msgid "About Software Install"
 msgstr "Apie programinės įrangos įdiegimą"
 
@@ -372,7 +364,6 @@ msgid "Check for updates when using mobile broadband"
 msgstr "Ieškoti atnaujinimų naudojant mobiliojo interneto ryšį"
 
 #: ../data/gpk-prefs.ui.h:6
-#| msgid "C_heck for updates:"
 msgid "Check for updates on battery power"
 msgstr "Tikrinti, ar yra atnaujinimų naudojant bateriją"
 
@@ -794,13 +785,11 @@ msgstr "GNOME aplinkai skirta paketų tvarkymo programa"
 
 #. TRANSLATORS: welcome text if we can click the group array
 #: ../src/gpk-application.c:2821
-#| msgid "Enter a search word and then click find to get started."
 msgid "Enter a search word or click a category to get started."
 msgstr "Norėdami pradėti, įveskite paieškos žodį arba spauskite ant kategorijos."
 
 #. TRANSLATORS: welcome text if we have to search by name
 #: ../src/gpk-application.c:2824
-#| msgid "Enter a search word and then click find to get started."
 msgid "Enter a search word to get started."
 msgstr "Norėdami pradėti, įveskite paketo pavadinimą."
 
@@ -821,14 +810,13 @@ msgstr "Rodyti visus paketus"
 
 #. TRANSLATORS: show the program version
 #: ../src/gpk-application.c:3540
-#: ../src/gpk-update-viewer.c:3422
+#: ../src/gpk-update-viewer.c:3424
 msgid "Show the program version and exit"
 msgstr "Parodyti programos versiją ir išeiti"
 
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../src/gpk-application.c:3554
 #: ../src/gpk-log.c:498
-#| msgid "Failed to install software"
 msgid "Install Software"
 msgstr "Įdiegti programinę įrangą"
 
@@ -2017,12 +2005,10 @@ msgid "Rescheduled due to priority"
 msgstr "Atidėta dėl prioriteto"
 
 #: ../src/gpk-enum.c:496
-#| msgid "Running the transaction failed"
 msgid "Unfinished transaction"
 msgstr "Nebaigta tranzakcija"
 
 #: ../src/gpk-enum.c:499
-#| msgid "Got requires"
 msgid "Lock required"
 msgstr "Būtinas užraktas"
 
@@ -2447,7 +2433,6 @@ msgid "The transaction has been canceled and will be retried when the system is 
 msgstr "Tranzakcija buvo atšaukta ir bus vėl mėginama, kai sistema bus neužimta."
 
 #: ../src/gpk-enum.c:756
-#| msgid "A media change is required"
 msgid "A package manager lock is required."
 msgstr "Būtinas paketų tvarkyklės užraktas."
 
@@ -3822,7 +3807,7 @@ msgstr "Nepavyko gauti saugyklų sąrašo"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
 #: ../src/gpk-prefs.c:720
-#: ../src/gpk-update-viewer.c:3178
+#: ../src/gpk-update-viewer.c:3180
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Išeinama, kadangi nepavyko gauti posistemės informacijos"
 
@@ -4071,16 +4056,16 @@ msgstr[1] "Į_diegti atnaujinimus"
 msgstr[2] "Į_diegti atnaujinimus"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1466
+#: ../src/gpk-update-viewer.c:1467
 msgid "All software is up to date"
 msgstr "Visa programinė įranga atnaujinta"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1468
+#: ../src/gpk-update-viewer.c:1469
 msgid "There are no software updates available for your computer at this time."
 msgstr "Šiuo metu jūsų kompiuteriui nėra jokių atnaujinimų."
 
-#: ../src/gpk-update-viewer.c:1494
+#: ../src/gpk-update-viewer.c:1496
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4089,7 +4074,7 @@ msgstr[1] "Yra %i atnaujinimai"
 msgstr[2] "Yra %i atnaujinimų"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1510
+#: ../src/gpk-update-viewer.c:1512
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4098,7 +4083,7 @@ msgstr[1] "Pasirinkti %i atnaujinimai"
 msgstr[2] "Pasirinkta %i atnaujinimų"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1518
+#: ../src/gpk-update-viewer.c:1520
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4107,50 +4092,50 @@ msgstr[1] "Pasirinkti %i atnaujinimai (%s)"
 msgstr[2] "Pasirinkta %i atnaujinimų (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1715
+#: ../src/gpk-update-viewer.c:1717
 msgid "Status"
 msgstr "Būsena"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1975
+#: ../src/gpk-update-viewer.c:1977
 msgid "This update will add new features and expand functionality."
 msgstr "Šis atnaujinimas pridės naujų galimybių ir praplės funkcionalumą."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1979
+#: ../src/gpk-update-viewer.c:1981
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Šis atnaujinimas ištaisys klaidas ir kitas nekritines problemas."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1983
+#: ../src/gpk-update-viewer.c:1985
 msgid "This update is important as it may solve critical problems."
 msgstr "Šis atnaujinimas yra svarbus, kadangi jis gali išspręsti kritines problemas."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1987
+#: ../src/gpk-update-viewer.c:1989
 msgid "This update is needed to fix a security vulnerability with this package."
 msgstr "Šis atnaujinimas reikalingas norint ištaisyti saugumo spragas šiame pakete."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1991
+#: ../src/gpk-update-viewer.c:1993
 msgid "This update is blocked."
 msgstr "Šis atnaujinimas yra blokuojamas."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:2003
+#: ../src/gpk-update-viewer.c:2005
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Šis pranešimas buvo parodytas %s ir paskutinį kartą atnaujintas %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:2010
+#: ../src/gpk-update-viewer.c:2012
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Pranešimas buvo parodytas %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:2032
-#: ../src/gpk-update-viewer.c:2056
+#: ../src/gpk-update-viewer.c:2034
+#: ../src/gpk-update-viewer.c:2058
 msgid "For more information about this update please visit this website:"
 msgid_plural "For more information about this update please visit these websites:"
 msgstr[0] "Daugiau informacijos apie šį atnaujinimą rasite šiame tinklalapyje:"
@@ -4158,8 +4143,8 @@ msgstr[1] "Daugiau informacijos apie šį atnaujinimą rasite šiuose tinklalapi
 msgstr[2] "Daugiau informacijos apie šį atnaujinimą rasite šiuose tinklalapiuose:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:2039
-#: ../src/gpk-update-viewer.c:2064
+#: ../src/gpk-update-viewer.c:2041
+#: ../src/gpk-update-viewer.c:2066
 msgid "For more information about bugs fixed by this update please visit this website:"
 msgid_plural "For more information about bugs fixed by this update please visit these websites:"
 msgstr[0] "Daugiau informacijos apie šiame atnaujinime ištaisytas klaidas rasite šiame tinklalapyje:"
@@ -4167,8 +4152,8 @@ msgstr[1] "Daugiau informacijos apie šiame atnaujinime ištaisytas klaidas rasi
 msgstr[2] "Daugiau informacijos apie šiame atnaujinime ištaisytas klaidas rasite šiuose tinklalapiuose:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2046
-#: ../src/gpk-update-viewer.c:2072
+#: ../src/gpk-update-viewer.c:2048
+#: ../src/gpk-update-viewer.c:2074
 msgid "For more information about this security update please visit this website:"
 msgid_plural "For more information about this security update please visit these websites:"
 msgstr[0] "Daugiau informacijos apie šį saugumo atnaujinimą rasite šiame tinklalapyje:"
@@ -4176,109 +4161,110 @@ msgstr[1] "Daugiau informacijos apie šį saugumo atnaujinimą rasite šiuose ti
 msgstr[2] "Daugiau informacijos apie šį saugumo atnaujinimą rasite šiuose tinklalapiuose:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2081
+#: ../src/gpk-update-viewer.c:2083
 msgid "The computer will have to be restarted after the update for the changes to take effect."
 msgstr "Atnaujinus reikės paleisti kompiuterį iš naujo, kad pakeitimai įsigaliotų."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2085
+#: ../src/gpk-update-viewer.c:2087
 msgid "You will need to log out and back in after the update for the changes to take effect."
 msgstr "Įdiegus naujinimus, jums reikės atsijungti ir vėl prisijungti, idant pakeitimai įsigaliotų."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2092
+#: ../src/gpk-update-viewer.c:2094
 msgid "The classification of this update is unstable which means it is not designed for production use."
 msgstr "Šis atnaujinimas klasifikuojamas kaip nestabilus, t. y. jis nėra skirtas kasdieniam naudojimui."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2096
+#: ../src/gpk-update-viewer.c:2098
 msgid "This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter."
 msgstr "Tai yra bandomasis atnaujinimas ir nėra skirtas įprastiniam naudojimui. Praneškite apie pastebėtas problemas ir klaidas."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2105
+#: ../src/gpk-update-viewer.c:2107
 msgid "The developer logs will be shown as no description is available for this update:"
 msgstr "Bus parodyti kūrėjų žurnalai, kadangi nėra kito aprašymo šiam atnaujinimui:"
 
-#: ../src/gpk-update-viewer.c:2159
-msgid "Loading..."
+#: ../src/gpk-update-viewer.c:2161
+#| msgid "Loading..."
+msgid "Loading…"
 msgstr "Įkeliama..."
 
-#: ../src/gpk-update-viewer.c:2162
+#: ../src/gpk-update-viewer.c:2164
 msgid "No update details available."
 msgstr "Nėra atnaujinimų informacijos."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2194
-#: ../src/gpk-update-viewer.c:2292
-#: ../src/gpk-update-viewer.c:2312
+#: ../src/gpk-update-viewer.c:2196
+#: ../src/gpk-update-viewer.c:2294
+#: ../src/gpk-update-viewer.c:2314
 msgid "Could not get update details"
 msgstr "Nepavyko gauti atnaujinimo informacijos"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2214
+#: ../src/gpk-update-viewer.c:2216
 msgid "Could not get package details"
 msgstr "Nepavyko gauti paketo informacijos"
 
-#: ../src/gpk-update-viewer.c:2214
-#: ../src/gpk-update-viewer.c:2312
+#: ../src/gpk-update-viewer.c:2216
+#: ../src/gpk-update-viewer.c:2314
 msgid "No results were returned."
 msgstr "Negauta jokių rezultatų."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2547
+#: ../src/gpk-update-viewer.c:2549
 msgid "Select all"
 msgstr "Žymėti visus"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2555
+#: ../src/gpk-update-viewer.c:2557
 msgid "Unselect all"
 msgstr "Nežymėti jokių"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2562
+#: ../src/gpk-update-viewer.c:2564
 msgid "Select security updates"
 msgstr "Žymėti saugumo atnaujinimus"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2568
+#: ../src/gpk-update-viewer.c:2570
 msgid "Ignore this update"
 msgstr "Nepaisyti šio atnaujinimo"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2679
+#: ../src/gpk-update-viewer.c:2681
 msgid "Could not get updates"
 msgstr "Nepavyko gauti atnaujinimų"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2832
-msgid "Checking for updates..."
+#: ../src/gpk-update-viewer.c:2834
+#| msgid "Checking for updates..."
+msgid "Checking for updates…"
 msgstr "Ieškoma atnaujinimų..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3111
+#: ../src/gpk-update-viewer.c:3113
 msgid "Could not get list of distribution upgrades"
 msgstr "Nepavyko gauti distributyvo atnaujinimų sąrašo"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3141
+#: ../src/gpk-update-viewer.c:3143
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Prieinama nauja distributyvo atnaujinimo laida „%s“"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3391
+#: ../src/gpk-update-viewer.c:3393
 msgid "Other updates are held back as some important system packages need to be installed first."
 msgstr "Kiti atnaujinimai sulaikyti, kadangi pirma reikia įdiegti kai kuriuos svarbius sisteminius paketus."
 
-#: ../src/gpk-update-viewer.c:3437
-#| msgid "Update System"
+#: ../src/gpk-update-viewer.c:3439
 msgid "Update Software"
 msgstr "Atnaujinti programinę įrangą"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3454
+#: ../src/gpk-update-viewer.c:3456
 msgid "Software Update Viewer"
 msgstr "Programinės įrangos atnaujinimo žiūryklė"
 
