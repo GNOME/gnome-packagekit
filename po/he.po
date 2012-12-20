@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-15 22:50+0300\n"
-"PO-Revision-Date: 2012-08-15 22:51+0200\n"
+"POT-Creation-Date: 2012-12-20 13:37+0200\n"
+"PO-Revision-Date: 2012-12-20 13:51+0200\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: \n"
 "Language: \n"
@@ -185,6 +185,10 @@ msgstr "תכנה"
 #: ../data/gpk-application.desktop.in.h:2
 msgid "Add or remove software installed on the system"
 msgstr "הוספה או הסרה של יישומי המערכת"
+
+#: ../data/gpk-application.desktop.in.h:3
+msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
+msgstr "עידכון;שידרוג;עדכון;שדרוג;מקורות;מאגרים;העדפות;התקנה;התקנות;חנות;"
 
 #: ../data/gpk-application.ui.h:2
 msgid "Changes are not applied instantly, this button applies all changes"
@@ -760,7 +764,7 @@ msgstr ""
 "מארק קרפיבנר <mark125@gmail.com>\n"
 "ירון שהרבני <sh.yaron@gmail.com>\n"
 "\n"
-"פרוייקט תרגום GNOME לעברית:\n"
+"פרויקט תרגום GNOME לעברית:\n"
 "‏http://gnome-il.berlios.de"
 
 #: ../src/gpk-application.c:2625
@@ -799,7 +803,7 @@ msgstr "הצגת כל החבילות"
 
 #. TRANSLATORS: show the program version
 #: ../src/gpk-application.c:3540
-#: ../src/gpk-update-viewer.c:3422
+#: ../src/gpk-update-viewer.c:3424
 msgid "Show the program version and exit"
 msgstr "הצגת גרסת התכנה ויציאה"
 
@@ -1911,19 +1915,19 @@ msgstr "ההורדה נכשלה"
 
 #: ../src/gpk-enum.c:466
 msgid "Package failed to configure"
-msgstr "ארע כשל בהגדרת החבילה"
+msgstr "הגדרת החבילה נכשלה"
 
 #: ../src/gpk-enum.c:469
 msgid "Package failed to build"
-msgstr "ארע כשל בבניית החבילה"
+msgstr "בניית החבילה נכשלה"
 
 #: ../src/gpk-enum.c:472
 msgid "Package failed to install"
-msgstr "ארע כשל בהתקנת החבילה"
+msgstr "התקנת החבילה נכשלה"
 
 #: ../src/gpk-enum.c:475
 msgid "Package failed to be removed"
-msgstr "ארע כשל בהסרת החבילה"
+msgstr "הסרת החבילה נכשלה"
 
 #: ../src/gpk-enum.c:478
 msgid "Update failed due to running process"
@@ -1982,7 +1986,7 @@ msgid ""
 "The service that is responsible for handling user requests is out of memory.\n"
 "Please restart your computer."
 msgstr ""
-"לשירות המטפל בבקשות משתמש נגמר הזיכרון.\n"
+"לשירות המטפל בבקשות המשתמש נגמר הזיכרון.\n"
 "נא להפעיל את המחשב מחדש."
 
 #: ../src/gpk-enum.c:531
@@ -2002,7 +2006,7 @@ msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug in your distribution bug tracker with the error description."
 msgstr ""
-"התרחשה בעיה שלא ציפינו לה.\n"
+"התרחשה בעיה בלתי צפויה.\n"
 "נא לדווח על השגיאה במערכת מעקב התקלות של ההפצה שלך עם תיאור השגיאה."
 
 #: ../src/gpk-enum.c:542
@@ -2055,7 +2059,7 @@ msgid ""
 "More information is available in the detailed report."
 msgstr ""
 "לא נמצאה חבילה המאפשרת את השלמת הפעולה.\n"
-"מידע נוסף זמין בדו\"ח המפורט."
+"מידע נוסף זמין בדוח המפורט."
 
 #: ../src/gpk-enum.c:572
 msgid "The search filter was not correctly formed."
@@ -2075,7 +2079,7 @@ msgid ""
 "More information is available in the detailed report."
 msgstr ""
 "התרחשה שגיאת פעולה לא מוגדרת.\n"
-"פרטים נוספים זמינים בדו\"ח המפורט."
+"פרטים נוספים זמינים בדוח המפורט."
 
 #: ../src/gpk-enum.c:583
 msgid ""
@@ -2099,7 +2103,7 @@ msgid ""
 "The backend did not exit cleanly."
 msgstr ""
 "הפעולה בוטלה בהצלחה ואף חבילה לא שונתה.\n"
-"המנוע לא יצא בצורה נקייה."
+"המנוע לא נסגר בצורה נקייה."
 
 #: ../src/gpk-enum.c:597
 msgid ""
@@ -2126,8 +2130,8 @@ msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
 msgstr ""
-"לא בוצעה הסכמה לרישיון.\n"
-"כדי להשתמש בתכנה זו עליך להסכים לרישיון."
+"לא הסכמת לרישיון.\n"
+"כדי להשתמש בתכנית זו עליך להסכים לרישיון."
 
 #: ../src/gpk-enum.c:612
 msgid ""
@@ -2135,30 +2139,30 @@ msgid ""
 "This is usually due to mixing packages from different software sources."
 msgstr ""
 "שתי חבילות המספקות את אותו הקובץ.\n"
-"זה בדרך כלל בגלל ערבוב חבילות ממאגרי חבילות שונים."
+"בעיה זו מתרחשת לרוב עקב ערבוב חבילות ממאגרי חבילות שונים."
 
 #: ../src/gpk-enum.c:616
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software sources."
 msgstr ""
-"קיימות חבילות מרובות שלא תואמות.\n"
-"בדרך כלל זה מתרחש כתוצאה מעירוב חבילות ממאגרי חבילות שונים."
+"קיימות חבילות מרובות שאינן תואמות.\n"
+"בעיה זו מתרחשת לרוב כתוצאה מעירוב חבילות ממאגרי חבילות שונים."
 
 #: ../src/gpk-enum.c:620
 msgid ""
 "There was a (possibly temporary) problem connecting to a software source.\n"
 "Please check the detailed error for further details."
 msgstr ""
-"התרחשה בעיה (יתכן שזמנית) בהתחברות למקור תוכנה.\n"
-"נא לבדוק בשגיאה מפורטת לקבלת מידע נוסף."
+"התרחשה בעיה (יתכן שזמנית) בהתחברות למקור תכנה.\n"
+"נא לבדוק בשגיאה המפורטת לקבלת מידע נוסף."
 
 #: ../src/gpk-enum.c:624
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
 msgstr ""
-"ארע כשל באתחול מנוע ניהול החבילות.\n"
+"אתחול מנוע ניהול החבילות נכשל.\n"
 "יתכן שבעיה זו התרחשה עקב מספר כלי ניהול חבילות הפועלים בו זמנית."
 
 #: ../src/gpk-enum.c:628
@@ -2166,7 +2170,7 @@ msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
 msgstr ""
-"ארע כשל בסגירת מופע המנוע.\n"
+"סגירת מופע המנוע נכשלה.\n"
 "ניתן להתעלם משגיאה זו."
 
 #: ../src/gpk-enum.c:632
@@ -2191,7 +2195,7 @@ msgid ""
 "More information is available in the detailed report."
 msgstr ""
 "התקנת הקובץ המקומי נכשלה.\n"
-"מידע נוסף זמין בדו\"ח המפורט."
+"מידע נוסף זמין בדוח המפורט."
 
 #: ../src/gpk-enum.c:646
 msgid "The package security signature could not be verified."
@@ -2250,7 +2254,7 @@ msgid ""
 "Required upgrade data could not be found in any of the configured software sources.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
-"נתוני השדרוג הנדרשים לא נמצאו על אף אחד ממקורות התכנה המוגדרים.\n"
+"נתוני השדרוג הנדרשים לא נמצאו באף אחד ממקורות התכנה המוגדרים.\n"
 "רשימת שדרוגי ההפצה לא תהיה זמינה."
 
 #: ../src/gpk-enum.c:681
@@ -2274,7 +2278,7 @@ msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
 msgstr ""
-"ארע כשל בסיפוק אימות תקין.\n"
+"אספקת אימות תקין נכשלה.\n"
 "נא לבדוק את כל הססמאות או את הגדרות החשבון."
 
 #: ../src/gpk-enum.c:695
@@ -2311,39 +2315,39 @@ msgid ""
 "More information is available in the detailed report."
 msgstr ""
 "לא ניתן לבצע את ההורדה אוטומטית, הורדה זו צריכה להתבצע ידנית.\n"
-"מידע נוסף זמין בדו\"ח המפורט."
+"מידע נוסף זמין בדוח המפורט."
 
 #: ../src/gpk-enum.c:718
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"הגדרת אחת מהחבילות המסומנות לא הוגדרה כראוי.\n"
-"מידע נוסף זמין בדו\"ח המפורט."
+"אחת מהחבילות המסומנות לא הוגדרה כראוי.\n"
+"מידע נוסף זמין בדוח המפורט."
 
 #: ../src/gpk-enum.c:722
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"הגדרת אחת מהחבילות המסומנות לא נבנתה כראוי.\n"
-"מידע נוסף זמין בדו\"ח המפורט."
+"אחת מהחבילות המסומנות לא נבנתה כראוי.\n"
+"מידע נוסף זמין בדוח המפורט."
 
 #: ../src/gpk-enum.c:726
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"הגדרת אחת מהחבילות המסומנות לא הותקנה כראוי.\n"
-"מידע נוסף זמין בדו\"ח המפורט."
+"אחת מהחבילות המסומנות לא הותקנה כראוי.\n"
+"מידע נוסף זמין בדוח המפורט."
 
 #: ../src/gpk-enum.c:730
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"הגדרת אחת מהחבילות המסומנות לא הוסרה כראוי.\n"
-"מידע נוסף זמין בדו\"ח המפורט."
+"אחת מהחבילות המסומנות לא הוסרה כראוי.\n"
+"מידע נוסף זמין בדוח המפורט."
 
 #: ../src/gpk-enum.c:734
 msgid ""
@@ -2512,17 +2516,17 @@ msgstr "מצב לא ידוע"
 #. TRANSLATORS: transaction state, the daemon is in the process of starting
 #: ../src/gpk-enum.c:928
 msgid "Starting"
-msgstr "מתחיל"
+msgstr "בהתחלה"
 
 #. TRANSLATORS: transaction state, the transaction is waiting for another to complete
 #: ../src/gpk-enum.c:932
 msgid "Waiting in queue"
-msgstr "ממתין בתור"
+msgstr "בהמתנה בתור"
 
 #. TRANSLATORS: transaction state, just started
 #: ../src/gpk-enum.c:936
 msgid "Running"
-msgstr "פועל"
+msgstr "בפעולה"
 
 #. TRANSLATORS: transaction state, is querying data
 #: ../src/gpk-enum.c:940
@@ -3261,7 +3265,7 @@ msgstr "מיושן"
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1642
 msgid "Localization"
-msgstr "לוקליזציה"
+msgstr "התאמה מקומית"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1646
@@ -3337,7 +3341,7 @@ msgstr "קבוצה לא ידועה"
 #: ../src/gpk-helper-chooser.c:140
 #: ../src/gpk-helper-run.c:203
 msgid "Icon"
-msgstr "איקון"
+msgstr "סמל"
 
 #: ../src/gpk-helper-chooser.c:286
 msgid "Applications that can open this type of file"
@@ -3369,7 +3373,7 @@ msgstr "תכנה זדונית יכולה להזיק למחשב שלך או לג�
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
 #: ../src/gpk-task.c:146
 msgid "Are you <b>sure</b> you want to update this package?"
-msgstr "האם <b>בטוח</b> שברצונך לבצע את העדכון?"
+msgstr "האם <b>אכן</b> לבצע את העדכון?"
 
 #. TRANSLATORS: user has to trust provider -- I know, this sucks
 #: ../src/gpk-task.c:152
@@ -3379,7 +3383,7 @@ msgstr "אין להתקין חבילה זו אלא אם כן צעדיך מובנ
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
 #: ../src/gpk-task.c:156
 msgid "Are you <b>sure</b> you want to install this package?"
-msgstr "האם <b>בטוח</b> שברצונך להתקין את החבילה?"
+msgstr "האם <b>אכן</b> להתקין את החבילה?"
 
 #. TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc
 #: ../src/gpk-task.c:351
@@ -3672,7 +3676,7 @@ msgstr "הגדרת המסנן לערך זה"
 #: ../src/gpk-log.c:813
 #: ../src/gpk-prefs.c:894
 msgid "Set the parent window to make this modal"
-msgstr "הגדרת החלון הראשי כך שזה יהפך לעליון"
+msgstr "הגדרת החלון הראשי כך שזה ייהפך לעליון"
 
 #. are we running privileged
 #: ../src/gpk-log.c:835
@@ -3741,7 +3745,7 @@ msgstr "ארע כשל בקבלת רשימת המקורות"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
 #: ../src/gpk-prefs.c:720
-#: ../src/gpk-update-viewer.c:3178
+#: ../src/gpk-update-viewer.c:3180
 msgid "Exiting as backend details could not be retrieved"
 msgstr "התכנה תיסגר כיוון שלא ניתן לקבל פריטים על המנגנון"
 
@@ -3988,16 +3992,16 @@ msgstr[0] "ה_תקנת עדכון"
 msgstr[1] "_התקנת עדכונים"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1466
+#: ../src/gpk-update-viewer.c:1467
 msgid "All software is up to date"
 msgstr "כל התוכנות מעודכנות"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1468
+#: ../src/gpk-update-viewer.c:1469
 msgid "There are no software updates available for your computer at this time."
 msgstr "אין עדכוני תכנה הזמינים עבור המחשב שלך."
 
-#: ../src/gpk-update-viewer.c:1494
+#: ../src/gpk-update-viewer.c:1496
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4005,7 +4009,7 @@ msgstr[0] "יש עדכון אחד זמין."
 msgstr[1] "יש %i עדכונים זמינים"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1510
+#: ../src/gpk-update-viewer.c:1512
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4013,7 +4017,7 @@ msgstr[0] "עדכון אחד נבחר"
 msgstr[1] "%i עדכונים נבחרו"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1518
+#: ../src/gpk-update-viewer.c:1520
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4021,174 +4025,174 @@ msgstr[0] "עדכון %i נבחר (%s)"
 msgstr[1] "%i עדכונים נבחרו (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1715
+#: ../src/gpk-update-viewer.c:1717
 msgid "Status"
 msgstr "מצב"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1975
+#: ../src/gpk-update-viewer.c:1977
 msgid "This update will add new features and expand functionality."
 msgstr "עדכון זה יוסיף תכונות חדשות וירחיב את היכולות הקיימות."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1979
+#: ../src/gpk-update-viewer.c:1981
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "עדכון זה יתקן באגים ועוד בעיות שאינן קריטיות."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1983
+#: ../src/gpk-update-viewer.c:1985
 msgid "This update is important as it may solve critical problems."
 msgstr "עדכון זה הוא חשוב משום שהוא עשוי לפתור בעיות קריטיות."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1987
+#: ../src/gpk-update-viewer.c:1989
 msgid "This update is needed to fix a security vulnerability with this package."
 msgstr "עדכון זה נדרש כדי לתקן בעיות אבטחה בחבילה זו."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1991
+#: ../src/gpk-update-viewer.c:1993
 msgid "This update is blocked."
 msgstr "עדכון זה חסום."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:2003
+#: ../src/gpk-update-viewer.c:2005
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "הודעה זו הוצגה ב־%s והעדכון האחרון היה ב־%s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:2010
+#: ../src/gpk-update-viewer.c:2012
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "הודעה זו הוצגה ב־%s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:2032
-#: ../src/gpk-update-viewer.c:2056
+#: ../src/gpk-update-viewer.c:2034
+#: ../src/gpk-update-viewer.c:2058
 msgid "For more information about this update please visit this website:"
 msgid_plural "For more information about this update please visit these websites:"
 msgstr[0] "כדי לראות מידע נוסף על העדכון יש להיכנס לאתר:"
 msgstr[1] "כדי לראות מידע נוסף על העדכון יש להיכנס לאתרים:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:2039
-#: ../src/gpk-update-viewer.c:2064
+#: ../src/gpk-update-viewer.c:2041
+#: ../src/gpk-update-viewer.c:2066
 msgid "For more information about bugs fixed by this update please visit this website:"
 msgid_plural "For more information about bugs fixed by this update please visit these websites:"
 msgstr[0] "לקבלת מידע נוסף על הבאגים שעדכון זה מתקן יש לבקר באתר:"
 msgstr[1] "לקבלת מידע נוסף על הבאגים שעדכון זה מתקן יש לבקר באתרים:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2046
-#: ../src/gpk-update-viewer.c:2072
+#: ../src/gpk-update-viewer.c:2048
+#: ../src/gpk-update-viewer.c:2074
 msgid "For more information about this security update please visit this website:"
 msgid_plural "For more information about this security update please visit these websites:"
 msgstr[0] "לקבלת מידע נוסף על עדכון אבטחה זה יש לבקר באתר:"
 msgstr[1] "לקבלת מידע נוסף על עדכון אבטחה זה יש לבקר באתרים:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2081
+#: ../src/gpk-update-viewer.c:2083
 msgid "The computer will have to be restarted after the update for the changes to take effect."
 msgstr "יש להפעיל מחדש את המחשב לאחר העדכון כדי שהשינויים יכנסו לתוקף."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2085
+#: ../src/gpk-update-viewer.c:2087
 msgid "You will need to log out and back in after the update for the changes to take effect."
 msgstr "עליך להתנתק ולהתחבר בחזרה לאחר העדכון כדי שהשינויים ייכנסו לתוקף."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2092
+#: ../src/gpk-update-viewer.c:2094
 msgid "The classification of this update is unstable which means it is not designed for production use."
 msgstr "העדכון סווג בתור לא יציב מה שאומר שהוא לא נועד לשימוש יום יומי."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2096
+#: ../src/gpk-update-viewer.c:2098
 msgid "This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter."
 msgstr "עדכון זה הוא ניסיוני והוא לא מיועד לשימוש רגיל. נא לדווח על בעיות ותקלות שתיתקל בהן."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2105
+#: ../src/gpk-update-viewer.c:2107
 msgid "The developer logs will be shown as no description is available for this update:"
 msgstr "יוצגו הערות המפתח כיוון שאין תיאור זמין עבור עדכון זה:"
 
-#: ../src/gpk-update-viewer.c:2159
-msgid "Loading..."
-msgstr "בטעינה..."
+#: ../src/gpk-update-viewer.c:2161
+msgid "Loading…"
+msgstr "בטעינה…"
 
-#: ../src/gpk-update-viewer.c:2162
+#: ../src/gpk-update-viewer.c:2164
 msgid "No update details available."
 msgstr "אין פרטים על עדכון זה."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2194
-#: ../src/gpk-update-viewer.c:2292
-#: ../src/gpk-update-viewer.c:2312
+#: ../src/gpk-update-viewer.c:2196
+#: ../src/gpk-update-viewer.c:2294
+#: ../src/gpk-update-viewer.c:2314
 msgid "Could not get update details"
 msgstr "לא ניתן לקבל את פרטי העדכון"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2214
+#: ../src/gpk-update-viewer.c:2216
 msgid "Could not get package details"
 msgstr "לא ניתן לקבל את פרטי החבילה"
 
-#: ../src/gpk-update-viewer.c:2214
-#: ../src/gpk-update-viewer.c:2312
+#: ../src/gpk-update-viewer.c:2216
+#: ../src/gpk-update-viewer.c:2314
 msgid "No results were returned."
 msgstr "לא הוחזרו תוצאות."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2547
+#: ../src/gpk-update-viewer.c:2549
 msgid "Select all"
 msgstr "בחירת הכול"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2555
+#: ../src/gpk-update-viewer.c:2557
 msgid "Unselect all"
 msgstr "ביטול הבחירה"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2562
+#: ../src/gpk-update-viewer.c:2564
 msgid "Select security updates"
 msgstr "בחירת עדכוני אבטחה"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2568
+#: ../src/gpk-update-viewer.c:2570
 msgid "Ignore this update"
 msgstr "התעלמות מהעדכון"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2679
+#: ../src/gpk-update-viewer.c:2681
 msgid "Could not get updates"
 msgstr "לא ניתן לקבל עדכונים"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2832
-msgid "Checking for updates..."
-msgstr "מתבצע חיפוש אחר עדכונים..."
+#: ../src/gpk-update-viewer.c:2834
+msgid "Checking for updates…"
+msgstr "מתבצע חיפוש אחר עדכונים…"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3111
+#: ../src/gpk-update-viewer.c:3113
 msgid "Could not get list of distribution upgrades"
 msgstr "לא ניתן לקבל את רשימת שדרוגי ההפצה"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3141
+#: ../src/gpk-update-viewer.c:3143
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "זמינה גרסה חדשה של ההפצה '%s'"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3391
+#: ../src/gpk-update-viewer.c:3393
 msgid "Other updates are held back as some important system packages need to be installed first."
 msgstr "עדכונים אחרים נבלמים כיוון שיש להתקין תחילה כמה חבילות מערכת חשובות."
 
-#: ../src/gpk-update-viewer.c:3437
+#: ../src/gpk-update-viewer.c:3439
 msgid "Update Software"
 msgstr "עדכון תכנה"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3454
+#: ../src/gpk-update-viewer.c:3456
 msgid "Software Update Viewer"
 msgstr "מציג עדכוני תכנה"
 
