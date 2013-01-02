@@ -377,6 +377,7 @@ gpk_dbus_task_handle_error (GpkDbusTask *dtask, PkError *error_code)
 
 	/* do the bubble */
 	notification = notify_notification_new (title, message, NULL);
+	notify_notification_set_hint_string (notification, "desktop-entry", "gpk-application");
 	notify_notification_set_timeout (notification, 15000);
 	notify_notification_set_urgency (notification, NOTIFY_URGENCY_LOW);
 	notify_notification_add_action (notification, "show-error-details",
