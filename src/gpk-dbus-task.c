@@ -3294,7 +3294,8 @@ gpk_dbus_task_set_exec (GpkDbusTask *dtask, const gchar *exec)
 	dtask->priv->parent_icon_name = NULL;
 
 	/* is the binary trusted, i.e. can we probe it's window properties */
-	if (gpk_dbus_task_path_is_trusted (exec)) {
+	if (gpk_dbus_task_path_is_trusted (exec) &&
+            dtask->priv->parent_window != NULL) {
 		g_debug ("using application window properties");
 		/* get from window properties */
 		x11 = gpk_x11_new ();
