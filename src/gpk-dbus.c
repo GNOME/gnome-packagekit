@@ -345,9 +345,6 @@ gpk_dbus_create_task (GpkDbus *dbus, guint32 xid, const gchar *interaction, DBus
 	g_debug ("interact=%i", (gint) interact);
 	gpk_dbus_task_set_interaction (task, interact);
 
-	/* set the parent window */
-	gpk_dbus_task_set_xid (task, xid);
-
 	/* try to get the user time of the window */
 	if (xid != 0) {
 		ret = gpk_x11_set_xid (dbus->priv->x11, xid);
@@ -362,7 +359,8 @@ gpk_dbus_create_task (GpkDbus *dbus, guint32 xid, const gchar *interaction, DBus
 	gpk_dbus_task_set_timestamp (task, timestamp);
 
 	/* set the window for the modal and timestamp */
-	gpk_dbus_task_set_xid (task, xid);
+        if (xid != 0)
+        	gpk_dbus_task_set_xid (task, xid);
 
 	/* get the program name and set */
 	sender = dbus_g_method_get_sender (context);
