@@ -1521,9 +1521,9 @@ gpk_dbus_task_install_gstreamer_resources_confirm (GpkDbusTask *dtask, gchar **c
 	/* find out what type of request this is */
 	for (i=0; i<len; i++) {
 		parts = g_strsplit (codec_names[i], "|", 2);
-		if (g_str_has_prefix (parts[1], "gstreamer0.10(decoder"))
+		if (g_strstr_len (parts[1], -1, "(decoder") != NULL)
 			is_decoder = TRUE;
-		if (g_str_has_prefix (parts[1], "gstreamer0.10(encoder"))
+		if (g_strstr_len (parts[1], -1, "(encoder") != NULL)
 			is_encoder = TRUE;
 		g_strfreev (parts);
 	}
