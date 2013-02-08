@@ -250,7 +250,7 @@ gpk_dialog_embed_file_list_widget (GtkDialog *dialog, GPtrArray *files)
 	/* scroll the treeview */
 	scroll = gtk_scrolled_window_new (NULL, NULL);
 	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll),
-					GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+					GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	gtk_container_add (GTK_CONTAINER (scroll), widget);
 	gtk_widget_show (scroll);
 
@@ -405,7 +405,7 @@ gpk_dialog_tabbed_package_list_widget (GtkWidget *tab_page, GPtrArray *array)
 
 	/* scroll the treeview */
 	scroll = gtk_scrolled_window_new (NULL, NULL);
-	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+	gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scroll), GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
 	gtk_container_add (GTK_CONTAINER (scroll), widget);
 	gtk_widget_show (scroll);
 
