@@ -8,15 +8,15 @@
 # Lucas Lommer <llommer@svn.gnome.org>, 2010.
 # Ondrej Kopka <ondrej.kopka@gmail.com>, 2010.
 # Adam Matoušek <adydas95@gmail.com>, 2012.
-# Marek Černocký <marek@manet.cz>, 2010, 2011, 2012.
+# Marek Černocký <marek@manet.cz>, 2010, 2011, 2012, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-08-15 12:14+0000\n"
-"PO-Revision-Date: 2012-09-10 00:37+0200\n"
+"POT-Creation-Date: 2013-02-14 19:13+0000\n"
+"PO-Revision-Date: 2013-02-19 15:15+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -24,6 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Gtranslator 2.91.6\n"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:1
 msgid "Automatically remove unused dependencies"
@@ -245,6 +246,12 @@ msgstr "Software"
 msgid "Add or remove software installed on the system"
 msgstr "Přidat nebo odebrat software instalovaný v systému"
 
+#: ../data/gpk-application.desktop.in.h:3
+msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
+msgstr ""
+"aktualizace;aktualizovat;povýšení;povýšit;zdroje;repozitáře;předvolby;"
+"instalovat;instalace;úložiště;"
+
 #: ../data/gpk-application.ui.h:2
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "Změny nejsou aplikovány ihned, toto tlačítko aplikuje všechny změny"
@@ -286,12 +293,10 @@ msgid "Files"
 msgstr "Soubory"
 
 #: ../data/gpk-application.ui.h:12
-#| msgid "Removed packages"
 msgid "Required Packages"
 msgstr "Vyžadované balíčky"
 
 #: ../data/gpk-application.ui.h:13
-#| msgid "Newest packages"
 msgid "Dependent Packages"
 msgstr "Závislé balíčky"
 
@@ -347,7 +352,7 @@ msgstr "_Přijmout licenci"
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-dbus-task.c:3381
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-dbus-task.c:3383
 #: ../src/gpk-install-local-file.c:65 ../src/gpk-install-package-name.c:64
 #: ../src/gpk-dbus-service.c:151 ../src/gpk-dbus-service.c:154
 msgid "Software Install"
@@ -863,13 +868,11 @@ msgstr "Správce balíčků pro GNOME"
 
 #. TRANSLATORS: welcome text if we can click the group array
 #: ../src/gpk-application.c:2821
-#| msgid "Enter a search word and then click find to get started."
 msgid "Enter a search word or click a category to get started."
 msgstr "Hledat začnete zadáním slova nebo kliknutím na kategorii."
 
 #. TRANSLATORS: welcome text if we have to search by name
 #: ../src/gpk-application.c:2824
-#| msgid "Enter a search word and then click find to get started."
 msgid "Enter a search word to get started."
 msgstr "Hledat začnete zadáním slova."
 
@@ -889,13 +892,12 @@ msgid "Show all packages"
 msgstr "Zobrazit všechny balíčky"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3540 ../src/gpk-update-viewer.c:3422
+#: ../src/gpk-application.c:3540 ../src/gpk-update-viewer.c:3424
 msgid "Show the program version and exit"
 msgstr "Zobrazit verzi programu a skončit"
 
 #. TRANSLATORS: short name for gpk-update-viewer
 #: ../src/gpk-application.c:3554 ../src/gpk-log.c:498
-#| msgid "Failed to install software"
 msgid "Install Software"
 msgstr "Instalovat software"
 
@@ -1076,24 +1078,24 @@ msgid "The file is not valid."
 msgstr "Soubor není platný."
 
 #. TRANSLATORS: button: show details about the error
-#: ../src/gpk-dbus-task.c:384
+#: ../src/gpk-dbus-task.c:385
 msgid "Show details"
 msgstr "Ukázat podrobnosti"
 
 #. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:472 ../src/gpk-dbus-task.c:1161
+#: ../src/gpk-dbus-task.c:473 ../src/gpk-dbus-task.c:1162
 msgid "Failed to install package"
 msgstr "Instalace balíčku se nezdařila"
 
 #. TRANSLATORS: title: installing packages
 #. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:510 ../src/gpk-enum.c:956
+#: ../src/gpk-dbus-task.c:511 ../src/gpk-enum.c:956
 msgid "Installing packages"
 msgstr "Balíčky se instalují"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:612 ../src/gpk-dbus-task.c:1384
+#: ../src/gpk-dbus-task.c:613 ../src/gpk-dbus-task.c:1385
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "Instalace souboru se nezdařila"
@@ -1101,7 +1103,7 @@ msgstr[1] "Instalace souborů se nezdařila"
 msgstr[2] "Instalace souborů se nezdařila"
 
 #. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:701
+#: ../src/gpk-dbus-task.c:702
 msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
 msgstr[0] "Chcete instalovat tento soubor?"
@@ -1116,16 +1118,16 @@ msgstr[2] "Chcete instalovat tyto soubory?"
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
-#: ../src/gpk-dbus-task.c:710 ../src/gpk-dbus-task.c:1258
-#: ../src/gpk-dbus-task.c:1477 ../src/gpk-dbus-task.c:1680
-#: ../src/gpk-dbus-task.c:2140 ../src/gpk-dbus-task.c:2478
-#: ../src/gpk-dbus-task.c:2691 ../src/gpk-dbus-task.c:2813
-#: ../src/gpk-dbus-task.c:3166 ../src/gpk-task.c:404
+#: ../src/gpk-dbus-task.c:711 ../src/gpk-dbus-task.c:1259
+#: ../src/gpk-dbus-task.c:1478 ../src/gpk-dbus-task.c:1681
+#: ../src/gpk-dbus-task.c:2141 ../src/gpk-dbus-task.c:2479
+#: ../src/gpk-dbus-task.c:2692 ../src/gpk-dbus-task.c:2814
+#: ../src/gpk-dbus-task.c:3167 ../src/gpk-task.c:404
 msgid "Install"
 msgstr "Instalovat"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1033
+#: ../src/gpk-dbus-task.c:1034
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "Instalovat místní soubor"
@@ -1133,13 +1135,13 @@ msgstr[1] "Instalovat místní soubory"
 msgstr[2] "Instalovat místní soubory"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1093
+#: ../src/gpk-dbus-task.c:1094
 #, c-format
 msgid "Could not find packages"
 msgstr "Balíčky se nepodařilo nalézt"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1102
+#: ../src/gpk-dbus-task.c:1103
 msgid "The packages could not be found in any software source"
 msgstr "Balíček nebyl nalezen v žádném zdroji softwaru"
 
@@ -1148,13 +1150,13 @@ msgstr "Balíček nebyl nalezen v žádném zdroji softwaru"
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
-#: ../src/gpk-dbus-task.c:1105 ../src/gpk-dbus-task.c:1346
-#: ../src/gpk-dbus-task.c:1652 ../src/gpk-dbus-task.c:1858
-#: ../src/gpk-dbus-task.c:2113 ../src/gpk-dbus-task.c:2450
+#: ../src/gpk-dbus-task.c:1106 ../src/gpk-dbus-task.c:1347
+#: ../src/gpk-dbus-task.c:1653 ../src/gpk-dbus-task.c:1859
+#: ../src/gpk-dbus-task.c:2114 ../src/gpk-dbus-task.c:2451
 msgid "More information"
 msgstr "Více informací"
 
-#: ../src/gpk-dbus-task.c:1142 ../src/gpk-enum.c:328
+#: ../src/gpk-dbus-task.c:1143 ../src/gpk-enum.c:328
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "Balíček je již nainstalován"
@@ -1162,17 +1164,17 @@ msgstr[1] "Balíčky jsou již nainstalovány"
 msgstr[2] "Balíčky jsou již nainstalovány"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1146
+#: ../src/gpk-dbus-task.c:1147
 msgid "Nothing to do."
 msgstr "Není zapotřebí nic dělat."
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1163
+#: ../src/gpk-dbus-task.c:1164
 msgid "Incorrect response from search"
 msgstr "Neplatná odpověď při vyhledávání"
 
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1242
+#: ../src/gpk-dbus-task.c:1243
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
 msgstr[0] "Vyžadován přídavný balíček"
@@ -1180,7 +1182,7 @@ msgstr[1] "Vyžadovány přídavné balíčky"
 msgstr[2] "Vyžadovány přídavné balíčky"
 
 #. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1245
+#: ../src/gpk-dbus-task.c:1246
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "Chcete vyhledat a instalovat balíček ihned?"
@@ -1188,7 +1190,7 @@ msgstr[1] "Chcete vyhledat a instalovat balíčky ihned?"
 msgstr[2] "Chcete vyhledat a instalovat balíčky ihned?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1251
+#: ../src/gpk-dbus-task.c:1252
 #, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
@@ -1197,7 +1199,7 @@ msgstr[1] "%s vyžaduje instalaci balíčků"
 msgstr[2] "%s vyžaduje instalaci balíčků"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1254
+#: ../src/gpk-dbus-task.c:1255
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
 msgstr[0] "Nějaký program vyžaduje instalaci balíčku"
@@ -1205,28 +1207,28 @@ msgstr[1] "Nějaký program vyžaduje instalaci balíčků"
 msgstr[2] "Nějaký program vyžaduje instalaci balíčků"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1271 ../src/gpk-dbus-task.c:2873
+#: ../src/gpk-dbus-task.c:1272 ../src/gpk-dbus-task.c:2874
 msgid "Searching for packages"
 msgstr "Jsou vyhledávány balíčky"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1341
+#: ../src/gpk-dbus-task.c:1342
 msgid "Failed to find package"
 msgstr "Balíček nebyl nalezen"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1343 ../src/gpk-dbus-task.c:3013
+#: ../src/gpk-dbus-task.c:1344 ../src/gpk-dbus-task.c:3014
 msgid "The file could not be found in any packages"
 msgstr "Soubor nebyl nalezen v žádném balíčku"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1381
+#: ../src/gpk-dbus-task.c:1382
 #, c-format
 msgid "The %s package already provides this file"
 msgstr "Balíček %s již poskytuje tento soubor"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1462
+#: ../src/gpk-dbus-task.c:1463
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "Následující soubor je vyžadován:"
@@ -1234,7 +1236,7 @@ msgstr[1] "Následující soubory jsou vyžadovány:"
 msgstr[2] "Následující soubory jsou vyžadovány:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1465
+#: ../src/gpk-dbus-task.c:1466
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "Chcete vyhledat tento soubor ihned?"
@@ -1242,7 +1244,7 @@ msgstr[1] "Chcete vyhledat tyto soubory ihned?"
 msgstr[2] "Chcete vyhledat tyto soubory ihned?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1470
+#: ../src/gpk-dbus-task.c:1471
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1251,7 +1253,7 @@ msgstr[1] "%s vyžaduje instalaci souborů"
 msgstr[2] "%s vyžaduje instalaci souborů"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1473
+#: ../src/gpk-dbus-task.c:1474
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "Nějaký program vyžaduje instalaci souboru"
@@ -1260,13 +1262,13 @@ msgstr[2] "Nějaký program vyžaduje instalaci souborů"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1489 ../src/gpk-dbus-task.c:3116
+#: ../src/gpk-dbus-task.c:1490 ../src/gpk-dbus-task.c:3117
 #: ../src/gpk-enum.c:1312
 msgid "Searching for file"
 msgstr "Vyhledává se soubor"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1532
+#: ../src/gpk-dbus-task.c:1533
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "Je vyžadován následující zásuvný modul:"
@@ -1274,7 +1276,7 @@ msgstr[1] "Jsou vyžadovány následující zásuvné moduly:"
 msgstr[2] "Jsou vyžadovány následující zásuvné moduly:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1550 ../src/gpk-dbus-task.c:2378
+#: ../src/gpk-dbus-task.c:1551 ../src/gpk-dbus-task.c:2379
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Chcete vyhledat tento soubor?"
@@ -1282,7 +1284,7 @@ msgstr[1] "Chcete vyhledat tyto soubory?"
 msgstr[2] "Chcete vyhledat tyto soubory?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1563
+#: ../src/gpk-dbus-task.c:1564
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1291,7 +1293,7 @@ msgstr[1] "%s vyžaduje přídavné zásuvné moduly k dekódování souboru"
 msgstr[2] "%s vyžaduje přídavné zásuvné moduly k dekódování souboru"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1567
+#: ../src/gpk-dbus-task.c:1568
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1300,7 +1302,7 @@ msgstr[1] "%s vyžaduje přídavné zásuvné moduly ke kódování souboru"
 msgstr[2] "%s vyžaduje přídavné zásuvné moduly ke kódování souboru"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1571
+#: ../src/gpk-dbus-task.c:1572
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1309,7 +1311,7 @@ msgstr[1] "%s vyžaduje k této operaci přídavné zásuvné moduly"
 msgstr[2] "%s vyžaduje k této operaci přídavné zásuvné moduly"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1577
+#: ../src/gpk-dbus-task.c:1578
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] "Nějaký program vyžaduje přídavný zásuvný modul k dekódování souboru"
@@ -1319,7 +1321,7 @@ msgstr[2] ""
 "Nějaký program vyžaduje přídavné zásuvné moduly k dekódování souboru"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1581
+#: ../src/gpk-dbus-task.c:1582
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] "Nějaký program vyžaduje přídavný zásuvný modul ke kódování souboru"
@@ -1327,7 +1329,7 @@ msgstr[1] "Nějaký program vyžaduje přídavné zásuvné moduly ke kódován�
 msgstr[2] "Nějaký program vyžaduje přídavné zásuvné moduly ke kódování souboru"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1585
+#: ../src/gpk-dbus-task.c:1586
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "Nějaký program vyžaduje k této operaci přídavný zásuvný modul"
@@ -1335,22 +1337,22 @@ msgstr[1] "Nějaký program vyžaduje k této operaci přídavné zásuvné modu
 msgstr[2] "Nějaký program vyžaduje k této operaci přídavné zásuvné moduly"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1591 ../src/gpk-dbus-task.c:1944
-#: ../src/gpk-dbus-task.c:2317 ../src/gpk-dbus-task.c:2390
+#: ../src/gpk-dbus-task.c:1592 ../src/gpk-dbus-task.c:1945
+#: ../src/gpk-dbus-task.c:2318 ../src/gpk-dbus-task.c:2391
 msgid "Search"
 msgstr "Vyhledat"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1646
+#: ../src/gpk-dbus-task.c:1647
 msgid "Failed to search for plugin"
 msgstr "Zásuvný modul se nepodařilo vyhledat"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1648
+#: ../src/gpk-dbus-task.c:1649
 msgid "Could not find plugin in any configured software source"
 msgstr "Zásuvný modul se nezdařilo nalézt v žádném nastaveném zdroji softwaru"
 
-#: ../src/gpk-dbus-task.c:1671 ../src/gpk-dbus-task.c:2469
+#: ../src/gpk-dbus-task.c:1672 ../src/gpk-dbus-task.c:2470
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "Instalovat tento zásuvný modul"
@@ -1358,8 +1360,8 @@ msgstr[1] "Instalovat tyto zásuvné moduly"
 msgstr[2] "Instalovat tyto zásuvné moduly"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1672 ../src/gpk-dbus-task.c:2133
-#: ../src/gpk-dbus-task.c:2470 ../src/gpk-dbus-task.c:2805
+#: ../src/gpk-dbus-task.c:1673 ../src/gpk-dbus-task.c:2134
+#: ../src/gpk-dbus-task.c:2471 ../src/gpk-dbus-task.c:2806
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Chcete instalovat tento balíček právě teď?"
@@ -1367,42 +1369,42 @@ msgstr[1] "Chcete instalovat tyto balíčky právě teď?"
 msgstr[2] "Chcete instalovat tyto balíčky právě teď?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1764
+#: ../src/gpk-dbus-task.c:1765
 msgid "Searching for plugins"
 msgstr "Vyhledávají se zásuvné moduly"
 
-#: ../src/gpk-dbus-task.c:1785
+#: ../src/gpk-dbus-task.c:1786
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "Vyhledává se zásuvný modul: %s"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1823
+#: ../src/gpk-dbus-task.c:1824
 msgid "Failed to search for provides"
 msgstr "Nezdařilo se vyhledat poskytované"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1853
+#: ../src/gpk-dbus-task.c:1854
 msgid "Failed to find software"
 msgstr "Nezdařilo se vyhledat software"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1855
+#: ../src/gpk-dbus-task.c:1856
 msgid "No new applications can be found to handle this type of file"
 msgstr "Žádná nová aplikace pro daný typ souboru nebyla nalezena"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1926
+#: ../src/gpk-dbus-task.c:1927
 msgid "An additional program is required to open this type of file:"
 msgstr "Pro tento typ souboru je vyžadován přídavný software:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1929
+#: ../src/gpk-dbus-task.c:1930
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "Chcete vyhledat program pro otevření souboru tohoto typu ihned?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1937
+#: ../src/gpk-dbus-task.c:1938
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1411,7 +1413,7 @@ msgstr[1] "%s vyžaduje nové typy MIME"
 msgstr[2] "%s vyžaduje nové typy MIME"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1940
+#: ../src/gpk-dbus-task.c:1941
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "Nějaký program vyžaduje nový typ MIME"
@@ -1419,22 +1421,22 @@ msgstr[1] "Nějaký program vyžaduje nové typy MIME"
 msgstr[2] "Nějaký program vyžaduje nové typy MIME"
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1955
+#: ../src/gpk-dbus-task.c:1956
 msgid "Searching for file handlers"
 msgstr "Vyhledává se ovladač souborů"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2034
+#: ../src/gpk-dbus-task.c:2035
 msgid "Language tag not parsed"
 msgstr "Značka jazyka nebyla analyzován"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2042
+#: ../src/gpk-dbus-task.c:2043
 msgid "Language code not matched"
 msgstr "Kód jazyka neodpovídá"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2102
+#: ../src/gpk-dbus-task.c:2103
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "Nelze nalézt písmo"
@@ -1442,12 +1444,12 @@ msgstr[1] "Nelze nalézt písma"
 msgstr[2] "Nelze nalézt písma"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2110
+#: ../src/gpk-dbus-task.c:2111
 msgid "No new fonts can be found for this document"
 msgstr "Žádná nová písma pro tento dokument nebyla nalezena"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2296
+#: ../src/gpk-dbus-task.c:2297
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] ""
@@ -1458,7 +1460,7 @@ msgstr[2] ""
 "Pro správné zobrazení tohoto dokumentu jsou vyžadována dodatečná písma."
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2300
+#: ../src/gpk-dbus-task.c:2301
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "Chcete vyhledat vhodný balíček ihned?"
@@ -1466,7 +1468,7 @@ msgstr[1] "Chcete vyhledat vhodné balíčky ihned?"
 msgstr[2] "Chcete vyhledat vhodné balíčky ihned?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2310
+#: ../src/gpk-dbus-task.c:2311
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1475,7 +1477,7 @@ msgstr[1] "%s chce instalovat písma"
 msgstr[2] "%s chce instalovat písma"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2313
+#: ../src/gpk-dbus-task.c:2314
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "Nějaký program chce instalovat písmo"
@@ -1483,7 +1485,7 @@ msgstr[1] "Nějaký program chce instalovat písma"
 msgstr[2] "Nějaký program chce instalovat písma"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2329
+#: ../src/gpk-dbus-task.c:2330
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "Vyhledává se písmo"
@@ -1491,63 +1493,63 @@ msgstr[1] "Vyhledávají se písma"
 msgstr[2] "Vyhledávají se písma"
 
 #. TRANSLATORS: we are listing the services in a box
-#: ../src/gpk-dbus-task.c:2366
+#: ../src/gpk-dbus-task.c:2367
 msgid "The following service is required:"
 msgid_plural "The following services are required:"
 msgstr[0] "Následující služba je vyžadována:"
 msgstr[1] "Následující služby jsou vyžadovány:"
 msgstr[2] "Následující služby jsou vyžadovány:"
 
-#: ../src/gpk-dbus-task.c:2386
+#: ../src/gpk-dbus-task.c:2387
 msgid "Plasma requires an additional service for this operation"
 msgid_plural "Plasma requires additional services for this operation"
 msgstr[0] "Plasma pro tuto operaci vyžaduje doplňkovou službu"
 msgstr[1] "Plasma pro tuto operaci vyžaduje doplňkové služby"
 msgstr[2] "Plasma pro tuto operaci vyžaduje doplňkové služby"
 
-#: ../src/gpk-dbus-task.c:2444
+#: ../src/gpk-dbus-task.c:2445
 msgid "Failed to search for Plasma service"
 msgstr "Nezdařilo se vyhledat službu Plasma"
 
 #. TRANSLATORS: no software sources have the wanted Plasma service
-#: ../src/gpk-dbus-task.c:2446
+#: ../src/gpk-dbus-task.c:2447
 msgid "Could not find service in any configured software source"
 msgstr "Službu se nezdařilo najít v žádném nastavené zdroji softwaru"
 
 #. TRANSLATORS: search for Plasma services
-#: ../src/gpk-dbus-task.c:2552
+#: ../src/gpk-dbus-task.c:2553
 msgid "Searching for services"
 msgstr "Vyhledává se služba"
 
-#: ../src/gpk-dbus-task.c:2571
+#: ../src/gpk-dbus-task.c:2572
 #, c-format
 msgid "Searching for service: %s"
 msgstr "Vyhledává se služba: %s"
 
-#: ../src/gpk-dbus-task.c:2648
+#: ../src/gpk-dbus-task.c:2649
 msgid "Could not process catalog"
 msgstr "Nelze zpracovat katalog"
 
-#: ../src/gpk-dbus-task.c:2666
+#: ../src/gpk-dbus-task.c:2667
 msgid "No packages need to be installed"
 msgstr "Není potřeba instalovat žádné balíčky"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2685
+#: ../src/gpk-dbus-task.c:2686
 msgid "Install packages in catalog?"
 msgstr "Instalovat balíčky z katalogu?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2687
+#: ../src/gpk-dbus-task.c:2688
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "Následující balíčky jsou označeny pro instalaci z katalogu:"
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2727
+#: ../src/gpk-dbus-task.c:2728
 msgid "Failed to remove package"
 msgstr "Balíček se nepodařilo odstranit"
 
-#: ../src/gpk-dbus-task.c:2804
+#: ../src/gpk-dbus-task.c:2805
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "Instalovat tento ovladač"
@@ -1556,17 +1558,17 @@ msgstr[2] "Instalovat tyto ovladače"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2957 ../src/gpk-enum.c:948
+#: ../src/gpk-dbus-task.c:2958 ../src/gpk-enum.c:948
 msgid "Removing packages"
 msgstr "Balíčky se odstraňují"
 
 #. TRANSLATORS: failed to find the package for the file
-#: ../src/gpk-dbus-task.c:3011
+#: ../src/gpk-dbus-task.c:3012
 msgid "Failed to find package for this file"
 msgstr "Pro tento soubor se nepodařilo vyhledat balíček"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:3089
+#: ../src/gpk-dbus-task.c:3090
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "Následující soubor bude odstraněn:"
@@ -1574,7 +1576,7 @@ msgstr[1] "Následující soubory budou odstraněny:"
 msgstr[2] "Následující soubory budou odstraněny:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:3092
+#: ../src/gpk-dbus-task.c:3093
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Chcete odstranit tento soubor ihned?"
@@ -1582,7 +1584,7 @@ msgstr[1] "Chcete odstranit tyto soubory ihned?"
 msgstr[2] "Chcete odstranit tyto soubory ihned?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:3097
+#: ../src/gpk-dbus-task.c:3098
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1591,7 +1593,7 @@ msgstr[1] "%s vyžaduje odstranění souborů"
 msgstr[2] "%s vyžaduje odstranění souborů"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:3100
+#: ../src/gpk-dbus-task.c:3101
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Nějaký program vyžaduje odstranění souboru"
@@ -1599,12 +1601,12 @@ msgstr[1] "Nějaký program vyžaduje odstranění souborů"
 msgstr[2] "Nějaký program vyžaduje odstranění souborů"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:3104 ../src/gpk-task.c:409
+#: ../src/gpk-dbus-task.c:3105 ../src/gpk-task.c:409
 msgid "Remove"
 msgstr "Odstranit"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:3157
+#: ../src/gpk-dbus-task.c:3158
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Chcete instalovat tento katalog?"
@@ -1612,7 +1614,7 @@ msgstr[1] "Chcete instalovat tyto katalogy?"
 msgstr[2] "Chcete instalovat tyto katalogy?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:3182
+#: ../src/gpk-dbus-task.c:3183
 msgid "Install catalogs"
 msgstr "Instalovat katalogy"
 
@@ -2553,7 +2555,6 @@ msgstr ""
 "Transakce byla zrušena a bude opakována, až systém nebude zaneprázdněn."
 
 #: ../src/gpk-enum.c:756
-#| msgid "A media change is required"
 msgid "A package manager lock is required."
 msgstr "Je požadován zámek pro správu balíčků."
 
@@ -3928,7 +3929,7 @@ msgid "Failed to get the list of sources"
 msgstr "Nelze získat seznam zdrojů"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:720 ../src/gpk-update-viewer.c:3178
+#: ../src/gpk-prefs.c:720 ../src/gpk-update-viewer.c:3180
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Ukončuje se, protože nemohly být získány podrobnosti od výkonné části"
 
@@ -4194,16 +4195,16 @@ msgstr[1] "_Instalovat aktualizace"
 msgstr[2] "_Instalovat aktualizace"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1466
+#: ../src/gpk-update-viewer.c:1467
 msgid "All software is up to date"
 msgstr "Veškerý software je aktualizovaný"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1468
+#: ../src/gpk-update-viewer.c:1469
 msgid "There are no software updates available for your computer at this time."
 msgstr "Momentálně nejsou pro tento počítač dostupné žádné aktualizace."
 
-#: ../src/gpk-update-viewer.c:1494
+#: ../src/gpk-update-viewer.c:1496
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4212,7 +4213,7 @@ msgstr[1] "Jsou dostupné %i aktualizace"
 msgstr[2] "Je dostupných %i aktualizací"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1510
+#: ../src/gpk-update-viewer.c:1512
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4221,7 +4222,7 @@ msgstr[1] "Vybrány %i aktualizace"
 msgstr[2] "Vybráno %i aktualizací"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1518
+#: ../src/gpk-update-viewer.c:1520
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4230,51 +4231,51 @@ msgstr[1] "Vybrány %i aktualizace (%s)"
 msgstr[2] "Vybráno %i aktualizací (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1715
+#: ../src/gpk-update-viewer.c:1717
 msgid "Status"
 msgstr "Stav"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1975
+#: ../src/gpk-update-viewer.c:1977
 msgid "This update will add new features and expand functionality."
 msgstr "Tato aktualizace přidá nové vlastnosti a rozšíří funkcionalitu."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1979
+#: ../src/gpk-update-viewer.c:1981
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Tato aktualizace opraví chyby a nezávažné problémy."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1983
+#: ../src/gpk-update-viewer.c:1985
 msgid "This update is important as it may solve critical problems."
 msgstr "Tato aktualizace je důležitá a může vyřešit kritické problémy."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1987
+#: ../src/gpk-update-viewer.c:1989
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
 "Aktualizace je vyžadována k nápravě bezpečnostního problému tohoto balíčku."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1991
+#: ../src/gpk-update-viewer.c:1993
 msgid "This update is blocked."
 msgstr "Tato aktualizace je blokována."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:2003
+#: ../src/gpk-update-viewer.c:2005
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Toto upozornění bylo vydáno %s a naposledy aktualizováno %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:2010
+#: ../src/gpk-update-viewer.c:2012
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Toto upozornění bylo vydáno %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:2032 ../src/gpk-update-viewer.c:2056
+#: ../src/gpk-update-viewer.c:2034 ../src/gpk-update-viewer.c:2058
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4283,7 +4284,7 @@ msgstr[1] "Více informací o této aktualizaci naleznete těchto stránkách:"
 msgstr[2] "Více informací o této aktualizaci naleznete těchto stránkách:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:2039 ../src/gpk-update-viewer.c:2064
+#: ../src/gpk-update-viewer.c:2041 ../src/gpk-update-viewer.c:2066
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4300,7 +4301,7 @@ msgstr[2] ""
 "stránkách:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2046 ../src/gpk-update-viewer.c:2072
+#: ../src/gpk-update-viewer.c:2048 ../src/gpk-update-viewer.c:2074
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4313,7 +4314,7 @@ msgstr[2] ""
 "Více informací o této bezpečnostní aktualizaci naleznete na těchto stránkách:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2081
+#: ../src/gpk-update-viewer.c:2083
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
@@ -4322,7 +4323,7 @@ msgstr ""
 "projevily."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2085
+#: ../src/gpk-update-viewer.c:2087
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4331,7 +4332,7 @@ msgstr ""
 "přihlásit."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2092
+#: ../src/gpk-update-viewer.c:2094
 msgid ""
 "The classification of this update is unstable which means it is not designed "
 "for production use."
@@ -4340,7 +4341,7 @@ msgstr ""
 "pro produkční nasazení."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2096
+#: ../src/gpk-update-viewer.c:2098
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4349,7 +4350,7 @@ msgstr ""
 "prosím všechny problémy a chyby, které zaznamenáte."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2105
+#: ../src/gpk-update-viewer.c:2107
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
@@ -4357,73 +4358,73 @@ msgstr ""
 "Pro tuto aktualizaci není dostupný popis, a proto budou zobrazeny vývojářské "
 "záznamy:"
 
-#: ../src/gpk-update-viewer.c:2159
-msgid "Loading..."
+#: ../src/gpk-update-viewer.c:2161
+msgid "Loading…"
 msgstr "Načítá se…"
 
-#: ../src/gpk-update-viewer.c:2162
+#: ../src/gpk-update-viewer.c:2164
 msgid "No update details available."
 msgstr "Podrobnosti o aktualizaci nejsou dostupné"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2194 ../src/gpk-update-viewer.c:2292
-#: ../src/gpk-update-viewer.c:2312
+#: ../src/gpk-update-viewer.c:2196 ../src/gpk-update-viewer.c:2294
+#: ../src/gpk-update-viewer.c:2314
 msgid "Could not get update details"
 msgstr "Nelze získat podrobnosti o aktualizaci"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2214
+#: ../src/gpk-update-viewer.c:2216
 msgid "Could not get package details"
 msgstr "Nelze získat podrobnosti o balíčku"
 
-#: ../src/gpk-update-viewer.c:2214 ../src/gpk-update-viewer.c:2312
+#: ../src/gpk-update-viewer.c:2216 ../src/gpk-update-viewer.c:2314
 msgid "No results were returned."
 msgstr "Nebyly vráceny žádné výsledky."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2547
+#: ../src/gpk-update-viewer.c:2549
 msgid "Select all"
 msgstr "Vybrat vše"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2555
+#: ../src/gpk-update-viewer.c:2557
 msgid "Unselect all"
 msgstr "Zrušit výběr"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2562
+#: ../src/gpk-update-viewer.c:2564
 msgid "Select security updates"
 msgstr "Vyberte bezpečnostní aktualizace"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2568
+#: ../src/gpk-update-viewer.c:2570
 msgid "Ignore this update"
 msgstr "Ignorovat tuto aktualizaci"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2679
+#: ../src/gpk-update-viewer.c:2681
 msgid "Could not get updates"
 msgstr "Nelze získat aktualizace"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2832
-msgid "Checking for updates..."
+#: ../src/gpk-update-viewer.c:2834
+msgid "Checking for updates…"
 msgstr "Kontrolují se aktualizace…"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3111
+#: ../src/gpk-update-viewer.c:3113
 msgid "Could not get list of distribution upgrades"
 msgstr "Nelze získat seznam povýšení distribuce"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3141
+#: ../src/gpk-update-viewer.c:3143
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Je dostupné nové vydání distribuce „%s“"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3391
+#: ../src/gpk-update-viewer.c:3393
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -4431,12 +4432,12 @@ msgstr ""
 "Další aktualizace jsou zadrženy, protože je nejprve nutné nainstalovat "
 "některé důležité systémové balíčky."
 
-#: ../src/gpk-update-viewer.c:3437
+#: ../src/gpk-update-viewer.c:3439
 msgid "Update Software"
 msgstr "Aktualizovat software"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3454
+#: ../src/gpk-update-viewer.c:3456
 msgid "Software Update Viewer"
 msgstr "Prohlížeč aktualizací softwaru"
 
