@@ -58,7 +58,7 @@ gpk_desktop_check_icon_valid (const gchar *icon)
 		ret = FALSE;
 	} else {
 		/* we only used this to see if it was valid */
-		gtk_icon_info_free (icon_info);
+		g_object_unref (icon_info);
 	}
 	return ret;
 }
