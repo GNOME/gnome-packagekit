@@ -275,7 +275,7 @@ gpk_dbus_task_libnotify_cb (NotifyNotification *notification, gchar *action, gpo
 	if (g_strcmp0 (action, "show-error-details") == 0) {
 		details = g_markup_escape_text (pk_error_get_details (task->priv->cached_error_code), -1);
 		/* TRANSLATORS: detailed text about the error */
-		gpk_error_dialog (_("Error details"), _("Package Manager error details"), details);
+		gpk_error_dialog (_("Error details"), _("Software error details"), details);
 		g_free (details);
 	} else {
 		g_warning ("unknown action id: %s", action);
@@ -310,7 +310,7 @@ gpk_dbus_task_error_msg (GpkDbusTask *dtask, const gchar *title, GError *error)
 			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-permissions");
 		} else if (error->code == PK_CLIENT_ERROR_CANNOT_START_DAEMON) {
 			/* TRANSLATORS: could not start system service */
-			message = _("The packagekitd service could not be started.");
+			message = _("The software service could not be started.");
 			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-no-service");
 		} else if (error->code == PK_CLIENT_ERROR_INVALID_INPUT) {
 			/* TRANSLATORS: the user tried to query for something invalid */
@@ -470,7 +470,7 @@ gpk_dbus_task_install_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask 
 	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
 		/* TRANSLATORS: error: failed to install, detailed error follows */
-		gpk_dbus_task_error_msg (dtask, _("Failed to install package"), error);
+		gpk_dbus_task_error_msg (dtask, _("Failed to install software"), error);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_gerror (error), "%s", error->message);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
@@ -508,7 +508,7 @@ gpk_dbus_task_install_package_ids (GpkDbusTask *dtask)
 	GtkWindow *window;
 	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, GPK_MODAL_DIALOG_PACKAGE_PADDING);
 	/* TRANSLATORS: title: installing packages */
-	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Installing packages"));
+	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Installing software"));
 	if (dtask->priv->show_progress)
 		gpk_modal_dialog_present (dtask->priv->dialog);
 
@@ -1091,7 +1091,7 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 	if (array->len == 0) {
 		if (!dtask->priv->show_warning) {
 			/* TRANSLATORS: couldn't resolve name to package */
-			title = g_strdup_printf (_("Could not find packages"));
+			title = g_strdup_printf (_("Could not find software"));
 			info_url = gpk_vendor_get_not_found_url (dtask->priv->vendor, GPK_VENDOR_URL_TYPE_DEFAULT);
 			/* only show the "more info" button if there is a valid link */
 			if (info_url != NULL)
@@ -1100,7 +1100,7 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 				gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
 			gpk_modal_dialog_set_title (dtask->priv->dialog, title);
 			/* TRANSLATORS: message: could not find */
-			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The packages could not be found in any software source"));
+			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The software could not be found in any software source"));
 			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: a link to the help file */
 			gpk_modal_dialog_set_action (dtask->priv->dialog, _("More information"));
@@ -1140,9 +1140,7 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_FINISHED, 0);
 			/* TRANSLATORS: title: package is already installed */
 			gpk_modal_dialog_set_title (dtask->priv->dialog,
-						    ngettext ("The package is already installed",
-							      "The packages are already installed",
-							      g_strv_length (dtask->priv->package_ids)));
+						    _("The software is already installed"));
 			/* TRANSLATORS: message: package is already installed */
 			gpk_modal_dialog_set_message (dtask->priv->dialog, _("Nothing to do."));
 			gpk_modal_dialog_present (dtask->priv->dialog);
@@ -1159,7 +1157,7 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 		if (dtask->priv->show_warning) {
 			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
 			/* TRANSLATORS: failed to install, shouldn't be shown */
-			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to install package"));
+			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to install software"));
 			/* TRANSLATORS: the search gave us the wrong result. internal error. barf. */
 			gpk_modal_dialog_set_message (dtask->priv->dialog, _("Incorrect response from search"));
 			gpk_modal_dialog_present (dtask->priv->dialog);
@@ -1239,20 +1237,18 @@ gpk_dbus_task_install_package_names (GpkDbusTask *dtask, gchar **packages, GpkDb
 
 	/* check user wanted operation */
 	message = g_strdup_printf ("%s\n\n%s\n%s",
-				   /* TRANSLATORS: a program needs a package, for instance openoffice-clipart */
-				   ngettext ("An additional package is required:", "Additional packages are required:", len),
+				   _("Additional software is required"),
 				   text,
-				   /* TRANSLATORS: ask the user if it's okay to search */
-				   ngettext ("Do you want to search for and install this package now?", "Do you want to search for and install these packages now?", len));
+				   _("Do you want to search for and install this software now?"));
 	g_free (text);
 
 	/* make title using application name */
 	if (dtask->priv->parent_title != NULL) {
 		/* TRANSLATORS: string is a program name, e.g. "Movie Player" */
-		text = g_strdup_printf (ngettext ("%s wants to install a package", "%s wants to install packages", len), dtask->priv->parent_title);
+		text = g_strdup_printf (_("%s requires additional software"), dtask->priv->parent_title);
 	} else {
 		/* TRANSLATORS: a random program which we can't get the name wants to do something */
-		text = g_strdup (ngettext ("A program wants to install a package", "A program wants to install packages", len));
+		text = g_strdup (_("An application requires additional software"));
 	}
 
 	/* TRANSLATORS: button: confirm to search for packages */
@@ -1379,7 +1375,7 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 		if (dtask->priv->show_warning) {
 			split = pk_package_id_split (package_id);
 			/* TRANSLATORS: we've already got a package that provides this file */
-			text = g_strdup_printf (_("The %s package already provides this file"), split[PK_PACKAGE_ID_NAME]);
+			text = g_strdup_printf (_("%s already provides this file"), split[PK_PACKAGE_ID_NAME]);
 			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
 			/* TRANSLATORS: title */
 			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to install file"));
@@ -1670,7 +1666,7 @@ gpk_dbus_task_codec_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDb
 	}
 
 	title = ngettext ("Install the following plugin", "Install the following plugins", array->len);
-	message = ngettext ("Do you want to install this package now?", "Do you want to install these packages now?", array->len);
+	message = _("Do you want to install this software now?");
 
 	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, GPK_MODAL_DIALOG_PACKAGE_LIST);
 	gpk_modal_dialog_set_package_list (dtask->priv->dialog, array);
@@ -2131,7 +2127,7 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 	}
 
 	/* TRANSLATORS: title: show a list of fonts */
-	title = ngettext ("Do you want to install this package now?", "Do you want to install these packages now?", array->len);
+	title = _("Do you want to install this software now?");
 	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, GPK_MODAL_DIALOG_PACKAGE_LIST);
 	gpk_modal_dialog_set_package_list (dtask->priv->dialog, array);
 	gpk_modal_dialog_set_title (dtask->priv->dialog, title);
@@ -2298,8 +2294,8 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts, G
 			  "Additional fonts are required to view this document correctly.", len);
 
 	/* TRANSLATORS: we need to download a new font package to display a document */
-	title_part = ngettext ("Do you want to search for a suitable package now?",
-			       "Do you want to search for suitable packages now?", len);
+	title_part = ngettext ("Do you want to search for a suitable font now?",
+			       "Do you want to search for suitable fonts now?", len);
 
 	/* check user wanted operation */
 	message = g_strdup_printf ("%s\n\n%s\n%s", title, text, title_part);
@@ -2468,7 +2464,7 @@ gpk_dbus_task_plasma_service_what_provides_cb (PkClient *client, GAsyncResult *r
 	}
 
 	title = ngettext ("Install the following plugin", "Install the following plugins", array->len);
-	message = ngettext ("Do you want to install this package now?", "Do you want to install these packages now?", array->len);
+	message = _("Do you want to install this software now?");
 
 	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, GPK_MODAL_DIALOG_PACKAGE_LIST);
 	gpk_modal_dialog_set_package_list (dtask->priv->dialog, array);
@@ -2803,7 +2799,7 @@ gpk_dbus_task_printer_driver_what_provides_cb (PkClient *client, GAsyncResult *r
 	}
 
 	title = ngettext ("Install the following driver", "Install the following drivers", array->len);
-	message = ngettext ("Do you want to install this package now?", "Do you want to install these packages now?", array->len);
+	message = ngettext ("Do you want to install this driver now?", "Do you want to install these drivers now?", array->len);
 
 	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, GPK_MODAL_DIALOG_PACKAGE_LIST);
 	gpk_modal_dialog_set_package_list (dtask->priv->dialog, array);
@@ -3009,9 +3005,9 @@ gpk_dbus_task_remove_package_by_file_search_file_cb (PkClient *client, GAsyncRes
 		if (dtask->priv->show_warning) {
 			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
 			/* TRANSLATORS: failed to find the package for the file */
-			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to find package for this file"));
+			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to find any software"));
 			/* TRANSLATORS: nothing found */
-			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The file could not be found in any packages"));
+			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The file could not be found in any available software"));
 			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
 			gpk_modal_dialog_present (dtask->priv->dialog);

@@ -77,9 +77,9 @@ main (int argc, char *argv[])
 
 	if (packages == NULL) {
 		/* TRANSLATORS: failed */
-		gpk_error_dialog (_("Failed to install package from name"),
+		gpk_error_dialog (_("Failed to install software by name"),
 				  /* TRANSLATORS: nothing was specified */
-				  _("You need to specify a package to install"), NULL);
+				  _("You need to specify the name of the software to install"), NULL);
 		goto out;
 	}
 
