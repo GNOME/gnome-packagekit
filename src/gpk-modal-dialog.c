@@ -851,10 +851,8 @@ gpk_modal_dialog_init (GpkModalDialog *dialog)
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_modal_dialog_button_cancel_cb), dialog);
 
 	/* set the message text an absolute width so it's forced to wrap */
-	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "hbox_message"));
-	gtk_widget_set_size_request (widget, 400, -1);
 	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "label_message"));
-	gtk_widget_set_size_request (widget, 400, -1);
+	gtk_label_set_max_width_chars (GTK_LABEL (widget), 80);
 
 out_build:
 	/* clear status and progress text */
