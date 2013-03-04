@@ -1153,8 +1153,8 @@ static void
 gpk_application_clear_packages (GpkApplicationPrivate *priv)
 {
 	/* clear existing array */
-	gtk_list_store_clear (priv->packages_store);
 	priv->has_package = FALSE;
+	gtk_list_store_clear (priv->packages_store);
 }
 
 /**
@@ -2291,6 +2291,10 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	gchar **package_ids = NULL;
 	gchar *package_id = NULL;
 	gchar *summary = NULL;
+
+	/* ignore selection changed if we've just cleared the package list */
+	if (!priv->has_package)
+		return;
 
 	/* This will only work in single or browse selection mode! */
 	if (!gtk_tree_selection_get_selected (selection, &model, &iter)) {
