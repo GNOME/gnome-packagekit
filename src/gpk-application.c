@@ -1278,7 +1278,7 @@ gpk_application_suggest_better_search (GpkApplicationPrivate *priv)
 		message = _("Try entering a name in the search bar.");
 	}  else if (priv->search_mode == GPK_MODE_SELECTED) {
 		/* TRANSLATORS: nothing in the package queue */
-		message = _("There is no softare queued to be installed or removed.");
+		message = _("There is no software queued to be installed or removed.");
 	} else {
 		if (priv->search_type == GPK_SEARCH_NAME ||
 		    priv->search_type == GPK_SEARCH_FILE)
