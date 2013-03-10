@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-01-05 10:04+0000\n"
-"PO-Revision-Date: 2013-01-14 15:16+0700\n"
+"POT-Creation-Date: 2013-03-08 19:17+0000\n"
+"PO-Revision-Date: 2013-03-10 13:18+0700\n"
 "Last-Translator: Akom Chotiphantawanon <knight2000@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
 "Language: th\n"
@@ -324,7 +324,7 @@ msgstr "ยอมรับข้อ_ตกลง"
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-dbus-task.c:3383
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-dbus-task.c:3379
 #: ../src/gpk-install-local-file.c:65 ../src/gpk-install-package-name.c:64
 #: ../src/gpk-dbus-service.c:151 ../src/gpk-dbus-service.c:154
 msgid "Software Install"
@@ -591,187 +591,179 @@ msgstr[0] "มีแฟ้ม %i แฟ้มถูกติดตั้งโ�
 msgstr[1] "มีแฟ้ม %i แฟ้มถูกติดตั้งโดย %s"
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:904 ../src/gpk-application.c:1031
-msgid "No packages"
-msgstr "ไม่มี"
+#: ../src/gpk-application.c:904 ../src/gpk-application.c:1028
+msgid "No software"
+msgstr "ไม่มีซอฟต์แวร์"
 
 #. TRANSLATORS: this package is not required by any others
 #: ../src/gpk-application.c:906
-msgid "No other packages require this package"
-msgstr "ไม่มีแพกเกจอื่นที่ต้องใช้แพกเกจนี้"
+msgid "No other software requires this."
+msgstr "ไม่มีซอฟต์แวร์อื่นที่ต้องใช้ซอฟต์แวร์นี้"
 
-#. TRANSLATORS: title: how many packages require this package
-#: ../src/gpk-application.c:913
+#: ../src/gpk-application.c:912
 #, c-format
-msgid "%i package requires %s"
-msgid_plural "%i packages require %s"
-msgstr[0] "มี %i แพกเกจที่ต้องใช้ %s"
-msgstr[1] "มี %i แพกเกจที่ต้องใช้ %s"
+msgid "Software requires %s"
+msgstr "ซอฟต์แวร์ต้องการ %s"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:918
+#: ../src/gpk-application.c:915
 #, c-format
-msgid "Packages listed below require %s to function correctly."
-msgid_plural "Packages listed below require %s to function correctly."
-msgstr[0] "แพกเกจที่มีรายชื่อต่อไปนี้ต้องใช้ %s เพื่อจะทำงานอย่างถูกต้อง"
-msgstr[1] "แพกเกจที่มีรายชื่อต่อไปนี้ต้องใช้ %s เพื่อจะทำงานอย่างถูกต้อง"
+msgid "The software listed below require %s to function correctly."
+msgid_plural "The software listed below require %s to function correctly."
+msgstr[0] "ซอฟต์แวร์ที่มีรายชื่อต่อไปนี้ต้องใช้ %s เพื่อจะทำงานอย่างถูกต้อง"
+msgstr[1] "ซอฟต์แวร์ที่มีรายชื่อต่อไปนี้ต้องใช้ %s เพื่อจะทำงานอย่างถูกต้อง"
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1033
-msgid "This package does not depend on any others"
-msgstr "แพกเกจนี้ไม่ขึ้นกับแพกเกจอื่นใด"
+#: ../src/gpk-application.c:1030
+msgid "This software does not depend on any other"
+msgstr "ซอฟต์แวร์นี้ไม่ขึ้นกับซอฟต์แวร์อื่นใด"
 
-#. TRANSLATORS: title: show the number of other packages we depend on
-#: ../src/gpk-application.c:1040
+#: ../src/gpk-application.c:1036
 #, c-format
-msgid "%i additional package is required for %s"
-msgid_plural "%i additional packages are required for %s"
-msgstr[0] "มีอีก %i แพกเกจเพิ่มเติมที่ต้องใช้สำหรับ %s"
-msgstr[1] "มีอีก %i แพกเกจเพิ่มเติมที่ต้องใช้สำหรับ %s"
+msgid "Additional software is required for %s"
+msgstr "ต้องการซอฟต์แวร์เพิ่มเติมสำหรับ %s"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
-#: ../src/gpk-application.c:1045
+#: ../src/gpk-application.c:1039
 #, c-format
-msgid "Packages listed below are required for %s to function correctly."
-msgid_plural "Packages listed below are required for %s to function correctly."
-msgstr[0] "ต้องใช้แพกเกจที่มีรายชื่อต่อไปนี้เพื่อที่ %s จะทำงานอย่างถูกต้อง"
-msgstr[1] "ต้องใช้แพกเกจที่มีรายชื่อต่อไปนี้เพื่อที่ %s จะทำงานอย่างถูกต้อง"
+msgid "%s requires the following additional software to function correctly."
+msgstr "%s ต้องการซอฟต์แวร์เพิ่มเติมต่อไปนี้ เพื่อทำงานอย่างถูกต้อง"
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1114
+#: ../src/gpk-application.c:1106
 msgid "Invalid"
 msgstr "ไม่ถูกต้อง"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1278
+#: ../src/gpk-application.c:1270
 msgid "No results were found."
 msgstr "ไม่พบผลลัพธ์"
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1286
-msgid "Try entering a package name in the search bar."
-msgstr "ลองป้อนชื่อแพกเกจในแถบค้นหา"
+#: ../src/gpk-application.c:1278
+msgid "Try entering a name in the search bar."
+msgstr "ลองป้อนชื่อในแถบค้นหา"
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1289
-msgid "There are no packages queued to be installed or removed."
-msgstr "ไม่มีแพกเกจใดที่รอคิวติดตั้งหรือถอดถอนอยู่"
+#: ../src/gpk-application.c:1281
+msgid "There is no software queued to be installed or removed."
+msgstr "ไม่มีซอฟต์แวร์ใดที่รอคิวติดตั้งหรือถอดถอนอยู่"
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1294
+#: ../src/gpk-application.c:1286
 msgid ""
-"Try searching package descriptions by clicking the icon next to the search "
+"Try searching software descriptions by clicking the icon next to the search "
 "text."
-msgstr "ลองค้นคำบรรยายแพกเกจโดยคลิกที่ไอคอนถัดจากข้อความค้นหา"
+msgstr "ลองค้นคำบรรยายซอฟต์แวร์โดยคลิกที่ไอคอนถัดจากข้อความค้นหา"
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1297
+#: ../src/gpk-application.c:1289
 msgid "Try again with a different search term."
 msgstr "ลองอีกครั้งโดยใช้คำค้นอื่น"
 
 #. TRANSLATORS: title: invalid text in the search bar
-#: ../src/gpk-application.c:1561
+#: ../src/gpk-application.c:1553
 msgid "Invalid search text"
 msgstr "คำค้นไม่ถูกต้อง"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1563
+#: ../src/gpk-application.c:1555
 msgid "The search text contains invalid characters"
 msgstr "คำค้นมีอักขระที่ไม่ถูกต้อง"
 
 #. TRANSLATORS: title: we failed to execute the method
-#: ../src/gpk-application.c:1604
+#: ../src/gpk-application.c:1596
 msgid "The search could not be completed"
 msgstr "ไม่สามารถค้นหาจนเสร็จสมบูรณ์ได้"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1606
+#: ../src/gpk-application.c:1598
 msgid "Running the transaction failed"
 msgstr "ส่งคำสั่งไม่สำเร็จ"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1735
+#: ../src/gpk-application.c:1727
 msgid "Changes not applied"
 msgstr "การเปลี่ยนแปลงยังไม่ดำเนินการ"
 
-#: ../src/gpk-application.c:1736
+#: ../src/gpk-application.c:1728
 msgid "Close _Anyway"
 msgstr "_ปิดต่อไป"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1740
+#: ../src/gpk-application.c:1732
 msgid "You have made changes that have not yet been applied."
 msgstr "คุณมีรายการเปลี่ยนแปลงที่ยังไม่ได้ดำเนินการ"
 
-#: ../src/gpk-application.c:1741
+#: ../src/gpk-application.c:1733
 msgid "These changes will be lost if you close this window."
 msgstr "การเปลี่ยนแปลงเหล่านั้นจะสูญหายถ้าคุณปิดหน้าต่างนี้"
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2033 ../src/gpk-enum.c:1153 ../src/gpk-enum.c:1242
+#: ../src/gpk-application.c:2025 ../src/gpk-enum.c:1153 ../src/gpk-enum.c:1242
 msgid "Installed"
 msgstr "ติดตั้งแล้ว"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2049 ../src/gpk-application.c:2071
+#: ../src/gpk-application.c:2041 ../src/gpk-application.c:2063
 #: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
 msgid "Name"
 msgstr "ชื่อ"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2237
+#: ../src/gpk-application.c:2229
 msgid "Size"
 msgstr "ขนาด"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2240
+#: ../src/gpk-application.c:2232
 msgid "Installed size"
 msgstr "ขนาดที่ติดตั้ง"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2243
+#: ../src/gpk-application.c:2235
 msgid "Download size"
 msgstr "ขนาดที่ดาวน์โหลด"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2452
+#: ../src/gpk-application.c:2448
 msgid "Searching by name"
 msgstr "ค้นหาด้วยชื่อ"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2476
+#: ../src/gpk-application.c:2472
 msgid "Searching by description"
 msgstr "ค้นหาด้วยคำบรรยาย"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2500
+#: ../src/gpk-application.c:2496
 msgid "Searching by file"
 msgstr "ค้นหาด้วยแฟ้ม"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2522
+#: ../src/gpk-application.c:2518
 msgid "Search by name"
 msgstr "ค้นหาด้วยชื่อ"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2533
+#: ../src/gpk-application.c:2529
 msgid "Search by description"
 msgstr "ค้นหาด้วยคำบรรยาย"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2544
+#: ../src/gpk-application.c:2540
 msgid "Search by file name"
 msgstr "ค้นหาด้วยชื่อแฟ้ม"
 
-#: ../src/gpk-application.c:2590
+#: ../src/gpk-application.c:2586
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "อนุญาตสิทธิ์ภายใต้เงื่อนไข GNU General Public License รุ่นที่ 2"
 
-#: ../src/gpk-application.c:2591
+#: ../src/gpk-application.c:2587
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -782,7 +774,7 @@ msgstr ""
 "ภายใต้เงื่อนไขของ GNU General Public License ที่เผยแพร่โดยมูลนิธิซอฟต์แวร์เสรี "
 "ไม่ว่าจะเป็นสัญญาอนุญาตรุ่นที่ 2 หรือรุ่นถัดมา (ตามแต่คุณจะเลือก)"
 
-#: ../src/gpk-application.c:2595
+#: ../src/gpk-application.c:2591
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -793,7 +785,7 @@ msgstr ""
 "ไม่มีแม้การรับประกัน อรรถประโยชน์เชิงพาณิชย์ หรือความเหมาะสมสำหรับวัตถุประสงค์เฉพาะกิจใดๆ "
 "กรุณาอ่านGNU General Public License เพื่อดูรายละเอียดเพิ่มเติม"
 
-#: ../src/gpk-application.c:2599
+#: ../src/gpk-application.c:2595
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -804,56 +796,56 @@ msgstr ""
 "Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2605
+#: ../src/gpk-application.c:2601
 msgid "translator-credits"
 msgstr "Akom Chotiphantawanon <knight2000@gmail.com>, 2011"
 
-#: ../src/gpk-application.c:2625
+#: ../src/gpk-application.c:2621
 msgid "PackageKit Website"
 msgstr "เว็บไซต์ PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2628
-msgid "Package Manager for GNOME"
-msgstr "เครื่องมือจัดการแพกเกจสำหรับ GNOME"
+#: ../src/gpk-application.c:2624
+msgid "Software management for GNOME"
+msgstr "เครื่องมือจัดการซอฟต์แวร์สำหรับ GNOME"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2821
+#: ../src/gpk-application.c:2817
 msgid "Enter a search word or click a category to get started."
 msgstr "ป้อนคำค้นหรือคลิกหมวดหมู่เพื่อเริ่มต้น"
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2824
+#: ../src/gpk-application.c:2820
 msgid "Enter a search word to get started."
 msgstr "ป้อนคำค้นเพื่อเริ่มต้น"
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3063
+#: ../src/gpk-application.c:3059
 msgid "Exiting as properties could not be retrieved"
 msgstr "ขอจบการทำงาน เนื่องจากไม่สามารถดึงข้อมูลคุณสมบัติได้"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3106
+#: ../src/gpk-application.c:3102
 msgid "All packages"
 msgstr "ทุกแพกเกจ"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3108
+#: ../src/gpk-application.c:3104
 msgid "Show all packages"
 msgstr "แสดงทุกแพกเกจ"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3540 ../src/gpk-update-viewer.c:3424
+#: ../src/gpk-application.c:3536 ../src/gpk-update-viewer.c:3424
 msgid "Show the program version and exit"
 msgstr "แสดงรุ่นของโปรแกรมแล้วออก"
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3554 ../src/gpk-log.c:498
+#: ../src/gpk-application.c:3550 ../src/gpk-log.c:498
 msgid "Install Software"
 msgstr "ติดตั้งซอฟต์แวร์"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3570
+#: ../src/gpk-application.c:3566
 msgid "Package installer"
 msgstr "เครื่องมือติดตั้งแพกเกจ"
 
@@ -974,7 +966,10 @@ msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s และ %s"
 
 #. TRANSLATORS: we failed to install
-#: ../src/gpk-dbus-task.c:244
+#. TRANSLATORS: error: failed to install, detailed error follows
+#. TRANSLATORS: failed to install, shouldn't be shown
+#: ../src/gpk-dbus-task.c:244 ../src/gpk-dbus-task.c:473
+#: ../src/gpk-dbus-task.c:1160
 msgid "Failed to install software"
 msgstr "ติดตั้งซอฟต์แวร์ไม่สำเร็จ"
 
@@ -989,8 +984,8 @@ msgid "Error details"
 msgstr "รายละเอียดข้อผิดพลาด"
 
 #: ../src/gpk-dbus-task.c:278
-msgid "Package Manager error details"
-msgstr "รายละเอียดข้อผิดพลาดของเครื่องมือจัดการแพกเกจ"
+msgid "Software error details"
+msgstr "รายละเอียดข้อผิดพลาดของซอฟต์แวร์"
 
 #. TRANSLATORS: default fallback error -- this should never happen
 #: ../src/gpk-dbus-task.c:293
@@ -1008,8 +1003,8 @@ msgstr "คุณไม่มีอภิสิทธิ์สำหรับด
 
 #. TRANSLATORS: could not start system service
 #: ../src/gpk-dbus-task.c:313
-msgid "The packagekitd service could not be started."
-msgstr "ไม่สามารถเริ่มบริการ packagekitd"
+msgid "The software service could not be started."
+msgstr "ไม่สามารถเริ่มบริการซอฟต์แวร์"
 
 #. TRANSLATORS: the user tried to query for something invalid
 #: ../src/gpk-dbus-task.c:317
@@ -1026,20 +1021,13 @@ msgstr "แฟ้มใช้การไม่ได้"
 msgid "Show details"
 msgstr "แสดงรายละเอียด"
 
-#. TRANSLATORS: error: failed to install, detailed error follows
-#. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:473 ../src/gpk-dbus-task.c:1162
-msgid "Failed to install package"
-msgstr "ติดตั้งแพกเกจไม่สำเร็จ"
-
 #. TRANSLATORS: title: installing packages
-#. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:511 ../src/gpk-enum.c:956
-msgid "Installing packages"
-msgstr "กำลังติดตั้งแพกเกจ"
+#: ../src/gpk-dbus-task.c:511
+msgid "Installing software"
+msgstr "กำลังติดตั้งซอฟต์แวร์"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:613 ../src/gpk-dbus-task.c:1385
+#: ../src/gpk-dbus-task.c:613 ../src/gpk-dbus-task.c:1381
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "ติดตั้งแฟ้มไม่สำเร็จ"
@@ -1060,11 +1048,11 @@ msgstr[1] "คุณต้องการติดตั้งแฟ้มเห
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
-#: ../src/gpk-dbus-task.c:711 ../src/gpk-dbus-task.c:1259
-#: ../src/gpk-dbus-task.c:1478 ../src/gpk-dbus-task.c:1681
-#: ../src/gpk-dbus-task.c:2141 ../src/gpk-dbus-task.c:2479
-#: ../src/gpk-dbus-task.c:2692 ../src/gpk-dbus-task.c:2814
-#: ../src/gpk-dbus-task.c:3167 ../src/gpk-task.c:404
+#: ../src/gpk-dbus-task.c:711 ../src/gpk-dbus-task.c:1255
+#: ../src/gpk-dbus-task.c:1474 ../src/gpk-dbus-task.c:1677
+#: ../src/gpk-dbus-task.c:2137 ../src/gpk-dbus-task.c:2475
+#: ../src/gpk-dbus-task.c:2688 ../src/gpk-dbus-task.c:2810
+#: ../src/gpk-dbus-task.c:3163 ../src/gpk-task.c:404
 msgid "Install"
 msgstr "ติดตั้ง"
 
@@ -1078,107 +1066,95 @@ msgstr[1] "ติดตั้งแฟ้มภายใน"
 #. TRANSLATORS: couldn't resolve name to package
 #: ../src/gpk-dbus-task.c:1094
 #, c-format
-msgid "Could not find packages"
-msgstr "หาแพกเกจไม่พบ"
+msgid "Could not find software"
+msgstr "หาซอฟต์แวร์ไม่พบ"
 
 #. TRANSLATORS: message: could not find
 #: ../src/gpk-dbus-task.c:1103
-msgid "The packages could not be found in any software source"
-msgstr "ไม่พบแพกเกจในแหล่งซอฟต์แวร์ใดๆ"
+msgid "The software could not be found in any software source"
+msgstr "ไม่พบซอฟต์แวร์ในแหล่งซอฟต์แวร์ใดๆ"
 
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
-#: ../src/gpk-dbus-task.c:1106 ../src/gpk-dbus-task.c:1347
-#: ../src/gpk-dbus-task.c:1653 ../src/gpk-dbus-task.c:1859
-#: ../src/gpk-dbus-task.c:2114 ../src/gpk-dbus-task.c:2451
+#: ../src/gpk-dbus-task.c:1106 ../src/gpk-dbus-task.c:1343
+#: ../src/gpk-dbus-task.c:1649 ../src/gpk-dbus-task.c:1855
+#: ../src/gpk-dbus-task.c:2110 ../src/gpk-dbus-task.c:2447
 msgid "More information"
 msgstr "ข้อมูลเพิ่มเติม"
 
-#: ../src/gpk-dbus-task.c:1143 ../src/gpk-enum.c:328
-msgid "The package is already installed"
-msgid_plural "The packages are already installed"
-msgstr[0] "แพกเกจติดตั้งอยู่ก่อนแล้ว"
-msgstr[1] "แพกเกจติดตั้งอยู่ก่อนแล้ว"
+#: ../src/gpk-dbus-task.c:1143
+msgid "The software is already installed"
+msgstr "ซอฟต์แวร์ติดตั้งอยู่ก่อนแล้ว"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1147
+#: ../src/gpk-dbus-task.c:1145
 msgid "Nothing to do."
 msgstr "ไม่มีอะไรต้องทำ"
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1164
+#: ../src/gpk-dbus-task.c:1162
 msgid "Incorrect response from search"
 msgstr "คำตอบจากการค้นหาไม่ถูกต้อง"
 
-#. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1243
-msgid "An additional package is required:"
-msgid_plural "Additional packages are required:"
-msgstr[0] "มีแพกเกจเพิ่มเติมต้องใช้:"
-msgstr[1] "มีแพกเกจเพิ่มเติมต้องใช้:"
+#: ../src/gpk-dbus-task.c:1240
+msgid "Additional software is required"
+msgstr "มีซอฟต์แวร์เพิ่มเติมต้องใช้"
 
-#. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1246
-msgid "Do you want to search for and install this package now?"
-msgid_plural "Do you want to search for and install these packages now?"
-msgstr[0] "คุณต้องการค้นหาและติดตั้งแพกเกจนี้ตอนนี้เลยหรือไม่?"
-msgstr[1] "คุณต้องการค้นหาและติดตั้งแพกเกจเหล่านี้ตอนนี้เลยหรือไม่?"
+#: ../src/gpk-dbus-task.c:1242
+msgid "Do you want to search for and install this software now?"
+msgstr "คุณต้องการค้นหาและติดตั้งซอฟต์แวร์นี้ตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1252
+#: ../src/gpk-dbus-task.c:1248
 #, c-format
-msgid "%s wants to install a package"
-msgid_plural "%s wants to install packages"
-msgstr[0] "%s ต้องการติดตั้งแพกเกจ"
-msgstr[1] "%s ต้องการติดตั้งแพกเกจ"
+msgid "%s requires additional software"
+msgstr "%s ต้องการซอฟต์แวร์เพิ่มเติม"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1255
-msgid "A program wants to install a package"
-msgid_plural "A program wants to install packages"
-msgstr[0] "มีโปรแกรมต้องการติดตั้งแพกเกจ"
-msgstr[1] "มีโปรแกรมต้องการติดตั้งแพกเกจ"
+#: ../src/gpk-dbus-task.c:1251
+msgid "An application requires additional software"
+msgstr "มีโปรแกรมต้องการซอฟต์แวร์เพิ่มเติม"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1272 ../src/gpk-dbus-task.c:2874
+#: ../src/gpk-dbus-task.c:1268 ../src/gpk-dbus-task.c:2870
 msgid "Searching for packages"
 msgstr "กำลังค้นหาแพกเกจ"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1342
+#: ../src/gpk-dbus-task.c:1338
 msgid "Failed to find package"
-msgstr "หาแพกเกจไม่สำเร็จ"
+msgstr "หาแพกเกจไม่พบ"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1344 ../src/gpk-dbus-task.c:3014
+#: ../src/gpk-dbus-task.c:1340
 msgid "The file could not be found in any packages"
 msgstr "ไม่พบแฟ้มนี้ในแพกเกจใด"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1382
+#: ../src/gpk-dbus-task.c:1378
 #, c-format
-msgid "The %s package already provides this file"
-msgstr "แพกเกจ %s ได้จัดเตรียมแฟ้มนี้อยู่แล้ว"
+msgid "%s already provides this file"
+msgstr "%s ได้จัดเตรียมแฟ้มนี้อยู่แล้ว"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1463
+#: ../src/gpk-dbus-task.c:1459
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "ต้องใช้แฟ้มต่อไปนี้:"
 msgstr[1] "ต้องใช้แฟ้มต่อไปนี้:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1466
+#: ../src/gpk-dbus-task.c:1462
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "คุณต้องการค้นหาแฟ้มนี้ตอนนี้เลยหรือไม่?"
 msgstr[1] "คุณต้องการค้นหาแฟ้มเหล่านี้ตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1471
+#: ../src/gpk-dbus-task.c:1467
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1186,7 +1162,7 @@ msgstr[0] "%s ต้องการติดตั้งแฟ้ม"
 msgstr[1] "%s ต้องการติดตั้งแฟ้ม"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1474
+#: ../src/gpk-dbus-task.c:1470
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "มีโปรแกรมต้องการติดตั้งแฟ้ม"
@@ -1194,27 +1170,27 @@ msgstr[1] "มีโปรแกรมต้องการติดตั้ง
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1490 ../src/gpk-dbus-task.c:3117
+#: ../src/gpk-dbus-task.c:1486 ../src/gpk-dbus-task.c:3113
 #: ../src/gpk-enum.c:1312
 msgid "Searching for file"
 msgstr "กำลังค้นหาแฟ้ม"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1533
+#: ../src/gpk-dbus-task.c:1529
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "ต้องใช้ปลั๊กอินต่อไปนี้:"
 msgstr[1] "ต้องใช้ปลั๊กอินต่อไปนี้:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1551 ../src/gpk-dbus-task.c:2379
+#: ../src/gpk-dbus-task.c:1547 ../src/gpk-dbus-task.c:2375
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "คุณต้องการค้นหาตอนนี้เลยหรือไม่?"
 msgstr[1] "คุณต้องการค้นหาตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1564
+#: ../src/gpk-dbus-task.c:1560
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1222,7 +1198,7 @@ msgstr[0] "%s ต้องการปลั๊กอินเพิ่มเต
 msgstr[1] "%s ต้องการปลั๊กอินเพิ่มเติมเพื่ออ่านรหัสแฟ้มนี้"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1568
+#: ../src/gpk-dbus-task.c:1564
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1230,7 +1206,7 @@ msgstr[0] "%s ต้องการปลั๊กอินเพิ่มเต
 msgstr[1] "%s ต้องการปลั๊กอินเพิ่มเติมเพื่อลงรหัสแฟ้มนี้"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1572
+#: ../src/gpk-dbus-task.c:1568
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1238,93 +1214,91 @@ msgstr[0] "%s ต้องการปลั๊กอินเพิ่มเต
 msgstr[1] "%s ต้องการปลั๊กอินเพิ่มเติมสำหรับการดำเนินการนี้"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1578
+#: ../src/gpk-dbus-task.c:1574
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] "มีโปรแกรมต้องการปลั๊กอินเพิ่มเติมเพื่ออ่านรหัสแฟ้มนี้"
 msgstr[1] "มีโปรแกรมต้องการปลั๊กอินเพิ่มเติมเพื่ออ่านรหัสแฟ้มนี้"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1582
+#: ../src/gpk-dbus-task.c:1578
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] "มีโปรแกรมต้องการปลั๊กอินเพิ่มเติมเพื่อลงรหัสแฟ้มนี้"
 msgstr[1] "มีโปรแกรมต้องการปลั๊กอินเพิ่มเติมเพื่อลงรหัสแฟ้มนี้"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1586
+#: ../src/gpk-dbus-task.c:1582
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "มีโปรแกรมต้องการปลั๊กอินเพิ่มเติมสำหรับการดำเนินการนี้"
 msgstr[1] "มีโปรแกรมต้องการปลั๊กอินเพิ่มเติมสำหรับการดำเนินการนี้"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1592 ../src/gpk-dbus-task.c:1945
-#: ../src/gpk-dbus-task.c:2318 ../src/gpk-dbus-task.c:2391
+#: ../src/gpk-dbus-task.c:1588 ../src/gpk-dbus-task.c:1941
+#: ../src/gpk-dbus-task.c:2314 ../src/gpk-dbus-task.c:2387
 msgid "Search"
 msgstr "ค้นหา"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1647
+#: ../src/gpk-dbus-task.c:1643
 msgid "Failed to search for plugin"
-msgstr "ค้นหาปลั๊กอินไม่สำเร็จ"
+msgstr "ค้นหาปลั๊กอินไม่พบ"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1649
+#: ../src/gpk-dbus-task.c:1645
 msgid "Could not find plugin in any configured software source"
 msgstr "ไม่พบปลั๊กอินในแหล่งซอฟต์แวร์ใดที่ตั้งค่าไว้"
 
-#: ../src/gpk-dbus-task.c:1672 ../src/gpk-dbus-task.c:2470
+#: ../src/gpk-dbus-task.c:1668 ../src/gpk-dbus-task.c:2466
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "ติดตั้งปลั๊กอินต่อไปนี้"
 msgstr[1] "ติดตั้งปลั๊กอินต่อไปนี้"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1673 ../src/gpk-dbus-task.c:2134
-#: ../src/gpk-dbus-task.c:2471 ../src/gpk-dbus-task.c:2806
-msgid "Do you want to install this package now?"
-msgid_plural "Do you want to install these packages now?"
-msgstr[0] "คุณต้องการติดตั้งแพกเกจนี้ตอนนี้เลยหรือไม่?"
-msgstr[1] "คุณต้องการติดตั้งแพกเกจเหล่านี้ตอนนี้เลยหรือไม่?"
+#: ../src/gpk-dbus-task.c:1669 ../src/gpk-dbus-task.c:2130
+#: ../src/gpk-dbus-task.c:2467
+msgid "Do you want to install this software now?"
+msgstr "คุณต้องการติดตั้งซอฟต์แวร์นี้ตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1765
+#: ../src/gpk-dbus-task.c:1761
 msgid "Searching for plugins"
 msgstr "กำลังค้นหาปลั๊กอิน"
 
-#: ../src/gpk-dbus-task.c:1786
+#: ../src/gpk-dbus-task.c:1782
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "กำลังค้นหาปลั๊กอิน: %s"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1824
+#: ../src/gpk-dbus-task.c:1820
 msgid "Failed to search for provides"
-msgstr "ค้นหาแพกเกจที่จัดเตรียมไม่สำเร็จ"
+msgstr "ค้นหาแพกเกจที่จัดเตรียมไม่พบ"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1854
+#: ../src/gpk-dbus-task.c:1850
 msgid "Failed to find software"
-msgstr "หาซอฟต์แวร์ไม่สำเร็จ"
+msgstr "หาซอฟต์แวร์ไม่พบ"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1856
+#: ../src/gpk-dbus-task.c:1852
 msgid "No new applications can be found to handle this type of file"
 msgstr "ไม่พบโปรแกรมใหม่ที่สามารถดำเนินการกับแฟ้มชนิดนี้"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1927
+#: ../src/gpk-dbus-task.c:1923
 msgid "An additional program is required to open this type of file:"
 msgstr "ต้องการโปรแกรมเพิ่มเติมเพื่อเปิดแฟ้มชนิดนี้:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1930
+#: ../src/gpk-dbus-task.c:1926
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "คุณต้องการค้นหาโปรแกรมเพื่อเปิดแฟ้มชนิดนี้ตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1938
+#: ../src/gpk-dbus-task.c:1934
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1332,55 +1306,55 @@ msgstr[0] "%s ต้องการชนิด MIME ชนิดใหม่"
 msgstr[1] "%s ต้องการชนิด MIME ชนิดใหม่"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1941
+#: ../src/gpk-dbus-task.c:1937
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "มีโปรแกรมต้องการชนิด MIME ชนิดใหม่"
 msgstr[1] "มีโปรแกรมต้องการชนิด MIME ชนิดใหม่"
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1956
+#: ../src/gpk-dbus-task.c:1952
 msgid "Searching for file handlers"
 msgstr "กำลังค้นหาตัวดำเนินการสำหรับแฟ้ม"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2035
+#: ../src/gpk-dbus-task.c:2031
 msgid "Language tag not parsed"
 msgstr "แท็กภาษาไม่สามารถแจงได้"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2043
+#: ../src/gpk-dbus-task.c:2039
 msgid "Language code not matched"
 msgstr "ค้นหารหัสภาษาไม่พบ"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2103
+#: ../src/gpk-dbus-task.c:2099
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "หาแบบอักษรไม่พบ"
 msgstr[1] "หาแบบอักษรไม่พบ"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2111
+#: ../src/gpk-dbus-task.c:2107
 msgid "No new fonts can be found for this document"
 msgstr "ไม่พบแบบอักษรใหม่สำหรับเอกสารนี้"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2297
+#: ../src/gpk-dbus-task.c:2293
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] "ต้องการแบบอักษรเพิ่มเติมเพื่อแสดงเอกสารนี้อย่างถูกต้อง"
 msgstr[1] "ต้องการแบบอักษรเพิ่มเติมเพื่อแสดงเอกสารนี้อย่างถูกต้อง"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2301
-msgid "Do you want to search for a suitable package now?"
-msgid_plural "Do you want to search for suitable packages now?"
-msgstr[0] "คุณต้องการค้นหาแพกเกจที่เหมาะสมตอนนี้เลยหรือไม่?"
-msgstr[1] "คุณต้องการค้นหาแพกเกจที่เหมาะสมตอนนี้เลยหรือไม่?"
+#: ../src/gpk-dbus-task.c:2297
+msgid "Do you want to search for a suitable font now?"
+msgid_plural "Do you want to search for suitable fonts now?"
+msgstr[0] "คุณต้องการค้นหาแบบอักษรที่เหมาะสมตอนนี้เลยหรือไม่?"
+msgstr[1] "คุณต้องการค้นหาแบบอักษรที่เหมาะสมตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2311
+#: ../src/gpk-dbus-task.c:2307
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1388,107 +1362,118 @@ msgstr[0] "%s ต้องการติดตั้งแบบอักษร
 msgstr[1] "%s ต้องการติดตั้งแบบอักษร"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2314
+#: ../src/gpk-dbus-task.c:2310
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "มีโปรแกรมต้องการติดตั้งแบบอักษร"
 msgstr[1] "มีโปรแกรมต้องการติดตั้งแบบอักษร"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2330
+#: ../src/gpk-dbus-task.c:2326
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "กำลังค้นหาแบบอักษร"
 msgstr[1] "กำลังค้นหาแบบอักษร"
 
 #. TRANSLATORS: we are listing the services in a box
-#: ../src/gpk-dbus-task.c:2367
+#: ../src/gpk-dbus-task.c:2363
 msgid "The following service is required:"
 msgid_plural "The following services are required:"
 msgstr[0] "ต้องการบริการต่อไปนี้:"
 msgstr[1] "ต้องการบริการต่อไปนี้:"
 
-#: ../src/gpk-dbus-task.c:2387
+#: ../src/gpk-dbus-task.c:2383
 msgid "Plasma requires an additional service for this operation"
 msgid_plural "Plasma requires additional services for this operation"
 msgstr[0] "Plasma ต้องการบริการเพิ่มเติมสำหรับการดำเนินการนี้"
 msgstr[1] "Plasma ต้องการบริการเพิ่มเติมสำหรับการดำเนินการนี้"
 
-#: ../src/gpk-dbus-task.c:2445
+#: ../src/gpk-dbus-task.c:2441
 msgid "Failed to search for Plasma service"
 msgstr "ค้นหาบริการ Plasma ไม่สำเร็จ"
 
 #. TRANSLATORS: no software sources have the wanted Plasma service
-#: ../src/gpk-dbus-task.c:2447
+#: ../src/gpk-dbus-task.c:2443
 msgid "Could not find service in any configured software source"
 msgstr "ไม่พบบริการในแหล่งซอฟต์แวร์ใดที่ตั้งค่าไว้"
 
 #. TRANSLATORS: search for Plasma services
-#: ../src/gpk-dbus-task.c:2553
+#: ../src/gpk-dbus-task.c:2549
 msgid "Searching for services"
 msgstr "กำลังค้นหาบริการ"
 
-#: ../src/gpk-dbus-task.c:2572
+#: ../src/gpk-dbus-task.c:2568
 #, c-format
 msgid "Searching for service: %s"
 msgstr "กำลังค้นหาบริการ: %s"
 
-#: ../src/gpk-dbus-task.c:2649
+#: ../src/gpk-dbus-task.c:2645
 msgid "Could not process catalog"
 msgstr "ไม่สามารถดำเนินการแค็ตตาล็อก"
 
-#: ../src/gpk-dbus-task.c:2667
+#: ../src/gpk-dbus-task.c:2663
 msgid "No packages need to be installed"
 msgstr "ไม่มีแพกเกจที่ต้องติดตั้ง"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2686
+#: ../src/gpk-dbus-task.c:2682
 msgid "Install packages in catalog?"
 msgstr "จะติดตั้งแพกเกจในแค็ตตาล็อกหรือไม่?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2688
+#: ../src/gpk-dbus-task.c:2684
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "แพกเกจต่อไปนี้ถูกทำเครื่องหมายให้ติดตั้งจากแค็ตตาล็อก:"
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2728
+#: ../src/gpk-dbus-task.c:2724
 msgid "Failed to remove package"
 msgstr "ถอดถอนแพกเกจไม่สำเร็จ"
 
-#: ../src/gpk-dbus-task.c:2805
+#: ../src/gpk-dbus-task.c:2801
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "ติดตั้งไดรเวอร์ต่อไปนี้"
 msgstr[1] "ติดตั้งไดรเวอร์ต่อไปนี้"
 
+#: ../src/gpk-dbus-task.c:2802
+msgid "Do you want to install this driver now?"
+msgid_plural "Do you want to install these drivers now?"
+msgstr[0] "คุณต้องการติดตั้งไดรเวอร์นี้หรือไม่?"
+msgstr[1] "คุณต้องการติดตั้งไดรเวอร์เหล่านี้หรือไม่?"
+
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2958 ../src/gpk-enum.c:948
+#: ../src/gpk-dbus-task.c:2954 ../src/gpk-enum.c:948
 msgid "Removing packages"
 msgstr "กำลังถอดถอนแพกเกจ"
 
 #. TRANSLATORS: failed to find the package for the file
-#: ../src/gpk-dbus-task.c:3012
-msgid "Failed to find package for this file"
-msgstr "หาแพกเกจสำหรับแฟ้มนี้ไม่พบ"
+#: ../src/gpk-dbus-task.c:3008
+msgid "Failed to find any software"
+msgstr "หาซอฟต์แวร์ไม่พบ"
+
+#. TRANSLATORS: nothing found
+#: ../src/gpk-dbus-task.c:3010
+msgid "The file could not be found in any available software"
+msgstr "ไม่พบแฟ้มนี้ในซอฟต์แวร์ใด"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:3090
+#: ../src/gpk-dbus-task.c:3086
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "แฟ้มต่อไปนี้จะถูกลบออก:"
 msgstr[1] "แฟ้มต่อไปนี้จะถูกลบออก:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:3093
+#: ../src/gpk-dbus-task.c:3089
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "คุณต้องการลบแฟ้มนี้ตอนนี้เลยหรือไม่?"
 msgstr[1] "คุณต้องการลบแฟ้มเหล่านี้ตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:3098
+#: ../src/gpk-dbus-task.c:3094
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1496,7 +1481,7 @@ msgstr[0] "%s ต้องการลบแฟ้ม"
 msgstr[1] "%s ต้องการลบแฟ้ม"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:3101
+#: ../src/gpk-dbus-task.c:3097
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "มีโปรแกรมต้องการลบแฟ้ม"
@@ -1506,19 +1491,19 @@ msgstr[1] "มีโปรแกรมต้องการลบแฟ้ม"
 # Currently, occurence in ../src/gpk-dbus-task.c is for file.
 # So, just use general term for now. Let's file bug.
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:3105 ../src/gpk-task.c:409
+#: ../src/gpk-dbus-task.c:3101 ../src/gpk-task.c:409
 msgid "Remove"
 msgstr "ลบออก"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:3158
+#: ../src/gpk-dbus-task.c:3154
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "คุณต้องการติดตั้งแค็ตตาล็อกนี้หรือไม่?"
 msgstr[1] "คุณต้องการติดตั้งแค็ตตาล็อกเหล่านี้หรือไม่?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:3183
+#: ../src/gpk-dbus-task.c:3179
 msgid "Install catalogs"
 msgstr "ติดตั้งแค็ตตาล็อก"
 
@@ -1770,6 +1755,10 @@ msgstr "แพกเกจไม่ได้ติดตั้ง"
 #: ../src/gpk-enum.c:325
 msgid "The package was not found"
 msgstr "ไม่พบแพกเกจ"
+
+#: ../src/gpk-enum.c:328
+msgid "The package is already installed"
+msgstr "แพกเกจติดตั้งอยู่ก่อนแล้ว"
 
 #: ../src/gpk-enum.c:331
 msgid "The package download failed"
@@ -2598,6 +2587,11 @@ msgstr "กำลังอ่านข้อมูล"
 #: ../src/gpk-enum.c:952 ../src/gpk-enum.c:1384
 msgid "Downloading packages"
 msgstr "กำลังดาวน์โหลดแพกเกจ"
+
+#. TRANSLATORS: transaction state, installing packages
+#: ../src/gpk-enum.c:956
+msgid "Installing packages"
+msgstr "กำลังติดตั้งแพกเกจ"
 
 #. TRANSLATORS: transaction state, refreshing internal lists
 #: ../src/gpk-enum.c:960
@@ -3640,13 +3634,13 @@ msgstr "เครื่องมือติดตั้งแพกเกจด
 
 #. TRANSLATORS: failed
 #: ../src/gpk-install-package-name.c:80
-msgid "Failed to install package from name"
-msgstr "ติดตั้งแพกเกจจากชื่อไม่สำเร็จ"
+msgid "Failed to install software by name"
+msgstr "ติดตั้งซอฟต์แวร์ด้วยชื่อไม่สำเร็จ"
 
 #. TRANSLATORS: nothing was specified
 #: ../src/gpk-install-package-name.c:82
-msgid "You need to specify a package to install"
-msgstr "คุณต้องระบุแพกเกจที่จะติดตั้ง"
+msgid "You need to specify the name of the software to install"
+msgstr "คุณต้องระบุชื่อของซอฟต์แวร์ที่จะติดตั้ง"
 
 #. TRANSLATORS: command line option: a list of files to install
 #: ../src/gpk-install-provide-file.c:51
@@ -4283,6 +4277,48 @@ msgstr "ตัวเลือกสำหรับการดีบั๊ก"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "แสดงตัวเลือกสำหรับการดีบั๊ก"
+
+#~ msgid "No packages"
+#~ msgstr "ไม่มี"
+
+#~ msgid "%i package requires %s"
+#~ msgid_plural "%i packages require %s"
+#~ msgstr[0] "มี %i แพกเกจที่ต้องใช้ %s"
+#~ msgstr[1] "มี %i แพกเกจที่ต้องใช้ %s"
+
+#~ msgid "Packages listed below are required for %s to function correctly."
+#~ msgid_plural ""
+#~ "Packages listed below are required for %s to function correctly."
+#~ msgstr[0] "ต้องใช้แพกเกจที่มีรายชื่อต่อไปนี้เพื่อที่ %s จะทำงานอย่างถูกต้อง"
+#~ msgstr[1] "ต้องใช้แพกเกจที่มีรายชื่อต่อไปนี้เพื่อที่ %s จะทำงานอย่างถูกต้อง"
+
+#~ msgid "Package Manager error details"
+#~ msgstr "รายละเอียดข้อผิดพลาดของเครื่องมือจัดการแพกเกจ"
+
+#~ msgid "Failed to install package"
+#~ msgstr "ติดตั้งแพกเกจไม่สำเร็จ"
+
+#~ msgid "Could not find packages"
+#~ msgstr "หาแพกเกจไม่พบ"
+
+#~ msgid "%s wants to install a package"
+#~ msgid_plural "%s wants to install packages"
+#~ msgstr[0] "%s ต้องการติดตั้งแพกเกจ"
+#~ msgstr[1] "%s ต้องการติดตั้งแพกเกจ"
+
+#~ msgid "A program wants to install a package"
+#~ msgid_plural "A program wants to install packages"
+#~ msgstr[0] "มีโปรแกรมต้องการติดตั้งแพกเกจ"
+#~ msgstr[1] "มีโปรแกรมต้องการติดตั้งแพกเกจ"
+
+#~ msgid "Failed to find package for this file"
+#~ msgstr "หาแพกเกจสำหรับแฟ้มนี้ไม่พบ"
+
+#~ msgid "Failed to install package from name"
+#~ msgstr "ติดตั้งแพกเกจจากชื่อไม่สำเร็จ"
+
+#~ msgid "You need to specify a package to install"
+#~ msgstr "คุณต้องระบุแพกเกจที่จะติดตั้ง"
 
 #~ msgid "Add/Remove Software"
 #~ msgstr "เพิ่ม/ลบซอฟต์แวร์"
