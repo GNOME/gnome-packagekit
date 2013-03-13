@@ -6,15 +6,15 @@
 # package.
 #
 # Ivar Smolin <okul linux ee>, 2010, 2011.
-# Mattias Põldaru <mahfiaz@gmail.com>, 2010, 2012.
+# Mattias Põldaru <mahfiaz@gmail.com>, 2010, 2012, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit MASTER\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-12-18 11:37+0000\n"
-"PO-Revision-Date: 2012-12-18 17:41+0300\n"
+"POT-Creation-Date: 2013-03-12 01:17+0000\n"
+"PO-Revision-Date: 2013-03-12 21:04+0300\n"
 "Last-Translator: Mattias Põldaru <mahfiaz@gmail.com>\n"
 "Language-Team: Estonian <>\n"
 "Language: et\n"
@@ -490,44 +490,36 @@ msgstr[0] "Rakendus %2$s on paigaldanud %1$i faili"
 msgstr[1] "Rakendus %2$s on paigaldanud %1$i faili"
 
 #. TRANSLATORS: no packages returned
-msgid "No packages"
-msgstr "Pakke pole"
+msgid "No software"
+msgstr "Tarkvara pole"
 
 #. TRANSLATORS: this package is not required by any others
-msgid "No other packages require this package"
-msgstr "Mitte ükski muu pakk ei vaja seda pakki"
+msgid "No other software requires this."
+msgstr "Ülejäänud tarkvara ei vaja seda."
 
-#. TRANSLATORS: title: how many packages require this package
 #, c-format
-msgid "%i package requires %s"
-msgid_plural "%i packages require %s"
-msgstr[0] "%i pakk vajab pakki %s"
-msgstr[1] "%i pakki vajavad pakki %s"
+msgid "Software requires %s"
+msgstr "Tarkvara vajab pakki %s"
 
 #. TRANSLATORS: show a array of packages for the package
 #, c-format
-msgid "Packages listed below require %s to function correctly."
-msgid_plural "Packages listed below require %s to function correctly."
-msgstr[0] "Järgnev pakk on vajalik %s korrektseks toimimiseks."
-msgstr[1] "Järgnevad pakid on vajalikud %s korrektseks toimimiseks."
+msgid "The software listed below require %s to function correctly."
+msgid_plural "The software listed below require %s to function correctly."
+msgstr[0] "Järgnev tarkvara on vajalik %s korrektseks toimimiseks."
+msgstr[1] "Järgnev tarkvara on vajalik %s korrektseks toimimiseks."
 
 #. TRANSLATORS: this package does not depend on any others
-msgid "This package does not depend on any others"
-msgstr "See pakk ei sõltu ühestki teisest"
+msgid "This software does not depend on any other"
+msgstr "See tarkvara ei sõltu ühestki teisest"
 
-#. TRANSLATORS: title: show the number of other packages we depend on
 #, c-format
-msgid "%i additional package is required for %s"
-msgid_plural "%i additional packages are required for %s"
-msgstr[0] "%i lisapakk on vajalik %s jaoks"
-msgstr[1] "%i lisapakki on vajalikud %s jaoks"
+msgid "Additional software is required for %s"
+msgstr "Lisatarkvara on vajalik %s jaoks"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #, c-format
-msgid "Packages listed below are required for %s to function correctly."
-msgid_plural "Packages listed below are required for %s to function correctly."
-msgstr[0] "Järgnev pakk on vajalik %s korrektseks toimimiseks."
-msgstr[1] "Järgnevad pakid on vajalikud %s korrektseks toimimiseks."
+msgid "%s requires the following additional software to function correctly."
+msgstr "%s vajab toimimiseks veel lisatarkvara."
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
 msgid "Invalid"
@@ -538,18 +530,19 @@ msgid "No results were found."
 msgstr "Ei leitud ühtegi tulemust."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-msgid "Try entering a package name in the search bar."
-msgstr "Proovi otsinguribale sisestada paki nimi."
+msgid "Try entering a name in the search bar."
+msgstr "Proovi otsinguribale sisestada nimi."
 
 #. TRANSLATORS: nothing in the package queue
-msgid "There are no packages queued to be installed or removed."
-msgstr "Järjekorras pole ühtegi pakki, mida paigaldada või eemaldada."
+msgid "There is no software queued to be installed or removed."
+msgstr "Järjekorras pole tarkvara, mida paigaldada või eemaldada."
 
 #. TRANSLATORS: tell the user to switch to details search mode
 msgid ""
-"Try searching package descriptions by clicking the icon next to the search "
+"Try searching software descriptions by clicking the icon next to the search "
 "text."
-msgstr "Proovi kirjeldustest otsimist klõpsates ikoonil otsinguteksti kõrval."
+msgstr ""
+"Proovi tarkvara kirjelduste otsimist klõpsates ikoonil otsinguteksti kõrval."
 
 #. TRANSLATORS: tell the user to try harder
 msgid "Try again with a different search term."
@@ -679,8 +672,8 @@ msgid "PackageKit Website"
 msgstr "PackageKit'i sait"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-msgid "Package Manager for GNOME"
-msgstr "GNOME pakihaldur"
+msgid "Software management for GNOME"
+msgstr "GNOME tarkvarahaldur"
 
 #. TRANSLATORS: welcome text if we can click the group array
 msgid "Enter a search word or click a category to get started."
@@ -813,6 +806,8 @@ msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s ja %s"
 
 #. TRANSLATORS: we failed to install
+#. TRANSLATORS: error: failed to install, detailed error follows
+#. TRANSLATORS: failed to install, shouldn't be shown
 msgid "Failed to install software"
 msgstr "Tõrge tarkvara paigaldamisel"
 
@@ -824,8 +819,8 @@ msgstr "Ühtegi rakendust pole paigaldamiseks valitud"
 msgid "Error details"
 msgstr "Vea üksikasjad"
 
-msgid "Package Manager error details"
-msgstr "Pakihalduri vea andmed"
+msgid "Software error details"
+msgstr "Tarkvara vea üksikasjad"
 
 #. TRANSLATORS: default fallback error -- this should never happen
 msgid ""
@@ -840,8 +835,8 @@ msgid "You don't have the necessary privileges to perform this action."
 msgstr "Sul pole selle tegevuse sooritamiseks vajalikke õiguseid."
 
 #. TRANSLATORS: could not start system service
-msgid "The packagekitd service could not be started."
-msgstr "Packagekitd teenust polnud võimalik käivitada."
+msgid "The software service could not be started."
+msgstr "Tarkvarateenust polnud võimalik käivitada."
 
 #. TRANSLATORS: the user tried to query for something invalid
 msgid "The query is not valid."
@@ -855,15 +850,9 @@ msgstr "Fail ei ole korralik."
 msgid "Show details"
 msgstr "Näita üksikasju"
 
-#. TRANSLATORS: error: failed to install, detailed error follows
-#. TRANSLATORS: failed to install, shouldn't be shown
-msgid "Failed to install package"
-msgstr "Tõrge paki paigaldamisel"
-
 #. TRANSLATORS: title: installing packages
-#. TRANSLATORS: transaction state, installing packages
-msgid "Installing packages"
-msgstr "Pakkide paigaldamine"
+msgid "Installing software"
+msgstr "Tarkvara paigaldamine"
 
 #. TRANSLATORS: title
 msgid "Failed to install file"
@@ -896,12 +885,12 @@ msgstr[1] "Paigalda kohalikke faile"
 
 #. TRANSLATORS: couldn't resolve name to package
 #, c-format
-msgid "Could not find packages"
-msgstr "Pakke pole võimalik leida"
+msgid "Could not find software"
+msgstr "Tarkvara ei leitud"
 
 #. TRANSLATORS: message: could not find
-msgid "The packages could not be found in any software source"
-msgstr "Pakke pole võimalik ühestki tarkvaraallikast leida"
+msgid "The software could not be found in any software source"
+msgstr "Tarkvara ei leitud ühestki tarkvaraallikast"
 
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
@@ -911,10 +900,8 @@ msgstr "Pakke pole võimalik ühestki tarkvaraallikast leida"
 msgid "More information"
 msgstr "Rohkem andmeid"
 
-msgid "The package is already installed"
-msgid_plural "The packages are already installed"
-msgstr[0] "Pakk on juba paigaldatud"
-msgstr[1] "Pakid on juba paigaldatud"
+msgid "The software is already installed"
+msgstr "Tarkvara on juba paigaldatud"
 
 #. TRANSLATORS: message: package is already installed
 msgid "Nothing to do."
@@ -924,30 +911,20 @@ msgstr "Midagi pole teha."
 msgid "Incorrect response from search"
 msgstr "Otsingule anti sobimatu vastus"
 
-#. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-msgid "An additional package is required:"
-msgid_plural "Additional packages are required:"
-msgstr[0] "Vajalik on lisapakk:"
-msgstr[1] "Vajalikud lisapakid:"
+msgid "Additional software is required"
+msgstr "Vajalik on lisatarkvara"
 
-#. TRANSLATORS: ask the user if it's okay to search
-msgid "Do you want to search for and install this package now?"
-msgid_plural "Do you want to search for and install these packages now?"
-msgstr[0] "Kas seda pakki kohe otsida ja siis paigaldada?"
-msgstr[1] "Kas neid pakke kohe otsida ja seejärel paigaldada?"
+msgid "Do you want to search for and install this software now?"
+msgstr "Kas tahad seda tarkvara kohe otsida ja siis paigaldada?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #, c-format
-msgid "%s wants to install a package"
-msgid_plural "%s wants to install packages"
-msgstr[0] "%s tahab paigaldada paki"
-msgstr[1] "%s tahab paigaldada pakke"
+msgid "%s requires additional software"
+msgstr "%s vajab selle toimingu jaoks täiendavat tarkvara"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-msgid "A program wants to install a package"
-msgid_plural "A program wants to install packages"
-msgstr[0] "Rakendus tahab paigaldada paki"
-msgstr[1] "Rakendus tahab paigaldada pakke"
+msgid "An application requires additional software"
+msgstr "Rakendus vajab lisatarkvara"
 
 #. TRANSLATORS: title, searching
 msgid "Searching for packages"
@@ -963,8 +940,8 @@ msgstr "Faili ei leitud ühestki pakist"
 
 #. TRANSLATORS: we've already got a package that provides this file
 #, c-format
-msgid "The %s package already provides this file"
-msgstr "Pakk %s juba sisaldab seda faili"
+msgid "%s already provides this file"
+msgstr "%s juba sisaldab seda faili"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
 msgid "The following file is required:"
@@ -1065,10 +1042,8 @@ msgstr[0] "Paigalda järgnev plugin"
 msgstr[1] "Paigalda järgnevad pluginad"
 
 #. TRANSLATORS: title: show a list of fonts
-msgid "Do you want to install this package now?"
-msgid_plural "Do you want to install these packages now?"
-msgstr[0] "Kas tahad selle paki kohe paigaldada?"
-msgstr[1] "Kas tahad need pakid kohe paigaldada?"
+msgid "Do you want to install this software now?"
+msgstr "Kas tahad selle tarkvara kohe paigaldada?"
 
 #. TRANSLATORS: search for codec
 msgid "Searching for plugins"
@@ -1140,10 +1115,10 @@ msgstr[0] "Selle dokumendi korrektseks kuvamiseks on vaja lisafonti."
 msgstr[1] "Selle dokumendi korrektseks kuvamiseks on vaja lisafonte."
 
 #. TRANSLATORS: we need to download a new font package to display a document
-msgid "Do you want to search for a suitable package now?"
-msgid_plural "Do you want to search for suitable packages now?"
-msgstr[0] "Kas tahad kohe otsida sobivat pakki?"
-msgstr[1] "Kas tahad kohe otsida sobivaid pakke?"
+msgid "Do you want to search for a suitable font now?"
+msgid_plural "Do you want to search for suitable fonts now?"
+msgstr[0] "Kas tahad kohe otsida sobivat fonti?"
+msgstr[1] "Kas tahad kohe otsida sobivaid fonte?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #, c-format
@@ -1213,14 +1188,23 @@ msgid_plural "Install the following drivers"
 msgstr[0] "Järgneva draiveri paigaldamine"
 msgstr[1] "Järgnevate draiverite paigaldamine"
 
+msgid "Do you want to install this driver now?"
+msgid_plural "Do you want to install these drivers now?"
+msgstr[0] "Kas tahad selle draiveri paigaldada?"
+msgstr[1] "Kas tahad need draiverid paigaldada?"
+
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
 msgid "Removing packages"
 msgstr "Pakkide eemaldamine"
 
 #. TRANSLATORS: failed to find the package for the file
-msgid "Failed to find package for this file"
-msgstr "Selle faili paki leidmine nurjus"
+msgid "Failed to find any software"
+msgstr "Tarkvara ei leitud"
+
+#. TRANSLATORS: nothing found
+msgid "The file could not be found in any available software"
+msgstr "Faili ei leitud ühestki tarkvaraallikast"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
 msgid "The following file will be removed:"
@@ -1467,6 +1451,9 @@ msgstr "Pakk on paigaldamata"
 
 msgid "The package was not found"
 msgstr "Pakki ei leitud"
+
+msgid "The package is already installed"
+msgstr "See pakk on juba paigaldatud"
 
 msgid "The package download failed"
 msgstr "Tõrge paki allalaadimisel"
@@ -2143,6 +2130,10 @@ msgstr "Andmete hankimine"
 #. TRANSLATORS: The role of the transaction, in present tense
 msgid "Downloading packages"
 msgstr "Pakkide allalaadimine"
+
+#. TRANSLATORS: transaction state, installing packages
+msgid "Installing packages"
+msgstr "Pakkide paigaldamine"
 
 #. TRANSLATORS: transaction state, refreshing internal lists
 msgid "Refreshing software list"
@@ -2982,12 +2973,12 @@ msgid "Package Name Installer"
 msgstr "Paki nime järgi paigaldaja"
 
 #. TRANSLATORS: failed
-msgid "Failed to install package from name"
-msgstr "Paki nime järgi paigaldamine nurjus"
+msgid "Failed to install software by name"
+msgstr "Tõrge tarkvara paigaldamisel nime järgi"
 
 #. TRANSLATORS: nothing was specified
-msgid "You need to specify a package to install"
-msgstr "Pead määrama paki, mida paigaldada"
+msgid "You need to specify the name of the software to install"
+msgstr "Pead määrama tarkvara nime, mida tahad paigaldada"
 
 #. TRANSLATORS: command line option: a list of files to install
 msgid "Local files to install"
@@ -3525,3 +3516,45 @@ msgstr "Silumisvalikud"
 
 msgid "Show debugging options"
 msgstr "Silumisvõtmete näitamine"
+
+#~ msgid "No packages"
+#~ msgstr "Pakke pole"
+
+#~ msgid "%i package requires %s"
+#~ msgid_plural "%i packages require %s"
+#~ msgstr[0] "%i pakk vajab pakki %s"
+#~ msgstr[1] "%i pakki vajavad pakki %s"
+
+#~ msgid "Packages listed below are required for %s to function correctly."
+#~ msgid_plural ""
+#~ "Packages listed below are required for %s to function correctly."
+#~ msgstr[0] "Järgnev pakk on vajalik %s korrektseks toimimiseks."
+#~ msgstr[1] "Järgnevad pakid on vajalikud %s korrektseks toimimiseks."
+
+#~ msgid "Package Manager error details"
+#~ msgstr "Pakihalduri vea andmed"
+
+#~ msgid "Failed to install package"
+#~ msgstr "Tõrge paki paigaldamisel"
+
+#~ msgid "Could not find packages"
+#~ msgstr "Pakke pole võimalik leida"
+
+#~ msgid "%s wants to install a package"
+#~ msgid_plural "%s wants to install packages"
+#~ msgstr[0] "%s tahab paigaldada paki"
+#~ msgstr[1] "%s tahab paigaldada pakke"
+
+#~ msgid "A program wants to install a package"
+#~ msgid_plural "A program wants to install packages"
+#~ msgstr[0] "Rakendus tahab paigaldada paki"
+#~ msgstr[1] "Rakendus tahab paigaldada pakke"
+
+#~ msgid "Failed to find package for this file"
+#~ msgstr "Selle faili paki leidmine nurjus"
+
+#~ msgid "Failed to install package from name"
+#~ msgstr "Paki nime järgi paigaldamine nurjus"
+
+#~ msgid "You need to specify a package to install"
+#~ msgstr "Pead määrama paki, mida paigaldada"
