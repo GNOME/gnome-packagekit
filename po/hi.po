@@ -4,16 +4,16 @@
 #
 # Rajesh Ranjan <rranjan@redhat.com>, 2008.
 # Rajesh Ranjan <rajesh672@gmail.com>, 2009.
-# chandankumar(ciypro) <chandankumar.093047@gmail.com>, 2012.
+# chandankumar(ciypro) <chandankumar.093047@gmail.com>, 2012, 2013.
 # rajesh <rajeshkajha@yahoo.com>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-08-15 12:14+0000\n"
-"PO-Revision-Date: 2012-09-21 13:12+0530\n"
-"Last-Translator: rajesh <rajeshkajha@yahoo.com>\n"
+"POT-Creation-Date: 2013-03-06 18:34+0000\n"
+"PO-Revision-Date: 2013-03-25 10:43+0000\n"
+"Last-Translator: chandankumar <chandankumar.093047@gmail.com>\n"
 "Language-Team: Hindi <kde-i18n-doc@kde.org>\n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
@@ -25,7 +25,7 @@ msgstr ""
 "\n"
 "\n"
 "\n"
-"X-Generator: Lokalize 1.2\n"
+"X-Generator: Lokalize 1.5\n"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:1
 msgid "Automatically remove unused dependencies"
@@ -88,12 +88,10 @@ msgid "Only show the newest packages in the file lists."
 msgstr "सिर्फ नवीनतम उपलब्ध संकुल को फ़ाइल सूची में दिखाएँ."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:13
-#| msgid "Only show native packages in the file lists"
 msgid "Only show supported packages in the file lists"
 msgstr "फाइल सूची में केवल समर्थित संकुल दिखाएँ"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:14
-#| msgid "Only show native packages in the file lists"
 msgid "Only show supported packages in the file lists."
 msgstr "फाइल सूची में केवल समर्थित संकुल दिखाएँ"
 
@@ -254,6 +252,10 @@ msgstr "सॉफ्टवेयर"
 msgid "Add or remove software installed on the system"
 msgstr "सिस्टम पर संस्थापित सॉफ्टवेयर जोड़ें या हटाएँ"
 
+#: ../data/gpk-application.desktop.in.h:3
+msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
+msgstr "अद्यतन;अपग्रेड; स्रोत; रिपॉजिटरी; प्राथमिकताएं; स्थापित; स्टोर; "
+
 #: ../data/gpk-application.ui.h:2
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "बदलाव तत्काल लागू नहीं होता है, यह बटन सभी बदलावों को लागू करता है"
@@ -267,7 +269,6 @@ msgid "Cancel search"
 msgstr "खोज रद्द करें"
 
 #: ../data/gpk-application.ui.h:5
-#| msgid "License"
 msgid "Licence"
 msgstr "लाइसेंस"
 
@@ -280,7 +281,6 @@ msgid "Install Package"
 msgstr "संकुल संस्थापित करें"
 
 #: ../data/gpk-application.ui.h:8
-#| msgid "Removed packages"
 msgid "Remove Package"
 msgstr "संकुल हटाएँ"
 
@@ -289,27 +289,22 @@ msgid "Visit home page for selected package"
 msgstr "चयनित पैकेज के लिए होमपेज पर जाएँ"
 
 #: ../data/gpk-application.ui.h:10
-#| msgid "Visit the project homepage"
 msgid "Visit Project Website"
 msgstr "परियोजना वेबसाइट देखें"
 
 #: ../data/gpk-application.ui.h:11
-#| msgid "No files"
 msgid "Files"
 msgstr "फ़ाइल"
 
 #: ../data/gpk-application.ui.h:12
-#| msgid "Removed packages"
 msgid "Required Packages"
 msgstr "जरूरी संकुल"
 
 #: ../data/gpk-application.ui.h:13
-#| msgid "Newest packages"
 msgid "Dependent Packages"
 msgstr "निर्भर संकुल"
 
 #: ../data/gpk-application.ui.h:14
-#| msgid "C_heck for updates:"
 msgid "Check for Updates"
 msgstr "अद्यतन के लिए जाँचें"
 
@@ -326,22 +321,18 @@ msgid "Software Log"
 msgstr "सॉफ्टवेयर लॉग"
 
 #: ../data/gpk-application.ui.h:18
-#| msgid "Only _Newest Packages"
 msgid "Only Newest Versions"
 msgstr "सिर्फ नवीनतम संस्करण"
 
 #: ../data/gpk-application.ui.h:19
-#| msgid "Only N_ative Packages"
 msgid "Only Native Packages"
 msgstr "सिर्फ नेटिव संकुल"
 
 #: ../data/gpk-application.ui.h:20
-#| msgid "_Help"
 msgid "Help"
 msgstr "मदद"
 
 #: ../data/gpk-application.ui.h:21
-#| msgid "Software Install"
 msgid "About Software Install"
 msgstr "सॉफ्टवेयर संस्थापन का परिचय"
 
@@ -365,7 +356,7 @@ msgstr "अनुबंध स्वीकारें (_A)"
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-dbus-task.c:3381
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-dbus-task.c:3379
 #: ../src/gpk-install-local-file.c:65 ../src/gpk-install-package-name.c:64
 #: ../src/gpk-dbus-service.c:151 ../src/gpk-dbus-service.c:154
 msgid "Software Install"
@@ -429,7 +420,6 @@ msgid "Check for updates when using mobile broadband"
 msgstr "अद्यतन के लिए जाँचें जब मोबाइल ब्रॉडबैंड का उपयोग करना है"
 
 #: ../data/gpk-prefs.ui.h:6
-#| msgid "C_heck for updates:"
 msgid "Check for updates on battery power"
 msgstr "बैटरी पावर पर अद्यतन के लिए जाँचें"
 
@@ -642,211 +632,222 @@ msgstr[0] "%i फाइल %s के द्वारा संस्थापि
 msgstr[1] "%i फाइल %s के द्वारा संस्थापित है"
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:904 ../src/gpk-application.c:1031
-msgid "No packages"
-msgstr "कोई संकुल नहीं"
+#: ../src/gpk-application.c:904 ../src/gpk-application.c:1028
+#| msgid "Software"
+msgid "No software"
+msgstr "कोई सॉफ्टवेयर नहीं "
 
 #. TRANSLATORS: this package is not required by any others
 #: ../src/gpk-application.c:906
-msgid "No other packages require this package"
-msgstr "कोई अन्य संकुल इस संकुल के लिए जरूरी नहीं"
+#| msgid "No other packages require this package"
+msgid "No other software requires this."
+msgstr "कोई अन्य सॉफ्टवेयर के जरूरी नहीं"
 
-#. TRANSLATORS: title: how many packages require this package
-#: ../src/gpk-application.c:913
+#: ../src/gpk-application.c:912
 #, c-format
-msgid "%i package requires %s"
-msgid_plural "%i packages require %s"
-msgstr[0] "%i संकुल के लिए %s जरूरत है"
-msgstr[1] "%i संकुल के लिए %s जरूरत है"
+#| msgid "Software Sources"
+msgid "Software requires %s"
+msgstr "सॉफ्टवेयर %s चाहिए"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:918
+#: ../src/gpk-application.c:915
 #, c-format
-msgid "Packages listed below require %s to function correctly."
-msgid_plural "Packages listed below require %s to function correctly."
-msgstr[0] "नीचे के संकुल के लिए ठीक काम करने के लिए %s जरूरत है."
-msgstr[1] "नीचे के संकुल के लिए ठीक काम करने के लिए %s जरूरत है."
+#| msgid "Packages listed below require %s to function correctly."
+#| msgid_plural "Packages listed below require %s to function correctly."
+msgid "The software listed below require %s to function correctly."
+msgid_plural "The software listed below require %s to function correctly."
+msgstr[0] "नीचे के सॉफ्टवेयर के लिए ठीक काम करने के लिए %s जरूरत है."
+msgstr[1] "नीचे के सॉफ्टवेयर के लिए ठीक काम करने के लिए %s जरूरत है."
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1033
-msgid "This package does not depend on any others"
-msgstr "यह संकुल किसी दूसरे पर निर्भर नहीं है"
+#: ../src/gpk-application.c:1030
+#| msgid "This package does not depend on any others"
+msgid "This software does not depend on any other"
+msgstr "यह सॉफ्टवेयर किसी दूसरे पर निर्भर नहीं है"
 
-#. TRANSLATORS: title: show the number of other packages we depend on
-#: ../src/gpk-application.c:1040
+#: ../src/gpk-application.c:1036
 #, c-format
-msgid "%i additional package is required for %s"
-msgid_plural "%i additional packages are required for %s"
-msgstr[0] "%i अतिरिक्त संकुल की %s के लिए जरूरत है"
-msgstr[1] "%i अतिरिक्त संकुल की %s के लिए जरूरत है"
+#| msgid "%i additional package is required for %s"
+#| msgid_plural "%i additional packages are required for %s"
+msgid "Additional software is required for %s"
+msgstr "अतिरिक्त सॉफ्टवेयर की %s के लिए जरूरत है"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
-#: ../src/gpk-application.c:1045
+#: ../src/gpk-application.c:1039
 #, c-format
-msgid "Packages listed below are required for %s to function correctly."
-msgid_plural "Packages listed below are required for %s to function correctly."
-msgstr[0] "नीचे सूचीबद्ध संकुल को ठीक से काम करने के लिए %s की जरूरत है."
-msgstr[1] "नीचे सूचीबद्ध संकुल को ठीक से काम करने के लिए %s की जरूरत है."
+#| msgid ""
+#| "The software that you want to install requires additional software to run "
+#| "correctly."
+msgid "%s requires the following additional software to function correctly."
+msgstr ""
+"%s सॉफ्टवेयर जो आप संस्थापित करना चाहते हैं उसके लिए अतिरिक्त सॉफ्टवेयर को "
+"ठीक से चलाने की "
+"जरूरत होती है. "
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1114
+#: ../src/gpk-application.c:1106
 msgid "Invalid"
 msgstr "अवैध"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1278
+#: ../src/gpk-application.c:1270
 msgid "No results were found."
 msgstr "कोई परिणाम नहीं पाया गया."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1286
-msgid "Try entering a package name in the search bar."
-msgstr "खोज बार में एक संकुल नाम दाखिल करने की कोशिश करें."
+#: ../src/gpk-application.c:1278
+#| msgid "Try entering a package name in the search bar."
+msgid "Try entering a name in the search bar."
+msgstr "खोज बार में एक नाम दाखिल करने की कोशिश करें."
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1289
-msgid "There are no packages queued to be installed or removed."
-msgstr "संस्थापित करने या हटाने के लिए किसी कतारबद्ध संकुल की जरूरत नहीं."
+#: ../src/gpk-application.c:1281
+#| msgid "There are no packages queued to be installed or removed."
+msgid "There is no software queued to be installed or removed."
+msgstr "संस्थापित करने या हटाने के लिए किसी कतारबद्ध सॉफ्टवेयर की जरूरत नहीं."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1294
+#: ../src/gpk-application.c:1286
+#| msgid ""
+#| "Try searching package descriptions by clicking the icon next to the "
+#| "search text."
 msgid ""
-"Try searching package descriptions by clicking the icon next to the search "
+"Try searching software descriptions by clicking the icon next to the search "
 "text."
-msgstr "खोज पट्टी के साथ प्रतीक पर क्लिक करके संकुल विवरण खोजना जारी रखें."
+msgstr "खोज पट्टी के साथ प्रतीक पर क्लिक करके सॉफ्टवेयर विवरण खोजना जारी रखें."
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1297
+#: ../src/gpk-application.c:1289
 msgid "Try again with a different search term."
 msgstr "भिन्न खोज पद के साथ फिर कोशिश करें."
 
 #. TRANSLATORS: title: invalid text in the search bar
-#: ../src/gpk-application.c:1561
+#: ../src/gpk-application.c:1553
 msgid "Invalid search text"
 msgstr "अवैध खोज पाठ"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1563
+#: ../src/gpk-application.c:1555
 msgid "The search text contains invalid characters"
 msgstr "खोज पाछ में अवैध संप्रतीक हैं"
 
 #. TRANSLATORS: title: we failed to execute the method
-#: ../src/gpk-application.c:1604
+#: ../src/gpk-application.c:1596
 msgid "The search could not be completed"
 msgstr "खोज नहीं पूरा हो सका"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1606
+#: ../src/gpk-application.c:1598
 msgid "Running the transaction failed"
 msgstr "लेनदेन को चलाना विफल"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1735
+#: ../src/gpk-application.c:1727
 msgid "Changes not applied"
 msgstr "बदलाव लागू नहीं"
 
-#: ../src/gpk-application.c:1736
+#: ../src/gpk-application.c:1728
 msgid "Close _Anyway"
 msgstr "किसी तरह बन्द करें (_A)"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1740
+#: ../src/gpk-application.c:1732
 msgid "You have made changes that have not yet been applied."
 msgstr "आपने बदलाव किया है जो अबतक लागू नहीं है."
 
-#: ../src/gpk-application.c:1741
+#: ../src/gpk-application.c:1733
 msgid "These changes will be lost if you close this window."
 msgstr "यह बदलाव नष्ट हो जाएगा यदि आप इस विंडो को बंद करते हैं."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2033 ../src/gpk-enum.c:1153 ../src/gpk-enum.c:1242
+#: ../src/gpk-application.c:2025 ../src/gpk-enum.c:1153 ../src/gpk-enum.c:1242
 msgid "Installed"
 msgstr "संस्थापित"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2049 ../src/gpk-application.c:2071
+#: ../src/gpk-application.c:2041 ../src/gpk-application.c:2063
 #: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
 msgid "Name"
 msgstr "नाम"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2237
+#: ../src/gpk-application.c:2229
 msgid "Size"
 msgstr "आकार"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2240
+#: ../src/gpk-application.c:2232
 msgid "Installed size"
 msgstr "संस्थापित आकार"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2243
+#: ../src/gpk-application.c:2235
 msgid "Download size"
 msgstr "आकार डाउनलोड करें"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2452
+#: ../src/gpk-application.c:2448
 msgid "Searching by name"
 msgstr "नाम से खोज रहा है"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2476
+#: ../src/gpk-application.c:2472
 msgid "Searching by description"
 msgstr "विवरण से खोज रहा है"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2500
+#: ../src/gpk-application.c:2496
 msgid "Searching by file"
 msgstr "फाइल से खोज रहा है"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2522
+#: ../src/gpk-application.c:2518
 msgid "Search by name"
 msgstr "नाम से खोजें"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2533
+#: ../src/gpk-application.c:2529
 msgid "Search by description"
 msgstr "विवरण से खोजें"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2544
+#: ../src/gpk-application.c:2540
 msgid "Search by file name"
 msgstr "फाइल नाम से खोजें"
 
-#: ../src/gpk-application.c:2590
+#: ../src/gpk-application.c:2586
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Licensed under the GNU General Public License Version 2"
 
+#: ../src/gpk-application.c:2587
+msgid ""
+"PackageKit is free software; you can redistribute it and/or modify it under "
+"the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 2 of the License, or (at your option) "
+"any later version."
+msgstr ""
+"PackageKit is free software; you can redistribute it and/or modify it under "
+"the terms of the GNU General Public License as published by the Free "
+"Software Foundation; either version 2 of the License, or (at your option) "
+"any later version."
+
 #: ../src/gpk-application.c:2591
 msgid ""
-"PackageKit is free software; you can redistribute it and/or modify it under "
-"the terms of the GNU General Public License as published by the Free "
-"Software Foundation; either version 2 of the License, or (at your option) "
-"any later version."
+"PackageKit is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
+"more details."
 msgstr ""
-"PackageKit is free software; you can redistribute it and/or modify it under "
-"the terms of the GNU General Public License as published by the Free "
-"Software Foundation; either version 2 of the License, or (at your option) "
-"any later version."
+"PackageKit is distributed in the hope that it will be useful, but WITHOUT "
+"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
+"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
+"more details."
 
 #: ../src/gpk-application.c:2595
-msgid ""
-"PackageKit is distributed in the hope that it will be useful, but WITHOUT "
-"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
-"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
-"more details."
-msgstr ""
-"PackageKit is distributed in the hope that it will be useful, but WITHOUT "
-"ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
-"FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
-"more details."
-
-#: ../src/gpk-application.c:2599
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -857,59 +858,57 @@ msgstr ""
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2605
+#: ../src/gpk-application.c:2601
 msgid "translator-credits"
 msgstr "राजेश रंजन (rranjan@redhat.com, rajeshkajha@yahoo.com)"
 
-#: ../src/gpk-application.c:2625
+#: ../src/gpk-application.c:2621
 msgid "PackageKit Website"
 msgstr "PackageKit वेबसाइट"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2628
-msgid "Package Manager for GNOME"
-msgstr "गनोम के लिए पैकेज प्रबंधक"
+#: ../src/gpk-application.c:2624
+#| msgid "Package Manager for GNOME"
+msgid "Software management for GNOME"
+msgstr "गनोम के लिए सॉफ्टवेयर प्रबंधक"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2821
-#| msgid "Enter a search word and then click find to get started."
+#: ../src/gpk-application.c:2817
 msgid "Enter a search word or click a category to get started."
 msgstr "खोज शब्द दर्ज करें और फिर आरंभ होने के लिए क्लिक करें."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2824
-#| msgid "Enter a search word and then click find to get started."
+#: ../src/gpk-application.c:2820
 msgid "Enter a search word to get started."
 msgstr "आरंभ करने के लिए खोज शब्द दर्ज करें."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3063
+#: ../src/gpk-application.c:3059
 msgid "Exiting as properties could not be retrieved"
 msgstr "निकल रहा है क्योंकि विशेषता वापस नहीं किया जा सकता है"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3106
+#: ../src/gpk-application.c:3102
 msgid "All packages"
 msgstr "सभी संकुल"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3108
+#: ../src/gpk-application.c:3104
 msgid "Show all packages"
 msgstr "सभी संकुल दिखाएँ"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3540 ../src/gpk-update-viewer.c:3422
+#: ../src/gpk-application.c:3536 ../src/gpk-update-viewer.c:3424
 msgid "Show the program version and exit"
 msgstr "प्रोग्राम संस्करण दिखाएँ और बाहर निकलें"
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3554 ../src/gpk-log.c:498
-#| msgid "Install firmware"
+#: ../src/gpk-application.c:3550 ../src/gpk-log.c:498
 msgid "Install Software"
 msgstr "सॉफ़्टवेयर संस्थापित करें"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3570
+#: ../src/gpk-application.c:3566
 msgid "Package installer"
 msgstr "पैकेज संस्थापक"
 
@@ -1032,7 +1031,10 @@ msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s और %s"
 
 #. TRANSLATORS: we failed to install
-#: ../src/gpk-dbus-task.c:244
+#. TRANSLATORS: error: failed to install, detailed error follows
+#. TRANSLATORS: failed to install, shouldn't be shown
+#: ../src/gpk-dbus-task.c:244 ../src/gpk-dbus-task.c:473
+#: ../src/gpk-dbus-task.c:1160
 msgid "Failed to install software"
 msgstr "सॉफ्टवेयर संस्थापित करने में विफल"
 
@@ -1047,8 +1049,9 @@ msgid "Error details"
 msgstr "त्रुटि विवरण"
 
 #: ../src/gpk-dbus-task.c:278
-msgid "Package Manager error details"
-msgstr "संकुल प्रबंधक त्रुटि विवरण"
+#| msgid "Error details"
+msgid "Software error details"
+msgstr "सॉफ्टवेयर त्रुटि विवरण"
 
 #. TRANSLATORS: default fallback error -- this should never happen
 #: ../src/gpk-dbus-task.c:293
@@ -1066,8 +1069,9 @@ msgstr "आपके पास इस काम को करने के ल�
 
 #. TRANSLATORS: could not start system service
 #: ../src/gpk-dbus-task.c:313
-msgid "The packagekitd service could not be started."
-msgstr "packagekitd सेवा फिर आरंभ नहीं किया जा सका."
+#| msgid "The packagekitd service could not be started."
+msgid "The software service could not be started."
+msgstr "सॉफ्टवेयर सेवा फिर आरंभ नहीं किया जा सका."
 
 #. TRANSLATORS: the user tried to query for something invalid
 #: ../src/gpk-dbus-task.c:317
@@ -1080,31 +1084,25 @@ msgid "The file is not valid."
 msgstr "फाइल वैध नहीं है."
 
 #. TRANSLATORS: button: show details about the error
-#: ../src/gpk-dbus-task.c:384
+#: ../src/gpk-dbus-task.c:385
 msgid "Show details"
 msgstr "विवरण दिखाएँ"
 
-#. TRANSLATORS: error: failed to install, detailed error follows
-#. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:472 ../src/gpk-dbus-task.c:1161
-msgid "Failed to install package"
-msgstr "संकुल संस्थापन में विफल"
-
 #. TRANSLATORS: title: installing packages
-#. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:510 ../src/gpk-enum.c:956
-msgid "Installing packages"
-msgstr "संकुल संस्थापित कर रहा है"
+#: ../src/gpk-dbus-task.c:511
+#| msgid "Install Software"
+msgid "Installing software"
+msgstr "सॉफ़्टवेयर संस्थापित किया जा रहा है"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:612 ../src/gpk-dbus-task.c:1384
+#: ../src/gpk-dbus-task.c:613 ../src/gpk-dbus-task.c:1381
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "फाइल संस्थापित करने में विफल"
 msgstr[1] "फाइल संस्थापित करने में विफल"
 
 #. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:701
+#: ../src/gpk-dbus-task.c:702
 msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
 msgstr[0] "क्या आप इस फाइल को संस्थापित करना चाहते हैं?"
@@ -1118,125 +1116,123 @@ msgstr[1] "क्या आप इस फाइल को संस्थाप�
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
-#: ../src/gpk-dbus-task.c:710 ../src/gpk-dbus-task.c:1258
-#: ../src/gpk-dbus-task.c:1477 ../src/gpk-dbus-task.c:1680
-#: ../src/gpk-dbus-task.c:2140 ../src/gpk-dbus-task.c:2478
-#: ../src/gpk-dbus-task.c:2691 ../src/gpk-dbus-task.c:2813
-#: ../src/gpk-dbus-task.c:3166 ../src/gpk-task.c:404
+#: ../src/gpk-dbus-task.c:711 ../src/gpk-dbus-task.c:1255
+#: ../src/gpk-dbus-task.c:1474 ../src/gpk-dbus-task.c:1677
+#: ../src/gpk-dbus-task.c:2137 ../src/gpk-dbus-task.c:2475
+#: ../src/gpk-dbus-task.c:2688 ../src/gpk-dbus-task.c:2810
+#: ../src/gpk-dbus-task.c:3163 ../src/gpk-task.c:404
 msgid "Install"
 msgstr "संस्थापित करें"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1033
+#: ../src/gpk-dbus-task.c:1034
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "स्थानीय फाइल संस्थापित करें"
 msgstr[1] "स्थानीय फाइल संस्थापित करें"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1093
+#: ../src/gpk-dbus-task.c:1094
 #, c-format
-msgid "Could not find packages"
-msgstr "संकुल ढ़ूँढ़ नहीं सका"
+#| msgid "Failed to find software"
+msgid "Could not find software"
+msgstr "सॉफ्टवेयर नहीं पा सका"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1102
-msgid "The packages could not be found in any software source"
-msgstr "संकुल किसी सॉफ्टवेयर श्रोत में नहीं पाया जा सका"
+#: ../src/gpk-dbus-task.c:1103
+#| msgid "The packages could not be found in any software source"
+msgid "The software could not be found in any software source"
+msgstr "सॉफ्टवेयर किसी सॉफ्टवेयर श्रोत में नहीं पाया जा सका"
 
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
-#: ../src/gpk-dbus-task.c:1105 ../src/gpk-dbus-task.c:1346
-#: ../src/gpk-dbus-task.c:1652 ../src/gpk-dbus-task.c:1858
-#: ../src/gpk-dbus-task.c:2113 ../src/gpk-dbus-task.c:2450
+#: ../src/gpk-dbus-task.c:1106 ../src/gpk-dbus-task.c:1343
+#: ../src/gpk-dbus-task.c:1649 ../src/gpk-dbus-task.c:1855
+#: ../src/gpk-dbus-task.c:2110 ../src/gpk-dbus-task.c:2447
 msgid "More information"
 msgstr "अधिक सूचना"
 
-#: ../src/gpk-dbus-task.c:1142 ../src/gpk-enum.c:328
-msgid "The package is already installed"
-msgid_plural "The packages are already installed"
-msgstr[0] "संकुल पहले से संस्थापित है"
-msgstr[1] "सभी संकुल पहले से संस्थापित हैं"
+#: ../src/gpk-dbus-task.c:1143
+#| msgid "The package is already installed"
+#| msgid_plural "The packages are already installed"
+msgid "The software is already installed"
+msgstr "सॉफ्टवेयर पहले से संस्थापित है"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1146
+#: ../src/gpk-dbus-task.c:1145
 msgid "Nothing to do."
 msgstr "कुछ भी नहीं करना."
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1163
+#: ../src/gpk-dbus-task.c:1162
 msgid "Incorrect response from search"
 msgstr "खोज से गलत अनुक्रिया"
 
-#. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1242
-msgid "An additional package is required:"
-msgid_plural "Additional packages are required:"
-msgstr[0] "एक अतिरिक्त संकुल जरूरी है:"
-msgstr[1] "एक अतिरिक्त संकुल जरूरी है:"
+#: ../src/gpk-dbus-task.c:1240
+#| msgid "Additional firmware required"
+msgid "Additional software is required"
+msgstr "अतिरिक्त सॉफ्टवेयर जरूरी है"
 
-#. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1245
-msgid "Do you want to search for and install this package now?"
-msgid_plural "Do you want to search for and install these packages now?"
-msgstr[0] "क्या आप अब इस संकुल को खोजना और संस्थापित करना चाहते हैं?"
-msgstr[1] "क्या आप अब इस संकुल को खोजना और संस्थापित करना चाहते हैं?"
+#: ../src/gpk-dbus-task.c:1242
+#| msgid "Do you want to search for and install this package now?"
+#| msgid_plural "Do you want to search for and install these packages now?"
+msgid "Do you want to search for and install this software now?"
+msgstr "क्या आप अब इस सॉफ्टवेयर को खोजना और संस्थापित करना चाहते हैं?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1251
+#: ../src/gpk-dbus-task.c:1248
 #, c-format
-msgid "%s wants to install a package"
-msgid_plural "%s wants to install packages"
-msgstr[0] "%s संकुल को संस्थापित करना चाहते हैं"
-msgstr[1] "%s संकुल को संस्थापित करना चाहते हैं"
+#| msgid "%s requires an additional plugin for this operation"
+#| msgid_plural "%s requires additional plugins for this operation"
+msgid "%s requires additional software"
+msgstr "%s को अतिरिक्त सॉफ्टवेयर की जरूरत"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1254
-msgid "A program wants to install a package"
-msgid_plural "A program wants to install packages"
-msgstr[0] "एक प्रोग्राम संकुल को संस्थापित करना चाहते हैं"
-msgstr[1] "एक प्रोग्राम संकुल को संस्थापित करना चाहते हैं"
+#: ../src/gpk-dbus-task.c:1251
+msgid "An application requires additional software"
+msgstr "कोई अनुप्रयोग के लिए अतिरिक्त सॉफ्टवेयर की आवश्यकता है"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1271 ../src/gpk-dbus-task.c:2873
+#: ../src/gpk-dbus-task.c:1268 ../src/gpk-dbus-task.c:2870
 msgid "Searching for packages"
 msgstr "संकुल के लिए खोज रहा है"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1341
+#: ../src/gpk-dbus-task.c:1338
 msgid "Failed to find package"
 msgstr "संकुल ढ़ूँढ़ने में विफल"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1343 ../src/gpk-dbus-task.c:3013
+#: ../src/gpk-dbus-task.c:1340
 msgid "The file could not be found in any packages"
 msgstr "फाइल को किसी संकुल में नहीं पाया जा सका"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1381
+#: ../src/gpk-dbus-task.c:1378
 #, c-format
-msgid "The %s package already provides this file"
-msgstr "%s संकुल ने पहले ही यह फाइल दिया है"
+#| msgid "The %s package already provides this file"
+msgid "%s already provides this file"
+msgstr "%s ने पहले ही यह फाइल दिया है"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1462
+#: ../src/gpk-dbus-task.c:1459
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "निम्नलिखित फाइल जरूरी है:"
 msgstr[1] "निम्नलिखित फाइल जरूरी है:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1465
+#: ../src/gpk-dbus-task.c:1462
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "क्या आप इस फाइल के लिए अब खोजना चाहते हैं?"
 msgstr[1] "क्या आप इस फाइल के लिए अब खोजना चाहते हैं?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1470
+#: ../src/gpk-dbus-task.c:1467
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1244,7 +1240,7 @@ msgstr[0] "%s फाइल संस्थापित करना चाहत
 msgstr[1] "%s फाइल संस्थापित करना चाहते हैं"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1473
+#: ../src/gpk-dbus-task.c:1470
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "एक प्रोग्राम एक फाइल संस्थापित करना चाहता है"
@@ -1252,27 +1248,27 @@ msgstr[1] "एक प्रोग्राम एक फाइल संस्�
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1489 ../src/gpk-dbus-task.c:3116
+#: ../src/gpk-dbus-task.c:1486 ../src/gpk-dbus-task.c:3113
 #: ../src/gpk-enum.c:1312
 msgid "Searching for file"
 msgstr "फाइल के लिए खोज रहा है"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1532
+#: ../src/gpk-dbus-task.c:1529
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "निम्नलिखित प्लगिन जरूरी है"
 msgstr[1] "निम्नलिखित प्लगिन जरूरी है"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1550 ../src/gpk-dbus-task.c:2378
+#: ../src/gpk-dbus-task.c:1547 ../src/gpk-dbus-task.c:2375
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "क्या आप इसके लिए खोजना चाहते हैं?"
 msgstr[1] "क्या आप इसके लिए खोजना चाहते हैं?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1563
+#: ../src/gpk-dbus-task.c:1560
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1280,7 +1276,7 @@ msgstr[0] "%s को इस फाइल को डिकोड करने क
 msgstr[1] "%s को इस फाइल को डिकोड करने के लिए अतिरिक्त प्लगिनों की जरूरत"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1567
+#: ../src/gpk-dbus-task.c:1564
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1288,7 +1284,7 @@ msgstr[0] "%s को इस फाइल को एन्कोड करने 
 msgstr[1] "%s को इस फाइल को एन्कोड करने के लिए अतिरिक्त प्लगिन की जरूरत"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1571
+#: ../src/gpk-dbus-task.c:1568
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1296,94 +1292,94 @@ msgstr[0] "%s को इस संक्रिया के लिए अति�
 msgstr[1] "%s को इस संक्रिया के लिए अतिरिक्त प्लगिन की जरूरत"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1577
+#: ../src/gpk-dbus-task.c:1574
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] "प्रोग्राम को इस फाइल को डिकोड करने लिए अतिरिक्त प्लगिन की जरूरत"
 msgstr[1] "प्रोग्राम को इस फाइल को डिकोड करने लिए अतिरिक्त प्लगिन की जरूरत"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1581
+#: ../src/gpk-dbus-task.c:1578
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] "प्रोग्राम को इस फाइल के लिए अतिरिक्त प्लगिन की जरूरत"
 msgstr[1] "प्रोग्राम को इस फाइल के लिए अतिरिक्त प्लगिन की जरूरत"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1585
+#: ../src/gpk-dbus-task.c:1582
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "एक प्रोग्राम को इस संक्रिया के लिए अतिरिक्त प्लगिन की जरूरत"
 msgstr[1] "एक प्रोग्राम को इस संक्रिया के लिए अतिरिक्त प्लगिन की जरूरत"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1591 ../src/gpk-dbus-task.c:1944
-#: ../src/gpk-dbus-task.c:2317 ../src/gpk-dbus-task.c:2390
+#: ../src/gpk-dbus-task.c:1588 ../src/gpk-dbus-task.c:1941
+#: ../src/gpk-dbus-task.c:2314 ../src/gpk-dbus-task.c:2387
 msgid "Search"
 msgstr "ढूंढें"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1646
+#: ../src/gpk-dbus-task.c:1643
 msgid "Failed to search for plugin"
 msgstr "प्लगिन के लिए खोजने में विफल"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1648
+#: ../src/gpk-dbus-task.c:1645
 msgid "Could not find plugin in any configured software source"
 msgstr "किसी विन्यस्त सॉफ्टवेयर स्रोत में प्लगिन नहीं पा सका"
 
-#: ../src/gpk-dbus-task.c:1671 ../src/gpk-dbus-task.c:2469
+#: ../src/gpk-dbus-task.c:1668 ../src/gpk-dbus-task.c:2466
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "निम्नलिखित प्लगिन संस्थापित करें"
 msgstr[1] "निम्नलिखित प्लगिन संस्थापित करें"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1672 ../src/gpk-dbus-task.c:2133
-#: ../src/gpk-dbus-task.c:2470 ../src/gpk-dbus-task.c:2805
-msgid "Do you want to install this package now?"
-msgid_plural "Do you want to install these packages now?"
-msgstr[0] "क्या आप अब इस संकुल को संस्थापित करना चाहते हैं?"
-msgstr[1] "क्या आप अब इस संकुल को संस्थापित करना चाहते हैं?"
+#: ../src/gpk-dbus-task.c:1669 ../src/gpk-dbus-task.c:2130
+#: ../src/gpk-dbus-task.c:2467
+#| msgid "Do you want to install this package now?"
+#| msgid_plural "Do you want to install these packages now?"
+msgid "Do you want to install this software now?"
+msgstr "क्या आप अब इस सॉफ्टवेयर को संस्थापित करना चाहते हैं?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1764
+#: ../src/gpk-dbus-task.c:1761
 msgid "Searching for plugins"
 msgstr "प्लगिन के लिए खोजें"
 
-#: ../src/gpk-dbus-task.c:1785
+#: ../src/gpk-dbus-task.c:1782
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "प्लगिन के लिए खोज रहा है: %s"
 
 #. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1823
+#: ../src/gpk-dbus-task.c:1820
 msgid "Failed to search for provides"
 msgstr "देने के लिए खोजने में विफल"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1853
+#: ../src/gpk-dbus-task.c:1850
 msgid "Failed to find software"
 msgstr "सॉफ्टवेयर ढ़ूँढने में विफल"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1855
+#: ../src/gpk-dbus-task.c:1852
 msgid "No new applications can be found to handle this type of file"
 msgstr ""
 "कोई नया अनुप्रयोग ऐसी फाइल को नियंत्रित करने के लिए नहीं पाया जा सकता है"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1926
+#: ../src/gpk-dbus-task.c:1923
 msgid "An additional program is required to open this type of file:"
 msgstr "अतिरिक्त प्रोग्राम ऐसी फाइल खोलने के लिए जरूरी है:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1929
+#: ../src/gpk-dbus-task.c:1926
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "क्या आप अब एक प्रोग्राम खोजना चाहते हैं जो ऐसी फाइल खोलें?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1937
+#: ../src/gpk-dbus-task.c:1934
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1391,55 +1387,57 @@ msgstr[0] "%s को नई माइम प्रकार की जरूर�
 msgstr[1] "%s को नई माइम प्रकार की जरूरत"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1940
+#: ../src/gpk-dbus-task.c:1937
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "प्रोग्राम को नई माइम प्रकार की जरूरत"
 msgstr[1] "प्रोग्राम को नई माइम प्रकार की जरूरत"
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1955
+#: ../src/gpk-dbus-task.c:1952
 msgid "Searching for file handlers"
 msgstr "फाइल नियंत्रक के लिए खोज रहा है"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2034
+#: ../src/gpk-dbus-task.c:2031
 msgid "Language tag not parsed"
 msgstr "भाषा टैग विश्लेषित नहीं"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2042
+#: ../src/gpk-dbus-task.c:2039
 msgid "Language code not matched"
 msgstr "भाषा टैग मेल नहीं खाता है"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2102
+#: ../src/gpk-dbus-task.c:2099
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "फॉन्ट ढूंढने में विफल"
 msgstr[1] "फॉन्ट ढूंढने में विफल"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2110
+#: ../src/gpk-dbus-task.c:2107
 msgid "No new fonts can be found for this document"
 msgstr "इस दस्तावेज के लिए कोई नया फॉन्ट नहीं मिल सकता है"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2296
+#: ../src/gpk-dbus-task.c:2293
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] "एक अतिरिक्त फॉन्ट इस फाइल को सही रूप में देखने के लिए जरूरी है"
 msgstr[1] "एक अतिरिक्त फॉन्ट इस फाइल को सही रूप में देखने के लिए जरूरी है"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2300
-msgid "Do you want to search for a suitable package now?"
-msgid_plural "Do you want to search for suitable packages now?"
-msgstr[0] "क्या आप अब उपयुक्त संकुल के लिए खोजना चाहते हैं?"
-msgstr[1] "क्या आप अब उपयुक्त संकुल के लिए खोजना चाहते हैं?"
+#: ../src/gpk-dbus-task.c:2297
+#| msgid "Do you want to search for a suitable package now?"
+#| msgid_plural "Do you want to search for suitable packages now?"
+msgid "Do you want to search for a suitable font now?"
+msgid_plural "Do you want to search for suitable fonts now?"
+msgstr[0] "क्या आप अब एक उपयुक्त फ़ॉन्ट के लिए खोज करना चाहते हैं?"
+msgstr[1] "क्या आप अब एक उपयुक्त फ़ॉन्ट के लिए खोज करना चाहते हैं?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2310
+#: ../src/gpk-dbus-task.c:2307
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1447,108 +1445,123 @@ msgstr[0] "%s फ़ॉन्ट संस्थापित करना चा
 msgstr[1] "%s फ़ॉन्ट संस्थापित करना चाहते हैं"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2313
+#: ../src/gpk-dbus-task.c:2310
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "एक प्रोग्राम फॉन्ट संस्थापित करना चाहते है"
 msgstr[1] "एक प्रोग्राम फॉन्ट संस्थापित करना चाहते है"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2329
+#: ../src/gpk-dbus-task.c:2326
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "फॉन्ट के लिए खोज रहा है"
 msgstr[1] "फॉन्ट के लिए खोज रहा है"
 
 #. TRANSLATORS: we are listing the services in a box
-#: ../src/gpk-dbus-task.c:2366
+#: ../src/gpk-dbus-task.c:2363
 msgid "The following service is required:"
 msgid_plural "The following services are required:"
 msgstr[0] "निम्नलिखित सुविधा  जरूरी है:"
 msgstr[1] "निम्नलिखित सुविधा जरूरी है:"
 
-#: ../src/gpk-dbus-task.c:2386
+#: ../src/gpk-dbus-task.c:2383
 msgid "Plasma requires an additional service for this operation"
 msgid_plural "Plasma requires additional services for this operation"
 msgstr[0] "प्लाज्मा को इस संक्रिया के लिए अतिरिक्त सुविधा की जरूरत"
 msgstr[1] "प्लाज्मा को इस संक्रिया के लिए अतिरिक्त सुविधा की जरूरत"
 
-#: ../src/gpk-dbus-task.c:2444
+#: ../src/gpk-dbus-task.c:2441
 msgid "Failed to search for Plasma service"
 msgstr "प्लाज्मा सुविधा के लिए खोजने में विफल"
 
 #. TRANSLATORS: no software sources have the wanted Plasma service
-#: ../src/gpk-dbus-task.c:2446
+#: ../src/gpk-dbus-task.c:2443
 msgid "Could not find service in any configured software source"
 msgstr "किसी विन्यस्त सॉफ्टवेयर स्रोत में सुविधा नहीं पा सका"
 
 #. TRANSLATORS: search for Plasma services
-#: ../src/gpk-dbus-task.c:2552
+#: ../src/gpk-dbus-task.c:2549
 msgid "Searching for services"
 msgstr "सुविधा के लिए खोज रहा है"
 
-#: ../src/gpk-dbus-task.c:2571
+#: ../src/gpk-dbus-task.c:2568
 #, c-format
 msgid "Searching for service: %s"
 msgstr "सुविधा के लिए खोज रहा है: %s"
 
-#: ../src/gpk-dbus-task.c:2648
+#: ../src/gpk-dbus-task.c:2645
 msgid "Could not process catalog"
 msgstr "सूची को संसाधित नहीं किया जा सका"
 
-#: ../src/gpk-dbus-task.c:2666
+#: ../src/gpk-dbus-task.c:2663
 msgid "No packages need to be installed"
 msgstr "कोई संकुल को संस्थापित करने की जरूरत नहीं"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2685
+#: ../src/gpk-dbus-task.c:2682
 msgid "Install packages in catalog?"
 msgstr "कैटालाग में संकुलों को संस्थापित करें?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2687
+#: ../src/gpk-dbus-task.c:2684
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr ""
 "निम्नलिखित संकुल को कैटालाग से संस्थापित करने के लिए चिह्नित किया गया है:"
 
 #. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2727
+#: ../src/gpk-dbus-task.c:2724
 msgid "Failed to remove package"
 msgstr "संकुल हटाने में विफल"
 
-#: ../src/gpk-dbus-task.c:2804
+#: ../src/gpk-dbus-task.c:2801
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "निम्नलिखित ड्राईवर संस्थापित करें"
 msgstr[1] "निम्नलिखित ड्राईवर को संस्थापित करें"
 
+#: ../src/gpk-dbus-task.c:2802
+#| msgid "Do you want to install this file?"
+#| msgid_plural "Do you want to install these files?"
+msgid "Do you want to install this driver now?"
+msgid_plural "Do you want to install these drivers now?"
+msgstr[0] "क्या आप अब इस ड्राइवर स्थापित करने के लिए करना चाहते हैं?"
+msgstr[1] "क्या आप अब इस ड्राइवर स्थापित करने के लिए करना चाहते हैं?"
+
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2957 ../src/gpk-enum.c:948
+#: ../src/gpk-dbus-task.c:2954 ../src/gpk-enum.c:948
 msgid "Removing packages"
 msgstr "संकुल हटा रहा है"
 
 #. TRANSLATORS: failed to find the package for the file
-#: ../src/gpk-dbus-task.c:3011
-msgid "Failed to find package for this file"
-msgstr "फाइल के लिए संकुल ढ़ूँढ़ने में विफल"
+#: ../src/gpk-dbus-task.c:3008
+#| msgid "Failed to find software"
+msgid "Failed to find any software"
+msgstr "सॉफ्टवेयर ढ़ूँढने में विफल "
+
+#. TRANSLATORS: nothing found
+#: ../src/gpk-dbus-task.c:3010
+#| msgid "The file could not be found in any packages"
+msgid "The file could not be found in any available software"
+msgstr "फाइल को किसी सॉफ्टवेयर में नहीं पाया जा सका"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:3089
+#: ../src/gpk-dbus-task.c:3086
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "निम्नलिखित फ़ाइल को हटा दिया जाएगा:"
 msgstr[1] "निम्नलिखित फ़ाइलों को हटा दिया जाएगा:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:3092
+#: ../src/gpk-dbus-task.c:3089
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "क्या आप इस फाइल के लिए अब हटाना चाहते हैं?"
 msgstr[1] "क्या आप इस फाइल के लिए अब हटाना चाहते हैं?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:3097
+#: ../src/gpk-dbus-task.c:3094
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1556,26 +1569,26 @@ msgstr[0] "%s फ़ाइल को हटाना चाहते है"
 msgstr[1] "%s फाइलें को हटाना चाहते है"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:3100
+#: ../src/gpk-dbus-task.c:3097
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "कार्यक्रम फाइल को हटाना चाहते है"
 msgstr[1] "कार्यक्रम फाइलें को हटाना चाहते है"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:3104 ../src/gpk-task.c:409
+#: ../src/gpk-dbus-task.c:3101 ../src/gpk-task.c:409
 msgid "Remove"
 msgstr "हटाएं"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:3157
+#: ../src/gpk-dbus-task.c:3154
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "क्या आप इस कैटालाग को संस्थापित करना चाहते हैं?"
 msgstr[1] "क्या आप इस कैटालाग को संस्थापित करना चाहते हैं?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:3182
+#: ../src/gpk-dbus-task.c:3179
 msgid "Install catalogs"
 msgstr "कैटालाग संस्थापित करें"
 
@@ -1843,6 +1856,12 @@ msgstr "संकुल संस्थापित नहीं है"
 msgid "The package was not found"
 msgstr "संकुल नहीं मिला था"
 
+#: ../src/gpk-enum.c:328
+#| msgid "The package is already installed"
+#| msgid_plural "The packages are already installed"
+msgid "The package is already installed"
+msgstr "सॉफ्टवेयर पहले से संस्थापित है"
+
 #: ../src/gpk-enum.c:331
 msgid "The package download failed"
 msgstr "संकुल डाउनलोड विफल"
@@ -2065,12 +2084,10 @@ msgid "Rescheduled due to priority"
 msgstr "प्राथमिकता के कारण प्राथमिकता किया गया "
 
 #: ../src/gpk-enum.c:496
-#| msgid "Running the transaction failed"
 msgid "Unfinished transaction"
 msgstr "गैर समाप्त विनिमय"
 
 #: ../src/gpk-enum.c:499
-#| msgid "Got requires"
 msgid "Lock required"
 msgstr "लॉक जरूरी"
 
@@ -2390,8 +2407,8 @@ msgid ""
 "sources.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
-"जरूरी उन्नयन आंकड़ा किसी विन्यस्त सॉफ्टवेयर स्रोत के किसी पर नहीं पाया जा सका."
-"\n"
+"जरूरी उन्नयन आंकड़ा किसी विन्यस्त सॉफ्टवेयर स्रोत के किसी पर नहीं पाया जा "
+"सका.\n"
 "वितरण उन्नयन की सूची अनुपलब्ध होगी."
 
 #: ../src/gpk-enum.c:681
@@ -2525,7 +2542,6 @@ msgstr ""
 "है."
 
 #: ../src/gpk-enum.c:756
-#| msgid "A media change is required"
 msgid "A package manager lock is required."
 msgstr "संकुल प्रबंधक लॉक जरूरी है."
 
@@ -2688,6 +2704,11 @@ msgstr "सूचना पा रहा है"
 #: ../src/gpk-enum.c:952 ../src/gpk-enum.c:1384
 msgid "Downloading packages"
 msgstr "संकुल डाउनलोड कर रहा है"
+
+#. TRANSLATORS: transaction state, installing packages
+#: ../src/gpk-enum.c:956
+msgid "Installing packages"
+msgstr "संकुल संस्थापित कर रहा है"
 
 #. TRANSLATORS: transaction state, refreshing internal lists
 #: ../src/gpk-enum.c:960
@@ -3750,13 +3771,15 @@ msgstr "संकुल नाम संस्थापक"
 
 #. TRANSLATORS: failed
 #: ../src/gpk-install-package-name.c:80
-msgid "Failed to install package from name"
-msgstr "नाम से संकुल संस्थापित करने में विफल"
+#| msgid "Failed to install software"
+msgid "Failed to install software by name"
+msgstr "नाम से सॉफ्टवेयर स्थापित करने में विफल"
 
 #. TRANSLATORS: nothing was specified
 #: ../src/gpk-install-package-name.c:82
-msgid "You need to specify a package to install"
-msgstr "आपको एक संकुल को संस्थापित करने के लिए निर्दिष्ट करने की जरूरत है"
+#| msgid "You need to specify a file name to install"
+msgid "You need to specify the name of the software to install"
+msgstr "आप के लिए सॉफ्टवेयर का नाम निर्दिष्ट स्थापित करने की आवश्यकता है"
 
 #. TRANSLATORS: command line option: a list of files to install
 #: ../src/gpk-install-provide-file.c:51
@@ -3891,7 +3914,7 @@ msgid "Failed to get the list of sources"
 msgstr "स्रोतों की सूची पाने में विफल"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:720 ../src/gpk-update-viewer.c:3178
+#: ../src/gpk-prefs.c:720 ../src/gpk-update-viewer.c:3180
 msgid "Exiting as backend details could not be retrieved"
 msgstr "निकल रहा है क्योंकि बैकेंड विवरण वापस नहीं किया जा सकता है"
 
@@ -4162,16 +4185,16 @@ msgstr[0] "अद्यतन संस्थापित करें (_I)"
 msgstr[1] "अद्यतन संस्थापित करें (_I)"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1466
+#: ../src/gpk-update-viewer.c:1467
 msgid "All software is up to date"
 msgstr "सभी सॉफ्टवेयर अद्यतनीकृत हैं"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1468
+#: ../src/gpk-update-viewer.c:1469
 msgid "There are no software updates available for your computer at this time."
 msgstr "इस समय आपके कंप्यूटर के लिए कोई सॉफ्टवेयर अद्यतन उपलब्ध नहीं हैं:"
 
-#: ../src/gpk-update-viewer.c:1494
+#: ../src/gpk-update-viewer.c:1496
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -4179,7 +4202,7 @@ msgstr[0] "%i अद्यतन उपलब्ध है"
 msgstr[1] "%i अद्यतन उपलब्ध है"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1510
+#: ../src/gpk-update-viewer.c:1512
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -4187,7 +4210,7 @@ msgstr[0] "%i अद्यतन चयनित"
 msgstr[1] "%i अद्यतन चयनित"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1518
+#: ../src/gpk-update-viewer.c:1520
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -4195,51 +4218,51 @@ msgstr[0] "%i अद्यतन चयनित (%s)"
 msgstr[1] "%i अद्यतन चयनित (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1715
+#: ../src/gpk-update-viewer.c:1717
 msgid "Status"
 msgstr "स्थिति"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1975
+#: ../src/gpk-update-viewer.c:1977
 msgid "This update will add new features and expand functionality."
 msgstr "यह अद्यतन नए फीचर जोड़ेगा और कार्यशीलता में विस्तार लाएगा."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1979
+#: ../src/gpk-update-viewer.c:1981
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "यह अद्यतन बग और दूसरे गैर गंभीर समस्या ठीक करेगा."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1983
+#: ../src/gpk-update-viewer.c:1985
 msgid "This update is important as it may solve critical problems."
 msgstr ""
 "यह अद्यतन महत्वपूर्ण है क्योंकि यह गंभीर समस्याओं का समाधान कर सकता है."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1987
+#: ../src/gpk-update-viewer.c:1989
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr "यह अद्यतन इस संकुल के साथ सुरक्षा भेद्यता को ठीक करने के लिए जरूरी है."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1991
+#: ../src/gpk-update-viewer.c:1993
 msgid "This update is blocked."
 msgstr "यह अद्यतन रोका गया है."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:2003
+#: ../src/gpk-update-viewer.c:2005
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "यह सूचना %s पर निर्गत की गई थी और %s पर अंतिम बार अद्यतन की गई."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:2010
+#: ../src/gpk-update-viewer.c:2012
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "यह सूचना %s पर निर्गत की गई थी."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:2032 ../src/gpk-update-viewer.c:2056
+#: ../src/gpk-update-viewer.c:2034 ../src/gpk-update-viewer.c:2058
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4247,7 +4270,7 @@ msgstr[0] "इस अद्यतन के बारे में अधिक 
 msgstr[1] "इस अद्यतन के बारे में अधिक सूचना के लिए कृपया वेबसाइट देखें:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:2039 ../src/gpk-update-viewer.c:2064
+#: ../src/gpk-update-viewer.c:2041 ../src/gpk-update-viewer.c:2066
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4258,7 +4281,7 @@ msgstr[0] "बग फिक्स के बारे में अधिक स
 msgstr[1] "बग फिक्स के बारे में अधिक सूचना के लिए कृपया इस वेबसाइट को देखें:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2046 ../src/gpk-update-viewer.c:2072
+#: ../src/gpk-update-viewer.c:2048 ../src/gpk-update-viewer.c:2074
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4269,7 +4292,7 @@ msgstr[1] ""
 "इस सुरक्षा अद्यतन के बारे में अधिक सूचना के लिए इस वेबसाइट को देखें:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2081
+#: ../src/gpk-update-viewer.c:2083
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
@@ -4278,7 +4301,7 @@ msgstr ""
 "लिए."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2085
+#: ../src/gpk-update-viewer.c:2087
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4288,7 +4311,7 @@ msgstr ""
 "जरूरत होगी."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2092
+#: ../src/gpk-update-viewer.c:2094
 msgid ""
 "The classification of this update is unstable which means it is not designed "
 "for production use."
@@ -4298,7 +4321,7 @@ msgstr ""
 "किया गया है."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2096
+#: ../src/gpk-update-viewer.c:2098
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4308,80 +4331,82 @@ msgstr ""
 "समस्या रिपोर्ट करें या कोई निकासी जिसका आप सामना करते हैं."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2105
+#: ../src/gpk-update-viewer.c:2107
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr ""
 "डेवलेपर लॉग दिखाया जाएगा क्योंकि इस अद्यतन के लिए कोई विवरण उपलब्ध नहीं है:"
 
-#: ../src/gpk-update-viewer.c:2159
-msgid "Loading..."
-msgstr "लोड कर रहा है..."
+#: ../src/gpk-update-viewer.c:2161
+#| msgid "Loading..."
+msgid "Loading…"
+msgstr "लोड कर रहा है…"
 
-#: ../src/gpk-update-viewer.c:2162
+#: ../src/gpk-update-viewer.c:2164
 msgid "No update details available."
 msgstr "कोई संकुल अद्यतन उपलब्ध नहीं."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2194 ../src/gpk-update-viewer.c:2292
-#: ../src/gpk-update-viewer.c:2312
+#: ../src/gpk-update-viewer.c:2196 ../src/gpk-update-viewer.c:2294
+#: ../src/gpk-update-viewer.c:2314
 msgid "Could not get update details"
 msgstr "अद्यतन विवरण प्राप्त नहीं कर सका"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2214
+#: ../src/gpk-update-viewer.c:2216
 msgid "Could not get package details"
 msgstr "पैकेज विवरण प्राप्त नहीं कर सका"
 
-#: ../src/gpk-update-viewer.c:2214 ../src/gpk-update-viewer.c:2312
+#: ../src/gpk-update-viewer.c:2216 ../src/gpk-update-viewer.c:2314
 msgid "No results were returned."
 msgstr "कोई परिणाम नहीं वापस आ रहे थे."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2547
+#: ../src/gpk-update-viewer.c:2549
 msgid "Select all"
 msgstr "सबको चुनें"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2555
+#: ../src/gpk-update-viewer.c:2557
 msgid "Unselect all"
 msgstr "सभी विचयनित करें"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2562
+#: ../src/gpk-update-viewer.c:2564
 msgid "Select security updates"
 msgstr "सुरक्षा अद्यतन चुनें"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2568
+#: ../src/gpk-update-viewer.c:2570
 msgid "Ignore this update"
 msgstr "यह अद्यतन नजरअंदाज करें"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2679
+#: ../src/gpk-update-viewer.c:2681
 msgid "Could not get updates"
 msgstr "अद्यतन प्राप्त नहीं कर सका"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2832
-msgid "Checking for updates..."
-msgstr "अद्यतन के लिए जाँच रहा है..."
+#: ../src/gpk-update-viewer.c:2834
+#| msgid "Checking for updates..."
+msgid "Checking for updates…"
+msgstr "अद्यतन के लिए जाँच रहा है…"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3111
+#: ../src/gpk-update-viewer.c:3113
 msgid "Could not get list of distribution upgrades"
 msgstr "वितरण उन्नयन की सूची प्राप्त नहीं कर सका"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3141
+#: ../src/gpk-update-viewer.c:3143
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "नया वितरण उन्नयन रिलीज '%s' उपलब्ध है"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3391
+#: ../src/gpk-update-viewer.c:3393
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -4390,13 +4415,12 @@ msgstr ""
 "जरूरत के रूप में "
 "आयोजित की जाती हैं."
 
-#: ../src/gpk-update-viewer.c:3437
-#| msgid "Update System"
+#: ../src/gpk-update-viewer.c:3439
 msgid "Update Software"
 msgstr "सॉफ़्टवेयर अद्यतन करें"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3454
+#: ../src/gpk-update-viewer.c:3456
 msgid "Software Update Viewer"
 msgstr "सॉफ्टवेयर अद्यतन दर्शक"
 
@@ -4420,6 +4444,53 @@ msgstr "डिबगिंग विकल्प"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "डिबगिंग विकल्प दिखाएं"
+
+#~ msgid "No packages"
+#~ msgstr "कोई संकुल नहीं"
+
+#~ msgid "%i package requires %s"
+#~ msgid_plural "%i packages require %s"
+#~ msgstr[0] "%i संकुल के लिए %s जरूरत है"
+#~ msgstr[1] "%i संकुल के लिए %s जरूरत है"
+
+#~ msgid "Packages listed below are required for %s to function correctly."
+#~ msgid_plural ""
+#~ "Packages listed below are required for %s to function correctly."
+#~ msgstr[0] "नीचे सूचीबद्ध संकुल को ठीक से काम करने के लिए %s की जरूरत है."
+#~ msgstr[1] "नीचे सूचीबद्ध संकुल को ठीक से काम करने के लिए %s की जरूरत है."
+
+#~ msgid "Package Manager error details"
+#~ msgstr "संकुल प्रबंधक त्रुटि विवरण"
+
+#~ msgid "Failed to install package"
+#~ msgstr "संकुल संस्थापन में विफल"
+
+#~ msgid "Could not find packages"
+#~ msgstr "संकुल ढ़ूँढ़ नहीं सका"
+
+#~ msgid "An additional package is required:"
+#~ msgid_plural "Additional packages are required:"
+#~ msgstr[0] "एक अतिरिक्त संकुल जरूरी है:"
+#~ msgstr[1] "एक अतिरिक्त संकुल जरूरी है:"
+
+#~ msgid "%s wants to install a package"
+#~ msgid_plural "%s wants to install packages"
+#~ msgstr[0] "%s संकुल को संस्थापित करना चाहते हैं"
+#~ msgstr[1] "%s संकुल को संस्थापित करना चाहते हैं"
+
+#~ msgid "A program wants to install a package"
+#~ msgid_plural "A program wants to install packages"
+#~ msgstr[0] "एक प्रोग्राम संकुल को संस्थापित करना चाहते हैं"
+#~ msgstr[1] "एक प्रोग्राम संकुल को संस्थापित करना चाहते हैं"
+
+#~ msgid "Failed to find package for this file"
+#~ msgstr "फाइल के लिए संकुल ढ़ूँढ़ने में विफल"
+
+#~ msgid "Failed to install package from name"
+#~ msgstr "नाम से संकुल संस्थापित करने में विफल"
+
+#~ msgid "You need to specify a package to install"
+#~ msgstr "आपको एक संकुल को संस्थापित करने के लिए निर्दिष्ट करने की जरूरत है"
 
 #~ msgid "Add/Remove Software"
 #~ msgstr "सॉफ्टवेयर जोड़ें/हटायें"
@@ -4904,9 +4975,6 @@ msgstr "डिबगिंग विकल्प दिखाएं"
 #~ "Additional firmware is required to make hardware in this computer "
 #~ "function correctly."
 #~ msgstr "इस कंप्यूटर में हार्डवेयर बनाने के लिए अतिरिक्त फर्मवेयर जरूरी है."
-
-#~ msgid "Additional firmware required"
-#~ msgstr "अतिरिक्त फर्मवेयर जरूरी है"
 
 #~ msgid "Ignore devices"
 #~ msgstr "युक्ति नजरअंदाज करें"
