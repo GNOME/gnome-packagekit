@@ -776,43 +776,6 @@ gpk_package_entry_completion_new (void)
 	return completion;
 }
 
-/**
- * gpk_ignore_session_error:
- *
- * Returns true if the error is a remote exception where we canceled
- **/
-gboolean
-gpk_ignore_session_error (GError *error)
-{
-	gboolean ret = FALSE;
-	const gchar *name;
-
-	if (error == NULL)
-		goto out;
-	if (error->domain != DBUS_GERROR)
-		goto out;
-	if (error->code != DBUS_GERROR_REMOTE_EXCEPTION)
-		goto out;
-
-	/* use one of our local codes */
-	name = dbus_g_error_get_name (error);
-	if (name == NULL)
-		goto out;
-
-	if (g_str_has_prefix (name, "org.freedesktop.PackageKit.Modify.Cancelled")) {
-		ret = TRUE;
-		goto out;
-	}
-
-	/* DBus-glib hates us */
-	if (g_str_has_prefix (name, "Org.freedesktop.PackageKit.Modify.Cancelled")) {
-		ret = TRUE;
-		goto out;
-	}
-out:
-	return ret;
-}
-
 /***************************************************************************
  ***                          MAKE CHECK TESTS                           ***
  ***************************************************************************/
