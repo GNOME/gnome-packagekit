@@ -349,4 +349,3 @@ egg_console_kit_new (void)
 	console = g_object_new (EGG_TYPE_CONSOLE_KIT, NULL);
 	return EGG_CONSOLE_KIT (console);
 }
-

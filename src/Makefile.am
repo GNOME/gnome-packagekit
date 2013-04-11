@@ -270,8 +270,6 @@ noinst_PROGRAMS =					\
 
 gpk_self_test_SOURCES =					\
 	gpk-self-test.c					\
-	egg-test.h					\
-	egg-test.c					\
 	egg-string.c					\
 	egg-string.h					\
 	egg-markdown.c					\
@@ -319,7 +317,7 @@ gpk_self_test_LDADD =					\
 	$(SELFTEST_LIBS)				\
 	$(NULL)
 
-gpk_self_test_CFLAGS = -DEGG_TEST $(AM_CFLAGS)
+gpk_self_test_CFLAGS = $(AM_CFLAGS)
 
 TESTS = gpk-self-test
 endif

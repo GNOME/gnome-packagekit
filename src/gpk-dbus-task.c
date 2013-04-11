@@ -1984,7 +1984,7 @@ out:
 /**
  * gpk_dbus_task_font_tag_to_lang:
  **/
-static gchar *
+gchar *
 gpk_dbus_task_font_tag_to_lang (const gchar *tag)
 {
 	gchar *lang = NULL;
@@ -2030,7 +2030,7 @@ out:
 /**
  * gpk_dbus_task_font_tag_to_localised_name:
  **/
-static gchar *
+gchar *
 gpk_dbus_task_font_tag_to_localised_name (GpkDbusTask *dtask, const gchar *tag)
 {
 	gchar *lang;
@@ -3207,7 +3207,7 @@ out:
 /**
  * gpk_dbus_task_get_package_for_exec:
  **/
-static gchar *
+gchar *
 gpk_dbus_task_get_package_for_exec (GpkDbusTask *dtask, const gchar *exec)
 {
 	const gchar *package_id;
@@ -3261,7 +3261,7 @@ out:
 /**
  * gpk_dbus_task_path_is_trusted:
  **/
-static gboolean
+gboolean
 gpk_dbus_task_path_is_trusted (const gchar *exec)
 {
 	gboolean res = FALSE;
@@ -3486,131 +3486,3 @@ gpk_dbus_task_new (void)
 	dtask = g_object_new (GPK_TYPE_DBUS_TASK, NULL);
 	return GPK_DBUS_TASK (dtask);
 }
-
-/***************************************************************************
- ***                          MAKE CHECK TESTS                           ***
- ***************************************************************************/
-#ifdef EGG_TEST
-#include "egg-test.h"
-
-void
-gpk_dbus_task_test (gpointer data)
-{
-	EggTest *test = (EggTest *) data;
-	GpkDbusTask *dtask;
-	gchar *lang;
-	gchar *language;
-	gchar *package;
-	gboolean ret;
-#if 0
-	const gchar *fonts[] = { ":lang=mn", NULL };
-	GError *error;
-#endif
-
-	if (egg_test_start (test, "GpkChooser") == FALSE)
-		return;
-
-	/************************************************************/
-	egg_test_title (test, "get GpkDbusTask object");
-	dtask = gpk_dbus_task_new ();
-	if (dtask != NULL)
-		egg_test_success (test, NULL);
-	else
-		g_warning (NULL);
-
-	/************************************************************/
-	egg_test_title (test, "convert tag to lang");
-	lang = gpk_dbus_task_font_tag_to_lang (":lang=mn");
-	if (g_strcmp0 (lang, "mn") == 0)
-		egg_test_success (test, NULL);
-	else
-		g_warning ("lang '%s'", lang);
-	g_free (lang);
-
-	/************************************************************/
-	egg_test_title (test, "convert tag to language");
-	language = gpk_dbus_task_font_tag_to_localised_name (dtask, ":lang=mn");
-	if (g_strcmp0 (language, "Mongolian") == 0)
-		egg_test_success (test, NULL);
-	else
-		g_warning ("language '%s'", language);
-	g_free (language);
-
-	/************************************************************/
-	egg_test_title (test, "test trusted path");
-	ret = gpk_dbus_task_path_is_trusted ("/usr/libexec/gst-install-plugins-helper");
-	if (ret)
-		egg_test_success (test, NULL);
-	else
-		g_warning ("failed to identify trusted");
-
-	/************************************************************/
-	egg_test_title (test, "test trusted path");
-	ret = gpk_dbus_task_path_is_trusted ("/usr/bin/totem");
-	if (!ret)
-		egg_test_success (test, NULL);
-	else
-		g_warning ("identify untrusted as trusted!");
-
-	/************************************************************/
-	egg_test_title (test, "get package for exec");
-	package = gpk_dbus_task_get_package_for_exec (dtask, "/usr/bin/totem");
-	if (g_strcmp0 (package, "totem") == 0)
-		egg_test_success (test, NULL);
-	else
-		g_warning ("package '%s'", package);
-	g_free (package);
-
-	/************************************************************/
-	egg_test_title (test, "set exec");
-	ret = gpk_dbus_task_set_exec (dtask, "/usr/bin/totem");
-	if (ret)
-		egg_test_success (test, NULL);
-	else
-		g_warning ("failed to set exec");
-
-#if 0
-	/************************************************************/
-	egg_test_title (test, "install fonts (no UI)");
-	error = NULL;
-	gpk_dbus_task_set_interaction (dtask, GPK_CLIENT_INTERACT_NEVER);
-	ret = gpk_dbus_task_install_fontconfig_resources (dtask, (gchar**)fonts, &error);
-	if (ret)
-		egg_test_success (test, NULL);
-	else {
-		/* success until we can do the server parts */
-		egg_test_success (test, "failed to install font : %s", error->message);
-		g_error_free (error);
-	}
-
-	/************************************************************/
-	egg_test_title (test, "install fonts (if found)");
-	error = NULL;
-	gpk_dbus_task_set_interaction (dtask, pk_bitfield_from_enums (GPK_CLIENT_INTERACT_CONFIRM_SEARCH, GPK_CLIENT_INTERACT_FINISHED, -1));
-	ret = gpk_dbus_task_install_fontconfig_resources (dtask, (gchar**)fonts, &error);
-	if (ret)
-		egg_test_success (test, NULL);
-	else {
-		/* success until we can do the server parts */
-		egg_test_success (test, "failed to install font : %s", error->message);
-		g_error_free (error);
-	}
-
-	/************************************************************/
-	egg_test_title (test, "install fonts (always)");
-	error = NULL;
-	gpk_dbus_task_set_interaction (dtask, GPK_CLIENT_INTERACT_ALWAYS);
-	ret = gpk_dbus_task_install_fontconfig_resources (dtask, (gchar**)fonts, &error);
-	if (ret)
-		egg_test_success (test, NULL);
-	else {
-		/* success until we can do the server parts */
-		egg_test_success (test, "failed to install font : %s", error->message);
-		g_error_free (error);
-	}
-#endif
-
-	egg_test_end (test);
-}
-#endif
-

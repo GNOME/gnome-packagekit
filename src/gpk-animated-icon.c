@@ -117,7 +117,7 @@ gpk_animated_icon_set_filename_tile (GpkAnimatedIcon *icon, GtkIconSize size, co
 	pixbuf = gtk_icon_theme_load_icon (gtk_icon_theme_get_default (), name, w, 0, NULL);
 	/* can't load from gnome-icon-theme */
 	if (pixbuf == NULL) {
-		g_warning ("can't load %s", name);
+		g_debug ("can't load animation %s", name);
 		return FALSE;
 	}
 
@@ -303,4 +303,3 @@ gpk_animated_icon_new (void)
 {
 	return g_object_new (GPK_TYPE_ANIMATED_ICON, NULL);
 }
-

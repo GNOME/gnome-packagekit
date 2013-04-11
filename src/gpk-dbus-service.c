@@ -203,4 +203,3 @@ out:
 	g_object_unref (dbus);
 	return retval;
 }
-

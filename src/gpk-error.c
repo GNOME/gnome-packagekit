@@ -169,30 +169,3 @@ gpk_error_dialog (const gchar *title, const gchar *message, const gchar *details
 {
 	return gpk_error_dialog_modal (NULL, title, message, details);
 }
-
-/***************************************************************************
- ***                          MAKE CHECK TESTS                           ***
- ***************************************************************************/
-#ifdef EGG_TEST
-#include "egg-test.h"
-
-void
-gpk_error_test (EggTest *test)
-{
-	gboolean ret;
-
-	if (!egg_test_start (test, "GpkError"))
-		return;
-
-	/************************************************************/
-	egg_test_title (test, "do dialog");
-	ret = gpk_error_dialog ("No space is left on the disk",
-				"There is insufficient space on the device.\n"
-				"Free some space on the system disk to perform this operation.",
-				"[Errno 28] No space left on device");
-	egg_test_assert (test, ret);
-
-	egg_test_end (test);
-}
-#endif
-

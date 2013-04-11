@@ -152,6 +152,15 @@ gboolean	 gpk_dbus_task_set_xid			(GpkDbusTask	*dtask,
 gboolean	 gpk_dbus_task_set_exec			(GpkDbusTask	*dtask,
 							 const gchar	*exec);
 
+/* for self checks */
+gchar		*gpk_dbus_task_font_tag_to_localised_name (GpkDbusTask	*dtask,
+							 const gchar	*tag);
+gboolean	 gpk_dbus_task_path_is_trusted		(const gchar	*exec);
+gchar		*gpk_dbus_task_get_package_for_exec	(GpkDbusTask	*dtask,
+							 const gchar	*exec);
+gchar		*gpk_dbus_task_font_tag_to_lang		(const gchar	*tag);
+
+
 G_END_DECLS
 
 #endif /* __GPK_DBUS_TASK_H */

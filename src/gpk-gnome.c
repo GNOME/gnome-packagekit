@@ -80,4 +80,3 @@ gpk_gnome_help (const gchar *link_id)
 	g_free (uri);
 	return ret;
 }
-

@@ -599,32 +599,3 @@ gpk_dbus_new (void)
 	dbus = g_object_new (GPK_TYPE_DBUS, NULL);
 	return GPK_DBUS (dbus);
 }
-
-/***************************************************************************
- ***                          MAKE CHECK TESTS                           ***
- ***************************************************************************/
-#ifdef EGG_TEST
-#include "egg-test.h"
-
-void
-gpk_dbus_test (EggTest *test)
-{
-	GpkDbus *dbus = NULL;
-
-	if (!egg_test_start (test, "GpkDbus"))
-		return;
-
-	/************************************************************/
-	egg_test_title (test, "get GpkDbus object");
-	dbus = gpk_dbus_new ();
-	if (dbus != NULL)
-		egg_test_success (test, NULL);
-	else
-		egg_test_failed (test, NULL);
-
-	g_object_unref (dbus);
-
-	egg_test_end (test);
-}
-#endif
-
