@@ -108,15 +108,10 @@ main (int argc, char *argv[])
 	ret = dbus_g_proxy_call (proxy, "InstallMimeTypes", &error,
 				 G_TYPE_UINT, 0, /* xid */
 				 G_TYPE_STRV, types, /* data */
-				 G_TYPE_STRING, "hide-finished,hide-warnings", /* interaction */
+				 G_TYPE_STRING, "hide-finished,show-warnings", /* interaction */
 				 G_TYPE_INVALID,
 				 G_TYPE_INVALID);
-	if (!ret && !gpk_ignore_session_error (error)) {
-		/* TRANSLATORS: This is when the specified D-Bus method did not execute successfully */
-		gpk_error_dialog (_("The action could not be completed"),
-				  /* TRANSLATORS: we don't have anything more useful to translate. sorry. */
-				  _("The request failed. More details are available in the detailed report."),
-				  error->message);
+	if (!ret) {
 		g_warning ("%s", error->message);
 		goto out;
 	}

@@ -95,7 +95,6 @@ GtkEntryCompletion *gpk_package_entry_completion_new	(void);
 gboolean	 gpk_window_set_size_request		(GtkWindow	*window,
 							 guint		 width,
 							 guint		 height);
-gboolean	 gpk_ignore_session_error		(GError		*error);
 gboolean	 gpk_window_set_parent_xid		(GtkWindow	*window,
 							 guint32	 xid);
 GPtrArray	*pk_strv_to_ptr_array			(gchar		**array)
