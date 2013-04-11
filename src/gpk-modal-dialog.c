@@ -438,7 +438,7 @@ gpk_modal_dialog_set_remaining (GpkModalDialog *dialog, guint remaining)
 
 	/* get time text */
 	timestring = gpk_time_to_imprecise_string (remaining);
-	text = g_strdup_printf (_("Remaining time : %s"), timestring);
+	text = g_strdup_printf (_("Remaining time: %s"), timestring);
 	gtk_progress_bar_set_text (progress_bar, text);
 out:
 	g_free (timestring);
