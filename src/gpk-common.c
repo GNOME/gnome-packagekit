@@ -634,16 +634,20 @@ gpk_strv_join_locale (gchar **array)
 	if (length == 1)
 		return g_strdup (array[0]);
 	else if (length == 2)
+                /* Translators: a list of two things */
 		return g_strdup_printf (_("%s and %s"),
 					array[0], array[1]);
 	else if (length == 3)
+                /* Translators: a list of three things */
 		return g_strdup_printf (_("%s, %s and %s"),
 					array[0], array[1], array[2]);
 	else if (length == 4)
+                /* Translators: a list of four things */
 		return g_strdup_printf (_("%s, %s, %s and %s"),
 					array[0], array[1],
 					array[2], array[3]);
 	else if (length == 5)
+                /* Translators: a list of five things */
 		return g_strdup_printf (_("%s, %s, %s, %s and %s"),
 					array[0], array[1], array[2],
 					array[3], array[4]);
