@@ -80,22 +80,19 @@ gpk_dbus_error_quark (void)
 /**
  * gpk_dbus_error_get_type:
  **/
-#define ENUM_ENTRY(NAME, DESC) { NAME, "" #NAME "", DESC }
 GType
 gpk_dbus_error_get_type (void)
 {
 	static GType etype = 0;
 
 	if (etype == 0) {
-		static const GEnumValue values[] =
-		{
-			ENUM_ENTRY (GPK_DBUS_ERROR_FAILED, "Failed"),
-			ENUM_ENTRY (GPK_DBUS_ERROR_INTERNAL_ERROR, "InternalError"),
-			ENUM_ENTRY (GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "NoPackagesFound"),
-			ENUM_ENTRY (GPK_DBUS_ERROR_FORBIDDEN, "Forbidden"),
-			ENUM_ENTRY (GPK_DBUS_ERROR_CANCELLED, "Cancelled"),
-			{ 0, NULL, NULL }
-		};
+		guint i;
+		static GEnumValue values[PK_ERROR_ENUM_LAST];
+		for (i = 0; i < PK_ERROR_ENUM_LAST; i++) {
+			values[i].value = i;
+			values[i].value_name = pk_error_enum_to_string (i);
+			values[i].value_nick = pk_error_enum_to_string (i);
+		}
 		etype = g_enum_register_static ("GpkDbusError", values);
 	}
 	return etype;

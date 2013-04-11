@@ -234,7 +234,7 @@ gpk_dbus_task_chooser_event_cb (GpkHelperChooser *helper_chooser, GtkResponseTyp
 	if (type != GTK_RESPONSE_YES || package_id == NULL) {
 
 		/* failed */
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not choose anything to install");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not choose anything to install");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 
@@ -301,27 +301,34 @@ gpk_dbus_task_error_msg (GpkDbusTask *dtask, const gchar *title, GError *error)
 
 	/* print a proper error if we have it */
 	if (error != NULL) {
-		if (error->code == PK_CLIENT_ERROR_DECLINED_SIMULATION)
-			return;
-		if (error->code == PK_CLIENT_ERROR_FAILED_AUTH ||
-		    g_str_has_prefix (error->message, "org.freedesktop.packagekit.")) {
-			/* TRANSLATORS: failed authentication */
-			message = _("You don't have the necessary privileges to perform this action.");
-			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-permissions");
-		} else if (error->code == PK_CLIENT_ERROR_CANNOT_START_DAEMON) {
-			/* TRANSLATORS: could not start system service */
-			message = _("The software service could not be started.");
-			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-no-service");
-		} else if (error->code == PK_CLIENT_ERROR_INVALID_INPUT) {
-			/* TRANSLATORS: the user tried to query for something invalid */
-			message = _("The query is not valid.");
-			details = error->message;
-		} else if (error->code == PK_CLIENT_ERROR_INVALID_FILE) {
-			/* TRANSLATORS: the user tried to install a file that was not compatable or broken */
-			message = _("The file is not valid.");
-			details = error->message;
+		if (error->domain == GPK_DBUS_ERROR) {
+			message = gpk_error_enum_to_localised_message (error->code);
 		} else {
-			details = error->message;
+			switch (error->code) {
+			case PK_CLIENT_ERROR_FAILED_AUTH:
+				/* TRANSLATORS: failed authentication */
+				message = _("You don't have the necessary privileges to perform this action.");
+				gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-permissions");
+				break;
+			case PK_CLIENT_ERROR_CANNOT_START_DAEMON:
+				/* TRANSLATORS: could not start system service */
+				message = _("The software service could not be started.");
+				gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-no-service");
+				break;
+			case PK_CLIENT_ERROR_INVALID_INPUT:
+				/* TRANSLATORS: the user tried to query for something invalid */
+				message = _("The query is not valid.");
+				details = error->message;
+				break;
+			case PK_CLIENT_ERROR_INVALID_FILE:
+				/* TRANSLATORS: the user tried to install a file that was not compatable or broken */
+				message = _("The file is not valid.");
+				details = error->message;
+				break;
+			default:
+				details = error->message;
+				break;
+			}
 		}
 	}
 
@@ -396,7 +403,7 @@ gpk_dbus_task_handle_error (GpkDbusTask *dtask, PkError *error_code)
 static gint
 gpk_dbus_task_get_code_from_gerror (const GError *error)
 {
-	gint code = GPK_DBUS_ERROR_INTERNAL_ERROR;
+	gint code = PK_ERROR_ENUM_INTERNAL_ERROR;
 
 	/* already correct */
 	if (error->domain == GPK_DBUS_ERROR) {
@@ -410,25 +417,31 @@ gpk_dbus_task_get_code_from_gerror (const GError *error)
 		goto out;
 	}
 
-	/* standard return codes */
+	/* PkError codes */
+	if (error->code > 0xff) {
+		code = error->code - 0xff;
+		goto out;
+	}
+
+	/* map return codes to PkError codes */
 	switch (error->code) {
 	case PK_CLIENT_ERROR_NO_TID:
 	case PK_CLIENT_ERROR_ALREADY_TID:
 	case PK_CLIENT_ERROR_ROLE_UNKNOWN:
 	case PK_CLIENT_ERROR_CANNOT_START_DAEMON:
 	case PK_CLIENT_ERROR_NOT_SUPPORTED:
-		code = GPK_DBUS_ERROR_INTERNAL_ERROR;
+		code = PK_ERROR_ENUM_INTERNAL_ERROR;
 		break;
 	case PK_CLIENT_ERROR_INVALID_INPUT:
 	case PK_CLIENT_ERROR_INVALID_FILE:
 	case PK_CLIENT_ERROR_FAILED:
-		code = GPK_DBUS_ERROR_FAILED;
+		code = PK_ERROR_ENUM_UNKNOWN;
 		break;
 	case PK_CLIENT_ERROR_DECLINED_SIMULATION:
-		code = GPK_DBUS_ERROR_CANCELLED;
+		code = PK_ERROR_ENUM_TRANSACTION_CANCELLED;
 		break;
 	case PK_CLIENT_ERROR_FAILED_AUTH:
-		code = GPK_DBUS_ERROR_FORBIDDEN;
+		code = PK_ERROR_ENUM_NOT_AUTHORIZED;
 		break;
 	default:
 		break;
@@ -443,11 +456,11 @@ out:
 static gint
 gpk_dbus_task_get_code_from_pkerror (PkError *error_code)
 {
-	gint code = GPK_DBUS_ERROR_FAILED;
+	gint code = PK_ERROR_ENUM_UNKNOWN;
 
 	switch (pk_error_get_code (error_code)) {
 	case PK_ERROR_ENUM_TRANSACTION_CANCELLED:
-		code = GPK_DBUS_ERROR_CANCELLED;
+		code = PK_ERROR_ENUM_TRANSACTION_CANCELLED;
 		break;
 	default:
 		break;
@@ -470,8 +483,8 @@ gpk_dbus_task_install_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask 
 	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
 		/* TRANSLATORS: error: failed to install, detailed error follows */
-		gpk_dbus_task_error_msg (dtask, _("Failed to install software"), error);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_gerror (error), "%s", error->message);
+		gpk_dbus_task_error_msg (dtask, _("Failed to install software"), error_dbus);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
 		g_error_free (error_dbus);
@@ -611,8 +624,8 @@ gpk_dbus_task_install_files_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *dt
 		/* TRANSLATORS: error: failed to install, detailed error follows */
 		length = g_strv_length (dtask->priv->files);
 		title = ngettext ("Failed to install file", "Failed to install files", length);
-		gpk_dbus_task_error_msg (dtask, title, error);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_gerror (error), "%s", error->message);
+		gpk_dbus_task_error_msg (dtask, title, error_dbus);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
 		g_error_free (error_dbus);
@@ -716,7 +729,7 @@ gpk_dbus_task_install_package_files_verify (GpkDbusTask *dtask, GPtrArray *array
 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
-		g_set_error_literal (error, GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "Aborted");
+		g_set_error_literal (error, GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "Aborted");
 		ret = FALSE;
 		goto out;
 	}
@@ -921,7 +934,7 @@ gpk_dbus_task_search_file_search_file_cb (PkClient *client, GAsyncResult *res, G
 	array = pk_results_get_package_array (results);
 	if (array->len == 0) {
 		g_warning ("no packages");
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "failed to find any packages");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_UNKNOWN, "failed to find any packages");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1111,7 +1124,7 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 			g_free (info_url);
 			g_free (title);
 		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "no package found");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_PACKAGE_NOT_FOUND, "no package found");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1146,7 +1159,7 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 			gpk_modal_dialog_present (dtask->priv->dialog);
 			gpk_modal_dialog_run (dtask->priv->dialog);
 		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "package already found");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_UNKNOWN, "package already found");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1163,7 +1176,7 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 			gpk_modal_dialog_present (dtask->priv->dialog);
 			gpk_modal_dialog_run (dtask->priv->dialog);
 		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "incorrect response from search");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_UNKNOWN, "incorrect response from search");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1256,7 +1269,7 @@ gpk_dbus_task_install_package_names (GpkDbusTask *dtask, gchar **packages, GpkDb
 	g_free (text);
 	g_free (message);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to search");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1347,7 +1360,7 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 				gpk_gnome_open (info_url);
 			g_free (info_url);
 		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "no files found");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_PACKAGE_NOT_FOUND, "no files found");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1385,7 +1398,7 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 			g_free (text);
 			g_strfreev (split);
 		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "already provided");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_UNKNOWN, "already provided");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1475,7 +1488,7 @@ gpk_dbus_task_install_provide_files (GpkDbusTask *dtask, gchar **full_paths, Gpk
 	g_free (text);
 	g_free (message);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to search");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1653,7 +1666,7 @@ gpk_dbus_task_codec_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDb
 				gpk_gnome_open (info_url);
 			g_free (info_url);
 		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "failed to find codec");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_PACKAGE_NOT_FOUND, "failed to find codec");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1681,7 +1694,7 @@ gpk_dbus_task_codec_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDb
 	/* close, we're going to fail the method */
 	if (button != GTK_RESPONSE_OK) {
 		gpk_modal_dialog_close (dtask->priv->dialog);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to download");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to download");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1734,7 +1747,7 @@ gpk_dbus_task_install_gstreamer_resources (GpkDbusTask *dtask, gchar **codec_nam
 	/* check it's not session wide banned */
 	ret = g_settings_get_boolean (dtask->priv->settings, GPK_SETTINGS_ENABLE_CODEC_HELPER);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "not enabled in GSettings : %s", GPK_SETTINGS_ENABLE_CODEC_HELPER);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_NOT_AUTHORIZED, "not enabled in GSettings : %s", GPK_SETTINGS_ENABLE_CODEC_HELPER);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1749,7 +1762,7 @@ gpk_dbus_task_install_gstreamer_resources (GpkDbusTask *dtask, gchar **codec_nam
 	/* confirm */
 	ret = gpk_dbus_task_install_gstreamer_resources_confirm (dtask, codec_names);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to search");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1817,8 +1830,8 @@ gpk_dbus_task_mime_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDbu
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
-		gpk_dbus_task_error_msg (dtask, _("Failed to search for provides"), error);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_gerror (error), "failed to search for provides: %s", error->message);
+		gpk_dbus_task_error_msg (dtask, _("Failed to search for provides"), error_dbus);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
 		g_error_free (error_dbus);
@@ -1859,7 +1872,7 @@ gpk_dbus_task_mime_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDbu
 				gpk_gnome_open (info_url);
 			g_free (info_url);
 		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "nothing was found to handle mime type");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_PACKAGE_NOT_FOUND, "nothing was found to handle mime type");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1905,7 +1918,7 @@ gpk_dbus_task_install_mime_types (GpkDbusTask *dtask, gchar **mime_types, GpkDbu
 	/* check it's not session wide banned */
 	ret = g_settings_get_boolean (dtask->priv->settings, GPK_SETTINGS_ENABLE_MIME_TYPE_HELPER);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "not enabled in GSettings : %s", GPK_SETTINGS_ENABLE_MIME_TYPE_HELPER);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_NOT_AUTHORIZED, "not enabled in GSettings : %s", GPK_SETTINGS_ENABLE_MIME_TYPE_HELPER);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -1940,7 +1953,7 @@ gpk_dbus_task_install_mime_types (GpkDbusTask *dtask, gchar **mime_types, GpkDbu
 	/* TRANSLATORS: button: confirm to search for packages */
 	ret = gpk_dbus_task_confirm_action (dtask, text, message, _("Search"));
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to search");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -2069,8 +2082,8 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
 		/* TRANSLATORS: we failed to find the package, this shouldn't happen */
-//		gpk_dbus_task_error_msg (dtask, _("Failed to search for provides"), error);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_gerror (error), "failed to search for provides: %s", error->message);
+//		gpk_dbus_task_error_msg (dtask, _("Failed to search for provides"), error_dbus);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
 		g_error_free (error_dbus);
@@ -2114,7 +2127,7 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 				gpk_gnome_open (info_url);
 			g_free (info_url);
 		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "failed to find font");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_PACKAGE_NOT_FOUND, "failed to find font");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -2141,7 +2154,7 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 	/* close, we're going to fail the method */
 	if (button != GTK_RESPONSE_OK) {
 		gpk_modal_dialog_close (dtask->priv->dialog);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to download");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to download");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -2229,7 +2242,7 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts, G
 	/* if this program banned? */
 	ret = gpk_dbus_task_install_check_exec_ignored (dtask);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "skipping ignored program: %s", dtask->priv->exec);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_NOT_AUTHORIZED, "skipping ignored program: %s", dtask->priv->exec);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -2241,7 +2254,7 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts, G
 	/* check it's not session wide banned */
 	ret = g_settings_get_boolean (dtask->priv->settings, GPK_SETTINGS_ENABLE_FONT_HELPER);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FORBIDDEN, "not enabled in GSettings : %s", GPK_SETTINGS_ENABLE_FONT_HELPER);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_NOT_AUTHORIZED, "not enabled in GSettings : %s", GPK_SETTINGS_ENABLE_FONT_HELPER);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -2257,7 +2270,7 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts, G
 	for (i=0; i<len; i++) {
 		/* correct prefix */
 		if (!g_str_has_prefix (fonts[i], ":lang=")) {
-			error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "not recognized prefix: '%s'", fonts[i]);
+			error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_INTERNAL_ERROR, "not recognized prefix: '%s'", fonts[i]);
 			gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 			g_error_free (error_dbus);
 			goto out;
@@ -2265,7 +2278,7 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts, G
 		/* no lang code */
 		size = strlen (fonts[i]);
 		if (size < 7 || size > 20) {
-			error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "lang tag malformed: '%s'", fonts[i]);
+			error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_INTERNAL_ERROR, "lang tag malformed: '%s'", fonts[i]);
 			gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 			g_error_free (error_dbus);
 			goto out;
@@ -2315,7 +2328,7 @@ gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask, gchar **fonts, G
 	g_free (text);
 	g_free (message);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to search");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -2451,7 +2464,7 @@ gpk_dbus_task_plasma_service_what_provides_cb (PkClient *client, GAsyncResult *r
 				gpk_gnome_open (info_url);
 			g_free (info_url);
 		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "failed to find Plasma service");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_PACKAGE_NOT_FOUND, "failed to find Plasma service");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -2479,7 +2492,7 @@ gpk_dbus_task_plasma_service_what_provides_cb (PkClient *client, GAsyncResult *r
 	/* close, we're going to fail the method */
 	if (button != GTK_RESPONSE_OK) {
 		gpk_modal_dialog_close (dtask->priv->dialog);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to download");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to download");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -2537,7 +2550,7 @@ gpk_dbus_task_install_plasma_resources (GpkDbusTask *dtask, gchar **service_name
 	/* confirm */
 	ret = gpk_dbus_task_install_plasma_resources_confirm (dtask, service_names);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to search");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -2617,7 +2630,7 @@ gpk_dbus_task_install_resources (GpkDbusTask *dtask, PkProvidesEnum type, gchar 
 			gpk_dbus_task_install_plasma_resources (dtask, resources, finished_cb, userdata);
 			break;
 		default:
-			error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "Unsupported resource type");
+			error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_UNKNOWN, "Unsupported resource type");
 			gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 			g_error_free (error_dbus);
 			break;
@@ -2647,7 +2660,7 @@ gpk_dbus_task_catalog_lookup_cb (GObject *object, GAsyncResult *res, GpkDbusTask
 			gpk_modal_dialog_present_with_time (dtask->priv->dialog, dtask->priv->timestamp);
 			gpk_modal_dialog_run (dtask->priv->dialog);
 		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "failed to parse catalog: %s", error->message);
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_UNKNOWN, "failed to parse catalog: %s", error->message);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
 		g_error_free (error_dbus);
@@ -2665,7 +2678,7 @@ gpk_dbus_task_catalog_lookup_cb (GObject *object, GAsyncResult *res, GpkDbusTask
 			gpk_modal_dialog_present_with_time (dtask->priv->dialog, dtask->priv->timestamp);
 			gpk_modal_dialog_run (dtask->priv->dialog);
 		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_FAILED, "No packages need to be installed");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_UNKNOWN, "No packages need to be installed");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -2691,7 +2704,7 @@ gpk_dbus_task_catalog_lookup_cb (GObject *object, GAsyncResult *res, GpkDbusTask
 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "Action was canceled");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "Action was canceled");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -2721,8 +2734,8 @@ gpk_dbus_task_remove_packages_cb (PkTask *task, GAsyncResult *res, GpkDbusTask *
 	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
 		/* TRANSLATORS: error: failed to remove, detailed error follows */
-		gpk_dbus_task_error_msg (dtask, _("Failed to remove package"), error);
 		error_dbus = g_error_new (GPK_DBUS_ERROR, gpk_dbus_task_get_code_from_gerror (error), "failed to remove package: %s", error->message);
+		gpk_dbus_task_error_msg (dtask, _("Failed to remove package"), error_dbus);
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error);
 		g_error_free (error_dbus);
@@ -2814,7 +2827,7 @@ gpk_dbus_task_printer_driver_what_provides_cb (PkClient *client, GAsyncResult *r
 	/* close, we're going to fail the method */
 	if (button != GTK_RESPONSE_OK) {
 		gpk_modal_dialog_close (dtask->priv->dialog);
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to download");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to download");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -3013,7 +3026,7 @@ gpk_dbus_task_remove_package_by_file_search_file_cb (PkClient *client, GAsyncRes
 			gpk_modal_dialog_present (dtask->priv->dialog);
 			gpk_modal_dialog_run (dtask->priv->dialog);
 		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_NO_PACKAGES_FOUND, "no packages found for this file");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_PACKAGE_NOT_FOUND, "no packages found for this file");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -3102,7 +3115,7 @@ gpk_dbus_task_remove_package_by_file (GpkDbusTask *dtask, gchar **full_paths, Gp
 	g_free (text);
 	g_free (message);
 	if (!ret) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to search");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to search");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -3167,7 +3180,7 @@ gpk_dbus_task_install_catalogs (GpkDbusTask *dtask, gchar **filenames, GpkDbusTa
 
 	/* did we click no or exit the window? */
 	if (button != GTK_RESPONSE_OK) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_CANCELLED, "did not agree to install");
+		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to install");
 		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
 		g_error_free (error_dbus);
 		goto out;
@@ -3432,7 +3445,7 @@ gpk_dbus_task_finalize (GObject *object)
 
 	/* no reply was sent */
 	if (dtask->priv->context != NULL) {
-		error = g_error_new (GPK_DBUS_ERROR, GPK_DBUS_ERROR_INTERNAL_ERROR, "context never was returned");
+		error = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_INTERNAL_ERROR, "context never was returned");
 		gpk_dbus_task_dbus_return_error (dtask, error);
 		g_error_free (error);
 	}

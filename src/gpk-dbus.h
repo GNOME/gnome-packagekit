@@ -49,16 +49,6 @@ typedef struct
 	GObjectClass	parent_class;
 } GpkDbusClass;
 
-typedef enum
-{
-	GPK_DBUS_ERROR_FAILED,
-	GPK_DBUS_ERROR_INTERNAL_ERROR,
-	GPK_DBUS_ERROR_NO_PACKAGES_FOUND,
-	GPK_DBUS_ERROR_FORBIDDEN,
-	GPK_DBUS_ERROR_CANCELLED,
-	GPK_DBUS_ERROR_LAST
-} GpkDbusError;
-
 GQuark		 gpk_dbus_error_quark			(void);
 GType		 gpk_dbus_error_get_type		(void);
 GType		 gpk_dbus_get_type			(void);
