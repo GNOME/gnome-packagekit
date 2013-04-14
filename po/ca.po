@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-03-17 09:50+0000\n"
-"PO-Revision-Date: 2013-03-13 22:19+0100\n"
+"POT-Creation-Date: 2013-04-13 16:41+0000\n"
+"PO-Revision-Date: 2013-04-14 14:14+0200\n"
 "Last-Translator: Gil Forcada <gilforcada@guifi.net>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -252,87 +252,95 @@ msgstr ""
 "Actualitzacions;Millores;Fonts;Dipòsits;Preferències;Instal·lació;Botiga;"
 
 #: ../data/gpk-application.ui.h:2
+msgid "Apply Changes"
+msgstr "Aplica els canvis"
+
+#: ../data/gpk-application.ui.h:3
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr ""
 "Els canvis no s'apliquen immediatament, aquest botó aplica tots els canvis"
 
-#: ../data/gpk-application.ui.h:3
+#: ../data/gpk-application.ui.h:4
+msgid "Clear"
+msgstr "Neteja"
+
+#: ../data/gpk-application.ui.h:5
 msgid "Clear current selection"
 msgstr "Neteja la selecció actual"
 
-#: ../data/gpk-application.ui.h:4
+#: ../data/gpk-application.ui.h:6
 msgid "Cancel search"
 msgstr "Cancel·la la cerca"
 
-#: ../data/gpk-application.ui.h:5
+#: ../data/gpk-application.ui.h:7
 msgid "Licence"
 msgstr "Llicència"
 
-#: ../data/gpk-application.ui.h:6
+#: ../data/gpk-application.ui.h:8
 msgid "Source"
 msgstr "Font"
 
-#: ../data/gpk-application.ui.h:7 ../data/gpk-client.ui.h:1
+#: ../data/gpk-application.ui.h:9 ../data/gpk-client.ui.h:1
 msgid "Install Package"
 msgstr "Instal·la el paquet"
 
-#: ../data/gpk-application.ui.h:8
+#: ../data/gpk-application.ui.h:10
 msgid "Remove Package"
 msgstr "Suprimeix el paquet"
 
-#: ../data/gpk-application.ui.h:9
+#: ../data/gpk-application.ui.h:11
 msgid "Visit home page for selected package"
 msgstr "Visita la pàgina d'inici del paquet seleccionat"
 
-#: ../data/gpk-application.ui.h:10
+#: ../data/gpk-application.ui.h:12
 msgid "Visit Project Website"
 msgstr "Visita el lloc web del projecte"
 
-#: ../data/gpk-application.ui.h:11
+#: ../data/gpk-application.ui.h:13
 msgid "Files"
 msgstr "Fitxers"
 
-#: ../data/gpk-application.ui.h:12
+#: ../data/gpk-application.ui.h:14
 msgid "Required Packages"
 msgstr "Paquets necessaris"
 
-#: ../data/gpk-application.ui.h:13
+#: ../data/gpk-application.ui.h:15
 msgid "Dependent Packages"
 msgstr "Paquets dependents"
 
-#: ../data/gpk-application.ui.h:14
+#: ../data/gpk-application.ui.h:16
 msgid "Check for Updates"
 msgstr "Comprova si hi ha actualitzacions"
 
-#: ../data/gpk-application.ui.h:15 ../data/gpk-prefs.ui.h:12
+#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.ui.h:12
 msgid "Software Sources"
 msgstr "Fonts de programari"
 
-#: ../data/gpk-application.ui.h:16
+#: ../data/gpk-application.ui.h:18
 msgid "Refresh Package Lists"
 msgstr "Actualitza les llistes de paquets"
 
-#: ../data/gpk-application.ui.h:17
+#: ../data/gpk-application.ui.h:19
 msgid "Software Log"
 msgstr "Registre de programari"
 
-#: ../data/gpk-application.ui.h:18
+#: ../data/gpk-application.ui.h:20
 msgid "Only Newest Versions"
 msgstr "Només les versions més noves"
 
-#: ../data/gpk-application.ui.h:19
+#: ../data/gpk-application.ui.h:21
 msgid "Only Native Packages"
 msgstr "Només els paquets nadius"
 
-#: ../data/gpk-application.ui.h:20
+#: ../data/gpk-application.ui.h:22
 msgid "Help"
 msgstr "Ajuda"
 
-#: ../data/gpk-application.ui.h:21
+#: ../data/gpk-application.ui.h:23
 msgid "About Software Install"
 msgstr "Quant a l'instal·la programari"
 
-#: ../data/gpk-application.ui.h:22
+#: ../data/gpk-application.ui.h:24
 msgid "_Quit"
 msgstr "_Surt"
 
@@ -879,17 +887,17 @@ msgid "Show all packages"
 msgstr "Mostra tots els paquets"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3536 ../src/gpk-update-viewer.c:3424
+#: ../src/gpk-application.c:3535 ../src/gpk-update-viewer.c:3424
 msgid "Show the program version and exit"
 msgstr "Mostra la versió del programa i surt"
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3550 ../src/gpk-log.c:498
+#: ../src/gpk-application.c:3549 ../src/gpk-log.c:498
 msgid "Install Software"
 msgstr "Instal·la programari"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3566
+#: ../src/gpk-application.c:3565
 msgid "Package installer"
 msgstr "Instal·lador de paquets"
 
@@ -990,22 +998,26 @@ msgid_plural "hours"
 msgstr[0] "hora"
 msgstr[1] "hores"
 
-#: ../src/gpk-common.c:637
+#. Translators: a list of two things
+#: ../src/gpk-common.c:638
 #, c-format
 msgid "%s and %s"
 msgstr "%s i %s"
 
-#: ../src/gpk-common.c:640
+#. Translators: a list of three things
+#: ../src/gpk-common.c:642
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s i %s"
 
-#: ../src/gpk-common.c:643
+#. Translators: a list of four things
+#: ../src/gpk-common.c:646
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s i %s"
 
-#: ../src/gpk-common.c:647
+#. Translators: a list of five things
+#: ../src/gpk-common.c:651
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s i %s"
@@ -4408,679 +4420,3 @@ msgstr "Opcions de depuració"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Mostra les opcions de depuració"
-
-#~ msgid "No packages"
-#~ msgstr "No hi ha cap paquet"
-
-#~ msgid "%i package requires %s"
-#~ msgid_plural "%i packages require %s"
-#~ msgstr[0] "%i paquet requereix %s"
-#~ msgstr[1] "%i paquets requereixen %s"
-
-#~ msgid "Packages listed below are required for %s to function correctly."
-#~ msgid_plural ""
-#~ "Packages listed below are required for %s to function correctly."
-#~ msgstr[0] ""
-#~ "Es necessiten els paquets d'aquí sota perquè %s funcioni correctament."
-#~ msgstr[1] ""
-#~ "Es necessiten els paquets d'aquí sota perquè %s funcionin correctament."
-
-#~ msgid "Package Manager error details"
-#~ msgstr "Detalls de l'errada del gestor de paquets"
-
-#~ msgid "Failed to install package"
-#~ msgstr "No s'ha pogut instal·lar el paquet"
-
-#~ msgid "Could not find packages"
-#~ msgstr "No s'ha pogut trobar cap paquet"
-
-#~ msgid "An additional package is required:"
-#~ msgid_plural "Additional packages are required:"
-#~ msgstr[0] "Es necessita un altre paquet:"
-#~ msgstr[1] "Es necessiten altres paquets:"
-
-#~ msgid "%s wants to install a package"
-#~ msgid_plural "%s wants to install packages"
-#~ msgstr[0] "El %s vol instal·lar un paquet"
-#~ msgstr[1] "El %s vol instal·lar uns paquets"
-
-#~ msgid "A program wants to install a package"
-#~ msgid_plural "A program wants to install packages"
-#~ msgstr[0] "Un programa vol instal·lar un paquet"
-#~ msgstr[1] "Un programa vol instal·lar uns paquets"
-
-#~ msgid "Failed to find package for this file"
-#~ msgstr "No s'ha pogut trobar el paquet per aquest fitxer"
-
-#~ msgid "Failed to install package from name"
-#~ msgstr "No s'ha pogut instal·lar un paquet a partir del nom"
-
-#~ msgid "You need to specify a package to install"
-#~ msgstr "Heu d'especificar un paquet per instal·lar"
-
-#~ msgid "Add/Remove Software"
-#~ msgstr "Afegeix/Suprimeix programari"
-
-#~ msgid "_System"
-#~ msgstr "_Sistema"
-
-#~ msgid "View previously added or removed software"
-#~ msgstr "Mostra el programari afegit o suprimit anteriorment"
-
-#~ msgid "Edit list of software sources"
-#~ msgstr "Edita la llista de fonts de programari"
-
-#~ msgid "Refresh the list of packages on the system"
-#~ msgstr "Actualitza la llista de paquets del sistema"
-
-#~ msgid "_Filters"
-#~ msgstr "_Filtres"
-
-#~ msgid "_Installed"
-#~ msgstr "_Instal·lat"
-
-#~ msgid "Only _Installed"
-#~ msgstr "Només els _instal·lats"
-
-#~ msgid "Only _Available"
-#~ msgstr "Només els _disponibles"
-
-#~ msgid "_No Filter"
-#~ msgstr "_Cap filtre"
-
-#~ msgid "_Development"
-#~ msgstr "_Desenvolupament"
-
-#~ msgid "Only _Development"
-#~ msgstr "Només els de desen_volupament"
-
-#~ msgid "Only _End User Files"
-#~ msgstr "Només fitxers d'_usuari final"
-
-#~ msgid "_Graphical"
-#~ msgstr "_Gràfic"
-
-#~ msgid "Only _Graphical"
-#~ msgstr "Només els d'interfície _gràfica"
-
-#~ msgid "Only _Text"
-#~ msgstr "Només els de _text"
-
-#~ msgid "_Free"
-#~ msgstr "_Lliure"
-
-#~ msgid "_Only Free Software"
-#~ msgstr "Només _programari lliure"
-
-#~ msgid "Only _Non-Free Software"
-#~ msgstr "Només el programari no _lliure"
-
-#~ msgid "_Source"
-#~ msgstr "_Font"
-
-#~ msgid "_Only Source Code"
-#~ msgstr "_Només codi font"
-
-#~ msgid "Only _Non-Source Code"
-#~ msgstr "Només els que no contenen codi _font"
-
-#~ msgid "Only show one package, not subpackages"
-#~ msgstr "Mostra només un paquet i no els subpaquets"
-
-#~ msgid "_Hide Subpackages"
-#~ msgstr "_Oculta els subpaquets"
-
-#~ msgid "Only show the newest available package"
-#~ msgstr "Mostra només el paquet disponible més nou"
-
-#~ msgid "Only show packages matching the machine architecture"
-#~ msgstr ""
-#~ "Mostra només els paquets que coincideixen amb l'arquitectura de la màquina"
-
-#~ msgid "S_election"
-#~ msgstr "_Selecció"
-
-#~ msgid "Project homepage"
-#~ msgstr "Pàgina inicial del projecte"
-
-#~ msgid "Execute graphical applications"
-#~ msgstr "Executa aplicacions gràfiques"
-
-#~ msgid "Run program"
-#~ msgstr "Executa el programa"
-
-#~ msgid "Get file list"
-#~ msgstr "Obtén la llista de fitxers"
-
-#~ msgid "Depends on"
-#~ msgstr "Depèn de"
-
-#~ msgid "Required by"
-#~ msgstr "El necessita"
-
-#~ msgid "_Contents"
-#~ msgstr "_Continguts"
-
-#~ msgid "Help with this software"
-#~ msgstr "Ajuda sobre aquest programari"
-
-#~ msgid "About this software"
-#~ msgstr "Quant a aquest programari"
-
-#~ msgid "Fi_nd"
-#~ msgstr "_Cerca"
-
-#~ msgid "_Automatically install:"
-#~ msgstr "Instal·la _automàticament:"
-
-#~ msgid "Type"
-#~ msgstr "Tipus"
-
-#~ msgid "Collection"
-#~ msgstr "Col·lecció"
-
-#~ msgid "Visit %s"
-#~ msgstr "Visita %s"
-
-#~ msgid "Project"
-#~ msgstr "Projecte"
-
-#~ msgid "Homepage"
-#~ msgstr "Pàgina inicial"
-
-#~ msgid "Group"
-#~ msgstr "Grup"
-
-#~ msgid "Selected packages"
-#~ msgstr "Paquets seleccionats"
-
-#~ msgid "Text"
-#~ msgstr "Text"
-
-#~ msgid ""
-#~ "Enter a search word and then click find, or click a group to get started."
-#~ msgstr ""
-#~ "Introduïu una paraula de cerca i després feu clic a cerca, o feu clic a "
-#~ "un grup per començar."
-
-#~ msgid "Find packages"
-#~ msgstr "Cerca paquets"
-
-#~ msgid "Unsupported daemon version."
-#~ msgstr "La versió del dimoni és massa vella."
-
-#~ msgid "An untrusted package was installed"
-#~ msgstr "S'ha instal·lat un paquet que no és de confiança"
-
-#~ msgid "Rolling back"
-#~ msgstr "S'està desfent"
-
-#~ msgid "Updating system"
-#~ msgstr "S'està actualitzant el sistema"
-
-#~ msgid "Simulating the install of files"
-#~ msgstr "S'està simulant la instal·lació de fitxers"
-
-#~ msgid "Simulating the install"
-#~ msgstr "S'està simulant la instal·lació"
-
-#~ msgid "Simulating the remove"
-#~ msgstr "S'està simulant la supressió"
-
-#~ msgid "Simulating the update"
-#~ msgstr "S'està simulant l'actualització"
-
-#~ msgid "Simulating the system repair"
-#~ msgstr "S'està simulant la reparació del sistema"
-
-#~ msgid "Updated system"
-#~ msgstr "S'ha actualitzat el sistema"
-
-#~ msgid "Rolled back"
-#~ msgstr "S'ha desfet"
-
-#~ msgid "Simulated the install of files"
-#~ msgstr "S'ha simulat la instal·lació de fitxers"
-
-#~ msgid "Simulated the install"
-#~ msgstr "S'ha simulat la instal·lació"
-
-#~ msgid "Simulated the remove"
-#~ msgstr "S'ha simulat la supressió"
-
-#~ msgid "Simulated the update"
-#~ msgstr "S'ha simulat l'actualització"
-
-#~ msgid "Simulated the system repair"
-#~ msgstr "S'ha simulat la reparació del sistema"
-
-#~ msgid "Cancelling"
-#~ msgstr "S'està cancel·lant"
-
-#~ msgid "You need to specify a filename to install"
-#~ msgstr "Heu d'especificar un nom de fitxer per instal·lar"
-
-#~ msgid "Software Updates"
-#~ msgstr "Actualitzacions de programari"
-
-#~ msgid "_Install Update(s)"
-#~ msgstr "_Instal·la les actualitzacions"
-
-#~ msgid "Menu"
-#~ msgstr "Menú"
-
-#~ msgid "Applications"
-#~ msgstr "Aplicacions"
-
-#~ msgctxt "Main menu"
-#~ msgid "System"
-#~ msgstr "Sistema"
-
-#~ msgid "Preferences"
-#~ msgstr "Preferències"
-
-#~ msgid "Administration"
-#~ msgstr "Administració"
-
-#~ msgid "Package Installer"
-#~ msgstr "Instal·lador de paquets"
-
-#~ msgid "Ask the user if additional firmware should be installed"
-#~ msgstr ""
-#~ "Pregunta a l'usuari si s'hauria d'instal·lar algun microprogramari més"
-
-#~ msgid "Ask the user if additional hardware drivers should be installed"
-#~ msgstr ""
-#~ "Pregunta a l'usuari si s'hauria d'instal·lar algun controlador de "
-#~ "maquinari més"
-
-#~ msgid "Automatically update these types of updates"
-#~ msgstr "Actualitza automàticament aquest tipus d'actualitzacions"
-
-#~ msgid ""
-#~ "Automatically update these types of updates. Options are \"all\", "
-#~ "\"security\", or \"none\""
-#~ msgstr ""
-#~ "Actualitza automàticament aquest tipus d'actualitzacions. Les opcions "
-#~ "són: «all» (totes), «security» (de seguretat) o «none» (cap)"
-
-#~ msgid "Devices that should be ignored"
-#~ msgstr "Dispositius que s'haurien d'ignorar"
-
-#~ msgid ""
-#~ "Devices that should be ignored, separated by commas. These can include "
-#~ "'*' and '?' characters"
-#~ msgstr ""
-#~ "Dispositius que s'haurien d'ignorar, separats per coma. Poden incloure "
-#~ "els caràcters «*» i «?»"
-
-#~ msgid "Firmware files that should not be searched for"
-#~ msgstr "Fitxers de microprogramari que no s'haurien de cercar"
-
-#~ msgid ""
-#~ "Firmware files that should not be searched for, separated by commas. "
-#~ "These can include '*' and '?' characters"
-#~ msgstr ""
-#~ "Fitxers de microprogramari que no s'haurien de cercar, separats per coma. "
-#~ "Poden contenir els caràcters «*» i «?»"
-
-#~ msgid "GTK+ module for font installation"
-#~ msgstr "Mòdul del GTK+ per a la instal·lació de tipus de lletra"
-
-#~ msgid "Get the update list when the session starts"
-#~ msgstr "Aconsegueix la llista d'actualitzacions en iniciar la sessió"
-
-#~ msgid ""
-#~ "Get the update list when the session starts, even if not scheduled to. "
-#~ "This ensures the user has up to date and valid data in the tray at "
-#~ "startup."
-#~ msgstr ""
-#~ "Aconsegueix la llista d'actualitzacions en iniciar la sessió, encara que "
-#~ "no estigui en la planificació. Amb això es garanteix que l'usuari tingui "
-#~ "dades actualitzades en la safata del sistema en iniciar."
-
-#~ msgid "How often to check for distribution upgrades"
-#~ msgstr ""
-#~ "Cada quan s'ha de comprovar si hi ha actualitzacions de la distribució"
-
-#~ msgid "How often to check for distribution upgrades. Value is in seconds."
-#~ msgstr ""
-#~ "Cada quan s'ha de comprovar si hi ha actualitzacions de la distribució. "
-#~ "El valor s'ha d'expressar en segons."
-
-#~ msgid "How often to check for updates"
-#~ msgstr "Cada quan s'ha de comprovar si hi ha actualitzacions"
-
-#~ msgid "How often to check for updates. Value is in seconds."
-#~ msgstr ""
-#~ "Cada quan s'ha de comprovar si hi ha actualitzacions. El valor s'ha "
-#~ "d'expressar en segons."
-
-#~ msgid "How often to refresh the package cache"
-#~ msgstr "Cada quan s'ha d'actualitzar la memòria cau dels paquets"
-
-#~ msgid "How often to refresh the package cache. Value is in seconds."
-#~ msgstr ""
-#~ "Cada quan s'ha d'actualitzar la memòria cau dels paquets. El valor s'ha "
-#~ "d'expressar en segons."
-
-#~ msgid "Install updates automatically when running on battery power"
-#~ msgstr ""
-#~ "Instal·la automàticament les actualitzacions quan s'estigui en bateria"
-
-#~ msgid "Interaction modes that must be used, overriding requests from client"
-#~ msgstr ""
-#~ "Modes d'interacció que s'han d'utilitzar, sobreescrivint les sol·licituds "
-#~ "del client"
-
-#~ msgid "Interaction modes to use by default"
-#~ msgstr "Modes d'interacció predeterminats"
-
-#~ msgid "Messages that should be ignored"
-#~ msgstr "Missatges que s'haurien d'ignorar"
-
-#~ msgid ""
-#~ "Messages that should be ignored, separated by commas. These can include "
-#~ "'*' and '?' characters"
-#~ msgstr ""
-#~ "Missatges que s'haurien d'ignorar, separats per coma. Poden incloure els "
-#~ "caràcters «*» i «?»"
-
-#~ msgid "Notify the user for completed updates"
-#~ msgstr "Notifica a l'usuari quan s'hagi completat una actualització"
-
-#~ msgid ""
-#~ "Notify the user for completed updates where the user needs to restart"
-#~ msgstr ""
-#~ "Notifica a l'usuari quan s'hagi completat una actualització que requereix "
-#~ "reiniciar"
-
-#~ msgid "Notify the user when a task is complete"
-#~ msgstr "Notifica a l'usuari quan s'hagi completat una tasca"
-
-#~ msgid "Notify the user when an update has failed"
-#~ msgstr "Notifica a l'usuari quan s'hagi produït un error en una tasca"
-
-#~ msgid "Notify the user when distribution upgrades are available"
-#~ msgstr "Notifica a l'usuari quan hi ha actualitzacions de la distribució"
-
-#~ msgid "Notify the user when security updates are available"
-#~ msgstr "Notifica a l'usuari quan hi ha actualitzacions de seguretat"
-
-#~ msgid ""
-#~ "Notify the user when the automatic update was not started on battery power"
-#~ msgstr ""
-#~ "Notifica a l'usuari quan no s'ha iniciat una actualització automàtica ja "
-#~ "que s'està en bateria"
-
-#~ msgid ""
-#~ "Notify the user when the update was not automatically started while "
-#~ "running on battery power"
-#~ msgstr ""
-#~ "Notifica a l'usuari quan no s'ha iniciat una actualització automàtica ja "
-#~ "que s'està en bateria"
-
-#~ msgid "Notify the user when the update was started"
-#~ msgstr "Notifica a l'usuari quan s'hagi iniciat l'actualització"
-
-#~ msgid "Notify the user when there are errors"
-#~ msgstr "Notifica a l'usuari quan hi ha hagi errades"
-
-#~ msgid "Notify the user when there are messages"
-#~ msgstr "Notifica a l'usuari quan hi hagi missatges"
-
-#~ msgid "Notify the user when there are messages from the package manager"
-#~ msgstr "Notifica a l'usuari quan hi hagi missatges del gestor de paquets"
-
-#~ msgid "Notify the user when updates are available"
-#~ msgstr "Notifica a l'usuari quan hi ha actualitzacions disponibles"
-
-#~ msgid ""
-#~ "Show the transaction progress icon in the tray when the original "
-#~ "application is still running."
-#~ msgstr ""
-#~ "Mostra la icona de progressió de la transacció a la safata del sistema "
-#~ "quan l'aplicació que ha sol·licitat l'acció encara s'estigui executant."
-
-#~ msgid "Show transactions that have the original application running"
-#~ msgstr ""
-#~ "Mostra les transaccions que mantenen l'aplicació original executant-se"
-
-#~ msgid ""
-#~ "The number of seconds at session startup to wait before checking for "
-#~ "updates"
-#~ msgstr ""
-#~ "El nombre de segons que s'esperaran després d'iniciar la sessió per "
-#~ "comprovar si hi ha actualitzacions"
-
-#~ msgid ""
-#~ "This key determines if applications should be able to prompt for fonts"
-#~ msgstr ""
-#~ "Aquesta clau determina si les aplicacions poden preguntar pels tipus de "
-#~ "lletra"
-
-#~ msgid "Use WiFi (wireless LAN) connections to check for updates"
-#~ msgstr ""
-#~ "Utilitza connexions wi-fi (LAN sense fil) per comprovar si hi ha "
-#~ "actualitzacions"
-
-#~ msgid "Use WiFi connections"
-#~ msgstr "Utilitza connexions wi-fi"
-
-#~ msgid "Use mobile broadband connections"
-#~ msgstr "Utilitza connexions de banda ampla mòbil"
-
-#~ msgid ""
-#~ "Use mobile broadband connections such as GSM and CDMA to check for updates"
-#~ msgstr ""
-#~ "Utilitza connexions de banda ampla mòbil com GSM i CDMA per comprovar si "
-#~ "hi ha actualitzacions"
-
-#~ msgid "Backend Status"
-#~ msgstr "Estat del rerefons"
-
-#~ msgid "Backend author:"
-#~ msgstr "Autor del rerefons:"
-
-#~ msgid "Backend name:"
-#~ msgstr "Nom del rerefons:"
-
-#~ msgid "Enable or disable software sources"
-#~ msgstr "Habilita o inhabilita les fonts de programari"
-
-#~ msgid "Shows more software sources that may be interesting"
-#~ msgstr "Mostra més fonts de programari que em puguin interessar"
-
-#~ msgid "PackageKit Update Applet"
-#~ msgstr "Miniaplicació d'actualitzacions del PackageKit"
-
-#~ msgid "Failed to show url"
-#~ msgstr "No s'ha pogut mostrar l'URL"
-
-#~ msgid "PackageKit Backend Details Viewer"
-#~ msgstr "Visualitzador dels detalls del rerefons del PackageKit"
-
-#~ msgid "_Preferences"
-#~ msgstr "_Preferències"
-
-#~ msgid "_About"
-#~ msgstr "_Quant a"
-
-#~ msgid "One package was skipped:"
-#~ msgid_plural "Some packages were skipped:"
-#~ msgstr[0] "S'ha omès un paquet:"
-#~ msgstr[1] "S'han omès alguns paquets:"
-
-#~ msgid "The system update has completed"
-#~ msgstr "S'ha completat l'actualització del sistema"
-
-#~ msgid "Restart computer now"
-#~ msgstr "Reinicia l'ordinador ara"
-
-#~ msgid "GNOME PackageKit Update Icon"
-#~ msgstr "Icona d'actualització del PackageKit del GNOME"
-
-#~ msgid "Security update available"
-#~ msgid_plural "Security updates available"
-#~ msgstr[0] "Actualització de seguretat disponible"
-#~ msgstr[1] "Actualitzacions de seguretat disponibles"
-
-#~ msgid "An important update is available for your computer:"
-#~ msgid_plural "Important updates are available for your computer:"
-#~ msgstr[0] "Hi ha una actualització important disponible:"
-#~ msgstr[1] "Hi ha actualitzacions importants disponibles:"
-
-#~ msgid "Install updates"
-#~ msgstr "Instal·la les actualitzacions"
-
-#~ msgid ""
-#~ "Automatic updates are not being installed as the computer is running on "
-#~ "battery power"
-#~ msgstr ""
-#~ "No s'estan instal·lant les actualitzacions automàtiques atès que s'està "
-#~ "en bateria"
-
-#~ msgid "Updates not installed"
-#~ msgstr "Actualitzacions no instal·lades"
-
-#~ msgid "Install the updates anyway"
-#~ msgstr "Instal·la les actualitzacions de totes maneres"
-
-#~ msgid "Updates are being installed"
-#~ msgstr "S'estan instal·lant les actualitzacions"
-
-#~ msgid "Updates are being automatically installed on your computer"
-#~ msgstr "S'estan instal·lant les actualitzacions automàticament"
-
-#~ msgid "Cancel update"
-#~ msgstr "Cancel·la l'actualització"
-
-#~ msgid "There is %d update available"
-#~ msgid_plural "There are %d updates available"
-#~ msgstr[0] "Hi ha %d actualització disponibles"
-#~ msgstr[1] "Hi ha %d actualitzacions disponibles"
-
-#~ msgid "Update available (on battery)"
-#~ msgstr "Actualització disponible (en bateria)"
-
-#~ msgid "Failed to install packages"
-#~ msgstr "No s'han pogut instal·lar els paquets"
-
-#~ msgid "Additional software was installed"
-#~ msgstr "S'ha instal·lat programari addicional"
-
-#~ msgid ""
-#~ "You will need to remove and then reinsert the hardware before it will "
-#~ "work correctly."
-#~ msgstr ""
-#~ "Heu de treure i tornar a inserir el maquinari perquè funcioni "
-#~ "correctament."
-
-#~ msgid "Your hardware has been set up and is now ready to use."
-#~ msgstr "S'ha configurat el maquinari i ja està llest per utilitzar-se."
-
-#~ msgid ""
-#~ "Additional firmware is required to make hardware in this computer "
-#~ "function correctly."
-#~ msgstr ""
-#~ "Es necessita un microprogramari addicional perquè funcioni correctament "
-#~ "el maquinari d'aquest ordinador."
-
-#~ msgid "Ignore devices"
-#~ msgstr "Ignora els dispositius"
-
-#~ msgid "Additional packages can be installed to support this hardware"
-#~ msgstr "Es poden instal·lar més paquets per gestionar aquest maquinari"
-
-#~ msgid "New hardware attached"
-#~ msgstr "S'ha connectat maquinari nou"
-
-#~ msgid "A transaction that cannot be interrupted is running"
-#~ msgstr "S'està fent una transacció que no es pot interrompre"
-
-#~ msgid "Software Source Viewer"
-#~ msgstr "Visualitzador de fonts de programari"
-
-#~ msgid "Software source viewer"
-#~ msgstr "Visualitzador de fonts de programari"
-
-#~ msgid "Exit after a small delay"
-#~ msgstr "Surt després d'una petita espera"
-
-#~ msgid "Update Applet"
-#~ msgstr "Miniaplicació d'actualització"
-
-#~ msgid "Update applet"
-#~ msgstr "Miniaplicació d'actualització"
-
-#~ msgid "GNOME PackageKit Update Viewer"
-#~ msgstr "Visualitzador d'actualitzacions PackageKit del GNOME"
-
-#~ msgid "Failed to update"
-#~ msgstr "Error en l'actualització"
-
-#~ msgid "This is due to the %s package being updated."
-#~ msgid_plural "This is due to the following packages being updated: %s."
-#~ msgstr[0] "És degut a que s'està actualitzant el paquet %s."
-#~ msgstr[1] "És degut a que s'estan actualitzant els paquets següents: %s."
-
-#~ msgid "This is because %i package has been updated."
-#~ msgid_plural "This is because %i packages have been updated."
-#~ msgstr[0] "Es deu a que s'ha actualitzat %i paquet."
-#~ msgstr[1] "Es deu a que s'han actualitzat %i paquets."
-
-#~ msgid "Package manager error details"
-#~ msgstr "Detalls de l'errada del gestor de paquets"
-
-#~ msgid "Internal error"
-#~ msgstr "Error intern"
-
-#~ msgid "_Log out"
-#~ msgstr "_Surt"
-
-#~ msgid "_Restart computer"
-#~ msgstr "_Reinicia l'ordinador"
-
-#~ msgid "_Hide this icon"
-#~ msgstr "_Oculta aquesta icona"
-
-#~ msgid "Package Manager"
-#~ msgstr "Gestor de paquets"
-
-#~ msgid "Packages have been removed"
-#~ msgstr "S'han suprimit els paquets"
-
-#~ msgid "Packages have been installed"
-#~ msgstr "S'han instal·lat els paquets"
-
-#~ msgid "System has been updated"
-#~ msgstr "S'ha actualitzat el sistema"
-
-#~ msgid "Task completed"
-#~ msgstr "Tasca completada"
-
-#~ msgid "Debug these specific modules"
-#~ msgstr "Depura aquests mòduls en concret"
-
-#~ msgid "Debug these specific functions"
-#~ msgstr "Depura aquestes funcions en concret"
-
-#~ msgid "Log debugging data to a file"
-#~ msgstr "Registra les dades de depuració en un fitxer"
-
-#~ msgid "%i message from the package manager"
-#~ msgid_plural "%i messages from the package manager"
-#~ msgstr[0] "Hi ha %i missatge del gestor de paquets"
-#~ msgstr[1] "Hi ha %i missatges del gestor de paquets"
-
-#~ msgid "Package Manager Messages"
-#~ msgstr "Missatges del gestor de paquets"
-
-#~ msgid "Message"
-#~ msgstr "Missatge"
-
-#~ msgid "_Show messages"
-#~ msgstr "_Mostra els missatges"
-
-#~ msgid "New package manager message"
-#~ msgstr "Nou missatge del gestor de paquets"
