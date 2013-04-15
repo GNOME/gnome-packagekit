@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-03-07 12:06+0100\n"
-"PO-Revision-Date: 2013-03-07 12:07+0200\n"
+"POT-Creation-Date: 2013-04-15 10:31+0200\n"
+"PO-Revision-Date: 2013-04-15 10:31+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: gnome-l10n-gl@gnome.org\n"
 "Language: gl\n"
@@ -251,88 +251,96 @@ msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
 msgstr "Actualizacións;Anovar;Orixes;Repositorios;Preferenzas;Instalar;Tenda;"
 
 #: ../data/gpk-application.ui.h:2
+msgid "Apply Changes"
+msgstr "Aplicar cambios"
+
+#: ../data/gpk-application.ui.h:3
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr ""
 "Os cambios non se aplican instantaneamente, este botón aplica todos os "
 "cambios"
 
-#: ../data/gpk-application.ui.h:3
+#: ../data/gpk-application.ui.h:4
+msgid "Clear"
+msgstr "Limpar"
+
+#: ../data/gpk-application.ui.h:5
 msgid "Clear current selection"
 msgstr "Limpar a selección actual"
 
-#: ../data/gpk-application.ui.h:4
+#: ../data/gpk-application.ui.h:6
 msgid "Cancel search"
 msgstr "Cancelar a busca"
 
-#: ../data/gpk-application.ui.h:5
+#: ../data/gpk-application.ui.h:7
 msgid "Licence"
 msgstr "Licenza"
 
-#: ../data/gpk-application.ui.h:6
+#: ../data/gpk-application.ui.h:8
 msgid "Source"
 msgstr "Código fonte"
 
-#: ../data/gpk-application.ui.h:7 ../data/gpk-client.ui.h:1
+#: ../data/gpk-application.ui.h:9 ../data/gpk-client.ui.h:1
 msgid "Install Package"
 msgstr "Instalar paquete"
 
-#: ../data/gpk-application.ui.h:8
+#: ../data/gpk-application.ui.h:10
 msgid "Remove Package"
 msgstr "Desinstalar paquete"
 
-#: ../data/gpk-application.ui.h:9
+#: ../data/gpk-application.ui.h:11
 msgid "Visit home page for selected package"
 msgstr "Visite a páxina principal para o paquete seleccionado"
 
-#: ../data/gpk-application.ui.h:10
+#: ../data/gpk-application.ui.h:12
 msgid "Visit Project Website"
 msgstr "Visitar a páxina web do proxecto"
 
-#: ../data/gpk-application.ui.h:11
+#: ../data/gpk-application.ui.h:13
 msgid "Files"
 msgstr "Ficheiros"
 
-#: ../data/gpk-application.ui.h:12
+#: ../data/gpk-application.ui.h:14
 msgid "Required Packages"
 msgstr "Paquetes requiridos"
 
-#: ../data/gpk-application.ui.h:13
+#: ../data/gpk-application.ui.h:15
 msgid "Dependent Packages"
 msgstr "Paquetes dependentes"
 
-#: ../data/gpk-application.ui.h:14
+#: ../data/gpk-application.ui.h:16
 msgid "Check for Updates"
 msgstr "Comprobar se hai actualizacións"
 
-#: ../data/gpk-application.ui.h:15 ../data/gpk-prefs.ui.h:12
+#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.ui.h:12
 msgid "Software Sources"
 msgstr "Fontes de software"
 
-#: ../data/gpk-application.ui.h:16
+#: ../data/gpk-application.ui.h:18
 msgid "Refresh Package Lists"
 msgstr "Actualizar a lista de paquetes"
 
-#: ../data/gpk-application.ui.h:17
+#: ../data/gpk-application.ui.h:19
 msgid "Software Log"
 msgstr "Rexistro de Software"
 
-#: ../data/gpk-application.ui.h:18
+#: ../data/gpk-application.ui.h:20
 msgid "Only Newest Versions"
 msgstr "Só versións novas"
 
-#: ../data/gpk-application.ui.h:19
+#: ../data/gpk-application.ui.h:21
 msgid "Only Native Packages"
 msgstr "Só paquetes nativos"
 
-#: ../data/gpk-application.ui.h:20
+#: ../data/gpk-application.ui.h:22
 msgid "Help"
 msgstr "Axuda"
 
-#: ../data/gpk-application.ui.h:21
+#: ../data/gpk-application.ui.h:23
 msgid "About Software Install"
 msgstr "Sobre o Instalador de software"
 
-#: ../data/gpk-application.ui.h:22
+#: ../data/gpk-application.ui.h:24
 msgid "_Quit"
 msgstr "_Saír"
 
@@ -885,17 +893,17 @@ msgid "Show all packages"
 msgstr "Mostrar todos os paquetes"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3536 ../src/gpk-update-viewer.c:3424
+#: ../src/gpk-application.c:3535 ../src/gpk-update-viewer.c:3424
 msgid "Show the program version and exit"
 msgstr "Mostrar a versión do programa e saír"
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3550 ../src/gpk-log.c:498
+#: ../src/gpk-application.c:3549 ../src/gpk-log.c:498
 msgid "Install Software"
 msgstr "Instalar software"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3566
+#: ../src/gpk-application.c:3565
 msgid "Package installer"
 msgstr "Instalador de paquetes"
 
@@ -997,22 +1005,26 @@ msgid_plural "hours"
 msgstr[0] "hora"
 msgstr[1] "horas"
 
-#: ../src/gpk-common.c:637
+#. Translators: a list of two things
+#: ../src/gpk-common.c:638
 #, c-format
 msgid "%s and %s"
 msgstr "%s e %s"
 
-#: ../src/gpk-common.c:640
+#. Translators: a list of three things
+#: ../src/gpk-common.c:642
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s e %s"
 
-#: ../src/gpk-common.c:643
+#. Translators: a list of four things
+#: ../src/gpk-common.c:646
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s e %s"
 
-#: ../src/gpk-common.c:647
+#. Translators: a list of five things
+#: ../src/gpk-common.c:651
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s e %s"
