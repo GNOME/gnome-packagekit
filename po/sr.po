@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-03-06 18:34+0000\n"
-"PO-Revision-Date: 2013-03-08 20:02+0200\n"
+"POT-Creation-Date: 2013-04-15 09:54+0000\n"
+"PO-Revision-Date: 2013-04-20 11:19+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "Language: sr\n"
@@ -247,86 +247,95 @@ msgstr ""
 "радња;"
 
 #: ../data/gpk-application.ui.h:2
+#| msgid "Applying changes"
+msgid "Apply Changes"
+msgstr "Примени измене"
+
+#: ../data/gpk-application.ui.h:3
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "Измене се не примењују одмах, већ кликом на ово дугме"
 
-#: ../data/gpk-application.ui.h:3
+#: ../data/gpk-application.ui.h:4
+msgid "Clear"
+msgstr "Очисти"
+
+#: ../data/gpk-application.ui.h:5
 msgid "Clear current selection"
 msgstr "Очистите тренутни избор"
 
-#: ../data/gpk-application.ui.h:4
+#: ../data/gpk-application.ui.h:6
 msgid "Cancel search"
 msgstr "Поништите претрагу"
 
-#: ../data/gpk-application.ui.h:5
+#: ../data/gpk-application.ui.h:7
 msgid "Licence"
 msgstr "Лиценца"
 
-#: ../data/gpk-application.ui.h:6
+#: ../data/gpk-application.ui.h:8
 msgid "Source"
 msgstr "Извор"
 
-#: ../data/gpk-application.ui.h:7 ../data/gpk-client.ui.h:1
+#: ../data/gpk-application.ui.h:9 ../data/gpk-client.ui.h:1
 msgid "Install Package"
 msgstr "Инсталирај пакет"
 
-#: ../data/gpk-application.ui.h:8
+#: ../data/gpk-application.ui.h:10
 msgid "Remove Package"
 msgstr "Уклони пакет"
 
-#: ../data/gpk-application.ui.h:9
+#: ../data/gpk-application.ui.h:11
 msgid "Visit home page for selected package"
 msgstr "Посетите веб страницу изабраног пакета"
 
-#: ../data/gpk-application.ui.h:10
+#: ../data/gpk-application.ui.h:12
 msgid "Visit Project Website"
 msgstr "Посетите веб страну пројекта"
 
-#: ../data/gpk-application.ui.h:11
+#: ../data/gpk-application.ui.h:13
 msgid "Files"
 msgstr "Датотеке"
 
-#: ../data/gpk-application.ui.h:12
+#: ../data/gpk-application.ui.h:14
 msgid "Required Packages"
 msgstr "Потребни пакети"
 
-#: ../data/gpk-application.ui.h:13
+#: ../data/gpk-application.ui.h:15
 msgid "Dependent Packages"
 msgstr "Зависни пакети"
 
-#: ../data/gpk-application.ui.h:14
+#: ../data/gpk-application.ui.h:16
 msgid "Check for Updates"
 msgstr "Потражи ажурирања"
 
-#: ../data/gpk-application.ui.h:15 ../data/gpk-prefs.ui.h:12
+#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.ui.h:12
 msgid "Software Sources"
 msgstr "Извори програма"
 
-#: ../data/gpk-application.ui.h:16
+#: ../data/gpk-application.ui.h:18
 msgid "Refresh Package Lists"
 msgstr "Освежи списак пакета"
 
-#: ../data/gpk-application.ui.h:17
+#: ../data/gpk-application.ui.h:19
 msgid "Software Log"
 msgstr "Дневник програма"
 
-#: ../data/gpk-application.ui.h:18
+#: ../data/gpk-application.ui.h:20
 msgid "Only Newest Versions"
 msgstr "Само нова издања"
 
-#: ../data/gpk-application.ui.h:19
+#: ../data/gpk-application.ui.h:21
 msgid "Only Native Packages"
 msgstr "Само изворни пакети"
 
-#: ../data/gpk-application.ui.h:20
+#: ../data/gpk-application.ui.h:22
 msgid "Help"
 msgstr "Помоћ"
 
-#: ../data/gpk-application.ui.h:21
+#: ../data/gpk-application.ui.h:23
 msgid "About Software Install"
 msgstr "О инсталирању софтвера"
 
-#: ../data/gpk-application.ui.h:22
+#: ../data/gpk-application.ui.h:24
 msgid "_Quit"
 msgstr "_Изађи"
 
@@ -346,9 +355,10 @@ msgstr "_Прихвати уговор"
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-dbus-task.c:3379
-#: ../src/gpk-install-local-file.c:65 ../src/gpk-install-package-name.c:64
-#: ../src/gpk-dbus-service.c:151 ../src/gpk-dbus-service.c:154
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2617
+#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:65
+#: ../src/gpk-install-package-name.c:64 ../src/gpk-dbus-service.c:151
+#: ../src/gpk-dbus-service.c:154
 msgid "Software Install"
 msgstr "Инсталација софтвера"
 
@@ -627,27 +637,22 @@ msgstr[3] "%i датотеку је инсталирао %s"
 
 #. TRANSLATORS: no packages returned
 #: ../src/gpk-application.c:904 ../src/gpk-application.c:1028
-#| msgid "Software"
 msgid "No software"
 msgstr "Нема програма"
 
 #. TRANSLATORS: this package is not required by any others
 #: ../src/gpk-application.c:906
-#| msgid "No other packages require this package"
 msgid "No other software requires this."
 msgstr "Ниједан други програм не захтева овај."
 
 #: ../src/gpk-application.c:912
 #, c-format
-#| msgid "Software Sources"
 msgid "Software requires %s"
 msgstr "Програм захтева „%s“"
 
 #. TRANSLATORS: show a array of packages for the package
 #: ../src/gpk-application.c:915
 #, c-format
-#| msgid "Packages listed below require %s to function correctly."
-#| msgid_plural "Packages listed below require %s to function correctly."
 msgid "The software listed below require %s to function correctly."
 msgid_plural "The software listed below require %s to function correctly."
 msgstr[0] "Програм са приложеног списка захтева „%s“ да би радио исправно."
@@ -657,23 +662,17 @@ msgstr[3] "Програм са приложеног списка захтева 
 
 #. TRANSLATORS: this package does not depend on any others
 #: ../src/gpk-application.c:1030
-#| msgid "This package does not depend on any others"
 msgid "This software does not depend on any other"
 msgstr "Овај програм не зависи ни од једног другог"
 
 #: ../src/gpk-application.c:1036
 #, c-format
-#| msgid "%i additional package is required for %s"
-#| msgid_plural "%i additional packages are required for %s"
 msgid "Additional software is required for %s"
 msgstr "Додатни програм је потребан за %s"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #: ../src/gpk-application.c:1039
 #, c-format
-#| msgid ""
-#| "The software that you want to install requires additional software to run "
-#| "correctly."
 msgid "%s requires the following additional software to function correctly."
 msgstr "„%s“ захтева следеће додатне програме да би радио исправно."
 
@@ -689,21 +688,16 @@ msgstr "Нема пронађених резултата."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
 #: ../src/gpk-application.c:1278
-#| msgid "Try entering a package name in the search bar."
 msgid "Try entering a name in the search bar."
 msgstr "Покушајте да унесете назив у траку за претрагу."
 
 #. TRANSLATORS: nothing in the package queue
 #: ../src/gpk-application.c:1281
-#| msgid "There are no packages queued to be installed or removed."
 msgid "There is no software queued to be installed or removed."
 msgstr "Нема програма који чекају на инсталацију или уклањање."
 
 #. TRANSLATORS: tell the user to switch to details search mode
 #: ../src/gpk-application.c:1286
-#| msgid ""
-#| "Try searching package descriptions by clicking the icon next to the "
-#| "search text."
 msgid ""
 "Try searching software descriptions by clicking the icon next to the search "
 "text."
@@ -862,38 +856,37 @@ msgstr ""
 "\n"
 "http://prevod.org — превод на српски језик"
 
-#: ../src/gpk-application.c:2621
+#: ../src/gpk-application.c:2622
 msgid "PackageKit Website"
 msgstr "Веб страница Пакет аранжмана"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2624
-#| msgid "Package Manager for GNOME"
+#: ../src/gpk-application.c:2625
 msgid "Software management for GNOME"
 msgstr "Управљање програмима за Гном"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2817
+#: ../src/gpk-application.c:2818
 msgid "Enter a search word or click a category to get started."
 msgstr "Унесите реч за претрагу или кликните на категорију да започнете."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2820
+#: ../src/gpk-application.c:2821
 msgid "Enter a search word to get started."
 msgstr "Унесите реч за претрагу да започнете."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3059
+#: ../src/gpk-application.c:3060
 msgid "Exiting as properties could not be retrieved"
 msgstr "Излазим јер не могу да добијем особине"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3102
+#: ../src/gpk-application.c:3103
 msgid "All packages"
 msgstr "Сви пакети"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3104
+#: ../src/gpk-application.c:3105
 msgid "Show all packages"
 msgstr "Прикажите све пакете"
 
@@ -1021,31 +1014,34 @@ msgstr[1] "сата"
 msgstr[2] "сати"
 msgstr[3] "сат"
 
-#: ../src/gpk-common.c:637
+#. Translators: a list of two things
+#: ../src/gpk-common.c:638
 #, c-format
 msgid "%s and %s"
 msgstr "%s и %s"
 
-#: ../src/gpk-common.c:640
+#. Translators: a list of three things
+#: ../src/gpk-common.c:642
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s и %s"
 
-#: ../src/gpk-common.c:643
+#. Translators: a list of four things
+#: ../src/gpk-common.c:646
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s и %s"
 
-#: ../src/gpk-common.c:647
+#. Translators: a list of five things
+#: ../src/gpk-common.c:651
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s и %s"
 
 #. TRANSLATORS: we failed to install
-#. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:244 ../src/gpk-dbus-task.c:473
-#: ../src/gpk-dbus-task.c:1160
+#: ../src/gpk-dbus-task.c:244 ../src/gpk-dbus-task.c:487
+#: ../src/gpk-dbus-task.c:1173
 msgid "Failed to install software"
 msgstr "Не могу да инсталирам програм"
 
@@ -1060,7 +1056,6 @@ msgid "Error details"
 msgstr "Детаљи о грешци"
 
 #: ../src/gpk-dbus-task.c:278
-#| msgid "Error details"
 msgid "Software error details"
 msgstr "Појединости грешке програма"
 
@@ -1074,39 +1069,37 @@ msgstr ""
 "пријављивање грешака ваше дистрибуције."
 
 #. TRANSLATORS: failed authentication
-#: ../src/gpk-dbus-task.c:309
+#: ../src/gpk-dbus-task.c:310
 msgid "You don't have the necessary privileges to perform this action."
 msgstr "Немате довољно овлашћења да бисте извршили ову радњу."
 
 #. TRANSLATORS: could not start system service
-#: ../src/gpk-dbus-task.c:313
-#| msgid "The packagekitd service could not be started."
+#: ../src/gpk-dbus-task.c:315
 msgid "The software service could not be started."
 msgstr "Услуга програма не може бити покренута."
 
 #. TRANSLATORS: the user tried to query for something invalid
-#: ../src/gpk-dbus-task.c:317
+#: ../src/gpk-dbus-task.c:320
 msgid "The query is not valid."
 msgstr "Упит није исправан."
 
 #. TRANSLATORS: the user tried to install a file that was not compatable or broken
-#: ../src/gpk-dbus-task.c:321
+#: ../src/gpk-dbus-task.c:325
 msgid "The file is not valid."
 msgstr "Датотека није исправна."
 
 #. TRANSLATORS: button: show details about the error
-#: ../src/gpk-dbus-task.c:385
+#: ../src/gpk-dbus-task.c:392
 msgid "Show details"
 msgstr "Прикажи детаље"
 
 #. TRANSLATORS: title: installing packages
-#: ../src/gpk-dbus-task.c:511
-#| msgid "Install Software"
+#: ../src/gpk-dbus-task.c:524
 msgid "Installing software"
 msgstr "Инсталирам програм"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:613 ../src/gpk-dbus-task.c:1381
+#: ../src/gpk-dbus-task.c:626 ../src/gpk-dbus-task.c:1394
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "Не могу да инсталирам датотеку"
@@ -1115,7 +1108,7 @@ msgstr[2] "Не могу да инсталирам датотеке"
 msgstr[3] "Не могу да инсталирам датотеку"
 
 #. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:702
+#: ../src/gpk-dbus-task.c:715
 msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
 msgstr[0] "Да ли желите да инсталирате ову датотеку?"
@@ -1131,16 +1124,16 @@ msgstr[3] "Да ли желите да инсталирате ову датот�
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
-#: ../src/gpk-dbus-task.c:711 ../src/gpk-dbus-task.c:1255
-#: ../src/gpk-dbus-task.c:1474 ../src/gpk-dbus-task.c:1677
-#: ../src/gpk-dbus-task.c:2137 ../src/gpk-dbus-task.c:2475
-#: ../src/gpk-dbus-task.c:2688 ../src/gpk-dbus-task.c:2810
-#: ../src/gpk-dbus-task.c:3163 ../src/gpk-task.c:404
+#: ../src/gpk-dbus-task.c:724 ../src/gpk-dbus-task.c:1268
+#: ../src/gpk-dbus-task.c:1487 ../src/gpk-dbus-task.c:1690
+#: ../src/gpk-dbus-task.c:2150 ../src/gpk-dbus-task.c:2488
+#: ../src/gpk-dbus-task.c:2701 ../src/gpk-dbus-task.c:2823
+#: ../src/gpk-dbus-task.c:3176 ../src/gpk-task.c:404
 msgid "Install"
 msgstr "Инсталирај"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1034
+#: ../src/gpk-dbus-task.c:1047
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "Инсталирај локалну датотеку"
@@ -1149,15 +1142,13 @@ msgstr[2] "Инсталирај локалне датотеке"
 msgstr[3] "Инсталирај локалну датотеку"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1094
+#: ../src/gpk-dbus-task.c:1107
 #, c-format
-#| msgid "Failed to find software"
 msgid "Could not find software"
 msgstr "На могу да нађем програм"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1103
-#| msgid "The packages could not be found in any software source"
+#: ../src/gpk-dbus-task.c:1116
 msgid "The software could not be found in any software source"
 msgstr "Програми не могу бити пронађени ни у једном извору програма"
 
@@ -1166,77 +1157,68 @@ msgstr "Програми не могу бити пронађени ни у је�
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
-#: ../src/gpk-dbus-task.c:1106 ../src/gpk-dbus-task.c:1343
-#: ../src/gpk-dbus-task.c:1649 ../src/gpk-dbus-task.c:1855
-#: ../src/gpk-dbus-task.c:2110 ../src/gpk-dbus-task.c:2447
+#: ../src/gpk-dbus-task.c:1119 ../src/gpk-dbus-task.c:1356
+#: ../src/gpk-dbus-task.c:1662 ../src/gpk-dbus-task.c:1868
+#: ../src/gpk-dbus-task.c:2123 ../src/gpk-dbus-task.c:2460
 msgid "More information"
 msgstr "Више података"
 
-#: ../src/gpk-dbus-task.c:1143
-#| msgid "The package is already installed"
-#| msgid_plural "The packages are already installed"
+#: ../src/gpk-dbus-task.c:1156
 msgid "The software is already installed"
 msgstr "Програм је већ инсталиран"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1145
+#: ../src/gpk-dbus-task.c:1158
 msgid "Nothing to do."
 msgstr "Ништа."
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1162
+#: ../src/gpk-dbus-task.c:1175
 msgid "Incorrect response from search"
 msgstr "Неисправан одговор претраге"
 
-#: ../src/gpk-dbus-task.c:1240
-#| msgid "An additional package is required:"
-#| msgid_plural "Additional packages are required:"
+#: ../src/gpk-dbus-task.c:1253
 msgid "Additional software is required"
 msgstr "Потребан је додатни програм"
 
-#: ../src/gpk-dbus-task.c:1242
-#| msgid "Do you want to search for and install this package now?"
-#| msgid_plural "Do you want to search for and install these packages now?"
+#: ../src/gpk-dbus-task.c:1255
 msgid "Do you want to search for and install this software now?"
 msgstr "Да ли желите да потражите и инсталирате овај програм сада?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1248
+#: ../src/gpk-dbus-task.c:1261
 #, c-format
-#| msgid "%s requires an additional plugin for this operation"
-#| msgid_plural "%s requires additional plugins for this operation"
 msgid "%s requires additional software"
 msgstr "%s захтева додатни програм"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1251
+#: ../src/gpk-dbus-task.c:1264
 msgid "An application requires additional software"
 msgstr "Један програм захтева додатни програм"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1268 ../src/gpk-dbus-task.c:2870
+#: ../src/gpk-dbus-task.c:1281 ../src/gpk-dbus-task.c:2883
 msgid "Searching for packages"
 msgstr "Претражујем пакете"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1338
+#: ../src/gpk-dbus-task.c:1351
 msgid "Failed to find package"
 msgstr "Не могу да нађем пакете"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1340
+#: ../src/gpk-dbus-task.c:1353
 msgid "The file could not be found in any packages"
 msgstr "Не могу да пронађем датотеку ни у једном пакету"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1378
+#: ../src/gpk-dbus-task.c:1391
 #, c-format
-#| msgid "The %s package already provides this file"
 msgid "%s already provides this file"
 msgstr "„%s“ већ обезбеђује ову датотеку"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1459
+#: ../src/gpk-dbus-task.c:1472
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "Потребна је следећа датотека:"
@@ -1245,7 +1227,7 @@ msgstr[2] "Потребне су следеће датотеке:"
 msgstr[3] "Потребна је следећа датотека:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1462
+#: ../src/gpk-dbus-task.c:1475
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "Да ли сада желите да потражите ову датотеку?"
@@ -1254,7 +1236,7 @@ msgstr[2] "Да ли сада желите да потражите ове дат
 msgstr[3] "Да ли сада желите да потражите ову датотеку?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1467
+#: ../src/gpk-dbus-task.c:1480
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1264,7 +1246,7 @@ msgstr[2] "%s жели да инсталира датотеке"
 msgstr[3] "%s жели да инсталира датотеку"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1470
+#: ../src/gpk-dbus-task.c:1483
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "Програм жели да инсталира датотеку"
@@ -1274,13 +1256,13 @@ msgstr[3] "Програм жели да инсталира датотеку"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1486 ../src/gpk-dbus-task.c:3113
+#: ../src/gpk-dbus-task.c:1499 ../src/gpk-dbus-task.c:3126
 #: ../src/gpk-enum.c:1312
 msgid "Searching for file"
 msgstr "Тражим датотеку"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1529
+#: ../src/gpk-dbus-task.c:1542
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "Потребан је следећи прикључак:"
@@ -1289,7 +1271,7 @@ msgstr[2] "Потребни су следећи прикључци:"
 msgstr[3] "Потребан је следећи прикључак:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1547 ../src/gpk-dbus-task.c:2375
+#: ../src/gpk-dbus-task.c:1560 ../src/gpk-dbus-task.c:2388
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Да ли сада желите да га потражите?"
@@ -1298,7 +1280,7 @@ msgstr[2] "Да ли сада желите да их потражите?"
 msgstr[3] "Да ли сада желите да га потражите?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1560
+#: ../src/gpk-dbus-task.c:1573
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1308,7 +1290,7 @@ msgstr[2] "%s захтева прикључке за отварање ове д�
 msgstr[3] "%s захтева прикључак за отварање ове датотеке"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1564
+#: ../src/gpk-dbus-task.c:1577
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1318,7 +1300,7 @@ msgstr[2] "%s захтева прикључке за кодирање ове д�
 msgstr[3] "%s захтева прикључак за кодирање ове датотеке"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1568
+#: ../src/gpk-dbus-task.c:1581
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1328,7 +1310,7 @@ msgstr[2] "%s захтева прикључке за ову радњу"
 msgstr[3] "%s захтева прикључак за ову радњу"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1574
+#: ../src/gpk-dbus-task.c:1587
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] "Програм захтева прикључак за отварање ове датотеке"
@@ -1337,7 +1319,7 @@ msgstr[2] "Програм захтева прикључке за отварањ�
 msgstr[3] "Програм захтева прикључак за отварање ове датотеке"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1578
+#: ../src/gpk-dbus-task.c:1591
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] "Програм захтева прикључак за кодирање ове датотеке"
@@ -1346,7 +1328,7 @@ msgstr[2] "Програм захтева прикључке за кодирањ�
 msgstr[3] "Програм захтева прикључак за кодирање ове датотеке"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1582
+#: ../src/gpk-dbus-task.c:1595
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "Програм захтева прикључак за ову радњу"
@@ -1355,22 +1337,22 @@ msgstr[2] "Програм захтева прикључке за ову радњ
 msgstr[3] "Програм захтева прикључак за ову радњу"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1588 ../src/gpk-dbus-task.c:1941
-#: ../src/gpk-dbus-task.c:2314 ../src/gpk-dbus-task.c:2387
+#: ../src/gpk-dbus-task.c:1601 ../src/gpk-dbus-task.c:1954
+#: ../src/gpk-dbus-task.c:2327 ../src/gpk-dbus-task.c:2400
 msgid "Search"
 msgstr "Потражи"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1643
+#: ../src/gpk-dbus-task.c:1656
 msgid "Failed to search for plugin"
 msgstr "Не могу да нађем прикључак"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1645
+#: ../src/gpk-dbus-task.c:1658
 msgid "Could not find plugin in any configured software source"
 msgstr "Не могу да нађем прикључак ни у једном подешеном извору програма"
 
-#: ../src/gpk-dbus-task.c:1668 ../src/gpk-dbus-task.c:2466
+#: ../src/gpk-dbus-task.c:1681 ../src/gpk-dbus-task.c:2479
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "Инсталирај следећи прикључак"
@@ -1379,50 +1361,47 @@ msgstr[2] "Инсталирај следеће прикључке"
 msgstr[3] "Инсталирај следећи прикључак"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1669 ../src/gpk-dbus-task.c:2130
-#: ../src/gpk-dbus-task.c:2467
-#| msgid "Do you want to install this package now?"
-#| msgid_plural "Do you want to install these packages now?"
+#: ../src/gpk-dbus-task.c:1682 ../src/gpk-dbus-task.c:2143
+#: ../src/gpk-dbus-task.c:2480
 msgid "Do you want to install this software now?"
 msgstr "Желите ли да инсталирате овај програм сада?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1761
+#: ../src/gpk-dbus-task.c:1774
 msgid "Searching for plugins"
 msgstr "Тражим прикључке"
 
-#: ../src/gpk-dbus-task.c:1782
+#: ../src/gpk-dbus-task.c:1795
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "Тражим прикључак: %s"
 
-#. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1820
+#: ../src/gpk-dbus-task.c:1834
 msgid "Failed to search for provides"
 msgstr "Не могу да нађем шта пакет обезбеђује"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1850
+#: ../src/gpk-dbus-task.c:1863
 msgid "Failed to find software"
 msgstr "На могу да нађем програм"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1852
+#: ../src/gpk-dbus-task.c:1865
 msgid "No new applications can be found to handle this type of file"
 msgstr "Нема нових програма који раде са овом врстом датотеке"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1923
+#: ../src/gpk-dbus-task.c:1936
 msgid "An additional program is required to open this type of file:"
 msgstr "Потребан је додатни програм за отварање ове врсте датотека:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1926
+#: ../src/gpk-dbus-task.c:1939
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "Да ли желите сада да потражите програм који отвара ову врсту датотеке?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1934
+#: ../src/gpk-dbus-task.c:1947
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1432,7 +1411,7 @@ msgstr[2] "%s захтева нове МИМЕ врсте"
 msgstr[3] "%s захтева нову МИМЕ врсту"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1937
+#: ../src/gpk-dbus-task.c:1950
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "Програм захтева нову МИМЕ врсту"
@@ -1441,22 +1420,22 @@ msgstr[2] "Програм захтева нове МИМЕ врсте"
 msgstr[3] "Програм захтева нову МИМЕ врсту"
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1952
+#: ../src/gpk-dbus-task.c:1965
 msgid "Searching for file handlers"
 msgstr "Тражим програм за ову врсту датотеке"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2031
+#: ../src/gpk-dbus-task.c:2044
 msgid "Language tag not parsed"
 msgstr "Ознака језика није обрађена"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2039
+#: ../src/gpk-dbus-task.c:2052
 msgid "Language code not matched"
 msgstr "Кôд језика се не може уклопити"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2099
+#: ../src/gpk-dbus-task.c:2112
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "Не могу да нађем словни лик"
@@ -1465,12 +1444,12 @@ msgstr[2] "Не могу да нађем словне ликове"
 msgstr[3] "Не могу да нађем словни лик"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2107
+#: ../src/gpk-dbus-task.c:2120
 msgid "No new fonts can be found for this document"
 msgstr "Не могу да нађем ниједан нови словни лик за овај документ"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2293
+#: ../src/gpk-dbus-task.c:2306
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] "Потребан је додатни словни лик да бисте исправно видели документ."
@@ -1481,9 +1460,7 @@ msgstr[2] ""
 msgstr[3] "Потребан је додатни словни лик да бисте исправно видели документ."
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2297
-#| msgid "Do you want to search for a suitable package now?"
-#| msgid_plural "Do you want to search for suitable packages now?"
+#: ../src/gpk-dbus-task.c:2310
 msgid "Do you want to search for a suitable font now?"
 msgid_plural "Do you want to search for suitable fonts now?"
 msgstr[0] "Да ли сада желите да потражите одговарајући словни лик?"
@@ -1492,7 +1469,7 @@ msgstr[2] "Да ли сада желите да потражите одгова�
 msgstr[3] "Да ли сада желите да потражите одговарајући словни лик?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2307
+#: ../src/gpk-dbus-task.c:2320
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1502,7 +1479,7 @@ msgstr[2] "%s жели да инсталира словни ликове"
 msgstr[3] "%s жели да инсталира словни лик"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2310
+#: ../src/gpk-dbus-task.c:2323
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "%s жели да инсталира словни лик"
@@ -1511,7 +1488,7 @@ msgstr[2] "%s жели да инсталира словни ликове"
 msgstr[3] "%s жели да инсталира словни лик"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2326
+#: ../src/gpk-dbus-task.c:2339
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "Тражим словни лик"
@@ -1520,7 +1497,7 @@ msgstr[2] "Тражим словни ликове"
 msgstr[3] "Тражим словни лик"
 
 #. TRANSLATORS: we are listing the services in a box
-#: ../src/gpk-dbus-task.c:2363
+#: ../src/gpk-dbus-task.c:2376
 msgid "The following service is required:"
 msgid_plural "The following services are required:"
 msgstr[0] "Потребна је следећа услуга:"
@@ -1528,7 +1505,7 @@ msgstr[1] "Потребне су следеће услуге:"
 msgstr[2] "Потребне су следеће услуге:"
 msgstr[3] "Потребна је следећа услуга:"
 
-#: ../src/gpk-dbus-task.c:2383
+#: ../src/gpk-dbus-task.c:2396
 msgid "Plasma requires an additional service for this operation"
 msgid_plural "Plasma requires additional services for this operation"
 msgstr[0] "Плазма захтева додатну услугу за ову радњу"
@@ -1536,49 +1513,48 @@ msgstr[1] "Плазма захтева додатне услуге за ову �
 msgstr[2] "Плазма захтева додатне услуге за ову радњу"
 msgstr[3] "Плазма захтева додатну услугу за ову радњу"
 
-#: ../src/gpk-dbus-task.c:2441
+#: ../src/gpk-dbus-task.c:2454
 msgid "Failed to search for Plasma service"
 msgstr "Нисам успео да пронађем услугу Плазме"
 
 #. TRANSLATORS: no software sources have the wanted Plasma service
-#: ../src/gpk-dbus-task.c:2443
+#: ../src/gpk-dbus-task.c:2456
 msgid "Could not find service in any configured software source"
 msgstr "Не могу да пронађем услугу ни у једном подешеном извору програма"
 
 #. TRANSLATORS: search for Plasma services
-#: ../src/gpk-dbus-task.c:2549
+#: ../src/gpk-dbus-task.c:2562
 msgid "Searching for services"
 msgstr "Тражим услуге"
 
-#: ../src/gpk-dbus-task.c:2568
+#: ../src/gpk-dbus-task.c:2581
 #, c-format
 msgid "Searching for service: %s"
 msgstr "Тражим услуге: %s"
 
-#: ../src/gpk-dbus-task.c:2645
+#: ../src/gpk-dbus-task.c:2658
 msgid "Could not process catalog"
 msgstr "Не могу да обрадим каталог"
 
-#: ../src/gpk-dbus-task.c:2663
+#: ../src/gpk-dbus-task.c:2676
 msgid "No packages need to be installed"
 msgstr "Ниједан пакет не треба да се инсталира"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2682
+#: ../src/gpk-dbus-task.c:2695
 msgid "Install packages in catalog?"
 msgstr "Да инсталирам пакете у каталог?"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2684
+#: ../src/gpk-dbus-task.c:2697
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "Следећи пакети су означени за инсталацију из каталога:"
 
-#. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2724
+#: ../src/gpk-dbus-task.c:2738
 msgid "Failed to remove package"
 msgstr "Нисам успео да уклоним пакет"
 
-#: ../src/gpk-dbus-task.c:2801
+#: ../src/gpk-dbus-task.c:2814
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "Инсталирај следећи управљачки програм"
@@ -1586,9 +1562,7 @@ msgstr[1] "Инсталирај следеће управљачки програ
 msgstr[2] "Инсталирај следеће управљачки програме"
 msgstr[3] "Инсталирај следећи управљачки програм"
 
-#: ../src/gpk-dbus-task.c:2802
-#| msgid "Do you want to install this file?"
-#| msgid_plural "Do you want to install these files?"
+#: ../src/gpk-dbus-task.c:2815
 msgid "Do you want to install this driver now?"
 msgid_plural "Do you want to install these drivers now?"
 msgstr[0] "Да ли сада желите да инсталирате овај управљачки програм?"
@@ -1598,24 +1572,22 @@ msgstr[3] "Да ли сада желите да инсталирате овај 
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2954 ../src/gpk-enum.c:948
+#: ../src/gpk-dbus-task.c:2967 ../src/gpk-enum.c:948
 msgid "Removing packages"
 msgstr "Уклањам пакете"
 
 #. TRANSLATORS: failed to find the package for the file
-#: ../src/gpk-dbus-task.c:3008
-#| msgid "Failed to find software"
+#: ../src/gpk-dbus-task.c:3021
 msgid "Failed to find any software"
 msgstr "На могу да нађем програме"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:3010
-#| msgid "The file could not be found in any packages"
+#: ../src/gpk-dbus-task.c:3023
 msgid "The file could not be found in any available software"
 msgstr "Не могу да пронађем датотеку ни у једном доступном програму"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:3086
+#: ../src/gpk-dbus-task.c:3099
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "Следећа датотека ће бити уклоњена:"
@@ -1624,7 +1596,7 @@ msgstr[2] "Следеће датотеке ће бити уклоњене:"
 msgstr[3] "Следеће датотека ће бити уклоњена:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:3089
+#: ../src/gpk-dbus-task.c:3102
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Да ли сада желите да уклоните ову датотеку?"
@@ -1633,7 +1605,7 @@ msgstr[2] "Да ли сада желите да уклоните ове дато
 msgstr[3] "Да ли сада желите да уклоните ову датотеку?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:3094
+#: ../src/gpk-dbus-task.c:3107
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1643,7 +1615,7 @@ msgstr[2] "%s жели да уклони датотеке"
 msgstr[3] "%s жели да уклони датотеку"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:3097
+#: ../src/gpk-dbus-task.c:3110
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Програм жели да уклони датотеку"
@@ -1652,12 +1624,12 @@ msgstr[2] "Програм жели да уклони датотеке"
 msgstr[3] "Програм жели да уклони датотеку"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:3101 ../src/gpk-task.c:409
+#: ../src/gpk-dbus-task.c:3114 ../src/gpk-task.c:409
 msgid "Remove"
 msgstr "Уклони"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:3154
+#: ../src/gpk-dbus-task.c:3167
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Да ли желите да инсталирате овај каталог?"
@@ -1666,7 +1638,7 @@ msgstr[2] "Да ли желите да инсталирате ове катал�
 msgstr[3] "Да ли желите да инсталирате овај каталог?"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:3179
+#: ../src/gpk-dbus-task.c:3192
 msgid "Install catalogs"
 msgstr "Инсталирај каталоге"
 
@@ -1932,8 +1904,6 @@ msgid "The package was not found"
 msgstr "Пакет није пронађен"
 
 #: ../src/gpk-enum.c:328
-#| msgid "The package is already installed"
-#| msgid_plural "The packages are already installed"
 msgid "The package is already installed"
 msgstr "Пакет је већ инсталиран"
 
@@ -3786,20 +3756,6 @@ msgstr "Не могу да инсталирам каталог"
 msgid "You need to specify a file name to install"
 msgstr "Морате навести назив датотеке за инсталацију"
 
-#. TRANSLATORS: This is when the specified D-Bus method did not execute successfully
-#: ../src/gpk-install-catalog.c:116 ../src/gpk-install-local-file.c:116
-#: ../src/gpk-install-mime-type.c:116 ../src/gpk-install-package-name.c:115
-#: ../src/gpk-install-provide-file.c:116
-msgid "The action could not be completed"
-msgstr "Не могу да завршим радњу"
-
-#. TRANSLATORS: we don't have anything more useful to translate. sorry.
-#: ../src/gpk-install-catalog.c:118 ../src/gpk-install-local-file.c:118
-#: ../src/gpk-install-mime-type.c:118 ../src/gpk-install-package-name.c:117
-#: ../src/gpk-install-provide-file.c:118
-msgid "The request failed. More details are available in the detailed report."
-msgstr "Захтев није успео. Више података је доступно у детаљном извештају."
-
 #. TRANSLATORS: command line option: a list of files to install
 #: ../src/gpk-install-local-file.c:51
 msgid "Files to install"
@@ -3861,13 +3817,11 @@ msgstr "Инсталер назива пакета"
 
 #. TRANSLATORS: failed
 #: ../src/gpk-install-package-name.c:80
-#| msgid "Failed to install software"
 msgid "Failed to install software by name"
 msgstr "Нисам успео да инсталирам програм према називу"
 
 #. TRANSLATORS: nothing was specified
 #: ../src/gpk-install-package-name.c:82
-#| msgid "You need to specify a file name to install"
 msgid "You need to specify the name of the software to install"
 msgstr "Морате да наведете назив програма за инсталацију"
 
