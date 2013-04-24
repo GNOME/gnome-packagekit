@@ -170,7 +170,7 @@ gpk_pack_set_percentage (guint percentage)
 		g_source_remove (pulse_id);
 		pulse_id = 0;
 	}
-	
+
 	progress_bar = GTK_PROGRESS_BAR (gtk_builder_get_object (builder, "progressbar_percentage"));
 	gtk_progress_bar_set_fraction (progress_bar, percentage / 100.0f);
 }
@@ -874,8 +874,6 @@ main (int argc, char *argv[])
 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
-
-	g_type_init ();
 
 	gtk_init (&argc, &argv);
 

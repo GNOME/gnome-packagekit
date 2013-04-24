@@ -764,7 +764,6 @@ main (int argc, char *argv[])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	g_type_init ();
 	gtk_init (&argc, &argv);
 	priv = g_new0 (GpkDistroUpgradePrivate, 1);
 #ifdef HAVE_SYSTEMD

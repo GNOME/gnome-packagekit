@@ -147,7 +147,6 @@ main (int argc, char *argv[])
 	textdomain (GETTEXT_PACKAGE);
 
 	dbus_g_thread_init ();
-	g_type_init ();
 	notify_init (_("Software Install"));
 
 	/* TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state */
