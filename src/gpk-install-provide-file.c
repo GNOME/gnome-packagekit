@@ -58,7 +58,6 @@ main (int argc, char *argv[])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	g_type_init ();
 	gtk_init (&argc, &argv);
 
 	/* TRANSLATORS: program name, an application to install a file that is needed by an application and is provided by packages */

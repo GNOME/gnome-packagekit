@@ -3432,7 +3432,6 @@ main (int argc, char *argv[])
 	textdomain (GETTEXT_PACKAGE);
 
 	dbus_g_thread_init ();
-	g_type_init ();
 	gtk_init (&argc, &argv);
 
 	context = g_option_context_new (NULL);
