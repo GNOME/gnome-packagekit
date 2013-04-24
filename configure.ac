@@ -138,6 +138,20 @@ fi
 AM_CONDITIONAL(HAVE_GUDEV, test x$HAVE_GUDEV = xyes)
 
 dnl ---------------------------------------------------------------------------
+dnl - Check if we can build with Listaller
+dnl ---------------------------------------------------------------------------
+LISTALLER_REQUIRED=0.5.7
+AC_ARG_ENABLE(listaller, AS_HELP_STRING([--enable-listaller],[Build with Listaller support]),
+	      enable_listaller=$enableval,enable_listaller=yes)
+if test x$enable_listaller = xyes; then
+	PKG_CHECK_MODULES(LISTALLER, listaller-glib >= $LISTALLER_REQUIRED,,
+				[AC_MSG_ERROR([Can't find Listaller -- please install Listaller>=$LISTALLER_REQUIRED!])])
+	PKG_CHECK_MODULES(GEE, gee-1.0 >= 0.6,,
+				[AC_MSG_ERROR([Can't find Gee -- please install libgee to continue!])])
+fi
+AM_CONDITIONAL(HAVE_LISTALLER, test $enable_listaller = "yes")
+
+dnl ---------------------------------------------------------------------------
 dnl systemd integration
 dnl ---------------------------------------------------------------------------
 AC_ARG_ENABLE([systemd],
