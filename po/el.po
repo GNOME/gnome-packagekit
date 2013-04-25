@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-03-06 18:34+0000\n"
-"PO-Revision-Date: 2013-03-08 10:29+0300\n"
+"POT-Creation-Date: 2013-04-22 15:50+0000\n"
+"PO-Revision-Date: 2013-04-25 07:59+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@gnome.gr\n"
 "Language: el\n"
@@ -269,88 +269,98 @@ msgstr ""
 "Ενημερώσεις;αναβάθμιση;πηγές;αποθετήρια;προτιμήσεις;εγκατάσταση;αποθήκευση;"
 
 #: ../data/gpk-application.ui.h:2
+#| msgid "Applying changes"
+msgid "Apply Changes"
+msgstr "Εφαρμογή αλλαγών"
+
+#: ../data/gpk-application.ui.h:3
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr ""
 "Οι αλλαγές δεν εφαρμόζονται αυτόματα, αυτό το κουμπί εφαρμόζει όλες τις "
 "αλλαγές"
 
-#: ../data/gpk-application.ui.h:3
+#: ../data/gpk-application.ui.h:4
+msgid "Clear"
+msgstr "Καθαρισμός"
+
+#: ../data/gpk-application.ui.h:5
 msgid "Clear current selection"
 msgstr "Καθαρισμός όλων των επιλεγμένων"
 
-#: ../data/gpk-application.ui.h:4
+#: ../data/gpk-application.ui.h:6
 msgid "Cancel search"
 msgstr "Ακύρωση αναζήτησης"
 
-#: ../data/gpk-application.ui.h:5
-msgid "Licence"
+#: ../data/gpk-application.ui.h:7
+#| msgid "Licence"
+msgid "License"
 msgstr "Άδεια"
 
-#: ../data/gpk-application.ui.h:6
+#: ../data/gpk-application.ui.h:8
 msgid "Source"
 msgstr "Πηγή"
 
-#: ../data/gpk-application.ui.h:7 ../data/gpk-client.ui.h:1
+#: ../data/gpk-application.ui.h:9 ../data/gpk-client.ui.h:1
 msgid "Install Package"
 msgstr "Εγκατάσταση πακέτου"
 
-#: ../data/gpk-application.ui.h:8
+#: ../data/gpk-application.ui.h:10
 msgid "Remove Package"
 msgstr "Αφαίρεση πακέτου"
 
-#: ../data/gpk-application.ui.h:9
+#: ../data/gpk-application.ui.h:11
 msgid "Visit home page for selected package"
 msgstr "Επισκεφθείτε την ιστοσελίδα του επιλεγμένου πακέτου"
 
-#: ../data/gpk-application.ui.h:10
+#: ../data/gpk-application.ui.h:12
 msgid "Visit Project Website"
 msgstr "Επισκεφθείτε την ιστοσελίδα του έργου"
 
-#: ../data/gpk-application.ui.h:11
+#: ../data/gpk-application.ui.h:13
 msgid "Files"
 msgstr "Αρχεία"
 
-#: ../data/gpk-application.ui.h:12
+#: ../data/gpk-application.ui.h:14
 msgid "Required Packages"
 msgstr "Απαιτούμενα πακέτα"
 
-#: ../data/gpk-application.ui.h:13
+#: ../data/gpk-application.ui.h:15
 msgid "Dependent Packages"
 msgstr "Εξαρτώμενα πακέτα"
 
-#: ../data/gpk-application.ui.h:14
+#: ../data/gpk-application.ui.h:16
 msgid "Check for Updates"
 msgstr "Έλεγχος για ενημερώσεις"
 
-#: ../data/gpk-application.ui.h:15 ../data/gpk-prefs.ui.h:12
+#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.ui.h:12
 msgid "Software Sources"
 msgstr "Πηγές λογισμικού"
 
-#: ../data/gpk-application.ui.h:16
+#: ../data/gpk-application.ui.h:18
 msgid "Refresh Package Lists"
 msgstr "Ανανέωση λίστας πακέτων"
 
-#: ../data/gpk-application.ui.h:17
+#: ../data/gpk-application.ui.h:19
 msgid "Software Log"
 msgstr "Καταγραφές λογισμικού"
 
-#: ../data/gpk-application.ui.h:18
+#: ../data/gpk-application.ui.h:20
 msgid "Only Newest Versions"
 msgstr "Μόνο νέα πακέτα"
 
-#: ../data/gpk-application.ui.h:19
+#: ../data/gpk-application.ui.h:21
 msgid "Only Native Packages"
 msgstr "Μόνο εγγενή πακέτα"
 
-#: ../data/gpk-application.ui.h:20
+#: ../data/gpk-application.ui.h:22
 msgid "Help"
 msgstr "Βοήθεια"
 
-#: ../data/gpk-application.ui.h:21
+#: ../data/gpk-application.ui.h:23
 msgid "About Software Install"
 msgstr "Περί Εγκατάσταση λογισμικού"
 
-#: ../data/gpk-application.ui.h:22
+#: ../data/gpk-application.ui.h:24
 msgid "_Quit"
 msgstr "Έ_ξοδος"
 
@@ -370,9 +380,10 @@ msgstr "Α_ποδοχή άδειας"
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-dbus-task.c:3379
-#: ../src/gpk-install-local-file.c:65 ../src/gpk-install-package-name.c:64
-#: ../src/gpk-dbus-service.c:151 ../src/gpk-dbus-service.c:154
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2617
+#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:65
+#: ../src/gpk-install-package-name.c:64 ../src/gpk-dbus-service.c:151
+#: ../src/gpk-dbus-service.c:154
 msgid "Software Install"
 msgstr "Εγκατάσταση λογισμικού"
 
@@ -701,7 +712,6 @@ msgstr "Δοκιμάστε να εισάγετε ένα όνομα στο πεδ
 
 #. TRANSLATORS: nothing in the package queue
 #: ../src/gpk-application.c:1281
-#| msgid "There is no softare queued to be installed or removed."
 msgid "There is no software queued to be installed or removed."
 msgstr ""
 "Δεν υπάρχει κανένα λογισμικό στην ουρά για να εγκατασταθεί ή να αφαιρεθεί."
@@ -872,39 +882,39 @@ msgstr ""
 "Για περισσότερες πληροφορίες, επισκεφθείτε \n"
 "την σελίδα http://www.gnome.gr/"
 
-#: ../src/gpk-application.c:2621
+#: ../src/gpk-application.c:2622
 msgid "PackageKit Website"
 msgstr "Ιστοσελίδα του Packagekit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2624
+#: ../src/gpk-application.c:2625
 msgid "Software management for GNOME"
 msgstr "Διαχείριση λογισμικού για το GNOME"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2817
+#: ../src/gpk-application.c:2818
 msgid "Enter a search word or click a category to get started."
 msgstr ""
 "Για να ξεκινήσετε, εισάγετε μια λέξη αναζήτησης ή κάντε κλικ σε μια "
 "κατηγορία."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2820
+#: ../src/gpk-application.c:2821
 msgid "Enter a search word to get started."
 msgstr "Για να ξεκινήσετε, εισάγετε μια λέξη αναζήτησης."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3059
+#: ../src/gpk-application.c:3060
 msgid "Exiting as properties could not be retrieved"
 msgstr "Έξοδος λόγω αδυναμίας ανάκτησης ιδιοτήτων"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3102
+#: ../src/gpk-application.c:3103
 msgid "All packages"
 msgstr "Όλα τα πακέτα"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3104
+#: ../src/gpk-application.c:3105
 msgid "Show all packages"
 msgstr "Εμφάνιση όλων των πακέτων"
 
@@ -1020,31 +1030,34 @@ msgid_plural "hours"
 msgstr[0] "ώρα"
 msgstr[1] "ώρες"
 
-#: ../src/gpk-common.c:637
+#. Translators: a list of two things
+#: ../src/gpk-common.c:638
 #, c-format
 msgid "%s and %s"
 msgstr "%s και %s"
 
-#: ../src/gpk-common.c:640
+#. Translators: a list of three things
+#: ../src/gpk-common.c:642
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s και %s"
 
-#: ../src/gpk-common.c:643
+#. Translators: a list of four things
+#: ../src/gpk-common.c:646
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s και %s"
 
-#: ../src/gpk-common.c:647
+#. Translators: a list of five things
+#: ../src/gpk-common.c:651
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s και %s"
 
 #. TRANSLATORS: we failed to install
-#. TRANSLATORS: error: failed to install, detailed error follows
 #. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:244 ../src/gpk-dbus-task.c:473
-#: ../src/gpk-dbus-task.c:1160
+#: ../src/gpk-dbus-task.c:244 ../src/gpk-dbus-task.c:487
+#: ../src/gpk-dbus-task.c:1173
 msgid "Failed to install software"
 msgstr "Απέτυχε η εγκατάσταση του λογισμικού"
 
@@ -1072,45 +1085,45 @@ msgstr ""
 "στο σύστημα καταγραφής σφαλμάτων της διανομής σας."
 
 #. TRANSLATORS: failed authentication
-#: ../src/gpk-dbus-task.c:309
+#: ../src/gpk-dbus-task.c:310
 msgid "You don't have the necessary privileges to perform this action."
 msgstr ""
 "Δεν έχετε τα προνόμια που απαιτούνται για την εκτέλεση αυτής της ενέργειας."
 
 #. TRANSLATORS: could not start system service
-#: ../src/gpk-dbus-task.c:313
+#: ../src/gpk-dbus-task.c:315
 msgid "The software service could not be started."
 msgstr "Αδύνατη η εκκίνηση της υπηρεσίας λογισμικού."
 
 #. TRANSLATORS: the user tried to query for something invalid
-#: ../src/gpk-dbus-task.c:317
+#: ../src/gpk-dbus-task.c:320
 msgid "The query is not valid."
 msgstr "Δεν ήταν έγκυρη η αναζήτηση."
 
 #. TRANSLATORS: the user tried to install a file that was not compatable or broken
-#: ../src/gpk-dbus-task.c:321
+#: ../src/gpk-dbus-task.c:325
 msgid "The file is not valid."
 msgstr "Δεν είναι έγκυρο το αρχείο."
 
 #. TRANSLATORS: button: show details about the error
-#: ../src/gpk-dbus-task.c:385
+#: ../src/gpk-dbus-task.c:392
 msgid "Show details"
 msgstr "Εμφάνιση λεπτομερειών"
 
 #. TRANSLATORS: title: installing packages
-#: ../src/gpk-dbus-task.c:511
+#: ../src/gpk-dbus-task.c:524
 msgid "Installing software"
 msgstr "Εγκατάσταση λογισμικού"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:613 ../src/gpk-dbus-task.c:1381
+#: ../src/gpk-dbus-task.c:626 ../src/gpk-dbus-task.c:1394
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "Απέτυχε η εγκατάσταση του αρχείου"
 msgstr[1] "Απέτυχε η εγκατάσταση των αρχείων"
 
 #. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:702
+#: ../src/gpk-dbus-task.c:715
 msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
 msgstr[0] "Θέλετε να εγκαταστήσετε αυτό το αρχείο;"
@@ -1124,29 +1137,29 @@ msgstr[1] "Θέλετε να εγκαταστήσετε αυτά τα αρχεί
 #. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
 #. TRANSLATORS: button: install catalog
-#: ../src/gpk-dbus-task.c:711 ../src/gpk-dbus-task.c:1255
-#: ../src/gpk-dbus-task.c:1474 ../src/gpk-dbus-task.c:1677
-#: ../src/gpk-dbus-task.c:2137 ../src/gpk-dbus-task.c:2475
-#: ../src/gpk-dbus-task.c:2688 ../src/gpk-dbus-task.c:2810
-#: ../src/gpk-dbus-task.c:3163 ../src/gpk-task.c:404
+#: ../src/gpk-dbus-task.c:724 ../src/gpk-dbus-task.c:1268
+#: ../src/gpk-dbus-task.c:1487 ../src/gpk-dbus-task.c:1690
+#: ../src/gpk-dbus-task.c:2150 ../src/gpk-dbus-task.c:2488
+#: ../src/gpk-dbus-task.c:2701 ../src/gpk-dbus-task.c:2823
+#: ../src/gpk-dbus-task.c:3176 ../src/gpk-task.c:404
 msgid "Install"
 msgstr "Εγκατάσταση"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1034
+#: ../src/gpk-dbus-task.c:1047
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "Εγκατάσταση τοπικού αρχείου"
 msgstr[1] "Εγκατάσταση τοπικών αρχείων"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1094
+#: ../src/gpk-dbus-task.c:1107
 #, c-format
 msgid "Could not find software"
 msgstr "Δε βρέθηκε λογισμικό"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1103
+#: ../src/gpk-dbus-task.c:1116
 msgid "The software could not be found in any software source"
 msgstr "Δε βρέθηκε το λογισμικό σε καμία πηγή λογισμικού"
 
@@ -1155,82 +1168,82 @@ msgstr "Δε βρέθηκε το λογισμικό σε καμία πηγή λ�
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
-#: ../src/gpk-dbus-task.c:1106 ../src/gpk-dbus-task.c:1343
-#: ../src/gpk-dbus-task.c:1649 ../src/gpk-dbus-task.c:1855
-#: ../src/gpk-dbus-task.c:2110 ../src/gpk-dbus-task.c:2447
+#: ../src/gpk-dbus-task.c:1119 ../src/gpk-dbus-task.c:1356
+#: ../src/gpk-dbus-task.c:1662 ../src/gpk-dbus-task.c:1868
+#: ../src/gpk-dbus-task.c:2123 ../src/gpk-dbus-task.c:2460
 msgid "More information"
 msgstr "Περισσότερες πληροφορίες"
 
-#: ../src/gpk-dbus-task.c:1143
+#: ../src/gpk-dbus-task.c:1156
 msgid "The software is already installed"
 msgstr "Το λογισμικό είναι ήδη εγκατεστημένο"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1145
+#: ../src/gpk-dbus-task.c:1158
 msgid "Nothing to do."
 msgstr "Δεν υπάρχει κάτι για να γίνει."
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1162
+#: ../src/gpk-dbus-task.c:1175
 msgid "Incorrect response from search"
 msgstr "Η αναζήτηση επέστρεψε λανθασμένη απάντηση"
 
-#: ../src/gpk-dbus-task.c:1240
+#: ../src/gpk-dbus-task.c:1253
 msgid "Additional software is required"
 msgstr "Απαιτείται επιπλέον λογισμικό"
 
-#: ../src/gpk-dbus-task.c:1242
+#: ../src/gpk-dbus-task.c:1255
 msgid "Do you want to search for and install this software now?"
 msgstr "Θέλετε να αναζητήσετε τώρα αυτό το λογισμικό και να το εγκαταστήσετε;"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1248
+#: ../src/gpk-dbus-task.c:1261
 #, c-format
 msgid "%s requires additional software"
 msgstr "Το %s απαιτεί πρόσθετο λογισμικό"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1251
+#: ../src/gpk-dbus-task.c:1264
 msgid "An application requires additional software"
 msgstr "Μια εφαρμογή απαιτεί πρόσθετο λογισμικό"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1268 ../src/gpk-dbus-task.c:2870
+#: ../src/gpk-dbus-task.c:1281 ../src/gpk-dbus-task.c:2883
 msgid "Searching for packages"
 msgstr "Αναζήτηση πακέτων"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1338
+#: ../src/gpk-dbus-task.c:1351
 msgid "Failed to find package"
 msgstr "Δε βρέθηκε το πακέτο"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1340
+#: ../src/gpk-dbus-task.c:1353
 msgid "The file could not be found in any packages"
 msgstr "Δε βρέθηκε το αρχείο σε κανένα πακέτο"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1378
+#: ../src/gpk-dbus-task.c:1391
 #, c-format
 msgid "%s already provides this file"
 msgstr "Το %s έχει ήδη αυτό το αρχείο"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1459
+#: ../src/gpk-dbus-task.c:1472
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "Απαιτείται το ακόλουθο αρχείο:"
 msgstr[1] "Απαιτούνται τα ακόλουθα αρχεία:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1462
+#: ../src/gpk-dbus-task.c:1475
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "Θέλετε να αναζητήσετε τώρα αυτό το αρχείο;"
 msgstr[1] "Θέλετε να αναζητήσετε τώρα αυτά τα αρχεία;"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1467
+#: ../src/gpk-dbus-task.c:1480
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1238,7 +1251,7 @@ msgstr[0] "Το %s επιθυμεί να εγκαταστήσει ένα αρχ�
 msgstr[1] "Το %s επιθυμεί να εγκαταστήσει αρχεία"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1470
+#: ../src/gpk-dbus-task.c:1483
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "Ένα πρόγραμμα επιθυμεί να εγκαταστήσει ένα αρχείο"
@@ -1246,27 +1259,27 @@ msgstr[1] "Ένα πρόγραμμα επιθυμεί να εγκαταστήσ�
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1486 ../src/gpk-dbus-task.c:3113
+#: ../src/gpk-dbus-task.c:1499 ../src/gpk-dbus-task.c:3126
 #: ../src/gpk-enum.c:1312
 msgid "Searching for file"
 msgstr "Αναζήτηση για το αρχείο"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1529
+#: ../src/gpk-dbus-task.c:1542
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "Απαιτείται το ακόλουθο πρόσθετο:"
 msgstr[1] "Απαιτούνται τα ακόλουθα πρόσθετα:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1547 ../src/gpk-dbus-task.c:2375
+#: ../src/gpk-dbus-task.c:1560 ../src/gpk-dbus-task.c:2388
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Θέλετε να το αναζητήσετε τώρα;"
 msgstr[1] "Θέλετε να τα αναζητήσετε τώρα;"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1560
+#: ../src/gpk-dbus-task.c:1573
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1275,7 +1288,7 @@ msgstr[0] ""
 msgstr[1] "Το %s απαιτεί επιπλέον πρόσθετα για την αποκωδικοποίηση του αρχείου"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1564
+#: ../src/gpk-dbus-task.c:1577
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1284,7 +1297,7 @@ msgstr[0] ""
 msgstr[1] "Το %s απαιτεί επιπλέον πρόσθετα για την κωδικοποίηση του αρχείου"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1568
+#: ../src/gpk-dbus-task.c:1581
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1292,7 +1305,7 @@ msgstr[0] "Το %s απαιτεί ένα επιπλέον πρόσθετο γι�
 msgstr[1] "Το %s απαιτεί επιπλέον πρόσθετα για αυτή την εργασία"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1574
+#: ../src/gpk-dbus-task.c:1587
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] ""
@@ -1303,7 +1316,7 @@ msgstr[1] ""
 "αρχείου"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1578
+#: ../src/gpk-dbus-task.c:1591
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] ""
@@ -1314,80 +1327,79 @@ msgstr[1] ""
 "αρχείου"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1582
+#: ../src/gpk-dbus-task.c:1595
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "Ένα πρόγραμμα απαιτεί ένα επιπλέον πρόσθετο για αυτή την εργασία"
 msgstr[1] "Ένα πρόγραμμα απαιτεί επιπλέον πρόσθετα για αυτή την εργασία"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1588 ../src/gpk-dbus-task.c:1941
-#: ../src/gpk-dbus-task.c:2314 ../src/gpk-dbus-task.c:2387
+#: ../src/gpk-dbus-task.c:1601 ../src/gpk-dbus-task.c:1954
+#: ../src/gpk-dbus-task.c:2327 ../src/gpk-dbus-task.c:2400
 msgid "Search"
 msgstr "Αναζήτηση"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1643
+#: ../src/gpk-dbus-task.c:1656
 msgid "Failed to search for plugin"
 msgstr "Απέτυχε η αναζήτηση για το πρόσθετο"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1645
+#: ../src/gpk-dbus-task.c:1658
 msgid "Could not find plugin in any configured software source"
 msgstr "Δε βρέθηκε το πρόσθετο σε καμία ενεργοποιημένη πηγή λογισμικού"
 
-#: ../src/gpk-dbus-task.c:1668 ../src/gpk-dbus-task.c:2466
+#: ../src/gpk-dbus-task.c:1681 ../src/gpk-dbus-task.c:2479
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "Εγκατάσταση του ακόλουθου πρόσθετου"
 msgstr[1] "Εγκατάσταση των ακόλουθων πρόσθετων"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1669 ../src/gpk-dbus-task.c:2130
-#: ../src/gpk-dbus-task.c:2467
+#: ../src/gpk-dbus-task.c:1682 ../src/gpk-dbus-task.c:2143
+#: ../src/gpk-dbus-task.c:2480
 msgid "Do you want to install this software now?"
 msgstr "Θέλετε να εγκαταστήσετε τώρα αυτό το λογισμικό;"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1761
+#: ../src/gpk-dbus-task.c:1774
 msgid "Searching for plugins"
 msgstr "Αναζήτηση για πρόσθετα"
 
-#: ../src/gpk-dbus-task.c:1782
+#: ../src/gpk-dbus-task.c:1795
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "Αναζήτηση για πρόσθετο: %s"
 
-#. TRANSLATORS: we failed to find the package, this shouldn't happen
-#: ../src/gpk-dbus-task.c:1820
+#: ../src/gpk-dbus-task.c:1834
 msgid "Failed to search for provides"
 msgstr "Απέτυχε η αναζήτηση για πακέτα που να παρέχουν το αρχείο"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1850
+#: ../src/gpk-dbus-task.c:1863
 msgid "Failed to find software"
 msgstr "Δε βρέθηκε το λογισμικό"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1852
+#: ../src/gpk-dbus-task.c:1865
 msgid "No new applications can be found to handle this type of file"
 msgstr ""
 "Δε βρέθηκαν εφαρμογές που να μπορούν να χειριστούν αυτόν τον τύπο αρχείου"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1923
+#: ../src/gpk-dbus-task.c:1936
 msgid "An additional program is required to open this type of file:"
 msgstr "Απαιτείται ένα νέο πρόγραμμα για το άνοιγμα αυτού του τύπου αρχείου:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1926
+#: ../src/gpk-dbus-task.c:1939
 msgid "Do you want to search for a program to open this file type now?"
 msgstr ""
 "Θέλετε να αναζητήσετε τώρα ένα πρόγραμμα που να μπορεί να ανοίξει αυτόν τον "
 "τύπο αρχείου;"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1934
+#: ../src/gpk-dbus-task.c:1947
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1395,41 +1407,41 @@ msgstr[0] "Το %s απαιτεί νέο τύπο mime"
 msgstr[1] "Το %s απαιτεί νέους τύπους mime"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1937
+#: ../src/gpk-dbus-task.c:1950
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "Ένα πρόγραμμα απαιτεί νέο τύπο mime"
 msgstr[1] "Ένα πρόγραμμα απαιτεί νέους τύπους mime"
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1952
+#: ../src/gpk-dbus-task.c:1965
 msgid "Searching for file handlers"
 msgstr "Αναζήτηση εφαρμογών για το χειρισμό του αρχείου"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2031
+#: ../src/gpk-dbus-task.c:2044
 msgid "Language tag not parsed"
 msgstr "Δεν αναγνωρίστηκε η ετικέτα γλώσσας"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2039
+#: ../src/gpk-dbus-task.c:2052
 msgid "Language code not matched"
 msgstr "Μη αντιστοιχία κωδικού γλώσσας"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2099
+#: ../src/gpk-dbus-task.c:2112
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "Δε βρέθηκε η γραμματοσειρά"
 msgstr[1] "Δε βρέθηκαν οι γραμματοσειρές"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2107
+#: ../src/gpk-dbus-task.c:2120
 msgid "No new fonts can be found for this document"
 msgstr "Δε βρέθηκαν κατάλληλες νέες γραμματοσειρές για αυτό το έγγραφο"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2293
+#: ../src/gpk-dbus-task.c:2306
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] ""
@@ -1438,14 +1450,14 @@ msgstr[1] ""
 "Απαιτούνται νέες γραμματοσειρές για την ορθή προβολή αυτού του εγγράφου."
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2297
+#: ../src/gpk-dbus-task.c:2310
 msgid "Do you want to search for a suitable font now?"
 msgid_plural "Do you want to search for suitable fonts now?"
 msgstr[0] "Θέλετε να αναζητήσετε τώρα μια κατάλληλη γραμματοσειρά;"
 msgstr[1] "Θέλετε να αναζητήσετε τώρα κατάλληλες γραμματοσειρές;"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2307
+#: ../src/gpk-dbus-task.c:2320
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1453,81 +1465,80 @@ msgstr[0] "Το %s επιθυμεί να εγκαταστήσει μια γρα�
 msgstr[1] "Το %s επιθυμεί να εγκαταστήσει γραμματοσειρές"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2310
+#: ../src/gpk-dbus-task.c:2323
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "Ένα πρόγραμμα επιθυμεί να εγκαταστήσει μια γραμματοσειρά"
 msgstr[1] "Ένα πρόγραμμα επιθυμεί να εγκαταστήσει γραμματοσειρές"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2326
+#: ../src/gpk-dbus-task.c:2339
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "Αναζήτηση γραμματοσειράς"
 msgstr[1] "Αναζήτηση γραμματοσειρών"
 
 #. TRANSLATORS: we are listing the services in a box
-#: ../src/gpk-dbus-task.c:2363
+#: ../src/gpk-dbus-task.c:2376
 msgid "The following service is required:"
 msgid_plural "The following services are required:"
 msgstr[0] "Απαιτείται η ακόλουθη υπηρεσία:"
 msgstr[1] "Απαιτούνται οι ακόλουθες υπηρεσίες:"
 
-#: ../src/gpk-dbus-task.c:2383
+#: ../src/gpk-dbus-task.c:2396
 msgid "Plasma requires an additional service for this operation"
 msgid_plural "Plasma requires additional services for this operation"
 msgstr[0] "Το plasma απαιτεί μια επιπλέον υπηρεσία για αυτή την εργασία"
 msgstr[1] "Το plasma απαιτεί επιπλέον υπηρεσίες για αυτή την εργασία"
 
-#: ../src/gpk-dbus-task.c:2441
+#: ../src/gpk-dbus-task.c:2454
 msgid "Failed to search for Plasma service"
 msgstr "Απέτυχε η αναζήτηση υπηρεσίας Plasma"
 
 #. TRANSLATORS: no software sources have the wanted Plasma service
-#: ../src/gpk-dbus-task.c:2443
+#: ../src/gpk-dbus-task.c:2456
 msgid "Could not find service in any configured software source"
 msgstr "Δε βρέθηκε υπηρεσία σε καμία ενεργοποιημένη πηγή λογισμικού"
 
 #. TRANSLATORS: search for Plasma services
-#: ../src/gpk-dbus-task.c:2549
+#: ../src/gpk-dbus-task.c:2562
 msgid "Searching for services"
 msgstr "Αναζήτηση για υπηρεσίες"
 
-#: ../src/gpk-dbus-task.c:2568
+#: ../src/gpk-dbus-task.c:2581
 #, c-format
 msgid "Searching for service: %s"
 msgstr "Αναζήτηση για την υπηρεσία: %s"
 
-#: ../src/gpk-dbus-task.c:2645
+#: ../src/gpk-dbus-task.c:2658
 msgid "Could not process catalog"
 msgstr "Απέτυχε η επεξεργασία του κατάλογου"
 
-#: ../src/gpk-dbus-task.c:2663
+#: ../src/gpk-dbus-task.c:2676
 msgid "No packages need to be installed"
 msgstr "Δε χρειάζεται να εγκατασταθούν πακέτα"
 
 #. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2682
+#: ../src/gpk-dbus-task.c:2695
 msgid "Install packages in catalog?"
 msgstr "Να εγκατασταθούν τα πακέτα του καταλόγου;"
 
 #. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2684
+#: ../src/gpk-dbus-task.c:2697
 msgid "The following packages are marked to be installed from the catalog:"
 msgstr "Σημειώθηκαν προς εγκατάσταση τα ακόλουθα πακέτα του καταλόγου:"
 
-#. TRANSLATORS: error: failed to remove, detailed error follows
-#: ../src/gpk-dbus-task.c:2724
+#: ../src/gpk-dbus-task.c:2738
 msgid "Failed to remove package"
 msgstr "Αδύνατη η αφαίρεση του πακέτου"
 
-#: ../src/gpk-dbus-task.c:2801
+#: ../src/gpk-dbus-task.c:2814
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "Εγκατάσταση του ακόλουθου οδηγού"
 msgstr[1] "Εγκατάσταση των ακόλουθων οδηγών"
 
-#: ../src/gpk-dbus-task.c:2802
+#: ../src/gpk-dbus-task.c:2815
 msgid "Do you want to install this driver now?"
 msgid_plural "Do you want to install these drivers now?"
 msgstr[0] "Θέλετε να εγκαταστήσετε αυτόν τον οδηγό τώρα;"
@@ -1535,36 +1546,36 @@ msgstr[1] "Θέλετε να εγκαταστήσετε αυτούς τους ο
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2954 ../src/gpk-enum.c:948
+#: ../src/gpk-dbus-task.c:2967 ../src/gpk-enum.c:948
 msgid "Removing packages"
 msgstr "Αφαίρεση πακέτων"
 
 #. TRANSLATORS: failed to find the package for the file
-#: ../src/gpk-dbus-task.c:3008
+#: ../src/gpk-dbus-task.c:3021
 msgid "Failed to find any software"
 msgstr "Δε βρέθηκε λογισμικό"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:3010
+#: ../src/gpk-dbus-task.c:3023
 msgid "The file could not be found in any available software"
 msgstr "Δε βρέθηκε το αρχείο σε κανένα διαθέσιμο λογισμικό"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:3086
+#: ../src/gpk-dbus-task.c:3099
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "Το παρακάτω αρχείο θα αφαιρεθεί:"
 msgstr[1] "Τα παρακάτω αρχεία θα αφαιρεθούν:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:3089
+#: ../src/gpk-dbus-task.c:3102
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Θέλετε να αφαιρεθεί τώρα αυτό το αρχείο;"
 msgstr[1] "Θέλετε να αφαιρέσετε τώρα αυτά τα αρχεία;"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:3094
+#: ../src/gpk-dbus-task.c:3107
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1572,26 +1583,26 @@ msgstr[0] "Το %s επιθυμεί να αφαιρέσει ένα αρχείο"
 msgstr[1] "Το %s επιθυμεί να αφαιρέσει αρχεία"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:3097
+#: ../src/gpk-dbus-task.c:3110
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Ένα πρόγραμμα ζητά να αφαιρέσει ένα αρχείο"
 msgstr[1] "Ένα πρόγραμμα ζητά να αφαιρέσει αρχεία"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:3101 ../src/gpk-task.c:409
+#: ../src/gpk-dbus-task.c:3114 ../src/gpk-task.c:409
 msgid "Remove"
 msgstr "Αφαίρεση"
 
 #. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:3154
+#: ../src/gpk-dbus-task.c:3167
 msgid "Do you want to install this catalog?"
 msgid_plural "Do you want to install these catalogs?"
 msgstr[0] "Θέλετε να εγκαταστήσετε αυτόν τον κατάλογο;"
 msgstr[1] "Θέλετε να εγκαταστήσετε αυτούς τους καταλόγους;"
 
 #. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:3179
+#: ../src/gpk-dbus-task.c:3192
 msgid "Install catalogs"
 msgstr "Εγκατάσταση καταλόγων"
 
@@ -3729,21 +3740,6 @@ msgstr "Απέτυχε η εγκατάσταση του καταλόγου"
 msgid "You need to specify a file name to install"
 msgstr "Πρέπει να ορίσετε ένα όνομα αρχείου προς εγκατάσταση"
 
-#. TRANSLATORS: This is when the specified D-Bus method did not execute successfully
-#: ../src/gpk-install-catalog.c:116 ../src/gpk-install-local-file.c:116
-#: ../src/gpk-install-mime-type.c:116 ../src/gpk-install-package-name.c:115
-#: ../src/gpk-install-provide-file.c:116
-msgid "The action could not be completed"
-msgstr "Δεν ήταν δυνατή η ολοκλήρωση της ενέργειας"
-
-#. TRANSLATORS: we don't have anything more useful to translate. sorry.
-#: ../src/gpk-install-catalog.c:118 ../src/gpk-install-local-file.c:118
-#: ../src/gpk-install-mime-type.c:118 ../src/gpk-install-package-name.c:117
-#: ../src/gpk-install-provide-file.c:118
-msgid "The request failed. More details are available in the detailed report."
-msgstr ""
-"Απέτυχε το αίτημα. Για περισσότερες πληροφορίες, δείτε τη λεπτομερή αναφορά."
-
 #. TRANSLATORS: command line option: a list of files to install
 #: ../src/gpk-install-local-file.c:51
 msgid "Files to install"
@@ -3888,7 +3884,8 @@ msgstr "Προβολή καταγραφών"
 
 #: ../src/gpk-modal-dialog.c:441
 #, c-format
-msgid "Remaining time : %s"
+#| msgid "Remaining time : %s"
+msgid "Remaining time: %s"
 msgstr "Χρόνος που απομένει : %s"
 
 #. TRANSLATORS: check once an hour
@@ -4490,6 +4487,15 @@ msgstr "Επιλογές αποσφαλμάτωσης"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Προβολή επιλογών αποσφαλμάτωσης"
+
+#~ msgid "The action could not be completed"
+#~ msgstr "Δεν ήταν δυνατή η ολοκλήρωση της ενέργειας"
+
+#~ msgid ""
+#~ "The request failed. More details are available in the detailed report."
+#~ msgstr ""
+#~ "Απέτυχε το αίτημα. Για περισσότερες πληροφορίες, δείτε τη λεπτομερή "
+#~ "αναφορά."
 
 #~ msgid "No packages"
 #~ msgstr "Κανένα πακέτο"
