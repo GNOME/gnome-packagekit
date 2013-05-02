@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-04-15 09:54+0000\n"
-"PO-Revision-Date: 2013-04-16 19:51+0100\n"
+"POT-Creation-Date: 2013-04-26 06:30+0000\n"
+"PO-Revision-Date: 2013-05-02 22:22+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "Language: sl\n"
@@ -262,7 +262,7 @@ msgid "Cancel search"
 msgstr "Prekliči iskanje"
 
 #: ../data/gpk-application.ui.h:7
-msgid "Licence"
+msgid "License"
 msgstr "Dovoljenje"
 
 #: ../data/gpk-application.ui.h:8
@@ -350,9 +350,9 @@ msgstr "_Sprejmi dovoljenje"
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
 #: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2617
-#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:65
-#: ../src/gpk-install-package-name.c:64 ../src/gpk-dbus-service.c:151
-#: ../src/gpk-dbus-service.c:154
+#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:64
+#: ../src/gpk-install-package-name.c:63 ../src/gpk-dbus-service.c:150
+#: ../src/gpk-dbus-service.c:153
 msgid "Software Install"
 msgstr "Nameščanje programske opreme"
 
@@ -362,8 +362,8 @@ msgid "Install selected software on the system"
 msgstr "Namestitev izbrane programske opreme v sistem"
 
 #. TRANSLATORS: program name: application to install a catalog of software
-#: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:66
-#: ../src/gpk-install-catalog.c:68
+#: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:65
+#: ../src/gpk-install-catalog.c:67
 msgid "Catalog Installer"
 msgstr "Namestilnik katalogov"
 
@@ -371,7 +371,7 @@ msgstr "Namestilnik katalogov"
 msgid "Install a catalog of software on the system"
 msgstr "Namestitev kataloga programske opreme v sistem"
 
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:827
+#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:826
 msgid "Software Log Viewer"
 msgstr "Pregledovalnik dnevnika programske opreme"
 
@@ -1822,7 +1822,7 @@ msgstr "Ni mogoče pridobiti podrobnosti posodobitve operacijskega sistema"
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-distro-upgrade.c:782 ../src/gpk-distro-upgrade.c:785
+#: ../src/gpk-distro-upgrade.c:781 ../src/gpk-distro-upgrade.c:784
 msgid "Distribution Upgrade Tool"
 msgstr "Orodje za posodobitev celotne distribucije"
 
@@ -3735,17 +3735,17 @@ msgid "Catalogs files to install"
 msgstr "Datoteke kataloga za namestitev"
 
 #. are we running privileged
-#: ../src/gpk-install-catalog.c:76
+#: ../src/gpk-install-catalog.c:75
 msgid "Catalog installer"
 msgstr "Namestilnik katalogov"
 
-#: ../src/gpk-install-catalog.c:81
+#: ../src/gpk-install-catalog.c:80
 msgid "Failed to install catalog"
 msgstr "Napaka med nameščanjem kataloga"
 
 #. TRANSLATORS: no file name was supplied
 #. TRANSLATORS: nothing was specified
-#: ../src/gpk-install-catalog.c:83 ../src/gpk-install-provide-file.c:83
+#: ../src/gpk-install-catalog.c:82 ../src/gpk-install-provide-file.c:82
 msgid "You need to specify a file name to install"
 msgstr "Določiti je treba ime datoteke za namestitev"
 
@@ -3754,23 +3754,23 @@ msgstr "Določiti je treba ime datoteke za namestitev"
 msgid "Files to install"
 msgstr "Datoteke za namestitev"
 
-#: ../src/gpk-install-local-file.c:67
+#: ../src/gpk-install-local-file.c:66
 msgid "PackageKit File Installer"
 msgstr "Namestilnik datotek PackageKit"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-local-file.c:75
+#: ../src/gpk-install-local-file.c:74
 msgid "Local file installer"
 msgstr "Namestilnik krajevnih datotek"
 
 #. TRANSLATORS: could not install a package that contained the file we wanted
 #. TRANSLATORS: nothing done
-#: ../src/gpk-install-local-file.c:81 ../src/gpk-install-provide-file.c:81
+#: ../src/gpk-install-local-file.c:80 ../src/gpk-install-provide-file.c:80
 msgid "Failed to install a package to provide a file"
 msgstr "Prišlo je do napaka med nameščanjem paketa z zahtevano datoteko"
 
 #. TRANSLATORS: nothing selected
-#: ../src/gpk-install-local-file.c:83
+#: ../src/gpk-install-local-file.c:82
 msgid "You need to specify a file to install"
 msgstr "Določiti je treba datoteko za namestitev"
 
@@ -3780,22 +3780,22 @@ msgid "Mime types to install"
 msgstr "Mime vrste za namestitev"
 
 #. TRANSLATORS: program name: application to install a package to provide a mime type
-#: ../src/gpk-install-mime-type.c:65 ../src/gpk-install-mime-type.c:67
+#: ../src/gpk-install-mime-type.c:64 ../src/gpk-install-mime-type.c:66
 msgid "Mime Type Installer"
 msgstr "Namestilnik mime vrst"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-mime-type.c:75
+#: ../src/gpk-install-mime-type.c:74
 msgid "Mime type installer"
 msgstr "Namestilnik mime vrst"
 
 #. TRANSLATORS: could not install program supporting this type
-#: ../src/gpk-install-mime-type.c:81
+#: ../src/gpk-install-mime-type.c:80
 msgid "Failed to install a program to handle this file type"
 msgstr "Napaka med nameščanjem programa za upravljanje te vrste datotek"
 
 #. TRANSLATORS: no type given
-#: ../src/gpk-install-mime-type.c:83
+#: ../src/gpk-install-mime-type.c:82
 msgid "You need to specify a mime type to install"
 msgstr "Določiti je treba vrsto MIME za namestitev"
 
@@ -3804,17 +3804,17 @@ msgid "Packages to install"
 msgstr "Paketi za namestitev"
 
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:74
+#: ../src/gpk-install-package-name.c:65 ../src/gpk-install-package-name.c:73
 msgid "Package Name Installer"
 msgstr "Namestilnik imen paketov"
 
 #. TRANSLATORS: failed
-#: ../src/gpk-install-package-name.c:80
+#: ../src/gpk-install-package-name.c:79
 msgid "Failed to install software by name"
 msgstr "Nameščanje programske opreme po imenu je spodletelo"
 
 #. TRANSLATORS: nothing was specified
-#: ../src/gpk-install-package-name.c:82
+#: ../src/gpk-install-package-name.c:81
 msgid "You need to specify the name of the software to install"
 msgstr "Določiti je treba ime datoteke programa za namestitev"
 
@@ -3825,8 +3825,8 @@ msgstr "Krajevne datoteke za namestitev"
 
 #. TRANSLATORS: program name, an application to install a file that is needed by an application and is provided by packages
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-provide-file.c:65 ../src/gpk-install-provide-file.c:67
-#: ../src/gpk-install-provide-file.c:75
+#: ../src/gpk-install-provide-file.c:64 ../src/gpk-install-provide-file.c:66
+#: ../src/gpk-install-provide-file.c:74
 msgid "Single File Installer"
 msgstr "Namestilnik ene datoteke"
 
@@ -3886,14 +3886,14 @@ msgid "Set the parent window to make this modal"
 msgstr "Določi glavno okno kot vedno na vrhu."
 
 #. are we running privileged
-#: ../src/gpk-log.c:835
+#: ../src/gpk-log.c:834
 msgid "Log viewer"
 msgstr "Pregledovalnik dnevnikov"
 
 #: ../src/gpk-modal-dialog.c:441
 #, c-format
-msgid "Remaining time : %s"
-msgstr "Preostal čas : %s"
+msgid "Remaining time: %s"
+msgstr "Preostali čas: %s"
 
 #. TRANSLATORS: check once an hour
 #: ../src/gpk-prefs.c:62
@@ -4454,12 +4454,12 @@ msgstr ""
 "Preostale posodobitve so zadržane, saj morajo biti najprej nameščeni "
 "pomembni sistemski paketi."
 
-#: ../src/gpk-update-viewer.c:3439
+#: ../src/gpk-update-viewer.c:3438
 msgid "Update Software"
 msgstr "Posodobi programsko opremo"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3456
+#: ../src/gpk-update-viewer.c:3455
 msgid "Software Update Viewer"
 msgstr "Pregledovalnik posodobitve programske opreme"
 
@@ -4467,7 +4467,7 @@ msgstr "Pregledovalnik posodobitve programske opreme"
 msgid "Do not exit after the request has been processed"
 msgstr "Ne končaj po končanih opravilih"
 
-#: ../src/gpk-dbus-service.c:156
+#: ../src/gpk-dbus-service.c:155
 msgid "Session D-Bus service for PackageKit"
 msgstr "Storitev seje D-Bus programa PackageKit"
 
