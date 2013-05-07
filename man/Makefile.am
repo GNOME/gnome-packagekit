@@ -1,33 +1,37 @@
 EXTRA_DIST =						\
 	gpk-application.sgml				\
-	gpk-backend-status.sgml				\
+	gpk-dbus-service.sgml				\
+	gpk-distro-upgrade.sgml				\
+	gpk-install-catalog.sgml			\
 	gpk-install-local-file.sgml			\
 	gpk-install-mime-type.sgml			\
 	gpk-install-package-name.sgml			\
 	gpk-install-provide-file.sgml			\
+	gpk-log.sgml					\
 	gpk-prefs.sgml					\
-	gpk-repo.sgml					\
-	gpk-update-icon.sgml				\
+	gpk-service-pack.sgml				\
 	gpk-update-viewer.sgml
 
 if HAVE_DOCBOOK2MAN
 man_MANS =						\
 	gpk-application.1				\
-	gpk-backend-status.1				\
+	gpk-dbus-service.1				\
+	gpk-distro-upgrade.1				\
+	gpk-install-catalog.1				\
 	gpk-install-local-file.1			\
-	gpk-install-mime-type.1			\
+	gpk-install-mime-type.1				\
 	gpk-install-package-name.1			\
 	gpk-install-provide-file.1			\
+	gpk-log.1					\
 	gpk-prefs.1					\
-	gpk-repo.1					\
-	gpk-update-icon.1				\
+	gpk-service-pack.1				\
 	gpk-update-viewer.1
 endif
 
 if HAVE_DOCBOOK2MAN
 gpk-application.1: gpk-application.sgml
 	docbook2man $? > /dev/null
-gpk-backend-status.1: gpk-backend-status.sgml
+gpk-distro-upgrade.1: gpk-distro-upgrade.sgml
 	docbook2man $? > /dev/null
 gpk-install-local-file.1: gpk-install-local-file.sgml
 	docbook2man $? > /dev/null
@@ -39,11 +43,15 @@ gpk-install-mime-type.1: gpk-install-mime-type.sgml
 	docbook2man $? > /dev/null
 gpk-prefs.1: gpk-prefs.sgml
 	docbook2man $? > /dev/null
-gpk-repo.1: gpk-repo.sgml
+gpk-install-catalog.1: gpk-install-catalog.sgml
 	docbook2man $? > /dev/null
-gpk-update-icon.1: gpk-update-icon.sgml
+gpk-dbus-service.1: gpk-dbus-service.sgml
 	docbook2man $? > /dev/null
 gpk-update-viewer.1: gpk-update-viewer.sgml
+	docbook2man $? > /dev/null
+gpk-log.1: gpk-log.sgml
+	docbook2man $? > /dev/null
+gpk-service-pack.1: gpk-service-pack.sgml
 	docbook2man $? > /dev/null
 endif
 
