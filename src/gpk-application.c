@@ -2401,31 +2401,6 @@ gpk_application_group_add_data (GpkApplicationPrivate *priv, PkGroupEnum group)
 }
 
 /**
- * gpk_application_popup_position_menu:
- **/
-static void
-gpk_application_popup_position_menu (GtkMenu *menu, gint *x, gint *y, gboolean *push_in, GpkApplicationPrivate *priv)
-{
-	GtkWidget *widget;
-	GdkWindow *window;
-	GtkRequisition requisition;
-	gint menu_xpos = 0;
-	gint menu_ypos = 0;
-
-	widget = GTK_WIDGET (menu);
-
-	/* find the location */
-	window = gtk_widget_get_window (widget);
-	gdk_window_get_origin (window, &menu_xpos, &menu_ypos);
-	gtk_widget_get_preferred_size (GTK_WIDGET (widget), &requisition, NULL);
-
-	/* set the position */
-	*x = menu_xpos;
-	*y = menu_ypos + requisition.height - 1;
-	*push_in = TRUE;
-}
-
-/**
  * gpk_application_menu_search_by_name:
  **/
 static void
@@ -2547,8 +2522,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 	}
 
 	gtk_widget_show_all (GTK_WIDGET (menu));
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL,
-			(GtkMenuPositionFunc) gpk_application_popup_position_menu, entry,
+	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
 			event->button, event->time);
 }
 
