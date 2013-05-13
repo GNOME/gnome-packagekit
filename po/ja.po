@@ -9,12 +9,13 @@
 # Hideki Yamane <henrich@debian.org>, 2011-2012.
 # Noriko Mizumoto <noriko@fedoraproject.org>, 2012.
 # Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2013.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-04-15 09:54+0000\n"
-"PO-Revision-Date: 2013-05-08 20:09+0900\n"
+"POT-Creation-Date: 2013-05-10 15:31+0000\n"
+"PO-Revision-Date: 2013-05-11 01:49+0900\n"
 "Last-Translator: Jiro Matsuzawa <jmatsuzawa@gnome.org>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -22,7 +23,6 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 1.0\n"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:1
 msgid "Automatically remove unused dependencies"
@@ -91,7 +91,7 @@ msgstr "ファイル一覧には、マシンのアーキテクチャに一致す
 #: ../data/org.gnome.packagekit.gschema.xml.h:17
 #, fuzzy
 msgid "Show the category group menu"
-msgstr "カテゴリーのグループメニューを表示"
+msgstr "カテゴリーのグループメニューを表示する"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:18
 #, fuzzy
@@ -199,10 +199,8 @@ msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
 msgstr "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;アップデート;アップグレード;更新;ソース;リポジトリ;レポジトリ;設定;インストール;ストア;Software;package;パッケージ;"
 
 #: ../data/gpk-application.ui.h:2
-#, fuzzy
-#| msgid "Applying changes"
 msgid "Apply Changes"
-msgstr "変更の適用中"
+msgstr "変更を適用"
 
 #: ../data/gpk-application.ui.h:3
 msgid "Changes are not applied instantly, this button applies all changes"
@@ -210,7 +208,7 @@ msgstr "変更はすぐに適用されませんが、このボタンですべて
 
 #: ../data/gpk-application.ui.h:4
 msgid "Clear"
-msgstr ""
+msgstr "クリア"
 
 #: ../data/gpk-application.ui.h:5
 msgid "Clear current selection"
@@ -310,7 +308,7 @@ msgstr "承諾します(_A)"
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2617
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2591
 #: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:65
 #: ../src/gpk-install-package-name.c:64 ../src/gpk-dbus-service.c:151
 #: ../src/gpk-dbus-service.c:154
@@ -562,57 +560,45 @@ msgstr "保留中"
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
-msgstr[0] "%i 個のファイルが %s によってインストールされました"
+msgstr[0] "%i 個のファイルが %s によってインストールされます"
 
 #. TRANSLATORS: no packages returned
 #: ../src/gpk-application.c:904 ../src/gpk-application.c:1028
-#, fuzzy
-#| msgid "Software"
 msgid "No software"
-msgstr "ソフトウェア"
+msgstr "ソフトウェアなし"
 
 #. TRANSLATORS: this package is not required by any others
 #: ../src/gpk-application.c:906
-#, fuzzy
-#| msgid "No other packages require this package"
 msgid "No other software requires this."
-msgstr "このパッケージを要求するパッケージはありません。"
+msgstr "これを要求する他のソフトウェアはありません。"
 
 #: ../src/gpk-application.c:912
-#, fuzzy, c-format
-#| msgid "Software Sources"
+#, c-format
 msgid "Software requires %s"
-msgstr "ソフトウェアの提供元"
+msgstr "%s を必要とするソフトウェア"
 
 #. TRANSLATORS: show a array of packages for the package
 #: ../src/gpk-application.c:915
-#, fuzzy, c-format
-#| msgid "Packages listed below require %s to function correctly."
-#| msgid_plural "Packages listed below require %s to function correctly."
+#, c-format
 msgid "The software listed below require %s to function correctly."
 msgid_plural "The software listed below require %s to function correctly."
-msgstr[0] "以下の一覧のパッケージが正常に動作するために%sを要求します。"
+msgstr[0] "以下の一覧のソフトウェアが正常に動作するためには %s を必要とします。"
 
 #. TRANSLATORS: this package does not depend on any others
 #: ../src/gpk-application.c:1030
-#, fuzzy
-#| msgid "This package does not depend on any others"
 msgid "This software does not depend on any other"
-msgstr "このパッケージは他のパッケージに依存していません"
+msgstr "このソフトウェアは他のソフトウェアに依存していません"
 
 #: ../src/gpk-application.c:1036
-#, fuzzy, c-format
-#| msgid "%i additional package is required for %s"
-#| msgid_plural "%i additional packages are required for %s"
+#, c-format
 msgid "Additional software is required for %s"
-msgstr "%i個のパッケージが%sに要求されています。"
+msgstr "追加のソフトウェアが %s に必要です。"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #: ../src/gpk-application.c:1039
-#, fuzzy, c-format
-#| msgid "The software that you want to install requires additional software to run correctly."
+#, c-format
 msgid "%s requires the following additional software to function correctly."
-msgstr "インストールしたいソフトウェアをきちんと実行させるため、追加のソフトウェアが必要です。"
+msgstr "%s が正しく動作するには以下のソフトウェアが追加で必要になります。"
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
 #: ../src/gpk-application.c:1106
@@ -626,24 +612,18 @@ msgstr "見つかりませんでした。"
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
 #: ../src/gpk-application.c:1278
-#, fuzzy
-#| msgid "Try entering a package name in the search bar."
 msgid "Try entering a name in the search bar."
-msgstr "検索バーにパッケージ名を入力してください。"
+msgstr "検索バーに名前を入力してください。"
 
 #. TRANSLATORS: nothing in the package queue
 #: ../src/gpk-application.c:1281
-#, fuzzy
-#| msgid "There are no packages queued to be installed or removed."
 msgid "There is no software queued to be installed or removed."
-msgstr "インストールまたは削除するパッケージはありません。"
+msgstr "インストールまたは削除するソフトウェアはありません。"
 
 #. TRANSLATORS: tell the user to switch to details search mode
 #: ../src/gpk-application.c:1286
-#, fuzzy
-#| msgid "Try searching package descriptions by clicking the icon next to the search text."
 msgid "Try searching software descriptions by clicking the icon next to the search text."
-msgstr "検索テキストの横のアイコンをクリックすると、記述されたパッケージの検索を試みます。"
+msgstr "検索テキストの横のアイコンをクリックして、説明から検索してみてください。ます。"
 
 #. TRANSLATORS: tell the user to try harder
 #: ../src/gpk-application.c:1289
@@ -719,53 +699,53 @@ msgid "Download size"
 msgstr "ダウンロード時のサイズ"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2448
+#: ../src/gpk-application.c:2423
 msgid "Searching by name"
-msgstr "名前から検索"
+msgstr "名前で検索"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2472
+#: ../src/gpk-application.c:2447
 msgid "Searching by description"
 msgstr "説明から検索"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2496
+#: ../src/gpk-application.c:2471
 msgid "Searching by file"
-msgstr "ファイルから検索"
+msgstr "ファイルで検索"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2518
+#: ../src/gpk-application.c:2493
 msgid "Search by name"
 msgstr "名前で検索"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2529
+#: ../src/gpk-application.c:2504
 msgid "Search by description"
 msgstr "説明から検索"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2540
+#: ../src/gpk-application.c:2515
 msgid "Search by file name"
 msgstr "ファイル名で検索"
 
-#: ../src/gpk-application.c:2586
+#: ../src/gpk-application.c:2560
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "このソフトウエアは GNU 一般公衆利用許諾契約書バージョン2の元にライセンスされています。"
 
-#: ../src/gpk-application.c:2587
+#: ../src/gpk-application.c:2561
 msgid "PackageKit is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 msgstr "PackageKit is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version."
 
-#: ../src/gpk-application.c:2591
+#: ../src/gpk-application.c:2565
 msgid "PackageKit is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 msgstr "PackageKit is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details."
 
-#: ../src/gpk-application.c:2595
+#: ../src/gpk-application.c:2569
 msgid "You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 msgstr "You should have received a copy of the GNU General Public License along with this program; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2601
+#: ../src/gpk-application.c:2575
 msgid "translator-credits"
 msgstr ""
 "Yohsuke Ooi <meke@momonga-linux.org>\n"
@@ -775,54 +755,52 @@ msgstr ""
 "松澤 二郎 <jmatsuzawa@gnome.org>\n"
 "日本GNOMEユーザー会 <http://www.gnome.gr.jp/>"
 
-#: ../src/gpk-application.c:2622
+#: ../src/gpk-application.c:2596
 msgid "PackageKit Website"
 msgstr "PackageKit のウェブサイト"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2625
-#, fuzzy
-#| msgid "Package Manager for GNOME"
+#: ../src/gpk-application.c:2599
 msgid "Software management for GNOME"
-msgstr "GNOME 用パッケージマネジャー"
+msgstr "GNOME 用ソフトウェア管理ツール"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2818
+#: ../src/gpk-application.c:2792
 msgid "Enter a search word or click a category to get started."
 msgstr "検索する単語を入力するかカテゴリをクリックして作業を開始してください。"
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2821
+#: ../src/gpk-application.c:2795
 msgid "Enter a search word to get started."
 msgstr "検索する単語を入力して作業を開始してください。"
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3060
+#: ../src/gpk-application.c:3034
 msgid "Exiting as properties could not be retrieved"
 msgstr "プロパティが取得不能なので終了します"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3103
+#: ../src/gpk-application.c:3077
 msgid "All packages"
 msgstr "すべてのパッケージ"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3105
+#: ../src/gpk-application.c:3079
 msgid "Show all packages"
 msgstr "すべてのパッケージを表示"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3536 ../src/gpk-update-viewer.c:3424
+#: ../src/gpk-application.c:3510 ../src/gpk-update-viewer.c:3424
 msgid "Show the program version and exit"
 msgstr "プログラムのバージョンを表示し終了します"
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3550 ../src/gpk-log.c:498
+#: ../src/gpk-application.c:3524 ../src/gpk-log.c:498
 msgid "Install Software"
 msgstr "ソフトウェアのインストール"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3566
+#: ../src/gpk-application.c:3540
 msgid "Package installer"
 msgstr "パッケージインストーラー"
 
@@ -955,10 +933,8 @@ msgid "Error details"
 msgstr "エラーの詳細"
 
 #: ../src/gpk-dbus-task.c:278
-#, fuzzy
-#| msgid "Error details"
 msgid "Software error details"
-msgstr "エラーの詳細"
+msgstr "ソフトウェアエラー詳細"
 
 #. TRANSLATORS: default fallback error -- this should never happen
 #: ../src/gpk-dbus-task.c:293
@@ -972,10 +948,8 @@ msgstr "その操作を実行する権限がありません"
 
 #. TRANSLATORS: could not start system service
 #: ../src/gpk-dbus-task.c:315
-#, fuzzy
-#| msgid "The packagekitd service could not be started."
 msgid "The software service could not be started."
-msgstr "packagekitdのサービスが開始されていません"
+msgstr "ソフトウェアサービスが開始できません。"
 
 #. TRANSLATORS: the user tried to query for something invalid
 #: ../src/gpk-dbus-task.c:320
@@ -994,8 +968,6 @@ msgstr "詳細の表示"
 
 #. TRANSLATORS: title: installing packages
 #: ../src/gpk-dbus-task.c:524
-#, fuzzy
-#| msgid "Install Software"
 msgid "Installing software"
 msgstr "ソフトウェアのインストール"
 
@@ -1035,17 +1007,14 @@ msgstr[0] "ローカルファイルのインストール"
 
 #. TRANSLATORS: couldn't resolve name to package
 #: ../src/gpk-dbus-task.c:1107
-#, fuzzy, c-format
-#| msgid "Failed to find software"
+#, c-format
 msgid "Could not find software"
-msgstr "ソフトウェアの検索に失敗しました"
+msgstr "ソフトウェアが見つかりませんでした"
 
 #. TRANSLATORS: message: could not find
 #: ../src/gpk-dbus-task.c:1116
-#, fuzzy
-#| msgid "The packages could not be found in any software source"
 msgid "The software could not be found in any software source"
-msgstr "どのソフトウェアの提供元からもパッケージは見つかりませんでした"
+msgstr "そのパッケージはどのソフトウェアの提供元にも見つかりませんでした"
 
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
@@ -1059,11 +1028,8 @@ msgid "More information"
 msgstr "詳細"
 
 #: ../src/gpk-dbus-task.c:1156
-#, fuzzy
-#| msgid "The package is already installed"
-#| msgid_plural "The packages are already installed"
 msgid "The software is already installed"
-msgstr "既にインストールされているパッケージです"
+msgstr "このソフトウェアは既にインストール済みです"
 
 #. TRANSLATORS: message: package is already installed
 #: ../src/gpk-dbus-task.c:1158
@@ -1111,10 +1077,9 @@ msgstr "そのファイルが存在するパッケージはありません"
 
 #. TRANSLATORS: we've already got a package that provides this file
 #: ../src/gpk-dbus-task.c:1391
-#, fuzzy, c-format
-#| msgid "The %s package already provides this file"
+#, c-format
 msgid "%s already provides this file"
-msgstr "%sパッケージが既にこのファイルを提供しています"
+msgstr "%s が既にこのファイルを提供しています"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
 #: ../src/gpk-dbus-task.c:1472
@@ -1223,11 +1188,8 @@ msgstr[0] "以下のプラグインをインストール"
 #. TRANSLATORS: title: show a list of fonts
 #: ../src/gpk-dbus-task.c:1682 ../src/gpk-dbus-task.c:2143
 #: ../src/gpk-dbus-task.c:2480
-#, fuzzy
-#| msgid "Do you want to install this package now?"
-#| msgid_plural "Do you want to install these packages now?"
 msgid "Do you want to install this software now?"
-msgstr "このパッケージをすぐにインストールしますか?"
+msgstr "このソフトウェアをすぐにインストールしますか?"
 
 #. TRANSLATORS: search for codec
 #: ../src/gpk-dbus-task.c:1774
@@ -1310,12 +1272,9 @@ msgstr[0] "このドキュメントを正しく表示するため、追加のフ
 
 #. TRANSLATORS: we need to download a new font package to display a document
 #: ../src/gpk-dbus-task.c:2310
-#, fuzzy
-#| msgid "Do you want to search for a suitable package now?"
-#| msgid_plural "Do you want to search for suitable packages now?"
 msgid "Do you want to search for a suitable font now?"
 msgid_plural "Do you want to search for suitable fonts now?"
-msgstr[0] "適切なパッケージをすぐに検索しますか?"
+msgstr[0] "適切なフォントをすぐに検索しますか?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-dbus-task.c:2320
@@ -1394,12 +1353,9 @@ msgid_plural "Install the following drivers"
 msgstr[0] "以下のドライバーをインストール"
 
 #: ../src/gpk-dbus-task.c:2815
-#, fuzzy
-#| msgid "Do you want to install this file?"
-#| msgid_plural "Do you want to install these files?"
 msgid "Do you want to install this driver now?"
 msgid_plural "Do you want to install these drivers now?"
-msgstr[0] "このファイルをインストールしますか?"
+msgstr[0] "このドライバーをインストールしますか?"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
@@ -1409,17 +1365,13 @@ msgstr "パッケージを削除中"
 
 #. TRANSLATORS: failed to find the package for the file
 #: ../src/gpk-dbus-task.c:3021
-#, fuzzy
-#| msgid "Failed to find software"
 msgid "Failed to find any software"
 msgstr "ソフトウェアの検索に失敗しました"
 
 #. TRANSLATORS: nothing found
 #: ../src/gpk-dbus-task.c:3023
-#, fuzzy
-#| msgid "The file could not be found in any packages"
 msgid "The file could not be found in any available software"
-msgstr "そのファイルが存在するパッケージはありません"
+msgstr "そのファイルが存在する利用可能なパッケージはありません"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
 #: ../src/gpk-dbus-task.c:3099
@@ -1691,9 +1643,6 @@ msgid "The package was not found"
 msgstr "パッケージは見つかりませんでした"
 
 #: ../src/gpk-enum.c:328
-#, fuzzy
-#| msgid "The package is already installed"
-#| msgid_plural "The packages are already installed"
 msgid "The package is already installed"
 msgstr "既にインストールされているパッケージです"
 
@@ -3531,10 +3480,8 @@ msgstr "ソフトウェアのインストールに失敗しました"
 
 #. TRANSLATORS: nothing was specified
 #: ../src/gpk-install-package-name.c:82
-#, fuzzy
-#| msgid "You need to specify a file name to install"
 msgid "You need to specify the name of the software to install"
-msgstr "インストールするファイル名を指定する必要があります"
+msgstr "インストールするソフトウェアの名前を指定する必要があります"
 
 #. TRANSLATORS: command line option: a list of files to install
 #: ../src/gpk-install-provide-file.c:51
@@ -4023,10 +3970,8 @@ msgid "The developer logs will be shown as no description is available for this 
 msgstr "更新の説明が利用可能ではないので、開発用ログが表示されます。"
 
 #: ../src/gpk-update-viewer.c:2161
-#, fuzzy
-#| msgid "Loading..."
 msgid "Loading…"
-msgstr "読み込み中..."
+msgstr "読み込み中…"
 
 #: ../src/gpk-update-viewer.c:2164
 msgid "No update details available."
@@ -4075,10 +4020,8 @@ msgstr "更新できませんでした"
 
 #. TRANSLATORS: this is the header
 #: ../src/gpk-update-viewer.c:2834
-#, fuzzy
-#| msgid "Checking for updates..."
 msgid "Checking for updates…"
-msgstr "更新の確認..."
+msgstr "更新の確認中…"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: ../src/gpk-update-viewer.c:3113
