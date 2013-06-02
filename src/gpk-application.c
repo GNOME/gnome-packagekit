@@ -3390,7 +3390,7 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	gpk_application_set_button_find_sensitivity (priv);
 
 	/* set a size, as much as the screen allows */
-	gtk_window_set_default_size (GTK_WINDOW (main_window), 800, 400);
+	gtk_window_set_default_size (GTK_WINDOW (main_window), 1000, 600);
 	gtk_widget_show (GTK_WIDGET(main_window));
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "treeview_packages"));
