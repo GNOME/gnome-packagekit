@@ -841,6 +841,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 	gchar *text;
 	gint percentage;
 	GtkWidget *widget;
+	guint64 transaction_flags;
 	PkInfoEnum info;
 	PkRoleEnum role;
 	PkStatusEnum status;
@@ -853,6 +854,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 		      "percentage", &percentage,
 		      "package", &package,
 		      "allow-cancel", &allow_cancel,
+		      "transaction-flags", &transaction_flags,
 		      NULL);
 
 	if (type == PK_PROGRESS_TYPE_PACKAGE) {
@@ -863,6 +865,10 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 		GtkTreeViewColumn *column;
 		GtkTreePath *path;
 		gboolean scroll;
+
+		/* ignore simulation phase */
+		if (pk_bitfield_contain (transaction_flags, PK_TRANSACTION_FLAG_ENUM_SIMULATE))
+			goto out;
 
 		/* add the results, not the progress */
 		if (role == PK_ROLE_ENUM_GET_UPDATES)
@@ -1039,6 +1045,10 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 		guint size;
 		guint size_display;
 		PkItemProgress *item_progress;
+
+		/* ignore simulation phase */
+		if (pk_bitfield_contain (transaction_flags, PK_TRANSACTION_FLAG_ENUM_SIMULATE))
+			goto out;
 
 		g_object_get (progress,
 			      "item-progress", &item_progress,
