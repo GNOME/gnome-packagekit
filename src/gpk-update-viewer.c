@@ -866,7 +866,7 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 
 		/* add the results, not the progress */
 		if (role == PK_ROLE_ENUM_GET_UPDATES)
-			return;
+			goto out;
 
 		g_object_get (package,
 			      "info", &info,
