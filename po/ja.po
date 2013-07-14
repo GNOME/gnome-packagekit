@@ -14,8 +14,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-05-10 15:31+0000\n"
-"PO-Revision-Date: 2013-05-11 01:49+0900\n"
+"POT-Creation-Date: 2013-05-13 03:46+0000\n"
+"PO-Revision-Date: 2013-06-29 22:19+0900\n"
 "Last-Translator: Jiro Matsuzawa <jmatsuzawa@gnome.org>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -91,7 +91,7 @@ msgstr "ファイル一覧には、マシンのアーキテクチャに一致す
 #: ../data/org.gnome.packagekit.gschema.xml.h:17
 #, fuzzy
 msgid "Show the category group menu"
-msgstr "カテゴリーのグループメニューを表示する"
+msgstr "カテゴリのグループメニューを表示する"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:18
 #, fuzzy
@@ -116,11 +116,11 @@ msgstr "デフォルトで使用される検索モードです。オプション
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:23
 msgid "Show all repositories in the software source viewer"
-msgstr "ソフトウェアソースビューワーにすべてのリポジトリを表示"
+msgstr "ソフトウェアソースビューアーにすべてのリポジトリを表示"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:24
 msgid "Show all repositories in the software source viewer."
-msgstr "ソフトウェアソースビューワーにすべてのリポジトリを表示します。"
+msgstr "ソフトウェアソースビューアーにすべてのリポジトリを表示します。"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:25
 msgid "Notify the user before a large update is done on a mobile broadband connection"
@@ -219,7 +219,9 @@ msgid "Cancel search"
 msgstr "検索のキャンセル"
 
 #: ../data/gpk-application.ui.h:7
-msgid "Licence"
+#, fuzzy
+#| msgid "Licence"
+msgid "License"
 msgstr "ライセンス"
 
 #: ../data/gpk-application.ui.h:8
@@ -309,9 +311,9 @@ msgstr "承諾します(_A)"
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
 #: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2591
-#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:65
-#: ../src/gpk-install-package-name.c:64 ../src/gpk-dbus-service.c:151
-#: ../src/gpk-dbus-service.c:154
+#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:64
+#: ../src/gpk-install-package-name.c:63 ../src/gpk-dbus-service.c:150
+#: ../src/gpk-dbus-service.c:153
 msgid "Software Install"
 msgstr "ソフトウェアのインストール"
 
@@ -321,8 +323,8 @@ msgid "Install selected software on the system"
 msgstr "選択されたソフトウェアをシステムにインストールします"
 
 #. TRANSLATORS: program name: application to install a catalog of software
-#: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:66
-#: ../src/gpk-install-catalog.c:68
+#: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:65
+#: ../src/gpk-install-catalog.c:67
 msgid "Catalog Installer"
 msgstr "カタログインストーラー"
 
@@ -330,7 +332,7 @@ msgstr "カタログインストーラー"
 msgid "Install a catalog of software on the system"
 msgstr "ソフトウェアカタログをシステムにインストール"
 
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:827
+#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:826
 msgid "Software Log Viewer"
 msgstr "ソフトウェア更新履歴ビューアー"
 
@@ -502,7 +504,7 @@ msgstr "更新をインストール(_I)"
 
 #: ../data/gpk-update-viewer.ui.h:3
 msgid "Software updates correct errors, eliminate security vulnerabilities and provide new features."
-msgstr "ソフトウェアの更新は、エラーを修正・セキュリティ脆弱性を取り除き、新たな機能を提供します。"
+msgstr "ソフトウェアを更新することで、エラーやセキュリティ脆弱性が修正され、新機能が利用可能になります。"
 
 #: ../data/gpk-update-viewer.ui.h:4
 msgid "_Upgrade"
@@ -623,7 +625,7 @@ msgstr "インストールまたは削除するソフトウェアはありませ
 #. TRANSLATORS: tell the user to switch to details search mode
 #: ../src/gpk-application.c:1286
 msgid "Try searching software descriptions by clicking the icon next to the search text."
-msgstr "検索テキストの横のアイコンをクリックして、説明から検索してみてください。ます。"
+msgstr "検索テキストの横のアイコンをクリックして「説明から検索」を試してください。"
 
 #. TRANSLATORS: tell the user to try harder
 #: ../src/gpk-application.c:1289
@@ -1578,7 +1580,7 @@ msgstr "OS のアップグレード情報を取得できません"
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-distro-upgrade.c:782 ../src/gpk-distro-upgrade.c:785
+#: ../src/gpk-distro-upgrade.c:781 ../src/gpk-distro-upgrade.c:784
 msgid "Distribution Upgrade Tool"
 msgstr "ディストリビューションのアップグレードツール"
 
@@ -3398,17 +3400,17 @@ msgid "Catalogs files to install"
 msgstr "カタログファイルのインストール"
 
 #. are we running privileged
-#: ../src/gpk-install-catalog.c:76
+#: ../src/gpk-install-catalog.c:75
 msgid "Catalog installer"
 msgstr "カタログインストーラー"
 
-#: ../src/gpk-install-catalog.c:81
+#: ../src/gpk-install-catalog.c:80
 msgid "Failed to install catalog"
 msgstr "インストールするカタログの失敗"
 
 #. TRANSLATORS: no file name was supplied
 #. TRANSLATORS: nothing was specified
-#: ../src/gpk-install-catalog.c:83 ../src/gpk-install-provide-file.c:83
+#: ../src/gpk-install-catalog.c:82 ../src/gpk-install-provide-file.c:82
 msgid "You need to specify a file name to install"
 msgstr "インストールするファイル名を指定する必要があります"
 
@@ -3417,23 +3419,23 @@ msgstr "インストールするファイル名を指定する必要がありま
 msgid "Files to install"
 msgstr "インストールするファイル"
 
-#: ../src/gpk-install-local-file.c:67
+#: ../src/gpk-install-local-file.c:66
 msgid "PackageKit File Installer"
 msgstr "PackageKit ファイルインストーラー"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-local-file.c:75
+#: ../src/gpk-install-local-file.c:74
 msgid "Local file installer"
 msgstr "ローカルファイルインストーラー"
 
 #. TRANSLATORS: could not install a package that contained the file we wanted
 #. TRANSLATORS: nothing done
-#: ../src/gpk-install-local-file.c:81 ../src/gpk-install-provide-file.c:81
+#: ../src/gpk-install-local-file.c:80 ../src/gpk-install-provide-file.c:80
 msgid "Failed to install a package to provide a file"
 msgstr "ファイルを提供しているパッケージのインストールに失敗しました"
 
 #. TRANSLATORS: nothing selected
-#: ../src/gpk-install-local-file.c:83
+#: ../src/gpk-install-local-file.c:82
 msgid "You need to specify a file to install"
 msgstr "インストールするファイルを指定する必要があります"
 
@@ -3443,22 +3445,22 @@ msgid "Mime types to install"
 msgstr "インストールする MIME 型"
 
 #. TRANSLATORS: program name: application to install a package to provide a mime type
-#: ../src/gpk-install-mime-type.c:65 ../src/gpk-install-mime-type.c:67
+#: ../src/gpk-install-mime-type.c:64 ../src/gpk-install-mime-type.c:66
 msgid "Mime Type Installer"
 msgstr "MIME 型のインストーラー"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-mime-type.c:75
+#: ../src/gpk-install-mime-type.c:74
 msgid "Mime type installer"
 msgstr "MIME 型のインストーラー"
 
 #. TRANSLATORS: could not install program supporting this type
-#: ../src/gpk-install-mime-type.c:81
+#: ../src/gpk-install-mime-type.c:80
 msgid "Failed to install a program to handle this file type"
 msgstr "このファイル形式を処理するプログラムのインストールに失敗しました"
 
 #. TRANSLATORS: no type given
-#: ../src/gpk-install-mime-type.c:83
+#: ../src/gpk-install-mime-type.c:82
 msgid "You need to specify a mime type to install"
 msgstr "インストールする mime-type を指定する必要があります"
 
@@ -3467,19 +3469,19 @@ msgid "Packages to install"
 msgstr "インストールするパッケージ"
 
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:74
+#: ../src/gpk-install-package-name.c:65 ../src/gpk-install-package-name.c:73
 msgid "Package Name Installer"
 msgstr "パッケージ名インストーラー"
 
 #. TRANSLATORS: failed
-#: ../src/gpk-install-package-name.c:80
+#: ../src/gpk-install-package-name.c:79
 #, fuzzy
 #| msgid "Failed to install software"
 msgid "Failed to install software by name"
 msgstr "ソフトウェアのインストールに失敗しました"
 
 #. TRANSLATORS: nothing was specified
-#: ../src/gpk-install-package-name.c:82
+#: ../src/gpk-install-package-name.c:81
 msgid "You need to specify the name of the software to install"
 msgstr "インストールするソフトウェアの名前を指定する必要があります"
 
@@ -3490,8 +3492,8 @@ msgstr "ローカルファイルのインストール"
 
 #. TRANSLATORS: program name, an application to install a file that is needed by an application and is provided by packages
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-provide-file.c:65 ../src/gpk-install-provide-file.c:67
-#: ../src/gpk-install-provide-file.c:75
+#: ../src/gpk-install-provide-file.c:64 ../src/gpk-install-provide-file.c:66
+#: ../src/gpk-install-provide-file.c:74
 msgid "Single File Installer"
 msgstr "単一ファイルのインストーラー"
 
@@ -3551,13 +3553,14 @@ msgid "Set the parent window to make this modal"
 msgstr "親ウィンドウをモーダルウィンドウに設定します"
 
 #. are we running privileged
-#: ../src/gpk-log.c:835
+#: ../src/gpk-log.c:834
 msgid "Log viewer"
 msgstr "ログビューアー"
 
 #: ../src/gpk-modal-dialog.c:441
-#, c-format
-msgid "Remaining time : %s"
+#, fuzzy, c-format
+#| msgid "Remaining time : %s"
+msgid "Remaining time: %s"
 msgstr "残り時間: %s"
 
 #. TRANSLATORS: check once an hour
@@ -3588,7 +3591,7 @@ msgstr "すべての更新"
 #. TRANSLATORS: update just security updates
 #: ../src/gpk-prefs.c:73
 msgid "Only security updates"
-msgstr "セキュリティー更新のみ"
+msgstr "セキュリティ更新のみ"
 
 #. TRANSLATORS: don't update anything
 #: ../src/gpk-prefs.c:75
@@ -3892,22 +3895,22 @@ msgstr "状態"
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer.c:1977
 msgid "This update will add new features and expand functionality."
-msgstr "この更新により新機能が追加され、 また機能性が拡張されることになります。"
+msgstr "この更新により新機能が追加され、また機能が拡張されます。"
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer.c:1981
 msgid "This update will fix bugs and other non-critical problems."
-msgstr "この更新はバグフィックスとその他の致命的ではない問題についてです。"
+msgstr "この更新によりバグやその他の致命的でない問題が修正されます。"
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer.c:1985
 msgid "This update is important as it may solve critical problems."
-msgstr "この更新は致命的な問題を解決する重要なものです。"
+msgstr "この更新は致命的な問題を修正する重要なものです。"
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer.c:1989
 msgid "This update is needed to fix a security vulnerability with this package."
-msgstr "この更新は、パッケージのセキュリティの脆弱性を修正するために必要です。"
+msgstr "この更新は必ず適用してください。パッケージのセキュリティ脆弱性が修正されます。"
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: ../src/gpk-update-viewer.c:1993
@@ -3918,31 +3921,31 @@ msgstr "この更新はブロックされました。"
 #: ../src/gpk-update-viewer.c:2005
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
-msgstr "この通知は、%s で発生しており、前回の %s の更新によるものです。"
+msgstr "この更新は %s に公開されました。前回の更新日は %s です。"
 
 #. TRANSLATORS: this is when the update was issued
 #: ../src/gpk-update-viewer.c:2012
 #, c-format
 msgid "This notification was issued on %s."
-msgstr "この通知は、%s で発生しました。"
+msgstr "この更新は %s に公開されました。"
 
 #. TRANSLATORS: this is a array of vendor URLs
 #: ../src/gpk-update-viewer.c:2034 ../src/gpk-update-viewer.c:2058
 msgid "For more information about this update please visit this website:"
 msgid_plural "For more information about this update please visit these websites:"
-msgstr[0] "この更新の詳細はウェブサイトを確認してください:"
+msgstr[0] "この更新の詳細については次のウェブサイトを参照してください。"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
 #: ../src/gpk-update-viewer.c:2041 ../src/gpk-update-viewer.c:2066
 msgid "For more information about bugs fixed by this update please visit this website:"
 msgid_plural "For more information about bugs fixed by this update please visit these websites:"
-msgstr[0] "このバグフィックス更新の詳細はウェブサイトを確認してください:"
+msgstr[0] "この更新で修正されるバグの詳細については次のウェブサイトを参照してください。"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
 #: ../src/gpk-update-viewer.c:2048 ../src/gpk-update-viewer.c:2074
 msgid "For more information about this security update please visit this website:"
 msgid_plural "For more information about this security update please visit these websites:"
-msgstr[0] "このセキュリティ更新の詳細はウェブサイトを確認してください:"
+msgstr[0] "このセキュリティ更新の詳細については次のウェブサイトを参照してください。"
 
 #. TRANSLATORS: reboot required
 #: ../src/gpk-update-viewer.c:2083
@@ -3962,7 +3965,7 @@ msgstr "この更新は不安定なバージョンとして分類されていま
 #. TRANSLATORS: this is the stability status of the update
 #: ../src/gpk-update-viewer.c:2098
 msgid "This is a test update, and is not designed for normal use. Please report any problems or regressions you encounter."
-msgstr "これはテスト的な更新で通常利用の品質ではありません。問題発生やお気づきの点を報告してください。"
+msgstr "これはテスト用の更新であり、通常時での使用を目的としていません。何か問題やリグレッションに遭遇した場合は、ぜひ報告してください。"
 
 #. TRANSLATORS: this is a ChangeLog
 #: ../src/gpk-update-viewer.c:2107
@@ -3996,17 +3999,17 @@ msgstr "結果が返ってきませんでした。"
 #. TRANSLATORS: right click menu, select all the updates
 #: ../src/gpk-update-viewer.c:2549
 msgid "Select all"
-msgstr "すべて選択"
+msgstr "すべて選択する"
 
 #. TRANSLATORS: right click menu, unselect all the updates
 #: ../src/gpk-update-viewer.c:2557
 msgid "Unselect all"
-msgstr "すべて未選択"
+msgstr "すべての選択を解除する"
 
 #. TRANSLATORS: right click menu, select only security updates
 #: ../src/gpk-update-viewer.c:2564
 msgid "Select security updates"
-msgstr "セキュリティー更新を選択する"
+msgstr "セキュリティ更新を選択する"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
 #: ../src/gpk-update-viewer.c:2570
@@ -4039,12 +4042,12 @@ msgstr "ディストリビューションの新規アップグレードリリー
 msgid "Other updates are held back as some important system packages need to be installed first."
 msgstr "重要なシステムのパッケージをいくつか先にインストールする必要があるため、他の更新は保留されています。"
 
-#: ../src/gpk-update-viewer.c:3439
+#: ../src/gpk-update-viewer.c:3438
 msgid "Update Software"
 msgstr "ソフトウェアの更新"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3456
+#: ../src/gpk-update-viewer.c:3455
 msgid "Software Update Viewer"
 msgstr "ソフトウェア更新ビューアー"
 
@@ -4052,7 +4055,7 @@ msgstr "ソフトウェア更新ビューアー"
 msgid "Do not exit after the request has been processed"
 msgstr "要求の完了後でも終了しません"
 
-#: ../src/gpk-dbus-service.c:156
+#: ../src/gpk-dbus-service.c:155
 msgid "Session D-Bus service for PackageKit"
 msgstr "PackageKit 向けセッション D-Bus サービス"
 
