@@ -42,6 +42,9 @@ main (int argc, char *argv[])
 	gboolean ret;
 	GError *error = NULL;
 	gchar **files = NULL;
+	gchar *tmp;
+	gchar *current_dir;
+	guint i;
 	DBusGConnection *connection;
 	DBusGProxy *proxy = NULL;
 
@@ -82,6 +85,18 @@ main (int argc, char *argv[])
 				  _("You need to specify a file to install"), NULL);
 		goto out;
 	}
+
+	/* make sure we don't pass relative paths to the session-interface */
+	/* (this is needed if install-local-files is executed from the command-line) */
+	current_dir = g_get_current_dir ();
+	for (i = 0; files[i] != NULL; i++) {
+		if (!g_str_has_prefix (files[i], "/")) {
+			tmp = g_build_filename (current_dir, files[i], NULL);
+			g_free (files[i]);
+			files[i] = tmp;
+		}
+	}
+	g_free (current_dir);
 
 	/* check dbus connections, exit if not valid */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
