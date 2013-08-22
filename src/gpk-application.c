@@ -130,6 +130,9 @@ enum {
 
 static void gpk_application_perform_search (GpkApplicationPrivate *priv);
 
+static void gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv);
+static void gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv);
+
 /**
  * gpk_application_state_get_icon:
  **/
@@ -959,11 +962,14 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplicationPrivate *priv
 
 	/* get the requires */
 	package_ids = pk_package_ids_from_id (package_id_selected);
-	pk_client_get_requires_async (PK_CLIENT (priv->task),
+
+	/* pk_client_get_depends/requires semantic is reversed */
+	pk_client_get_depends_async (PK_CLIENT (priv->task),
 				      pk_bitfield_value (PK_FILTER_ENUM_NONE),
 				      package_ids, TRUE, priv->cancellable,
 				      (PkProgressCallback) gpk_application_progress_cb, priv,
-				      (GAsyncReadyCallback) gpk_application_get_requires_cb, priv);
+				      (GAsyncReadyCallback) gpk_application_get_depends_cb, priv);
+
 out:
 	g_free (package_id_selected);
 	g_strfreev (package_ids);
@@ -1081,11 +1087,14 @@ gpk_application_menu_depends_cb (GtkAction *_action, GpkApplicationPrivate *priv
 
 	/* get the depends */
 	package_ids = pk_package_ids_from_id (package_id_selected);
-	pk_client_get_depends_async (PK_CLIENT (priv->task),
+
+	/* pk_client_get_depends/require semantic is reversed */
+	pk_client_get_requires_async (PK_CLIENT (priv->task),
 				     pk_bitfield_value (PK_FILTER_ENUM_NONE),
 				     package_ids, TRUE, priv->cancellable,
 				     (PkProgressCallback) gpk_application_progress_cb, priv,
-				     (GAsyncReadyCallback) gpk_application_get_depends_cb, priv);
+				     (GAsyncReadyCallback) gpk_application_get_requires_cb, priv);
+
 out:
 	g_free (package_id_selected);
 	g_strfreev (package_ids);
