@@ -1748,7 +1748,8 @@ gpk_application_text_changed_cb (GtkEntry *entry, GpkApplicationPrivate *priv)
 	GtkTreeSelection *selection;
 
 	/* clear group selection if we have the tab */
-	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
+	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_SEARCH_GROUP) &&
+	    gtk_entry_get_text_length (entry) > 0) {
 		treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_groups"));
 		selection = gtk_tree_view_get_selection (treeview);
 		gtk_tree_selection_unselect_all (selection);
@@ -2077,12 +2078,12 @@ gpk_application_groups_treeview_changed_cb (GtkTreeSelection *selection, GpkAppl
 	gpk_application_clear_details (priv);
 	gpk_application_clear_packages (priv);
 
-	/* clear the search text if we clicked the group array */
-	entry = GTK_ENTRY (gtk_builder_get_object (priv->builder, "entry_text"));
-	gtk_entry_set_text (entry, "");
-
 	/* This will only work in single or browse selection mode! */
 	if (gtk_tree_selection_get_selected (selection, &model, &iter)) {
+		/* clear the search text if we clicked the group array */
+		entry = GTK_ENTRY (gtk_builder_get_object (priv->builder, "entry_text"));
+		gtk_entry_set_text (entry, "");
+
 		g_free (priv->search_group);
 		gtk_tree_model_get (model, &iter,
 				    GROUPS_COLUMN_ID, &priv->search_group,
