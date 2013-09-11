@@ -5,6 +5,11 @@ SUBDIRS = icons
 migrationdir = $(datadir)/GConf/gsettings
 dist_migration_DATA = org.gnome.packagekit.gschema.migrate
 
+appdatadir = $(datadir)/appdata
+dist_appdata_DATA =					\
+	gpk-application.appdata.xml			\
+	gpk-update-viewer.appdata.xml
+
 @INTLTOOL_DESKTOP_RULE@
 desktopdir = $(datadir)/applications
 desktop_in_files =					\
