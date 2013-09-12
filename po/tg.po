@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Tajik Gnome\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-07-18 11:26+0000\n"
-"PO-Revision-Date: 2013-07-18 16:30+0500\n"
+"POT-Creation-Date: 2013-09-11 07:08+0000\n"
+"PO-Revision-Date: 2013-09-12 14:20+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: \n"
 "Language: Tajik\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=1;\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.5.7\n"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:1
 msgid "Automatically remove unused dependencies"
@@ -236,9 +236,10 @@ msgstr ""
 "Ҳангоми намоиши UI аз сессияи дархости D-Bus, ин имконотро барои фаъол шудан "
 "маҷбур намоед."
 
-#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
-msgid "Software"
-msgstr "Нармафзор"
+#: ../data/gpk-application.desktop.in.h:1
+#| msgid "Package"
+msgid "Packages"
+msgstr "Бастаҳо"
 
 #: ../data/gpk-application.desktop.in.h:2
 msgid "Add or remove software installed on the system"
@@ -249,8 +250,11 @@ msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
 msgstr ""
 "Навсозиҳо;Такмил;Манбаъҳо;Захирагоҳҳо;Хусусиятҳо;Насб кардан;Ҳифз кардан;"
 
+#: ../data/gpk-application.ui.h:1
+msgid "Software"
+msgstr "Нармафзор"
+
 #: ../data/gpk-application.ui.h:2
-#| msgid "Applying changes"
 msgid "Apply Changes"
 msgstr "Татбиқ кардани тағйирот"
 
@@ -272,7 +276,6 @@ msgid "Cancel search"
 msgstr "Бекор кардани ҷустуҷӯ"
 
 #: ../data/gpk-application.ui.h:7
-#| msgid "Licence"
 msgid "License"
 msgstr "Иҷозатнома"
 
@@ -360,8 +363,8 @@ msgstr "Қабули қарордод"
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2591
-#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:64
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2600
+#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:67
 #: ../src/gpk-install-package-name.c:63 ../src/gpk-dbus-service.c:150
 #: ../src/gpk-dbus-service.c:153
 msgid "Software Install"
@@ -623,12 +626,12 @@ msgstr ""
 "нармафзори иловагӣ ниёз дорад."
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:356
+#: ../src/gpk-application.c:359
 msgid "Pending"
 msgstr "Мунтазир"
 
 #. TRANSLATORS: title: how many files are installed by the application
-#: ../src/gpk-application.c:602
+#: ../src/gpk-application.c:605
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
@@ -636,22 +639,22 @@ msgstr[0] "%i файли насбшуда бо %s"
 msgstr[1] "%i файли насбшуда бо %s"
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:904 ../src/gpk-application.c:1028
+#: ../src/gpk-application.c:907 ../src/gpk-application.c:1034
 msgid "No software"
 msgstr "Ягон нармафзор нест"
 
 #. TRANSLATORS: this package is not required by any others
-#: ../src/gpk-application.c:906
+#: ../src/gpk-application.c:909
 msgid "No other software requires this."
 msgstr "Ҳеҷ кадоми нармафзорҳои дигар инро талаб намекунанд."
 
-#: ../src/gpk-application.c:912
+#: ../src/gpk-application.c:915
 #, c-format
 msgid "Software requires %s"
 msgstr "Ба нармафзор %s лозим аст"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:915
+#: ../src/gpk-application.c:918
 #, c-format
 msgid "The software listed below require %s to function correctly."
 msgid_plural "The software listed below require %s to function correctly."
@@ -661,45 +664,44 @@ msgstr[1] ""
 "Нармафзори дар рӯйхати поён буда барои фаъолияти дуруст ба %s ниёз дорад."
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1030
+#: ../src/gpk-application.c:1036
 msgid "This software does not depend on any other"
 msgstr "Ин нармафзор ба дигараш вобаста нест"
 
-#: ../src/gpk-application.c:1036
+#: ../src/gpk-application.c:1042
 #, c-format
 msgid "Additional software is required for %s"
 msgstr "Барои %s нармафзори иловагӣ лозим аст"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
-#: ../src/gpk-application.c:1039
+#: ../src/gpk-application.c:1045
 #, c-format
 msgid "%s requires the following additional software to function correctly."
 msgstr ""
 "%s барои дуруст фаъолият кардан ба нармафзори иловагии зерин ниёз дорад."
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1106
+#: ../src/gpk-application.c:1115
 msgid "Invalid"
 msgstr "Беэътибор"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1270
+#: ../src/gpk-application.c:1279
 msgid "No results were found."
 msgstr "Ягон натиҷа ёфт нашуд."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1278
+#: ../src/gpk-application.c:1287
 msgid "Try entering a name in the search bar."
 msgstr "Кӯшиш кунед, ки вожаеро ба навори ҷустуҷӯ ворид намоед."
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1281
-#| msgid "There is no softare queued to be installed or removed."
+#: ../src/gpk-application.c:1290
 msgid "There is no software queued to be installed or removed."
 msgstr "Ҳеҷ нармафзоре барои насб ё тоза кардан дар навбат наистодааст."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1286
+#: ../src/gpk-application.c:1295
 msgid ""
 "Try searching software descriptions by clicking the icon next to the search "
 "text."
@@ -708,113 +710,113 @@ msgstr ""
 "тавсифи нармафзор намоед."
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1289
+#: ../src/gpk-application.c:1298
 msgid "Try again with a different search term."
 msgstr "Бо вожаи дигар аз нав ҷустуҷӯ кунед."
 
 #. TRANSLATORS: title: invalid text in the search bar
-#: ../src/gpk-application.c:1553
+#: ../src/gpk-application.c:1562
 msgid "Invalid search text"
 msgstr "Матни ҷустуҷӯи нодуруст"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1555
+#: ../src/gpk-application.c:1564
 msgid "The search text contains invalid characters"
 msgstr "Матни ҷустуҷӯ аломатҳои нодуруст дорад"
 
 #. TRANSLATORS: title: we failed to execute the method
-#: ../src/gpk-application.c:1596
+#: ../src/gpk-application.c:1605
 msgid "The search could not be completed"
 msgstr "Ҷустуҷӯ ба охир расида натавонист"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1598
+#: ../src/gpk-application.c:1607
 msgid "Running the transaction failed"
 msgstr "Иҷроиши муомила барҳам хӯрд"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1727
+#: ../src/gpk-application.c:1736
 msgid "Changes not applied"
 msgstr "Тағйирот амалӣ нашуданд"
 
-#: ../src/gpk-application.c:1728
+#: ../src/gpk-application.c:1737
 msgid "Close _Anyway"
 msgstr "Бастани _маҷбурӣ"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1732
+#: ../src/gpk-application.c:1741
 msgid "You have made changes that have not yet been applied."
 msgstr "Шумо шояд тағйироте анҷом дода бошед, ки ҳоло амалӣ нашудаанд."
 
-#: ../src/gpk-application.c:1733
+#: ../src/gpk-application.c:1742
 msgid "These changes will be lost if you close this window."
 msgstr "Агар шумо ин равзанаро пӯшонед тағйирот нест мешавад."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2025 ../src/gpk-enum.c:1153 ../src/gpk-enum.c:1242
+#: ../src/gpk-application.c:2034 ../src/gpk-enum.c:1153 ../src/gpk-enum.c:1242
 msgid "Installed"
 msgstr "Насбшуда"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2041 ../src/gpk-application.c:2063
+#: ../src/gpk-application.c:2050 ../src/gpk-application.c:2072
 #: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
 msgid "Name"
 msgstr "Ном"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2229
+#: ../src/gpk-application.c:2238
 msgid "Size"
 msgstr "Андоза"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2232
+#: ../src/gpk-application.c:2241
 msgid "Installed size"
 msgstr "Андозаи насбшуда"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2235
+#: ../src/gpk-application.c:2244
 msgid "Download size"
 msgstr "Андозаи боргирӣ"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2423
+#: ../src/gpk-application.c:2432
 msgid "Searching by name"
 msgstr "Ҷустуҷӯ аз рӯи ном"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2447
+#: ../src/gpk-application.c:2456
 msgid "Searching by description"
 msgstr "Ҷустуҷӯ аз рӯи тафсилот"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2471
+#: ../src/gpk-application.c:2480
 msgid "Searching by file"
 msgstr "Ҷустуҷӯ аз рӯи файл"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2493
+#: ../src/gpk-application.c:2502
 msgid "Search by name"
 msgstr "Ҷустуҷӯ аз рӯи ном"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2504
+#: ../src/gpk-application.c:2513
 msgid "Search by description"
 msgstr "Ҷустуҷӯ аз рӯи тафсилот"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2515
+#: ../src/gpk-application.c:2524
 msgid "Search by file name"
 msgstr "Ҷустуҷӯ аз рӯи номи файл"
 
-#: ../src/gpk-application.c:2560
+#: ../src/gpk-application.c:2569
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Иҷозатномаи умумии ҷамъиятии Версияи 2 GNU дарёфт намудааст"
 
-#: ../src/gpk-application.c:2561
+#: ../src/gpk-application.c:2570
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -826,7 +828,7 @@ msgstr ""
 "озод нашр шудааст ё ҳатто версияи 2 Иҷозатнома ё ҳар версияи навбатӣ (дар "
 "имконоти шумо), дубора паҳн намоед ва/ё тағйир диҳед."
 
-#: ../src/gpk-application.c:2565
+#: ../src/gpk-application.c:2574
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -838,7 +840,7 @@ msgstr ""
 "МАҚСАДҲОИ ХУСУСӢ. Барои тафсилоти бештар нигаред ба: Иҷозатномаи умумии "
 "ҷамъиятии  GNU."
 
-#: ../src/gpk-application.c:2569
+#: ../src/gpk-application.c:2578
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -849,57 +851,57 @@ msgstr ""
 "Франклин, ошёнаи 5-ум, Бостон, MA 02110-1301, ИМА нависед. "
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2575
+#: ../src/gpk-application.c:2584
 msgid "translator-credits"
 msgstr "Victor Ibragimov"
 
-#: ../src/gpk-application.c:2596
+#: ../src/gpk-application.c:2605
 msgid "PackageKit Website"
 msgstr "Вебсайти PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2599
+#: ../src/gpk-application.c:2608
 msgid "Software management for GNOME"
 msgstr "Идоракунии нармафзор барои GNOME"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2792
+#: ../src/gpk-application.c:2801
 msgid "Enter a search word or click a category to get started."
 msgstr ""
 "Барои оғоз кардан калимаи ҷустуҷӯро ворид кунед ё категорияро зер кунед."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2795
+#: ../src/gpk-application.c:2804
 msgid "Enter a search word to get started."
 msgstr "Барои оғоз кардан калимаи ҷустуҷӯро ворид кунед."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3034
+#: ../src/gpk-application.c:3043
 msgid "Exiting as properties could not be retrieved"
 msgstr "Хусусиятҳои мавҷудбуда бозёбӣ карда намешаванд"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3077
+#: ../src/gpk-application.c:3086
 msgid "All packages"
 msgstr "Ҳамаи бастаҳо"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3079
+#: ../src/gpk-application.c:3088
 msgid "Show all packages"
 msgstr "Намоиш додани ҳамаи бастаҳо"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3510 ../src/gpk-update-viewer.c:3434
+#: ../src/gpk-application.c:3519 ../src/gpk-update-viewer.c:3434
 msgid "Show the program version and exit"
 msgstr "Намоиш додани версияи барнома ва хориҷ шудан"
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3524 ../src/gpk-log.c:498
+#: ../src/gpk-application.c:3533 ../src/gpk-log.c:498
 msgid "Install Software"
 msgstr "Насбкунии нармафзор"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3540
+#: ../src/gpk-application.c:3549
 msgid "Package installer"
 msgstr "Дастгоҳи насби баста"
 
@@ -3652,27 +3654,27 @@ msgid "You need to specify a file name to install"
 msgstr "Шумо бояд номи файлро барои насб муайян кунед"
 
 #. TRANSLATORS: command line option: a list of files to install
-#: ../src/gpk-install-local-file.c:51
+#: ../src/gpk-install-local-file.c:54
 msgid "Files to install"
 msgstr "Файлҳо барои насб"
 
-#: ../src/gpk-install-local-file.c:66
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "Насбкунандаи файли PackageKit"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-local-file.c:74
+#: ../src/gpk-install-local-file.c:77
 msgid "Local file installer"
 msgstr "Насбкунандаи файли маҳаллӣ"
 
 #. TRANSLATORS: could not install a package that contained the file we wanted
 #. TRANSLATORS: nothing done
-#: ../src/gpk-install-local-file.c:80 ../src/gpk-install-provide-file.c:80
+#: ../src/gpk-install-local-file.c:83 ../src/gpk-install-provide-file.c:80
 msgid "Failed to install a package to provide a file"
 msgstr "Насби баста барои таъмини як файл қатъ карда шуд"
 
 #. TRANSLATORS: nothing selected
-#: ../src/gpk-install-local-file.c:82
+#: ../src/gpk-install-local-file.c:85
 msgid "You need to specify a file to install"
 msgstr "Шумо бояд файлеро барои насб кардан муайян кунед"
 
@@ -3794,7 +3796,6 @@ msgstr "Тамошобини сабти рӯйдод"
 
 #: ../src/gpk-modal-dialog.c:441
 #, c-format
-#| msgid "Remaining time : %s"
 msgid "Remaining time: %s"
 msgstr "Вақти боқимонда: %s"
 
