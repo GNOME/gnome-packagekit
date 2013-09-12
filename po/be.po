@@ -1,12 +1,13 @@
 # Kasia Bondarava <kasia.bondarava@gmail.com>, 2012.
+# Ihar Hrachyshka <ihar.hrachyshka@gmail.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-07-18 11:26+0000\n"
+"POT-Creation-Date: 2013-09-11 07:08+0000\n"
 "PO-Revision-Date: 2012-09-23 14:32+0300\n"
-"Last-Translator: Kasia Bondarava <kasia.bondarava@gmail.com>\n"
+"Last-Translator: Ihar Hrachyshka <ihar.hrachyshka@gmail.com>\n"
 "Language-Team: Belarusian <i18n-bel-gnome@googlegroups.com>\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
@@ -232,9 +233,9 @@ msgstr ""
 "Пры паказе інтэрфейсу, выкліканага з дапамогай сеансавага запыту D-Bus, "
 "прымусова ўжыць наступныя опцыі."
 
-#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
-msgid "Software"
-msgstr "Апраграмаванне"
+#: ../data/gpk-application.desktop.in.h:1
+msgid "Packages"
+msgstr "Пакункі"
 
 #: ../data/gpk-application.desktop.in.h:2
 msgid "Add or remove software installed on the system"
@@ -243,6 +244,10 @@ msgstr "Дадаць ці выдаліць апраграмаванне, уст�
 #: ../data/gpk-application.desktop.in.h:3
 msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
 msgstr "Абнаўленне;Абноўкі;Крыніцы;Сховішчы;Настройкі;Усталяванне;"
+
+#: ../data/gpk-application.ui.h:1
+msgid "Software"
+msgstr "Апраграмаванне"
 
 #: ../data/gpk-application.ui.h:2
 msgid "Apply Changes"
@@ -352,8 +357,8 @@ msgstr "_Прыняць пагадненне"
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2591
-#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:64
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2600
+#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:67
 #: ../src/gpk-install-package-name.c:63 ../src/gpk-dbus-service.c:150
 #: ../src/gpk-dbus-service.c:153
 msgid "Software Install"
@@ -615,12 +620,12 @@ msgstr ""
 "дадатковае апраграмаванне."
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:356
+#: ../src/gpk-application.c:359
 msgid "Pending"
 msgstr "У чаканні"
 
 #. TRANSLATORS: title: how many files are installed by the application
-#: ../src/gpk-application.c:602
+#: ../src/gpk-application.c:605
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
@@ -629,22 +634,22 @@ msgstr[1] "Для %2$s усталяваныя %1$i файлы"
 msgstr[2] "Для %2$s усталяваныя %1$i файлаў"
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:904 ../src/gpk-application.c:1028
+#: ../src/gpk-application.c:907 ../src/gpk-application.c:1034
 msgid "No software"
 msgstr "Нічога"
 
 #. TRANSLATORS: this package is not required by any others
-#: ../src/gpk-application.c:906
+#: ../src/gpk-application.c:909
 msgid "No other software requires this."
 msgstr "Не запатрабавана іншымі пакункамі."
 
-#: ../src/gpk-application.c:912
+#: ../src/gpk-application.c:915
 #, c-format
 msgid "Software requires %s"
 msgstr "Апраграмаванне патрабуе %s"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:915
+#: ../src/gpk-application.c:918
 #, c-format
 msgid "The software listed below require %s to function correctly."
 msgid_plural "The software listed below require %s to function correctly."
@@ -656,43 +661,43 @@ msgstr[2] ""
 "Для беспамылковай працы апраграмавання, пералічанага ніжэй, патрэбны %s."
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1030
+#: ../src/gpk-application.c:1036
 msgid "This software does not depend on any other"
 msgstr "Гэта апраграмаванне не залежыць ад іншага апраграмавання"
 
-#: ../src/gpk-application.c:1036
+#: ../src/gpk-application.c:1042
 #, c-format
 msgid "Additional software is required for %s"
 msgstr "Для %s патрэбна дадатковае апраграмаванне"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
-#: ../src/gpk-application.c:1039
+#: ../src/gpk-application.c:1045
 #, c-format
 msgid "%s requires the following additional software to function correctly."
 msgstr "Для беспамылковай працы %s патрэбна наступнае апраграмаванне."
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1106
+#: ../src/gpk-application.c:1115
 msgid "Invalid"
 msgstr "Няправільны"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1270
+#: ../src/gpk-application.c:1279
 msgid "No results were found."
 msgstr "Нічога не знойдзена."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1278
+#: ../src/gpk-application.c:1287
 msgid "Try entering a name in the search bar."
 msgstr "Паспрабуйце ўвесці назву ў стужцы пошуку."
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1281
+#: ../src/gpk-application.c:1290
 msgid "There is no software queued to be installed or removed."
 msgstr "У чарзе ўсталявання і выдалення няма апраграмавання."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1286
+#: ../src/gpk-application.c:1295
 msgid ""
 "Try searching software descriptions by clicking the icon next to the search "
 "text."
@@ -701,113 +706,113 @@ msgstr ""
 "шуканага тэксту."
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1289
+#: ../src/gpk-application.c:1298
 msgid "Try again with a different search term."
 msgstr "Паспрабуйце іншы запыт."
 
 #. TRANSLATORS: title: invalid text in the search bar
-#: ../src/gpk-application.c:1553
+#: ../src/gpk-application.c:1562
 msgid "Invalid search text"
 msgstr "Хібны тэкст для пошуку"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1555
+#: ../src/gpk-application.c:1564
 msgid "The search text contains invalid characters"
 msgstr "Тэкст для пошуку змяшчае хібныя знакі"
 
 #. TRANSLATORS: title: we failed to execute the method
-#: ../src/gpk-application.c:1596
+#: ../src/gpk-application.c:1605
 msgid "The search could not be completed"
 msgstr "Не ўдалося скончыць пошук"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1598
+#: ../src/gpk-application.c:1607
 msgid "Running the transaction failed"
 msgstr "Памылка запуску трансакцыі"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1727
+#: ../src/gpk-application.c:1736
 msgid "Changes not applied"
 msgstr "Змены не ўжытыя"
 
-#: ../src/gpk-application.c:1728
+#: ../src/gpk-application.c:1737
 msgid "Close _Anyway"
 msgstr "_Усё роўна закрыць"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1732
+#: ../src/gpk-application.c:1741
 msgid "You have made changes that have not yet been applied."
 msgstr "Зробленыя змены яшчэ не ўжытыя."
 
-#: ../src/gpk-application.c:1733
+#: ../src/gpk-application.c:1742
 msgid "These changes will be lost if you close this window."
 msgstr "Калі вы закрыеце гэта акно, змены будуць незваротна страчаны."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2025 ../src/gpk-enum.c:1153 ../src/gpk-enum.c:1242
+#: ../src/gpk-application.c:2034 ../src/gpk-enum.c:1153 ../src/gpk-enum.c:1242
 msgid "Installed"
 msgstr "Усталяваны"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2041 ../src/gpk-application.c:2063
+#: ../src/gpk-application.c:2050 ../src/gpk-application.c:2072
 #: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
 msgid "Name"
 msgstr "Назва"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2229
+#: ../src/gpk-application.c:2238
 msgid "Size"
 msgstr "Памер"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2232
+#: ../src/gpk-application.c:2241
 msgid "Installed size"
 msgstr "Памер усталявання"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2235
+#: ../src/gpk-application.c:2244
 msgid "Download size"
 msgstr "Памер сцягвання"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2423
+#: ../src/gpk-application.c:2432
 msgid "Searching by name"
 msgstr "Пошук паводле назвы"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2447
+#: ../src/gpk-application.c:2456
 msgid "Searching by description"
 msgstr "Пошук паводле апісання"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2471
+#: ../src/gpk-application.c:2480
 msgid "Searching by file"
 msgstr "Пошук паводле файла"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2493
+#: ../src/gpk-application.c:2502
 msgid "Search by name"
 msgstr "Пошук паводле назвы"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2504
+#: ../src/gpk-application.c:2513
 msgid "Search by description"
 msgstr "Пошук паводле апісання"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2515
+#: ../src/gpk-application.c:2524
 msgid "Search by file name"
 msgstr "Пошук паводле назвы файла"
 
-#: ../src/gpk-application.c:2560
+#: ../src/gpk-application.c:2569
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Распаўсюджваецца на ўмовах Агульнай Грамадскай Ліцэнзіі GNU версіі 2"
 
-#: ../src/gpk-application.c:2561
+#: ../src/gpk-application.c:2570
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -818,7 +823,7 @@ msgstr ""
 "яго згодна з умовамі Агульнай Грамадскай Ліцэнзіі GNU (GPL), апублікаванай "
 "Фондам свабоднага апраграмавання, версіі 2 ці любой пазнейшай."
 
-#: ../src/gpk-application.c:2565
+#: ../src/gpk-application.c:2574
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -829,7 +834,7 @@ msgstr ""
 "гарантый, у тым ліку камерцыйнай вартасці праграмы і наогул яе карысці.  "
 "Падрабязней глядзіце ў тэксце Агульнай Грамадскай Ліцэнзіі GNU (GPL)."
 
-#: ../src/gpk-application.c:2569
+#: ../src/gpk-application.c:2578
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -841,56 +846,56 @@ msgstr ""
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2575
+#: ../src/gpk-application.c:2584
 msgid "translator-credits"
 msgstr "Kasia Bondarava <kasia.bondarava@gmail.com>"
 
-#: ../src/gpk-application.c:2596
+#: ../src/gpk-application.c:2605
 msgid "PackageKit Website"
 msgstr "Сеціўная пляцоўка PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2599
+#: ../src/gpk-application.c:2608
 msgid "Software management for GNOME"
 msgstr "Кіраўнік апраграмавання для GNOME"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2792
+#: ../src/gpk-application.c:2801
 msgid "Enter a search word or click a category to get started."
 msgstr "Для пачатку ўвядзіце слова для пошуку або пстрыкніце ў катэгорыю."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2795
+#: ../src/gpk-application.c:2804
 msgid "Enter a search word to get started."
 msgstr "Для пачатку ўвядзіце слова для пошуку."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3034
+#: ../src/gpk-application.c:3043
 msgid "Exiting as properties could not be retrieved"
 msgstr "Выхад, бо не ўдалося атрымаць уласцівасці"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3077
+#: ../src/gpk-application.c:3086
 msgid "All packages"
 msgstr "Усе пакункі"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3079
+#: ../src/gpk-application.c:3088
 msgid "Show all packages"
 msgstr "Паказаць усе пакункі"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3510 ../src/gpk-update-viewer.c:3434
+#: ../src/gpk-application.c:3519 ../src/gpk-update-viewer.c:3434
 msgid "Show the program version and exit"
 msgstr "Паказаць версію праграмы і выйсці"
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3524 ../src/gpk-log.c:498
+#: ../src/gpk-application.c:3533 ../src/gpk-log.c:498
 msgid "Install Software"
 msgstr "Усталяванне апраграмавання"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3540
+#: ../src/gpk-application.c:3549
 msgid "Package installer"
 msgstr "Усталяванне пакункаў"
 
@@ -3697,27 +3702,27 @@ msgid "You need to specify a file name to install"
 msgstr "Трэба вызначыць назву файла для ўсталявання"
 
 #. TRANSLATORS: command line option: a list of files to install
-#: ../src/gpk-install-local-file.c:51
+#: ../src/gpk-install-local-file.c:54
 msgid "Files to install"
 msgstr "Файлы для ўсталявання"
 
-#: ../src/gpk-install-local-file.c:66
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "Прылада ўсталявання файлаў PackageKit"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-local-file.c:74
+#: ../src/gpk-install-local-file.c:77
 msgid "Local file installer"
 msgstr "Прылада ўсталявання файлаў"
 
 #. TRANSLATORS: could not install a package that contained the file we wanted
 #. TRANSLATORS: nothing done
-#: ../src/gpk-install-local-file.c:80 ../src/gpk-install-provide-file.c:80
+#: ../src/gpk-install-local-file.c:83 ../src/gpk-install-provide-file.c:80
 msgid "Failed to install a package to provide a file"
 msgstr "Памылка ўсталявання пакунка, які забяспечвае файл"
 
 #. TRANSLATORS: nothing selected
-#: ../src/gpk-install-local-file.c:82
+#: ../src/gpk-install-local-file.c:85
 msgid "You need to specify a file to install"
 msgstr "Трэба вызначыць файл для ўсталявання"
 
