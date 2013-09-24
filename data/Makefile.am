@@ -5,10 +5,12 @@ SUBDIRS = icons
 migrationdir = $(datadir)/GConf/gsettings
 dist_migration_DATA = org.gnome.packagekit.gschema.migrate
 
+@INTLTOOL_XML_NOMERGE_RULE@
 appdatadir = $(datadir)/appdata
-dist_appdata_DATA =					\
-	gpk-application.appdata.xml			\
-	gpk-update-viewer.appdata.xml
+dist_appdata_DATA = $(appdata_in_files:.xml.in=.xml)
+appdata_in_files =					\
+	gpk-application.appdata.xml.in			\
+	gpk-update-viewer.appdata.xml.in
 
 @INTLTOOL_DESKTOP_RULE@
 desktopdir = $(datadir)/applications
@@ -52,6 +54,7 @@ gsettings_SCHEMAS = org.gnome.packagekit.gschema.xml
 
 EXTRA_DIST =						\
 	$(gsettings_SCHEMAS)				\
+	$(appdata_in_files)				\
 	$(autostart_in_files)				\
 	$(desktop_in_files)				\
 	$(pkgdata_DATA)					\
@@ -62,6 +65,8 @@ clean-local :
 	rm -f *~
 
 DISTCLEANFILES =					\
+	gpk-application.appdata.xml			\
+	gpk-update-viewer.appdata.xml			\
 	gpk-prefs.desktop				\
 	gpk-service-pack.desktop			\
 	gpk-update-viewer.desktop			\
