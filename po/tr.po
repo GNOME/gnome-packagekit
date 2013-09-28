@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: packagekit-gnome\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-08-22 12:08+0000\n"
-"PO-Revision-Date: 2013-09-28 18:24+0300\n"
+"POT-Creation-Date: 2013-09-28 15:50+0000\n"
+"PO-Revision-Date: 2013-09-28 19:00+0300\n"
 "Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -235,9 +235,10 @@ msgstr ""
 "Bir oturum DBus isteğinden UI görüntüleniyorken, bu seçeneklerin açık "
 "olmasını zorla."
 
-#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
-msgid "Software"
-msgstr "Yazılım"
+#: ../data/gpk-application.desktop.in.h:1
+#| msgid "Package"
+msgid "Packages"
+msgstr "Paketler"
 
 #: ../data/gpk-application.desktop.in.h:2
 msgid "Add or remove software installed on the system"
@@ -246,6 +247,10 @@ msgstr "Sisteminizde yüklü yazılımları ekleyin veya kaldırın"
 #: ../data/gpk-application.desktop.in.h:3
 msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
 msgstr "Güncellemeler;Yükseltme;Kaynaklar;Depolar;Tercihler;Kur;Mağaza;"
+
+#: ../data/gpk-application.ui.h:1
+msgid "Software"
+msgstr "Yazılım"
 
 #: ../data/gpk-application.ui.h:2
 msgid "Apply Changes"
@@ -268,7 +273,8 @@ msgid "Cancel search"
 msgstr "Aramayı iptal et"
 
 #: ../data/gpk-application.ui.h:7
-msgid "Licence"
+#| msgid "Licence"
+msgid "License"
 msgstr "Lisans"
 
 #: ../data/gpk-application.ui.h:8
@@ -356,9 +362,9 @@ msgstr "Anlaşmayı _Kabul Et"
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
 #: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2600
-#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:65
-#: ../src/gpk-install-package-name.c:64 ../src/gpk-dbus-service.c:151
-#: ../src/gpk-dbus-service.c:154
+#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:67
+#: ../src/gpk-install-package-name.c:63 ../src/gpk-dbus-service.c:150
+#: ../src/gpk-dbus-service.c:153
 msgid "Software Install"
 msgstr "Yazılım Kur"
 
@@ -368,8 +374,8 @@ msgid "Install selected software on the system"
 msgstr "Seçili yazılımı sisteme kur"
 
 #. TRANSLATORS: program name: application to install a catalog of software
-#: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:66
-#: ../src/gpk-install-catalog.c:68
+#: ../data/gpk-install-catalog.desktop.in.h:1 ../src/gpk-install-catalog.c:65
+#: ../src/gpk-install-catalog.c:67
 msgid "Catalog Installer"
 msgstr "Katalog Yükleyici"
 
@@ -377,7 +383,7 @@ msgstr "Katalog Yükleyici"
 msgid "Install a catalog of software on the system"
 msgstr "Sisteme bir yazılım kataloğu yükle"
 
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:827
+#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:826
 msgid "Software Log Viewer"
 msgstr "Yazılım Günlük Görüntüleyici"
 
@@ -877,7 +883,7 @@ msgid "Show all packages"
 msgstr "Tüm paketleri göster"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3519 ../src/gpk-update-viewer.c:3424
+#: ../src/gpk-application.c:3519 ../src/gpk-update-viewer.c:3434
 msgid "Show the program version and exit"
 msgstr "Program sürümünü göster ve çık"
 
@@ -1706,7 +1712,7 @@ msgstr "İşletim sistemi yükseltme bilgileri alınamıyor."
 
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-distro-upgrade.c:782 ../src/gpk-distro-upgrade.c:785
+#: ../src/gpk-distro-upgrade.c:781 ../src/gpk-distro-upgrade.c:784
 msgid "Distribution Upgrade Tool"
 msgstr "Dağıtım Yükseltme Aracı"
 
@@ -3570,42 +3576,42 @@ msgid "Catalogs files to install"
 msgstr "Yüklenecek katalog dosyaları"
 
 #. are we running privileged
-#: ../src/gpk-install-catalog.c:76
+#: ../src/gpk-install-catalog.c:75
 msgid "Catalog installer"
 msgstr "Katalog yükleyici"
 
-#: ../src/gpk-install-catalog.c:81
+#: ../src/gpk-install-catalog.c:80
 msgid "Failed to install catalog"
 msgstr "Katalog yükleme başarısız oldu"
 
 #. TRANSLATORS: no file name was supplied
 #. TRANSLATORS: nothing was specified
-#: ../src/gpk-install-catalog.c:83 ../src/gpk-install-provide-file.c:83
+#: ../src/gpk-install-catalog.c:82 ../src/gpk-install-provide-file.c:82
 msgid "You need to specify a file name to install"
 msgstr "Yüklemek için bir dosya ismi belirtmelisiniz"
 
 #. TRANSLATORS: command line option: a list of files to install
-#: ../src/gpk-install-local-file.c:51
+#: ../src/gpk-install-local-file.c:54
 msgid "Files to install"
 msgstr "Yüklenecek dosyalar"
 
-#: ../src/gpk-install-local-file.c:67
+#: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
 msgstr "PackageKit Dosya Yükleyici"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-local-file.c:75
+#: ../src/gpk-install-local-file.c:77
 msgid "Local file installer"
 msgstr "Yerel dosya yükleyici"
 
 #. TRANSLATORS: could not install a package that contained the file we wanted
 #. TRANSLATORS: nothing done
-#: ../src/gpk-install-local-file.c:81 ../src/gpk-install-provide-file.c:81
+#: ../src/gpk-install-local-file.c:83 ../src/gpk-install-provide-file.c:80
 msgid "Failed to install a package to provide a file"
 msgstr "Bir dosya sağlamak için paket yüklemek başarısız oldu"
 
 #. TRANSLATORS: nothing selected
-#: ../src/gpk-install-local-file.c:83
+#: ../src/gpk-install-local-file.c:85
 msgid "You need to specify a file to install"
 msgstr "Yüklemek için bir dosya belirtmelisiniz"
 
@@ -3615,22 +3621,22 @@ msgid "Mime types to install"
 msgstr "Yüklenecek mime türleri"
 
 #. TRANSLATORS: program name: application to install a package to provide a mime type
-#: ../src/gpk-install-mime-type.c:65 ../src/gpk-install-mime-type.c:67
+#: ../src/gpk-install-mime-type.c:64 ../src/gpk-install-mime-type.c:66
 msgid "Mime Type Installer"
 msgstr "Mime Türü Yükleyici"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-mime-type.c:75
+#: ../src/gpk-install-mime-type.c:74
 msgid "Mime type installer"
 msgstr "Mime türü yükleyici"
 
 #. TRANSLATORS: could not install program supporting this type
-#: ../src/gpk-install-mime-type.c:81
+#: ../src/gpk-install-mime-type.c:80
 msgid "Failed to install a program to handle this file type"
 msgstr "Bu dosya türünü işleyecek program yüklenirken başarısız olundu"
 
 #. TRANSLATORS: no type given
-#: ../src/gpk-install-mime-type.c:83
+#: ../src/gpk-install-mime-type.c:82
 msgid "You need to specify a mime type to install"
 msgstr "Kurmak için bir mime türü belirtmeniz gerekiyor"
 
@@ -3639,17 +3645,17 @@ msgid "Packages to install"
 msgstr "Yüklemek için paketler"
 
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-package-name.c:66 ../src/gpk-install-package-name.c:74
+#: ../src/gpk-install-package-name.c:65 ../src/gpk-install-package-name.c:73
 msgid "Package Name Installer"
 msgstr "Paket İsmi Yükleyici"
 
 #. TRANSLATORS: failed
-#: ../src/gpk-install-package-name.c:80
+#: ../src/gpk-install-package-name.c:79
 msgid "Failed to install software by name"
 msgstr "İsimle yazılım yüklemesi başarısız oldu"
 
 #. TRANSLATORS: nothing was specified
-#: ../src/gpk-install-package-name.c:82
+#: ../src/gpk-install-package-name.c:81
 msgid "You need to specify the name of the software to install"
 msgstr "Kurulacak yazılımın adını belirtmeniz gerekiyor"
 
@@ -3660,8 +3666,8 @@ msgstr "Yüklenecek yerel dosyalar"
 
 #. TRANSLATORS: program name, an application to install a file that is needed by an application and is provided by packages
 #. TRANSLATORS: application name to pass to to the user if there are not enough privs
-#: ../src/gpk-install-provide-file.c:65 ../src/gpk-install-provide-file.c:67
-#: ../src/gpk-install-provide-file.c:75
+#: ../src/gpk-install-provide-file.c:64 ../src/gpk-install-provide-file.c:66
+#: ../src/gpk-install-provide-file.c:74
 msgid "Single File Installer"
 msgstr "Tek Dosya Yükleyici"
 
@@ -3721,13 +3727,14 @@ msgid "Set the parent window to make this modal"
 msgstr "Bunu kalıcı yapmak için ana pencere ata"
 
 #. are we running privileged
-#: ../src/gpk-log.c:835
+#: ../src/gpk-log.c:834
 msgid "Log viewer"
 msgstr "Günlük görüntüleyici"
 
 #: ../src/gpk-modal-dialog.c:441
 #, c-format
-msgid "Remaining time : %s"
+#| msgid "Remaining time : %s"
+msgid "Remaining time: %s"
 msgstr "Kalan süre: %s"
 
 #. TRANSLATORS: check once an hour
@@ -3786,7 +3793,7 @@ msgid "Failed to get the list of sources"
 msgstr "Kaynakların listesi alınamadı"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:720 ../src/gpk-update-viewer.c:3180
+#: ../src/gpk-prefs.c:720 ../src/gpk-update-viewer.c:3190
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Arkauç ayrıntıları alınamadığından çıkılıyor"
 
@@ -4005,18 +4012,18 @@ msgid "Other updates"
 msgstr "Diğer güncellemeler"
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1010
+#: ../src/gpk-update-viewer.c:1016
 msgid "Getting the list of updates"
 msgstr "Güncelleştirme listesi alınıyor"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1251
+#: ../src/gpk-update-viewer.c:1261
 msgid "Could not run upgrade script"
 msgstr "Güncelleme betiği çalıştırılamadı"
 
 #. show a warning message
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1290
+#: ../src/gpk-update-viewer.c:1300
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -4028,78 +4035,78 @@ msgstr[0] ""
 "pahalı olabilir."
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1380
+#: ../src/gpk-update-viewer.c:1390
 msgid "There are no updates available"
 msgstr "Güncelleme mevcut değil"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1439
+#: ../src/gpk-update-viewer.c:1449
 msgid "No updates are available"
 msgstr "Güncelleme mevcut değil"
 
 #. TRANSLATORS: no network connection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1441
+#: ../src/gpk-update-viewer.c:1451
 msgid "No network connection was detected."
 msgstr "Ağ bağlantısı tespit edilemedi."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1458
+#: ../src/gpk-update-viewer.c:1468
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Güncelleme Yükle"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1467
+#: ../src/gpk-update-viewer.c:1477
 msgid "All software is up to date"
 msgstr "Tüm yazılım güncel durumda"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1469
+#: ../src/gpk-update-viewer.c:1479
 msgid "There are no software updates available for your computer at this time."
 msgstr "Şu an da bilgisayarınız için yazılım güncellemeleri mevcut değil."
 
-#: ../src/gpk-update-viewer.c:1496
+#: ../src/gpk-update-viewer.c:1506
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
 msgstr[0] "%i güncelleme var"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1512
+#: ../src/gpk-update-viewer.c:1522
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
 msgstr[0] "%i güncelleme seçildi"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1520
+#: ../src/gpk-update-viewer.c:1530
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
 msgstr[0] "%i güncelleme seçilmiş (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1717
+#: ../src/gpk-update-viewer.c:1727
 msgid "Status"
 msgstr "Durum"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1977
+#: ../src/gpk-update-viewer.c:1987
 msgid "This update will add new features and expand functionality."
 msgstr "Bu güncelleme, yeni özellikler ekleyecek ve işlevselliği artıracak."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1981
+#: ../src/gpk-update-viewer.c:1991
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Bu güncelleştirme hata ve diğer kritik olmayan sorunları çözecek."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1985
+#: ../src/gpk-update-viewer.c:1995
 msgid "This update is important as it may solve critical problems."
 msgstr "Bu güncelleştirme kritik problemleri çözebileceği için önemlidir."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1989
+#: ../src/gpk-update-viewer.c:1999
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
@@ -4107,24 +4114,24 @@ msgstr ""
 "gereklidir."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1993
+#: ../src/gpk-update-viewer.c:2003
 msgid "This update is blocked."
 msgstr "Bu güncelleme engellenmiş."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:2005
+#: ../src/gpk-update-viewer.c:2015
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Bu uyarı %s tarihinde yapıldı ve en son %s tarihinde güncellendi."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:2012
+#: ../src/gpk-update-viewer.c:2022
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Bu uyarı %s tarihinde yapıldı."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:2034 ../src/gpk-update-viewer.c:2058
+#: ../src/gpk-update-viewer.c:2044 ../src/gpk-update-viewer.c:2068
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -4132,7 +4139,7 @@ msgstr[0] ""
 "Bu güncelleme için daha fazla bilgi için bu web sitelerini ziyaret edin:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:2041 ../src/gpk-update-viewer.c:2066
+#: ../src/gpk-update-viewer.c:2051 ../src/gpk-update-viewer.c:2076
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -4144,7 +4151,7 @@ msgstr[0] ""
 "bu web sitelerini ziyaret edin:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2048 ../src/gpk-update-viewer.c:2074
+#: ../src/gpk-update-viewer.c:2058 ../src/gpk-update-viewer.c:2084
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -4154,7 +4161,7 @@ msgstr[0] ""
 "ziyaret edin:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2083
+#: ../src/gpk-update-viewer.c:2093
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
@@ -4163,7 +4170,7 @@ msgstr ""
 "yeniden başlatılacak."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2087
+#: ../src/gpk-update-viewer.c:2097
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -4172,7 +4179,7 @@ msgstr ""
 "giriş yapmanız gerekecek."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2094
+#: ../src/gpk-update-viewer.c:2104
 msgid ""
 "The classification of this update is unstable which means it is not designed "
 "for production use."
@@ -4181,7 +4188,7 @@ msgstr ""
 "tasarlanmadığı anlamına geliyor."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2098
+#: ../src/gpk-update-viewer.c:2108
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -4190,7 +4197,7 @@ msgstr ""
 "problem ya da geriye dönüşle karşılaşırsanız hata bildiriminde bulunun."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2107
+#: ../src/gpk-update-viewer.c:2117
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
@@ -4198,73 +4205,73 @@ msgstr ""
 "Bu güncelleme için hiçbir açıklama mevcut olmadığı için geliştirici "
 "günlükleri gösterilecek:"
 
-#: ../src/gpk-update-viewer.c:2161
+#: ../src/gpk-update-viewer.c:2171
 msgid "Loading…"
 msgstr "Yükleniyor…"
 
-#: ../src/gpk-update-viewer.c:2164
+#: ../src/gpk-update-viewer.c:2174
 msgid "No update details available."
 msgstr "Güncelleme ayrıntıları mevcut değil."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2196 ../src/gpk-update-viewer.c:2294
-#: ../src/gpk-update-viewer.c:2314
+#: ../src/gpk-update-viewer.c:2206 ../src/gpk-update-viewer.c:2304
+#: ../src/gpk-update-viewer.c:2324
 msgid "Could not get update details"
 msgstr "Güncelleme ayrıntıları alınamadı"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2216
+#: ../src/gpk-update-viewer.c:2226
 msgid "Could not get package details"
 msgstr "Paket ayrıntıları alınamadı"
 
-#: ../src/gpk-update-viewer.c:2216 ../src/gpk-update-viewer.c:2314
+#: ../src/gpk-update-viewer.c:2226 ../src/gpk-update-viewer.c:2324
 msgid "No results were returned."
 msgstr "Hiçbir sonuç dönmedi"
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2549
+#: ../src/gpk-update-viewer.c:2559
 msgid "Select all"
 msgstr "Hepsini seç"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2557
+#: ../src/gpk-update-viewer.c:2567
 msgid "Unselect all"
 msgstr "Hiçbirini seçme"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2564
+#: ../src/gpk-update-viewer.c:2574
 msgid "Select security updates"
 msgstr "Güvenlik güncellemelerini seç"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2570
+#: ../src/gpk-update-viewer.c:2580
 msgid "Ignore this update"
 msgstr "Bu güncellemeyi yok say"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2681
+#: ../src/gpk-update-viewer.c:2691
 msgid "Could not get updates"
 msgstr "Güncellemeler alınamadı"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2834
+#: ../src/gpk-update-viewer.c:2844
 msgid "Checking for updates…"
 msgstr "Güncellemeler denetleniyor..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3113
+#: ../src/gpk-update-viewer.c:3123
 msgid "Could not get list of distribution upgrades"
 msgstr "Dağıtım yükseltmeleri listesi alınamadı"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3143
+#: ../src/gpk-update-viewer.c:3153
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Yeni dağıtım yükseltme sürümü '%s' mevcut"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3393
+#: ../src/gpk-update-viewer.c:3403
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -4272,12 +4279,12 @@ msgstr ""
 "Diğer güncellemer başka önemli sistem paketlerinin daha önce kurulması "
 "gerektiği için bekletildi."
 
-#: ../src/gpk-update-viewer.c:3439
+#: ../src/gpk-update-viewer.c:3448
 msgid "Update Software"
 msgstr "Yazılımı Güncelleştir"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3456
+#: ../src/gpk-update-viewer.c:3465
 msgid "Software Update Viewer"
 msgstr "Yazılım Güncelleme Görüntüleyicisi"
 
@@ -4285,7 +4292,7 @@ msgstr "Yazılım Güncelleme Görüntüleyicisi"
 msgid "Do not exit after the request has been processed"
 msgstr "İşlem gerçekleştikten sonra çıkma"
 
-#: ../src/gpk-dbus-service.c:156
+#: ../src/gpk-dbus-service.c:155
 msgid "Session D-Bus service for PackageKit"
 msgstr "PackageKit için oturum DBus hizmeti"
 
