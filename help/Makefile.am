@@ -20,5 +20,5 @@ HELP_MEDIA = \
 	figures/gpk-service-pack-example.png \
 	figures/gpk-updates-warning.png
 
-HELP_LINGUAS = de el es fr gl oc pa pl ru sl sv zh_CN
+HELP_LINGUAS = de el es fr gl oc pa pl pt_BR ru sl sv zh_CN
 
