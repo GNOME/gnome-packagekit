@@ -7,7 +7,7 @@ dist_migration_DATA = org.gnome.packagekit.gschema.migrate
 
 @INTLTOOL_XML_RULE@
 appdatadir = $(datadir)/appdata
-dist_appdata_DATA = $(appdata_in_files:.xml.in=.xml)
+appdata_DATA = $(appdata_in_files:.xml.in=.xml)
 appdata_in_files =					\
 	gpk-application.appdata.xml.in			\
 	gpk-update-viewer.appdata.xml.in
@@ -64,9 +64,10 @@ EXTRA_DIST =						\
 clean-local :
 	rm -f *~
 
+CLEANFILES =						\
+	$(appdata_DATA)
+
 DISTCLEANFILES =					\
-	gpk-application.appdata.xml			\
-	gpk-update-viewer.appdata.xml			\
 	gpk-prefs.desktop				\
 	gpk-service-pack.desktop			\
 	gpk-update-viewer.desktop			\
