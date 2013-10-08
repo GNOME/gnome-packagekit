@@ -89,25 +89,6 @@ gpk_prefs_help_cb (GtkWidget *widget, GpkPrefsPrivate *priv)
 }
 
 /**
- * gpk_prefs_check_now_cb:
- **/
-static void
-gpk_prefs_check_now_cb (GtkWidget *widget, GpkPrefsPrivate *priv)
-{
-	gboolean ret;
-	GError *error = NULL;
-	gchar *command;
-
-	command = g_build_filename (BINDIR, "gpk-update-viewer", NULL);
-	ret = g_spawn_command_line_async (command, &error);
-	if (!ret) {
-		g_warning ("Couldn't execute %s: %s", command, error->message);
-		g_error_free (error);
-	}
-	g_free (command);
-}
-
-/**
  * gpk_prefs_update_freq_combo_changed:
  **/
 static void
@@ -827,9 +808,6 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_help"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_prefs_help_cb), priv);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_check_now"));
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_prefs_check_now_cb), priv);
 
 	/* update the combo boxes */
 	if (priv->settings_gsd != NULL) {
