@@ -1,7 +1,5 @@
 %define alphatag			#ALPHATAG#
 
-%{!?python_sitelib: %define python_sitelib %(python -c "from distutils.sysconfig import get_python_lib; print get_python_lib()")}
-
 Summary:   Session applications to manage packages
 Name:      gnome-packagekit
 Version:   #VERSION#
@@ -9,7 +7,7 @@ Release:   0.#BUILD#%{?alphatag}%{?dist}
 License:   GPLv2+
 Group:     Applications/System
 URL:       http://www.packagekit.org
-Source0:   http://download.gnome.org/sources/gnome-packagekit/3.5/%{name}-%{version}.tar.xz
+Source0:   http://download.gnome.org/sources/gnome-packagekit/3.10/%{name}-%{version}.tar.xz
 
 Requires:  gnome-icon-theme
 Requires:  dbus-x11 >= 1.1.2
@@ -27,27 +25,28 @@ Provides:  pirut = 1.3.31-2
 Provides: PackageKit-session-service
 
 BuildRequires: glib2-devel >= 2.25.8
-BuildRequires: gtk2-devel >= 2.18.1
-BuildRequires: libwnck-devel
+BuildRequires: gtk3-devel
 BuildRequires: dbus-devel
 BuildRequires: dbus-glib-devel
 BuildRequires: libnotify-devel >= 0.7.0
-BuildRequires: gnome-doc-utils >= 0.3.2
 BuildRequires: desktop-file-utils
 BuildRequires: gettext
 BuildRequires: libtool
 BuildRequires: cairo-devel
 BuildRequires: startup-notification-devel
 BuildRequires: perl(XML::Parser)
-BuildRequires: gnome-doc-utils
 BuildRequires: PackageKit-devel >= 0.5.0
 BuildRequires: intltool
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: fontconfig-devel
 BuildRequires: libcanberra-devel
 BuildRequires: libgudev1-devel
+BuildRequires: libxslt
 BuildRequires: upower-devel >= 0.9.0
 BuildRequires: docbook-utils
+BuildRequires: systemd-devel
+BuildRequires: polkit-devel
+BuildRequires: itstool
 
 # obsolete sub-package
 Obsoletes: gnome-packagekit-extra <= 2.91.1
@@ -78,7 +77,7 @@ without rebooting.
 %setup -q
 
 %build
-%configure --disable-scrollkeeper
+%configure --enable-systemd
 make %{?_smp_mflags}
 
 %install
@@ -114,7 +113,6 @@ gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f %{name}.lang
-%defattr(-,root,root,-)
 %doc AUTHORS COPYING NEWS README
 %{_bindir}/gpk-dbus-service
 %{_bindir}/gpk-distro-upgrade
