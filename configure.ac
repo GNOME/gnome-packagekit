@@ -232,6 +232,7 @@ help/Makefile
 man/Makefile
 po/Makefile.in
 data/Makefile
+data/appdata/Makefile
 docs/Makefile
 docs/dbus/Makefile
 data/icons/Makefile
