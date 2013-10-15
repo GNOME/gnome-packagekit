@@ -16,7 +16,6 @@ desktop_in_files =					\
 	gpk-application.desktop.in			\
 	gpk-update-viewer.desktop.in			\
 	gpk-log.desktop.in				\
-	gpk-distro-upgrade.desktop.in			\
 	$(NULL)
 
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
@@ -65,7 +64,6 @@ DISTCLEANFILES =					\
 	gpk-dbus-service.desktop			\
 	gpk-log.desktop					\
 	gpk-application.desktop				\
-	gpk-distro-upgrade.desktop			\
 	org.freedesktop.PackageKit.service		\
 	$(NULL)
 
