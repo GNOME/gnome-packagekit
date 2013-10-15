@@ -40,7 +40,6 @@
 
 #include "gpk-common.h"
 #include "gpk-common.h"
-#include "gpk-desktop.h"
 #include "gpk-dialog.h"
 #include "gpk-enum.h"
 #include "gpk-error.h"
@@ -95,7 +94,6 @@ typedef struct {
 	PkBitfield		 groups;
 	PkBitfield		 roles;
 	PkControl		*control;
-	PkDesktop		*desktop;
 	PkPackageSack		*package_sack;
 	PkStatusEnum		 status_last;
 	PkTask			*task;
@@ -235,12 +233,9 @@ gpk_application_packages_checkbox_invert (GpkApplicationPrivate *priv)
 	GtkTreeModel *model;
 	GtkTreeIter iter;
 	GtkTreeSelection *selection;
-	const gchar *icon = NULL;
-	gboolean checkbox;
 	PkBitfield state;
 	gboolean ret;
 	gchar *package_id = NULL;
-	gchar **split;
 
 	/* get the selection and add */
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_packages"));
@@ -259,23 +254,11 @@ gpk_application_packages_checkbox_invert (GpkApplicationPrivate *priv)
 	/* do something with the value */
 	pk_bitfield_invert (state, GPK_STATE_IN_LIST);
 
-	/* use the application icon if not selected */
-	if (!pk_bitfield_contain (state, GPK_STATE_IN_LIST)) {
-		split = pk_package_id_split (package_id);
-		icon = gpk_desktop_guess_icon_name (priv->desktop, split[PK_PACKAGE_ID_NAME]);
-		g_strfreev (split);
-	}
-
-	/* get the new icon */
-	if (icon == NULL)
-		icon = gpk_application_state_get_icon (state);
-	checkbox = gpk_application_state_get_checkbox (state);
-
 	/* set new value */
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter,
 			    PACKAGES_COLUMN_STATE, state,
-			    PACKAGES_COLUMN_CHECKBOX, checkbox,
-			    PACKAGES_COLUMN_IMAGE, icon,
+			    PACKAGES_COLUMN_CHECKBOX, gpk_application_state_get_checkbox (state),
+			    PACKAGES_COLUMN_IMAGE, gpk_application_state_get_icon (state),
 			    -1);
 	g_free (package_id);
 }
@@ -1186,15 +1169,12 @@ gpk_application_add_item_to_results (GpkApplicationPrivate *priv, PkPackage *ite
 {
 	GtkTreeIter iter;
 	gchar *summary_markup;
-	const gchar *icon = NULL;
 	gchar *text;
 	gboolean in_queue;
 	gboolean installed;
-	gboolean checkbox;
 	gboolean enabled;
 	PkBitfield state = 0;
 	static guint package_cnt = 0;
-	gchar **split;
 	PkInfoEnum info;
 	gchar *package_id = NULL;
 	gchar *summary = NULL;
@@ -1227,15 +1207,6 @@ gpk_application_add_item_to_results (GpkApplicationPrivate *priv, PkPackage *ite
 	if (info == PK_INFO_ENUM_COLLECTION_INSTALLED || info == PK_INFO_ENUM_COLLECTION_AVAILABLE)
 		pk_bitfield_add (state, GPK_STATE_COLLECTION);
 
-	/* use the application icon if available */
-	split = pk_package_id_split (package_id);
-	icon = gpk_desktop_guess_icon_name (priv->desktop, split[PK_PACKAGE_ID_NAME]);
-	g_strfreev (split);
-	if (icon == NULL)
-		icon = gpk_application_state_get_icon (state);
-
-	checkbox = gpk_application_state_get_checkbox (state);
-
 	/* use two lines */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "window_manager"));
 	text = gpk_package_id_format_twoline (gtk_widget_get_style_context (widget),
@@ -1248,12 +1219,12 @@ gpk_application_add_item_to_results (GpkApplicationPrivate *priv, PkPackage *ite
 	gtk_list_store_append (priv->packages_store, &iter);
 	gtk_list_store_set (priv->packages_store, &iter,
 			    PACKAGES_COLUMN_STATE, state,
-			    PACKAGES_COLUMN_CHECKBOX, checkbox,
+			    PACKAGES_COLUMN_CHECKBOX, gpk_application_state_get_checkbox (state),
 			    PACKAGES_COLUMN_CHECKBOX_VISIBLE, enabled,
 			    PACKAGES_COLUMN_TEXT, text,
 			    PACKAGES_COLUMN_SUMMARY, summary,
 			    PACKAGES_COLUMN_ID, package_id,
-			    PACKAGES_COLUMN_IMAGE, icon,
+			    PACKAGES_COLUMN_IMAGE, gpk_application_state_get_icon (state),
 			    -1);
 
 	/* only process every n events else we re-order too many times */
@@ -3288,12 +3259,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	g_signal_connect (priv->control, "notify::network-state",
 			  G_CALLBACK (gpk_application_notify_network_state_cb), priv);
 
-	/* get localized data from sqlite database */
-	priv->desktop = pk_desktop_new ();
-	ret = pk_desktop_open_database (priv->desktop, NULL);
-	if (!ret)
-		g_warning ("Failure opening database");
-
 	/* get UI */
 	priv->builder = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (priv->builder, GPK_DATA "/gpk-application.ui", &error);
@@ -3576,8 +3541,6 @@ main (int argc, char *argv[])
 		g_object_unref (priv->control);
 	if (priv->task != NULL)
 		g_object_unref (priv->task);
-	if (priv->desktop != NULL)
-		g_object_unref (priv->desktop);
 	if (priv->settings != NULL)
 		g_object_unref (priv->settings);
 	if (priv->markdown != NULL)
