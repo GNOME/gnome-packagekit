@@ -44,6 +44,9 @@ main (int argc, char *argv[])
 	DBusGProxy *proxy = NULL;
 	GError *error = NULL;
 	gboolean ret;
+	guint i;
+	gchar *tmp;
+	gchar *current_dir;
 	gchar **files = NULL;
 
 	const GOptionEntry options[] = {
@@ -82,6 +85,17 @@ main (int argc, char *argv[])
 				  _("You need to specify a file name to install"), NULL);
 		goto out;
 	}
+
+	/* make sure we don't pass relative paths to the session-interface */
+	current_dir = g_get_current_dir ();
+	for (i = 0; files[i] != NULL; i++) {
+		if (!g_str_has_prefix (files[i], "/")) {
+			tmp = g_build_filename (current_dir, files[i], NULL);
+			g_free (files[i]);
+			files[i] = tmp;
+		}
+	}
+	g_free (current_dir);
 
 	/* check dbus connections, exit if not valid */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
