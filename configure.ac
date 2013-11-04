@@ -21,10 +21,6 @@ YELP_HELP_INIT
 # set up gtk-doc
 GTK_DOC_CHECK(1.9)
 
-AM_PATH_PYTHON
-PYTHON_PACKAGE_DIR=${pythondir}/packagekit
-AC_SUBST(PYTHON_PACKAGE_DIR)
-
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
 dnl ---------------------------------------------------------------------------
@@ -253,8 +249,6 @@ data/icons/48x48/categories/Makefile
 data/icons/48x48/status/Makefile
 data/icons/scalable/categories/Makefile
 data/icons/scalable/status/Makefile
-python/Makefile
-python/packagekit/Makefile
 ])
 AC_OUTPUT
 

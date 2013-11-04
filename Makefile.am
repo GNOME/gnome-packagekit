@@ -3,7 +3,6 @@ SUBDIRS =						\
 	man						\
 	src						\
 	po						\
-	python						\
 	data						\
 	help
 
