@@ -113,7 +113,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %files -f %{name}.lang
 %doc AUTHORS COPYING NEWS README
 %{_bindir}/gpk-dbus-service
-%{_bindir}/gpk-install-catalog
 %{_bindir}/gpk-install-local-file
 %{_bindir}/gpk-install-mime-type
 %{_bindir}/gpk-install-package-name
@@ -137,7 +136,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/icons/hicolor/*/*/*.png
 %{_datadir}/icons/hicolor/scalable/*/*.svg*
 %{_datadir}/man/man1/gpk-dbus-service.1.gz
-%{_datadir}/man/man1/gpk-install-catalog.1.gz
 %{_datadir}/man/man1/gpk-install-local-file.1.gz
 %{_datadir}/man/man1/gpk-install-mime-type.1.gz
 %{_datadir}/man/man1/gpk-install-package-name.1.gz
@@ -147,7 +145,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/man/man1/gpk-service-pack.1.gz
 %{python_sitelib}/packagekit/*py*
 %{_datadir}/applications/gpk-dbus-service.desktop
-%{_datadir}/applications/gpk-install-catalog.desktop
 %{_datadir}/applications/gpk-install-local-file.desktop
 %{_datadir}/applications/gpk-log.desktop
 %{_datadir}/applications/gpk-prefs.desktop

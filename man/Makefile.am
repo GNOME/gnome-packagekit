@@ -1,7 +1,6 @@
 EXTRA_DIST =						\
 	gpk-application.sgml				\
 	gpk-dbus-service.sgml				\
-	gpk-install-catalog.sgml			\
 	gpk-install-local-file.sgml			\
 	gpk-install-mime-type.sgml			\
 	gpk-install-package-name.sgml			\
@@ -15,7 +14,6 @@ if HAVE_DOCBOOK2MAN
 man_MANS =						\
 	gpk-application.1				\
 	gpk-dbus-service.1				\
-	gpk-install-catalog.1				\
 	gpk-install-local-file.1			\
 	gpk-install-mime-type.1				\
 	gpk-install-package-name.1			\
@@ -38,8 +36,6 @@ gpk-install-provide-file.1: gpk-install-provide-file.sgml
 gpk-install-mime-type.1: gpk-install-mime-type.sgml
 	docbook2man $? > /dev/null
 gpk-prefs.1: gpk-prefs.sgml
-	docbook2man $? > /dev/null
-gpk-install-catalog.1: gpk-install-catalog.sgml
 	docbook2man $? > /dev/null
 gpk-dbus-service.1: gpk-dbus-service.sgml
 	docbook2man $? > /dev/null
