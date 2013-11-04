@@ -34,7 +34,6 @@ bin_PROGRAMS =						\
 	gpk-service-pack				\
 	gpk-install-local-file				\
 	gpk-install-provide-file			\
-	gpk-install-package-name			\
 	gpk-update-viewer				\
 	gpk-log						\
 	gpk-dbus-service				\
@@ -116,15 +115,6 @@ gpk_install_local_file_SOURCES =			\
 	$(NULL)
 
 gpk_install_local_file_LDADD =				\
-	libgpkshared.a					\
-	$(shared_LIBS)					\
-	$(NULL)
-
-gpk_install_package_name_SOURCES =			\
-	gpk-install-package-name.c			\
-	$(NULL)
-
-gpk_install_package_name_LDADD =			\
 	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
