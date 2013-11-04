@@ -1262,7 +1262,6 @@ gpk_update_viewer_button_upgrade_cb (GtkWidget *widget, gpointer user_data)
 static void
 gpk_update_viewer_check_mobile_broadband (void)
 {
-	gboolean ret = TRUE;
 	PkNetworkEnum state;
 	const gchar *message;
 
@@ -1281,13 +1280,6 @@ gpk_update_viewer_check_mobile_broadband (void)
 	/* not when small */
 	if (size_total < GPK_UPDATE_VIEWER_MOBILE_SMALL_SIZE)
 		goto out;
-
-	/* not when ignored */
-	ret = g_settings_get_boolean (settings, GPK_SETTINGS_NOTIFY_MOBILE_CONNECTION);
-	if (!ret)
-		goto out;
-
-	/* show a warning message */
 
 	/* TRANSLATORS, are we going to cost the user lots of money? */
 	message = ngettext ("Connectivity is being provided by wireless broadband, and it may be expensive to update this package.",
