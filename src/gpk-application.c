@@ -2401,7 +2401,9 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, GpkApplicationPrivate *p
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "entry_text"));
 	/* TRANSLATORS: entry tooltip: basic search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by name"));
-	gtk_entry_set_icon_from_stock (GTK_ENTRY (widget), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_FIND);
+	gtk_entry_set_icon_from_icon_name (GTK_ENTRY (widget),
+					   GTK_ENTRY_ICON_PRIMARY,
+					   "edit-find");
 }
 
 /**
@@ -2425,7 +2427,9 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, GpkApplicationPri
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "entry_text"));
 	/* TRANSLATORS: entry tooltip: detailed search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by description"));
-	gtk_entry_set_icon_from_stock (GTK_ENTRY (widget), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_EDIT);
+	gtk_entry_set_icon_from_icon_name (GTK_ENTRY (widget),
+					   GTK_ENTRY_ICON_PRIMARY,
+					   "edit-find-replace");
 }
 
 /**
@@ -2449,7 +2453,9 @@ gpk_application_menu_search_by_file (GtkMenuItem *item, GpkApplicationPrivate *p
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "entry_text"));
 	/* TRANSLATORS: entry tooltip: file search */
 	gtk_widget_set_tooltip_text (widget, _("Searching by file"));
-	gtk_entry_set_icon_from_stock (GTK_ENTRY (widget), GTK_ENTRY_ICON_PRIMARY, GTK_STOCK_OPEN);
+	gtk_entry_set_icon_from_icon_name (GTK_ENTRY (widget),
+					   GTK_ENTRY_ICON_PRIMARY,
+					   "folder-open");
 }
 
 /**
@@ -2460,7 +2466,6 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 {
 	GtkMenu *menu = (GtkMenu*) gtk_menu_new ();
 	GtkWidget *item;
-	GtkWidget *image;
 
 	/* only respond to left button */
 	if (event->button != 1)
@@ -2470,10 +2475,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 
 	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_SEARCH_NAME)) {
 		/* TRANSLATORS: context menu item for the search type icon */
-		item = gtk_image_menu_item_new_with_mnemonic (_("Search by name"));
-		image = gtk_image_new_from_stock (GTK_STOCK_FIND, GTK_ICON_SIZE_MENU);
-		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
-		gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (item), TRUE);
+		item = gtk_menu_item_new_with_mnemonic (_("Search by name"));
 		g_signal_connect (G_OBJECT (item), "activate",
 				  G_CALLBACK (gpk_application_menu_search_by_name), priv);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
@@ -2481,10 +2483,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 
 	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
 		/* TRANSLATORS: context menu item for the search type icon */
-		item = gtk_image_menu_item_new_with_mnemonic (_("Search by description"));
-		image = gtk_image_new_from_stock (GTK_STOCK_EDIT, GTK_ICON_SIZE_MENU);
-		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
-		gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (item), TRUE);
+		item = gtk_menu_item_new_with_mnemonic (_("Search by description"));
 		g_signal_connect (G_OBJECT (item), "activate",
 				  G_CALLBACK (gpk_application_menu_search_by_description), priv);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
@@ -2492,10 +2491,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 
 	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_SEARCH_FILE)) {
 		/* TRANSLATORS: context menu item for the search type icon */
-		item = gtk_image_menu_item_new_with_mnemonic (_("Search by file name"));
-		image = gtk_image_new_from_stock (GTK_STOCK_OPEN, GTK_ICON_SIZE_MENU);
-		gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (item), image);
-		gtk_image_menu_item_set_always_show_image (GTK_IMAGE_MENU_ITEM (item), TRUE);
+		item = gtk_menu_item_new_with_mnemonic (_("Search by file name"));
 		g_signal_connect (G_OBJECT (item), "activate",
 				  G_CALLBACK (gpk_application_menu_search_by_file), priv);
 		gtk_menu_shell_append (GTK_MENU_SHELL (menu), item);
