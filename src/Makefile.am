@@ -90,10 +90,6 @@ if WITH_SYSTEMD
 libgpkshared_a_SOURCES +=				\
 	systemd-proxy.c					\
 	systemd-proxy.h
-else
-libgpkshared_a_SOURCES +=				\
-	egg-console-kit.c				\
-	egg-console-kit.h
 endif
 
 shared_LIBS =						\

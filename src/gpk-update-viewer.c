@@ -34,8 +34,6 @@
 #include "egg-markdown.h"
 #ifdef HAVE_SYSTEMD
 #include "systemd-proxy.h"
-#else
-#include "egg-console-kit.h"
 #endif
 
 #include "gpk-cell-renderer-info.h"
@@ -62,9 +60,7 @@ static	guint			 size_total = 0;
 static	guint			 number_total = 0;
 static	PkRestartEnum		 restart_worst = 0;
 #ifdef HAVE_SYSTEMD
-static  SystemdProxy            *proxy = NULL;
-#else
-static	EggConsoleKit		*console = NULL;
+static  SystemdProxy		*proxy = NULL;
 #endif
 static	EggMarkdown		*markdown = NULL;
 static	GCancellable		*cancellable = NULL;
@@ -249,9 +245,9 @@ gpk_update_viewer_check_restart (void)
 	if (restart_update == PK_RESTART_ENUM_SYSTEM ||
 	    restart_update == PK_RESTART_ENUM_SECURITY_SYSTEM) {
 #ifdef HAVE_SYSTEMD
-                systemd_proxy_can_restart (proxy, &show_button, NULL);
+		systemd_proxy_can_restart (proxy, &show_button, NULL);
 #else
-		egg_console_kit_can_restart (console, &show_button, NULL);
+		show_button = FALSE;
 #endif
 	}
 
@@ -271,19 +267,16 @@ gpk_update_viewer_check_restart (void)
 	ret = TRUE;
 
 	/* do the action */
-	if (restart_update == PK_RESTART_ENUM_SYSTEM)
+	if (restart_update == PK_RESTART_ENUM_SYSTEM) {
 #ifdef HAVE_SYSTEMD
-                ret = systemd_proxy_restart (proxy, &error);
-#else
-		/* use consolekit to restart */
-		ret = egg_console_kit_restart (console, &error);
-#endif
+		ret = systemd_proxy_restart (proxy, &error);
 		if (!ret) {
 			/* TRANSLATORS: the PackageKit request did not complete, and it did not send an error */
 			gpk_update_viewer_error_dialog (_("Could not restart"), NULL, error->message);
 			g_error_free (error);
 		}
-	else if (restart_update == PK_RESTART_ENUM_SESSION) {
+#endif
+	} else if (restart_update == PK_RESTART_ENUM_SESSION) {
 		GpkSession *session;
 		session = gpk_session_new ();
 		/* use gnome-session to log out */
@@ -2585,8 +2578,8 @@ gpk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton 
 
 	gtk_widget_show_all (menu);
 	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
-		        (event != NULL) ? event->button : 0,
-		        gdk_event_get_time((GdkEvent*)event));
+			(event != NULL) ? event->button : 0,
+			gdk_event_get_time((GdkEvent*)event));
 }
 
 /**
@@ -3250,9 +3243,7 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 
 	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 #ifdef HAVE_SYSTEMD
-        proxy = systemd_proxy_new ();
-#else
-	console = egg_console_kit_new ();
+	proxy = systemd_proxy_new ();
 #endif
 	cancellable = g_cancellable_new ();
 	markdown = egg_markdown_new ();
@@ -3493,8 +3484,8 @@ main (int argc, char *argv[])
 	if (cancellable != NULL)
 		g_object_unref (cancellable);
 #ifdef HAVE_SYSTEMD
-        if (proxy != NULL)
-                systemd_proxy_free (proxy);
+	if (proxy != NULL)
+		systemd_proxy_free (proxy);
 #else
 	if (console != NULL)
 		g_object_unref (console);
