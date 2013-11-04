@@ -28,8 +28,6 @@
 #include <libnotify/notify.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-dbus-monitor.h"
-
 #include "gpk-common.h"
 #include "gpk-dbus.h"
 #include "gpk-debug.h"
@@ -109,16 +107,6 @@ gpk_dbus_service_check_idle_cb (GpkDbus *dbus)
 }
 
 /**
- * gpk_dbus_service_connection_replaced_cb:
- **/
-static void
-gpk_dbus_service_connection_replaced_cb (EggDbusMonitor *monitor, gpointer data)
-{
-	g_warning ("exiting as we have been replaced");
-	g_main_loop_quit (loop);
-}
-
-/**
  * main:
  **/
 int
@@ -131,7 +119,6 @@ main (int argc, char *argv[])
 	gboolean ret;
 	guint retval = 0;
 	DBusGConnection *connection;
-	EggDbusMonitor *monitor;
 	guint timer_id = 0;
 
 	const GOptionEntry options[] = {
@@ -165,12 +152,6 @@ main (int argc, char *argv[])
 	dbus = gpk_dbus_new ();
 	loop = g_main_loop_new (NULL, FALSE);
 
-	/* find out when we are replaced */
-	monitor = egg_dbus_monitor_new ();
-	egg_dbus_monitor_assign (monitor, EGG_DBUS_MONITOR_SESSION, PK_DBUS_SERVICE);
-	g_signal_connect (monitor, "connection-replaced",
-			  G_CALLBACK (gpk_dbus_service_connection_replaced_cb), NULL);
-
 	/* get the bus */
 	connection = dbus_g_bus_get (DBUS_BUS_SESSION, &error);
 	if (error) {
@@ -197,7 +178,6 @@ main (int argc, char *argv[])
 	/* wait */
 	g_main_loop_run (loop);
 out:
-	g_object_unref (monitor);
 	g_main_loop_unref (loop);
 	g_object_unref (dbus);
 	return retval;

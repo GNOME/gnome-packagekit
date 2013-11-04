@@ -48,8 +48,6 @@ libgpkshared_a_SOURCES =				\
 	egg-string.h					\
 	egg-markdown.c					\
 	egg-markdown.h					\
-	egg-dbus-monitor.c				\
-	egg-dbus-monitor.h				\
 	gpk-debug.c					\
 	gpk-debug.h					\
 	gpk-enum.c					\
