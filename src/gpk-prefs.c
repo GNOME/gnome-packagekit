@@ -37,7 +37,6 @@
 typedef struct {
 	const gchar		*id_tmp;
 	GCancellable		*cancellable;
-	GSettings		*settings_gsd;
 	GSettings		*settings_gpk;
 	GtkApplication		*application;
 	GtkBuilder		*builder;
@@ -58,27 +57,6 @@ enum {
 	GPK_COLUMN_LAST
 };
 
-/* TRANSLATORS: check once an hour */
-#define PK_FREQ_HOURLY_TEXT		_("Hourly")
-/* TRANSLATORS: check once a day */
-#define PK_FREQ_DAILY_TEXT		_("Daily")
-/* TRANSLATORS: check once a week */
-#define PK_FREQ_WEEKLY_TEXT		_("Weekly")
-/* TRANSLATORS: never check for updates/upgrades */
-#define PK_FREQ_NEVER_TEXT		_("Never")
-
-/* TRANSLATORS: update everything */
-#define PK_UPDATE_ALL_TEXT		_("All updates")
-/* TRANSLATORS: update just security updates */
-#define PK_UPDATE_SECURITY_TEXT		_("Only security updates")
-/* TRANSLATORS: don't update anything */
-#define PK_UPDATE_NONE_TEXT		_("Nothing")
-
-#define GPK_PREFS_VALUE_NEVER		(0)
-#define GPK_PREFS_VALUE_HOURLY		(60*60)
-#define GPK_PREFS_VALUE_DAILY		(60*60*24)
-#define GPK_PREFS_VALUE_WEEKLY		(60*60*24*7)
-
 /**
  * gpk_prefs_help_cb:
  **/
@@ -86,151 +64,6 @@ static void
 gpk_prefs_help_cb (GtkWidget *widget, GpkPrefsPrivate *priv)
 {
 	gpk_gnome_help ("prefs");
-}
-
-/**
- * gpk_prefs_update_freq_combo_changed:
- **/
-static void
-gpk_prefs_update_freq_combo_changed (GtkWidget *widget, GpkPrefsPrivate *priv)
-{
-	gchar *value;
-	guint freq = 0;
-
-	value = gtk_combo_box_text_get_active_text (GTK_COMBO_BOX_TEXT (widget));
-	if (strcmp (value, PK_FREQ_HOURLY_TEXT) == 0)
-		freq = GPK_PREFS_VALUE_HOURLY;
-	else if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0)
-		freq = GPK_PREFS_VALUE_DAILY;
-	else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0)
-		freq = GPK_PREFS_VALUE_WEEKLY;
-	else if (strcmp (value, PK_FREQ_NEVER_TEXT) == 0)
-		freq = GPK_PREFS_VALUE_NEVER;
-	else
-		g_assert (FALSE);
-
-	g_debug ("Changing %s to %i", GSD_SETTINGS_FREQUENCY_GET_UPDATES, freq);
-	g_settings_set_int (priv->settings_gsd, GSD_SETTINGS_FREQUENCY_GET_UPDATES, freq);
-	g_free (value);
-}
-
-/**
- * gpk_prefs_upgrade_freq_combo_changed:
- **/
-static void
-gpk_prefs_upgrade_freq_combo_changed (GtkWidget *widget, GpkPrefsPrivate *priv)
-{
-	gchar *value;
-	guint freq = 0;
-
-	value = gtk_combo_box_text_get_active_text (GTK_COMBO_BOX_TEXT (widget));
-	if (strcmp (value, PK_FREQ_DAILY_TEXT) == 0)
-		freq = GPK_PREFS_VALUE_DAILY;
-	else if (strcmp (value, PK_FREQ_WEEKLY_TEXT) == 0)
-		freq = GPK_PREFS_VALUE_WEEKLY;
-	else if (strcmp (value, PK_FREQ_NEVER_TEXT) == 0)
-		freq = GPK_PREFS_VALUE_NEVER;
-	else
-		g_assert (FALSE);
-
-	g_debug ("Changing %s to %i", GSD_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
-	g_settings_set_int (priv->settings_gsd, GSD_SETTINGS_FREQUENCY_GET_UPGRADES, freq);
-	g_free (value);
-}
-
-/**
- * gpk_prefs_update_freq_combo_setup:
- **/
-static void
-gpk_prefs_update_freq_combo_setup (GpkPrefsPrivate *priv)
-{
-	gboolean is_writable;
-	GtkWidget *widget;
-	guint value;
-
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "combobox_check"));
-	is_writable = g_settings_is_writable (priv->settings_gsd, GSD_SETTINGS_FREQUENCY_GET_UPDATES);
-	value = g_settings_get_int (priv->settings_gsd, GSD_SETTINGS_FREQUENCY_GET_UPDATES);
-	g_debug ("value from settings %i", value);
-
-	/* do we have permission to write? */
-	gtk_widget_set_sensitive (widget, is_writable);
-
-	/* use a simple text model */
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_HOURLY_TEXT);
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_DAILY_TEXT);
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_WEEKLY_TEXT);
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_NEVER_TEXT);
-
-	/* select the correct entry */
-	if (value == GPK_PREFS_VALUE_HOURLY)
-		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 0);
-	else if (value == GPK_PREFS_VALUE_DAILY)
-		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 1);
-	else if (value == GPK_PREFS_VALUE_WEEKLY)
-		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 2);
-	else if (value == GPK_PREFS_VALUE_NEVER)
-		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 3);
-
-	/* only do this after else we redraw the window */
-	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (gpk_prefs_update_freq_combo_changed), priv);
-}
-
-/**
- * gpk_prefs_upgrade_freq_combo_setup:
- **/
-static void
-gpk_prefs_upgrade_freq_combo_setup (GpkPrefsPrivate *priv)
-{
-	gboolean is_writable;
-	GtkWidget *widget;
-	guint value;
-
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "combobox_upgrade"));
-	is_writable = g_settings_is_writable (priv->settings_gsd, GSD_SETTINGS_FREQUENCY_GET_UPGRADES);
-	value = g_settings_get_int (priv->settings_gsd, GSD_SETTINGS_FREQUENCY_GET_UPGRADES);
-	g_debug ("value from settings %i", value);
-
-	/* do we have permission to write? */
-	gtk_widget_set_sensitive (widget, is_writable);
-
-	/* use a simple text model */
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_DAILY_TEXT);
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_WEEKLY_TEXT);
-	gtk_combo_box_text_append_text (GTK_COMBO_BOX_TEXT (widget), PK_FREQ_NEVER_TEXT);
-
-	/* select the correct entry */
-	if (value == GPK_PREFS_VALUE_DAILY)
-		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 0);
-	else if (value == GPK_PREFS_VALUE_WEEKLY)
-		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 1);
-	else if (value == GPK_PREFS_VALUE_NEVER)
-		gtk_combo_box_set_active (GTK_COMBO_BOX (widget), 2);
-
-	/* only do this after else we redraw the window */
-	g_signal_connect (G_OBJECT (widget), "changed",
-			  G_CALLBACK (gpk_prefs_upgrade_freq_combo_changed), priv);
-}
-
-/**
- * gpk_prefs_notify_network_state_cb:
- **/
-static void
-gpk_prefs_notify_network_state_cb (PkControl *control, GParamSpec *pspec, GpkPrefsPrivate *priv)
-{
-	GtkWidget *widget;
-	PkNetworkEnum state;
-
-	/* only show label on mobile broadband */
-	g_object_get (control,
-		      "network-state", &state,
-		      NULL);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "hbox_mobile_broadband"));
-	if (state == PK_NETWORK_ENUM_MOBILE)
-		gtk_widget_show (widget);
-	else
-		gtk_widget_hide (widget);
 }
 
 /**
@@ -328,23 +161,13 @@ gpk_prefs_remove_nonactive (GtkTreeModel *model)
 static gboolean
 gpk_prefs_status_changed_timeout_cb (GpkPrefsPrivate *priv)
 {
-	const gchar *text;
 	GtkWidget *widget;
 
 	/* set the text and show */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "scrolledwindow_repo"));
 	gtk_widget_hide (widget);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "viewport_status"));
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "box_status"));
 	gtk_widget_show (widget);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_status"));
-	text = gpk_status_enum_to_localised_text (priv->status);
-	gtk_label_set_label (GTK_LABEL (widget), text);
-
-	/* set icon */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "image_status"));
-	gtk_image_set_from_icon_name (GTK_IMAGE (widget),
-				      gpk_status_enum_to_icon_name (priv->status),
-				      GTK_ICON_SIZE_DIALOG);
 
 	/* never repeat */
 	priv->status_id = 0;
@@ -374,7 +197,7 @@ gpk_prefs_progress_cb (PkProgress *progress, PkProgressType type, GpkPrefsPrivat
 			g_source_remove (priv->status_id);
 			priv->status_id = 0;
 		}
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "viewport_status"));
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "box_status"));
 		gtk_widget_hide (widget);
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "scrolledwindow_repo"));
 		gtk_widget_show (widget);
@@ -692,7 +515,6 @@ gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate
 	GError *error = NULL;
 	GtkWidget *widget;
 	PkControl *control = PK_CONTROL(object);
-	PkNetworkEnum state;
 
 	/* get the result */
 	ret = pk_control_get_properties_finish (control, res, &error);
@@ -706,20 +528,7 @@ gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate
 	/* get values */
 	g_object_get (control,
 		      "roles", &priv->roles,
-		      "network-state", &state,
 		      NULL);
-
-	/* only show label on mobile broadband */
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "hbox_mobile_broadband"));
-	gtk_widget_set_visible (widget, (state == PK_NETWORK_ENUM_MOBILE));
-
-	/* hide if not supported */
-	if (!pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_DISTRO_UPGRADES)) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_upgrade"));
-		gtk_widget_hide (widget);
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "combobox_upgrade"));
-		gtk_widget_hide (widget);
-	}
 
 	/* setup sources GUI elements */
 	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_REPO_LIST)) {
@@ -775,8 +584,6 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 
 	/* get actions */
 	control = pk_control_new ();
-	g_signal_connect (control, "notify::network-state",
-			  G_CALLBACK (gpk_prefs_notify_network_state_cb), priv);
 	g_signal_connect (control, "repo-list-changed",
 			  G_CALLBACK (gpk_prefs_repo_list_changed_cb), priv);
 
@@ -788,35 +595,12 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 		goto out;
 	}
 
-	/* bind the mobile broadband and battery checkbox */
-	if (priv->settings_gsd != NULL) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_mobile_broadband"));
-		g_settings_bind (priv->settings_gsd,
-				 GSD_SETTINGS_CONNECTION_USE_MOBILE,
-				 widget, "active",
-				 G_SETTINGS_BIND_DEFAULT);
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_battery_power"));
-		g_settings_bind (priv->settings_gsd,
-				 GSD_SETTINGS_UPDATE_BATTERY,
-				 widget, "active",
-				 G_SETTINGS_BIND_DEFAULT);
-	}
-
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_close"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_prefs_close_cb), priv);
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_help"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_prefs_help_cb), priv);
-
-	/* update the combo boxes */
-	if (priv->settings_gsd != NULL) {
-		gpk_prefs_update_freq_combo_setup (priv);
-		gpk_prefs_upgrade_freq_combo_setup (priv);
-	} else {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "notebook_preferences"));
-		gtk_notebook_remove_page (GTK_NOTEBOOK (widget), 0);
-	}
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_detail"));
 	g_settings_bind (priv->settings_gpk,
@@ -901,30 +685,11 @@ out:
 }
 
 /**
- * gpk_prefs_has_gsd_schema:
- **/
-static gboolean
-gpk_prefs_has_gsd_schema (GpkPrefsPrivate *priv)
-{
-	const char * const *schemas;
-	guint i;
-
-	/* find the schema in the global list */
-	schemas = g_settings_list_schemas ();
-	for (i = 0; schemas[i] != NULL; i++) {
-		if (g_strcmp0 (schemas[i], GSD_SETTINGS_SCHEMA) == 0)
-			return TRUE;
-	}
-	return FALSE;
-}
-
-/**
  * main:
  **/
 int
 main (int argc, char *argv[])
 {
-	gboolean ret;
 	gint status = 0;
 	GpkPrefsPrivate *priv = NULL;
 
@@ -948,11 +713,6 @@ main (int argc, char *argv[])
 		      "background", FALSE,
 		      NULL);
 
-	/* have we got a GSD with update schema */
-	ret = gpk_prefs_has_gsd_schema (priv);
-	if (ret)
-		priv->settings_gsd = g_settings_new (GSD_SETTINGS_SCHEMA);
-
 	/* are we already activated? */
 	priv->application = gtk_application_new ("org.freedesktop.PackageKit.Prefs",
 						 G_APPLICATION_HANDLES_COMMAND_LINE);
@@ -971,8 +731,6 @@ main (int argc, char *argv[])
 		g_object_unref (priv->settings_gpk);
 		g_object_unref (priv->list_store);
 		g_object_unref (priv->client);
-		if (priv->settings_gsd != NULL)
-			g_object_unref (priv->settings_gsd);
 		g_free (priv);
 	}
 	return status;
