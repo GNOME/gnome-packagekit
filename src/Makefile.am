@@ -33,7 +33,6 @@ bin_PROGRAMS =						\
 	gpk-prefs					\
 	gpk-service-pack				\
 	gpk-install-local-file				\
-	gpk-install-provide-file			\
 	gpk-update-viewer				\
 	gpk-log						\
 	gpk-dbus-service				\
@@ -99,15 +98,6 @@ shared_LIBS =						\
 	$(GNOME_MENUS_LIBS)				\
 	$(CANBERRA_LIBS)				\
 	$(X11_LIBS)					\
-	$(NULL)
-
-gpk_install_provide_file_SOURCES =			\
-	gpk-install-provide-file.c			\
-	$(NULL)
-
-gpk_install_provide_file_LDADD =			\
-	libgpkshared.a					\
-	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_install_local_file_SOURCES =			\
