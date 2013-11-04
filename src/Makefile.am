@@ -33,7 +33,6 @@ bin_PROGRAMS =						\
 	gpk-prefs					\
 	gpk-service-pack				\
 	gpk-install-local-file				\
-	gpk-install-mime-type				\
 	gpk-install-provide-file			\
 	gpk-install-package-name			\
 	gpk-update-viewer				\
@@ -117,15 +116,6 @@ gpk_install_local_file_SOURCES =			\
 	$(NULL)
 
 gpk_install_local_file_LDADD =				\
-	libgpkshared.a					\
-	$(shared_LIBS)					\
-	$(NULL)
-
-gpk_install_mime_type_SOURCES =				\
-	gpk-install-mime-type.c				\
-	$(NULL)
-
-gpk_install_mime_type_LDADD =				\
 	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)
