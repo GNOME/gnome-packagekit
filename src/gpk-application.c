@@ -1120,6 +1120,7 @@ gpk_application_clear_details_cb (GpkApplicationPrivate *priv)
 	gtk_widget_hide (widget);
 
 	/* never repeat */
+	priv->details_event_id = 0;
 	return FALSE;
 }
 

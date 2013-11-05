@@ -183,6 +183,7 @@ gpk_animated_icon_update (GpkAnimatedIcon *icon)
 	/* have we loaded a file */
 	if (icon->frames == NULL) {
 		g_warning ("no frames to process");
+		icon->animation_id = 0;
 		return FALSE;
 	}
 

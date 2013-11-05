@@ -166,6 +166,7 @@ gpk_update_viewer_auto_shutdown_cb (GtkDialog *dialog)
 {
 	g_debug ("autoclosing dialog");
 	gtk_dialog_response (dialog, GTK_RESPONSE_CANCEL);
+	auto_shutdown_id = 0;
 	return FALSE;
 }
 
