@@ -53,7 +53,6 @@
 #define GPK_UPDATE_VIEWER_MOBILE_SMALL_SIZE	512*1024 /* bytes */
 
 static	gboolean		 ignore_updates_changed = FALSE;
-static	gboolean		 other_updates_held_back = FALSE;
 static	gchar			*package_id_last = NULL;
 static	guint			 auto_shutdown_id = 0;
 static	guint			 size_total = 0;
@@ -477,9 +476,6 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, gpointer
 		gpk_update_viewer_quit ();
 		goto out;
 	} else {
-		/* we want the UI to update with the new list */
-		if (other_updates_held_back)
-			gpk_update_viewer_get_new_update_array ();
 		goto out;
 	}
 
@@ -2652,8 +2648,6 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 	GPtrArray *array = NULL;
 	GPtrArray *array_messages = NULL;
 	PkPackage *item;
-	PkMessage *message;
-	PkMessageEnum message_type;
 	gchar *text = NULL;
 	gboolean selected;
 	gboolean sensitive;
@@ -2688,21 +2682,6 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 		gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
 					gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
-	}
-
-	/* do we have any important messages we need to show? */
-	other_updates_held_back = FALSE;
-	array_messages = pk_results_get_message_array (results);
-	for (i=0; i<array_messages->len; i++) {
-		message = g_ptr_array_index (array_messages, i);
-		g_object_get (message,
-			      "type", &message_type,
-			      NULL);
-		if (message_type == PK_MESSAGE_ENUM_OTHER_UPDATES_HELD_BACK) {
-			other_updates_held_back = TRUE;
-			gtk_widget_show (info_updates);
-			break;
-		}
 	}
 
 	/* get data */

@@ -216,38 +216,12 @@ out:
 }
 
 /**
- * gpk_prefs_process_messages_cb:
- **/
-static void
-gpk_prefs_process_messages_cb (PkMessage *item, GpkPrefsPrivate *priv)
-{
-	const gchar *title;
-	gchar *details;
-	GtkWindow *window;
-	PkMessageEnum type;
-
-	/* get data */
-	g_object_get (item,
-		      "type", &type,
-		      "details", &details,
-		      NULL);
-
-	/* show a modal window */
-	window = GTK_WINDOW (gtk_builder_get_object (priv->builder, "dialog_prefs"));
-	title = gpk_message_enum_to_localised_text (type);
-	gpk_error_dialog_modal (window, title, details, NULL);
-
-	g_free (details);
-}
-
-/**
  * gpk_prefs_repo_enable_cb
  **/
 static void
 gpk_prefs_repo_enable_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *priv)
 {
 	GError *error = NULL;
-	GPtrArray *array;
 	GtkWindow *window;
 	PkClient *client = PK_CLIENT (object);
 	PkError *error_code = NULL;
@@ -271,11 +245,6 @@ gpk_prefs_repo_enable_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *p
 					gpk_error_enum_to_localised_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
 	}
-
-	/* process messages */
-	array = pk_results_get_message_array (results);
-	g_ptr_array_foreach (array, (GFunc) gpk_prefs_process_messages_cb, priv);
-	g_ptr_array_unref (array);
 out:
 	if (error_code != NULL)
 		g_object_unref (error_code);
