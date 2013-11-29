@@ -10,7 +10,6 @@ desktopdir = $(datadir)/applications
 desktop_in_files =					\
 	gpk-install-local-file.desktop.in		\
 	gpk-dbus-service.desktop.in			\
-	gpk-service-pack.desktop.in			\
 	gpk-prefs.desktop.in				\
 	gpk-application.desktop.in			\
 	gpk-update-viewer.desktop.in			\
@@ -26,7 +25,6 @@ pkgdata_DATA =						\
 	gpk-application.ui				\
 	gpk-update-viewer.ui				\
 	gpk-prefs.ui					\
-	gpk-service-pack.ui				\
 	gpk-signature.ui				\
 	gpk-error.ui					\
 	gpk-log.ui					\
@@ -56,7 +54,6 @@ clean-local :
 
 DISTCLEANFILES =					\
 	gpk-prefs.desktop				\
-	gpk-service-pack.desktop			\
 	gpk-update-viewer.desktop			\
 	gpk-install-local-file.desktop			\
 	gpk-dbus-service.desktop			\

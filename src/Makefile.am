@@ -31,7 +31,6 @@ AM_CPPFLAGS =						\
 bin_PROGRAMS =						\
 	gpk-application					\
 	gpk-prefs					\
-	gpk-service-pack				\
 	gpk-install-local-file				\
 	gpk-update-viewer				\
 	gpk-log						\
@@ -127,15 +126,6 @@ gpk_application_SOURCES =				\
 	$(NULL)
 
 gpk_application_LDADD =					\
-	libgpkshared.a					\
-	$(shared_LIBS)					\
-	$(NULL)
-
-gpk_service_pack_SOURCES =				\
-	gpk-service-pack.c				\
-	$(NULL)
-
-gpk_service_pack_LDADD =				\
 	libgpkshared.a					\
 	$(shared_LIBS)					\
 	$(NULL)

@@ -4,7 +4,6 @@ EXTRA_DIST =						\
 	gpk-install-local-file.sgml			\
 	gpk-log.sgml					\
 	gpk-prefs.sgml					\
-	gpk-service-pack.sgml				\
 	gpk-update-viewer.sgml
 
 if HAVE_DOCBOOK2MAN
@@ -14,7 +13,6 @@ man_MANS =						\
 	gpk-install-local-file.1			\
 	gpk-log.1					\
 	gpk-prefs.1					\
-	gpk-service-pack.1				\
 	gpk-update-viewer.1
 endif
 
@@ -30,8 +28,6 @@ gpk-dbus-service.1: gpk-dbus-service.sgml
 gpk-update-viewer.1: gpk-update-viewer.sgml
 	docbook2man $? > /dev/null
 gpk-log.1: gpk-log.sgml
-	docbook2man $? > /dev/null
-gpk-service-pack.1: gpk-service-pack.sgml
 	docbook2man $? > /dev/null
 endif
 

@@ -26,7 +26,6 @@ icons_DATA = 				\
 	pk-update-normal.svg		\
 	pk-update-security.svg		\
 	pk-refresh-cache.svg		\
-	pk-service-pack.svg		\
 	pk-setup.svg			\
 	pk-wait.svg
 

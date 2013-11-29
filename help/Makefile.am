@@ -16,8 +16,6 @@ HELP_MEDIA = \
 	figures/gpk-added-deps.png \
 	figures/gpk-remove-confirm.png \
 	figures/gpk-updates.png \
-	figures/gpk-service-pack.png \
-	figures/gpk-service-pack-example.png \
 	figures/gpk-updates-warning.png
 
 HELP_LINGUAS = de el es fr gl oc pa pl pt_BR ru sl sv zh_CN
