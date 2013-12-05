@@ -131,10 +131,6 @@ void		 gpk_dbus_task_install_package_names	(GpkDbusTask	*dtask,
 							 gchar		**packages,
 							 GpkDbusTaskFinishedCb finished_cb,
 							 gpointer	 userdata);
-void		 gpk_dbus_task_install_catalogs		(GpkDbusTask	*dtask,
-							 gchar		**filenames,
-							 GpkDbusTaskFinishedCb finished_cb,
-							 gpointer	 userdata);
 void		 gpk_dbus_task_remove_package_by_file	(GpkDbusTask	*dtask,
 							 gchar		**full_paths,
 							 GpkDbusTaskFinishedCb finished_cb,

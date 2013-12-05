@@ -93,7 +93,6 @@ struct _GpkDbusTaskPrivate
 	gchar			**package_ids;
 	gchar			**files;
 	GCancellable		*cancellable;
-	PkCatalog		*catalog;
 	GpkDbusTaskFinishedCb	 finished_cb;
 	gpointer		 finished_userdata;
 };
@@ -2638,88 +2637,6 @@ gpk_dbus_task_install_resources (GpkDbusTask *dtask, PkProvidesEnum type, gchar 
 }
 
 /**
- * gpk_dbus_task_catalog_lookup_cb:
- **/
-static void
-gpk_dbus_task_catalog_lookup_cb (GObject *object, GAsyncResult *res, GpkDbusTask *dtask)
-{
-	PkCatalog *catalog = PK_CATALOG (object);
-	GError *error = NULL;
-	GError *error_dbus = NULL;
-	GPtrArray *array = NULL;
-	GtkResponseType button;
-
-	/* get the results */
-	array = pk_catalog_lookup_finish (catalog, res, &error);
-	if (array == NULL) {
-		if (dtask->priv->show_warning) {
-			/* TRANSLATORS: title: we've already got all these packages installed */
-			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
-			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Could not process catalog"));
-			gpk_modal_dialog_set_help_id (dtask->priv->dialog, NULL);
-			gpk_modal_dialog_present_with_time (dtask->priv->dialog, dtask->priv->timestamp);
-			gpk_modal_dialog_run (dtask->priv->dialog);
-		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_UNKNOWN, "failed to parse catalog: %s", error->message);
-		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
-		g_error_free (error);
-		g_error_free (error_dbus);
-		goto out;
-	}
-
-	/* nothing to do? */
-	if (array->len == 0) {
-		/* show UI */
-		if (dtask->priv->show_warning) {
-			/* TRANSLATORS: title: we've already got all these packages installed */
-			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
-			gpk_modal_dialog_set_title (dtask->priv->dialog, _("No packages need to be installed"));
-			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-catalog-none-required");
-			gpk_modal_dialog_present_with_time (dtask->priv->dialog, dtask->priv->timestamp);
-			gpk_modal_dialog_run (dtask->priv->dialog);
-		}
-		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_UNKNOWN, "No packages need to be installed");
-		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
-		g_error_free (error_dbus);
-		goto out;
-	}
-
-	/* optional */
-	if (!dtask->priv->show_confirm_install) {
-		g_debug ("skip confirm as not allowed to interact with user");
-		goto skip_checks;
-	}
-
-	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, GPK_MODAL_DIALOG_PACKAGE_LIST);
-	/* TRANSLATORS: title: allow user to confirm */
-	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Install packages in catalog?"));
-	/* TRANSLATORS: display a list of packages to install */
-	gpk_modal_dialog_set_message (dtask->priv->dialog, _("The following packages are marked to be installed from the catalog:"));
-	gpk_modal_dialog_set_image (dtask->priv->dialog, "dialog-question");
-	gpk_modal_dialog_set_package_list (dtask->priv->dialog, array);
-	/* TRANSLATORS: button: install packages in catalog */
-	gpk_modal_dialog_set_action (dtask->priv->dialog, _("Install"));
-	gpk_modal_dialog_present_with_time (dtask->priv->dialog, dtask->priv->timestamp);
-	button = gpk_modal_dialog_run (dtask->priv->dialog);
-
-	/* did we click no or exit the window? */
-	if (button != GTK_RESPONSE_OK) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "Action was canceled");
-		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
-		g_error_free (error_dbus);
-		goto out;
-	}
-
-skip_checks:
-	/* convert to list of package id's */
-	dtask->priv->package_ids = pk_package_array_to_strv (array);
-	gpk_dbus_task_install_package_ids (dtask);
-out:
-	if (array != NULL)
-		g_ptr_array_unref (array);
-}
-
-/**
  * gpk_dbus_task_remove_packages_cb:
  **/
 static void
@@ -3137,74 +3054,6 @@ out:
 }
 
 /**
- * gpk_dbus_task_install_catalogs:
- **/
-void
-gpk_dbus_task_install_catalogs (GpkDbusTask *dtask, gchar **filenames, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
-{
-	GError *error_dbus = NULL;
-	GtkResponseType button;
-	gchar *message = NULL;
-	const gchar *title;
-	guint len;
-
-	g_return_if_fail (GPK_IS_DBUS_TASK (dtask));
-	g_return_if_fail (filenames != NULL);
-
-	/* save callback information */
-	dtask->priv->finished_cb = finished_cb;
-	dtask->priv->finished_userdata = userdata;
-
-	len = g_strv_length (filenames);
-
-	/* optional */
-	if (!dtask->priv->show_confirm_search) {
-		g_debug ("skip confirm as not allowed to interact with user");
-		goto skip_checks;
-	}
-
-	/* TRANSLATORS: title to install package catalogs */
-	title = ngettext ("Do you want to install this catalog?",
-			  "Do you want to install these catalogs?", len);
-	message = g_strjoinv ("\n", filenames);
-
-	/* show UI */
-	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, 0);
-	gpk_modal_dialog_set_title (dtask->priv->dialog, title);
-	gpk_modal_dialog_set_message (dtask->priv->dialog, message);
-	/* TRANSLATORS: button: install catalog */
-	gpk_modal_dialog_set_action (dtask->priv->dialog, _("Install"));
-	gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-install-catalogs");
-	gpk_modal_dialog_present_with_time (dtask->priv->dialog, dtask->priv->timestamp);
-	button = gpk_modal_dialog_run (dtask->priv->dialog);
-
-	/* did we click no or exit the window? */
-	if (button != GTK_RESPONSE_OK) {
-		error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_TRANSACTION_CANCELLED, "did not agree to install");
-		gpk_dbus_task_dbus_return_error (dtask, error_dbus);
-		g_error_free (error_dbus);
-		goto out;
-	}
-
-skip_checks:
-	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, 0);
-	/* TRANSLATORS: title: install package catalogs, that is, instructions for installing */
-	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Install catalogs"));
-	gpk_dbus_task_set_status (dtask, PK_STATUS_ENUM_WAIT);
-
-	/* setup the UI */
-	if (dtask->priv->show_progress)
-		gpk_modal_dialog_present (dtask->priv->dialog);
-
-	/* lookup catalog */
-	pk_catalog_lookup_async (dtask->priv->catalog, filenames[0], NULL,
-			 	 (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
-				 (GAsyncReadyCallback) gpk_dbus_task_catalog_lookup_cb, dtask);
-out:
-	g_free (message);
-}
-
-/**
  * gpk_dbus_task_get_package_for_exec:
  **/
 gchar *
@@ -3419,7 +3268,6 @@ gpk_dbus_task_init (GpkDbusTask *dtask)
 	dtask->priv->control = pk_control_new ();
 	dtask->priv->task = PK_TASK(gpk_task_new ());
 	dtask->priv->roles = pk_control_get_properties (dtask->priv->control, NULL, NULL);
-	dtask->priv->catalog = pk_catalog_new ();
 
 	/* used for icons and translations */
 	dtask->priv->desktop = pk_desktop_new ();
@@ -3467,7 +3315,6 @@ gpk_dbus_task_finalize (GObject *object)
 	g_object_unref (dtask->priv->cancellable);
 	g_object_unref (dtask->priv->helper_run);
 	g_object_unref (dtask->priv->helper_chooser);
-	g_object_unref (dtask->priv->catalog);
 
 	G_OBJECT_CLASS (gpk_dbus_task_parent_class)->finalize (object);
 }
