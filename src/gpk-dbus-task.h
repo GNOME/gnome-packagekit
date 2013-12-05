@@ -119,7 +119,6 @@ void		 gpk_dbus_task_install_fontconfig_resources (GpkDbusTask *dtask,
 							 GpkDbusTaskFinishedCb finished_cb,
 							 gpointer	 userdata);
 void		 gpk_dbus_task_install_resources	(GpkDbusTask	*dtask,
-							 PkProvidesEnum	type,
 							 gchar		**resources,
 							 GpkDbusTaskFinishedCb finished_cb,
 							 gpointer	 userdata);

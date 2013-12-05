@@ -500,7 +500,7 @@ gpk_dbus_install_resources (GpkDbus *dbus, guint32 xid, const gchar *type, gchar
 {
 	GpkDbusTask *task;
 	task = gpk_dbus_create_task (dbus, xid, interaction, context);
-	gpk_dbus_task_install_resources (task, pk_provides_enum_from_string (type), resources, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
+	gpk_dbus_task_install_resources (task, resources, (GpkDbusTaskFinishedCb) gpk_dbus_task_finished_cb, dbus);
 }
 
 /**

@@ -1797,7 +1797,11 @@ skip_checks:
 	/* get codec packages */
 	search = pk_ptr_array_to_strv (array_search);
 	pk_client_what_provides_async (PK_CLIENT(dtask->priv->task), pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_ARCH, PK_FILTER_ENUM_NEWEST, -1),
+#if PK_CHECK_VERSION(0,9,0)
+				       search, NULL,
+#else
 				       PK_PROVIDES_ENUM_CODEC, search, NULL,
+#endif
 			               (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
 				       (GAsyncReadyCallback) gpk_dbus_task_codec_what_provides_cb, dtask);
 out:
@@ -1971,7 +1975,11 @@ skip_checks:
 
 	/* action */
 	pk_client_what_provides_async (PK_CLIENT(dtask->priv->task), pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_ARCH, PK_FILTER_ENUM_NEWEST, -1),
+#if PK_CHECK_VERSION(0,9,0)
+				       mime_types, NULL,
+#else
 				       PK_PROVIDES_ENUM_MIMETYPE, mime_types, NULL,
+#endif
 			               (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
 				       (GAsyncReadyCallback) gpk_dbus_task_mime_what_provides_cb, dtask);
 	/* wait for async reply */
@@ -2347,7 +2355,11 @@ skip_checks:
 
 	/* do each one */
 	pk_client_what_provides_async (PK_CLIENT(dtask->priv->task), pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_ARCH, PK_FILTER_ENUM_NEWEST, -1),
+#if PK_CHECK_VERSION(0,9,0)
+				       fonts, NULL,
+#else
 				       PK_PROVIDES_ENUM_FONT, fonts, NULL,
+#endif
 			               (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
 				       (GAsyncReadyCallback) gpk_dbus_task_fontconfig_what_provides_cb, dtask);
 out:
@@ -2583,7 +2595,11 @@ skip_checks:
 	/* get service packages */
 	search = pk_ptr_array_to_strv (array_search);
 	pk_client_what_provides_async (PK_CLIENT(dtask->priv->task), pk_bitfield_from_enums (PK_FILTER_ENUM_NOT_INSTALLED, PK_FILTER_ENUM_ARCH, PK_FILTER_ENUM_NEWEST, -1),
+#if PK_CHECK_VERSION(0,9,0)
+				       search, NULL,
+#else
 				       PK_PROVIDES_ENUM_PLASMA_SERVICE, search, NULL,
+#endif
 				       (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
 				       (GAsyncReadyCallback) gpk_dbus_task_plasma_service_what_provides_cb, dtask);
 out:
@@ -2609,31 +2625,9 @@ out:
  * Return value: %TRUE if the method succeeded
  **/
 void
-gpk_dbus_task_install_resources (GpkDbusTask *dtask, PkProvidesEnum type, gchar **resources, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
+gpk_dbus_task_install_resources (GpkDbusTask *dtask, gchar **resources, GpkDbusTaskFinishedCb finished_cb, gpointer userdata)
 {
-	GError *error_dbus = NULL;
-	switch (type) {
-		case PK_PROVIDES_ENUM_CODEC:
-			gpk_dbus_task_install_gstreamer_resources (dtask, resources, finished_cb, userdata);
-			break;
-		case PK_PROVIDES_ENUM_MIMETYPE:
-			gpk_dbus_task_install_mime_types (dtask, resources, finished_cb, userdata);
-			break;
-		case PK_PROVIDES_ENUM_FONT:
-			gpk_dbus_task_install_fontconfig_resources (dtask, resources, finished_cb, userdata);
-			break;
-		case PK_PROVIDES_ENUM_POSTSCRIPT_DRIVER:
-			gpk_dbus_task_install_printer_drivers (dtask, resources, finished_cb, userdata);
-			break;
-		case PK_PROVIDES_ENUM_PLASMA_SERVICE:
-			gpk_dbus_task_install_plasma_resources (dtask, resources, finished_cb, userdata);
-			break;
-		default:
-			error_dbus = g_error_new (GPK_DBUS_ERROR, PK_ERROR_ENUM_UNKNOWN, "Unsupported resource type");
-			gpk_dbus_task_dbus_return_error (dtask, error_dbus);
-			g_error_free (error_dbus);
-			break;
-	}
+	gpk_dbus_task_install_plasma_resources (dtask, resources, finished_cb, userdata);
 }
 
 /**
@@ -2861,7 +2855,9 @@ gpk_dbus_task_install_printer_drivers (GpkDbusTask *dtask, gchar **device_ids, G
 							       PK_FILTER_ENUM_ARCH,
 							       PK_FILTER_ENUM_NEWEST,
 							       -1),
+#if !PK_CHECK_VERSION(0,9,0)
 				       PK_PROVIDES_ENUM_POSTSCRIPT_DRIVER,
+#endif
 				       tags, NULL,
 				       (PkProgressCallback) gpk_dbus_task_progress_cb, dtask,
 				       (GAsyncReadyCallback) gpk_dbus_task_printer_driver_what_provides_cb, dtask);
