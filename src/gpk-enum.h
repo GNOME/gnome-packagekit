@@ -92,9 +92,6 @@ const gchar	*gpk_restart_enum_to_localised_text	(PkRestartEnum	 restart)
 							 G_GNUC_CONST;
 const gchar	*gpk_update_state_enum_to_localised_text (PkUpdateStateEnum state)
 							 G_GNUC_CONST;
-const gchar	*gpk_message_enum_to_icon_name		(PkMessageEnum	 message);
-const gchar	*gpk_message_enum_to_localised_text	(PkMessageEnum	 message)
-							 G_GNUC_CONST;
 const gchar	*gpk_restart_enum_to_localised_text_future(PkRestartEnum	 restart)
 							 G_GNUC_CONST;
 const gchar	*gpk_group_enum_to_localised_text	(PkGroupEnum	 group)

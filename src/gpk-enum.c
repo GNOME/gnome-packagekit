@@ -236,26 +236,6 @@ static const PkEnumMatch enum_restart_dialog_icon_name[] = {
 	{0, NULL}
 };
 
-static const PkEnumMatch enum_message_icon_name[] = {
-	{PK_MESSAGE_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
-	{PK_MESSAGE_ENUM_BROKEN_MIRROR,		"dialog-error"},
-	{PK_MESSAGE_ENUM_CONNECTION_REFUSED,	"dialog-error"},
-	{PK_MESSAGE_ENUM_PARAMETER_INVALID,	"dialog-error"},
-	{PK_MESSAGE_ENUM_PRIORITY_INVALID,	"dialog-error"},
-	{PK_MESSAGE_ENUM_BACKEND_ERROR,		"dialog-error"},
-	{PK_MESSAGE_ENUM_DAEMON_ERROR,		"dialog-error"},
-	{PK_MESSAGE_ENUM_CACHE_BEING_REBUILT,	"dialog-information"},
-	{PK_MESSAGE_ENUM_NEWER_PACKAGE_EXISTS,	"dialog-information"},
-	{PK_MESSAGE_ENUM_COULD_NOT_FIND_PACKAGE,"dialog-error"},
-	{PK_MESSAGE_ENUM_CONFIG_FILES_CHANGED,	"dialog-information"},
-	{PK_MESSAGE_ENUM_PACKAGE_ALREADY_INSTALLED,	"dialog-information"},
-	{PK_MESSAGE_ENUM_AUTOREMOVE_IGNORED,	"dialog-information"},
-	{PK_MESSAGE_ENUM_REPO_METADATA_DOWNLOAD_FAILED,	"dialog-warning"},
-	{PK_MESSAGE_ENUM_REPO_FOR_DEVELOPERS_ONLY,	"dialog-warning"},
-	{PK_MESSAGE_ENUM_OTHER_UPDATES_HELD_BACK,	"dialog-information"},
-	{0, NULL}
-};
-
 /**
  * gpk_media_type_enum_to_localised_text:
  **/
@@ -847,65 +827,6 @@ gpk_update_state_enum_to_localised_text (PkUpdateStateEnum state)
 		break;
 	default:
 		g_warning ("state unrecognized: %i", state);
-	}
-	return text;
-}
-
-/**
- * gpk_message_enum_to_localised_text:
- **/
-const gchar *
-gpk_message_enum_to_localised_text (PkMessageEnum message)
-{
-	const gchar *text = NULL;
-	switch (message) {
-	case PK_MESSAGE_ENUM_BROKEN_MIRROR:
-		text = _("A mirror is possibly broken");
-		break;
-	case PK_MESSAGE_ENUM_CONNECTION_REFUSED:
-		text = _("The connection was refused");
-		break;
-	case PK_MESSAGE_ENUM_PARAMETER_INVALID:
-		text = _("The parameter was invalid");
-		break;
-	case PK_MESSAGE_ENUM_PRIORITY_INVALID:
-		text = _("The priority was invalid");
-		break;
-	case PK_MESSAGE_ENUM_BACKEND_ERROR:
-		text = _("Backend warning");
-		break;
-	case PK_MESSAGE_ENUM_DAEMON_ERROR:
-		text = _("Daemon warning");
-		break;
-	case PK_MESSAGE_ENUM_CACHE_BEING_REBUILT:
-		text = _("The package list cache is being rebuilt");
-		break;
-	case PK_MESSAGE_ENUM_NEWER_PACKAGE_EXISTS:
-		text = _("A newer package exists");
-		break;
-	case PK_MESSAGE_ENUM_COULD_NOT_FIND_PACKAGE:
-		text = _("Could not find package");
-		break;
-	case PK_MESSAGE_ENUM_CONFIG_FILES_CHANGED:
-		text = _("Configuration files were changed");
-		break;
-	case PK_MESSAGE_ENUM_PACKAGE_ALREADY_INSTALLED:
-		text = _("Package is already installed");
-		break;
-	case PK_MESSAGE_ENUM_AUTOREMOVE_IGNORED:
-		text = _("Automatic cleanup is being ignored");
-		break;
-	case PK_MESSAGE_ENUM_REPO_METADATA_DOWNLOAD_FAILED:
-		text = _("Software source download failed");
-		break;
-	case PK_MESSAGE_ENUM_REPO_FOR_DEVELOPERS_ONLY:
-		text = _("This software source is for developers only");
-		break;
-	case PK_MESSAGE_ENUM_OTHER_UPDATES_HELD_BACK:
-		text = _("Other updates have been held back");
-		break;
-	default:
-		g_warning ("message unrecognized: %i", message);
 	}
 	return text;
 }
@@ -1767,15 +1688,6 @@ const gchar *
 gpk_restart_enum_to_dialog_icon_name (PkRestartEnum restart)
 {
 	return pk_enum_find_string (enum_restart_dialog_icon_name, restart);
-}
-
-/**
- * gpk_message_enum_to_icon_name:
- **/
-const gchar *
-gpk_message_enum_to_icon_name (PkMessageEnum message)
-{
-	return pk_enum_find_string (enum_message_icon_name, message);
 }
 
 /**

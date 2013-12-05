@@ -182,24 +182,6 @@ gpk_test_enum_func (void)
 		}
 	}
 
-	/* check we convert all the message icon name enums */
-	for (i = PK_MESSAGE_ENUM_UNKNOWN+1; i < PK_MESSAGE_ENUM_LAST; i++) {
-		string = gpk_message_enum_to_icon_name (i);
-		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
-			g_warning ("failed to get %s", pk_message_enum_to_string (i));
-			break;
-		}
-	}
-
-	/* check we convert all the localized message enums */
-	for (i = PK_MESSAGE_ENUM_UNKNOWN+1; i < PK_MESSAGE_ENUM_LAST; i++) {
-		string = gpk_message_enum_to_localised_text (i);
-		if (string == NULL) {
-			g_warning ("failed to get %i", i);
-			break;
-		}
-	}
-
 	/* check we convert all the localized restart future enums */
 	for (i = PK_RESTART_ENUM_UNKNOWN+1; i < PK_RESTART_ENUM_LAST; i++) {
 		string = gpk_restart_enum_to_localised_text_future (i);
