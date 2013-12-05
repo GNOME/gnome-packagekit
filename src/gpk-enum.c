@@ -170,7 +170,6 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_SEARCH_NAME,		"pk-package-search"},
 	{PK_ROLE_ENUM_UPDATE_PACKAGES,		"pk-package-update"},
 	{PK_ROLE_ENUM_WHAT_PROVIDES,		"pk-package-search"},
-	{PK_ROLE_ENUM_UPGRADE_SYSTEM,		"system-software-update"},
 	{PK_ROLE_ENUM_REPAIR_SYSTEM,		"system-software-update"},
 	{0, NULL}
 };
@@ -1315,10 +1314,6 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting old transactions");
 		break;
-	case PK_ROLE_ENUM_UPGRADE_SYSTEM:
-		/* TRANSLATORS: The role of the transaction, in present tense */
-		text = _("Upgrading system");
-		break;
 	case PK_ROLE_ENUM_REPAIR_SYSTEM:
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Repairing the system");
@@ -1454,10 +1449,6 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 	case PK_ROLE_ENUM_GET_OLD_TRANSACTIONS:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got old transactions");
-		break;
-	case PK_ROLE_ENUM_UPGRADE_SYSTEM:
-		/* TRANSLATORS: The role of the transaction, in past tense */
-		text = _("Upgraded system");
 		break;
 	case PK_ROLE_ENUM_REPAIR_SYSTEM:
 		/* TRANSLATORS: The role of the transaction, in past tense */
