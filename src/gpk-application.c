@@ -2190,6 +2190,7 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 		gtk_widget_show (widget);
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_licence"));
 		gtk_label_set_label (GTK_LABEL (widget), license);
+		gtk_label_set_line_wrap (GTK_LABEL (widget), TRUE);
 		gtk_widget_show (widget);
 	} else {
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_licence_title"));
