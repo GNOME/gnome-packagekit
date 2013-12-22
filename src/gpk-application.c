@@ -48,6 +48,11 @@
 #include "gpk-task.h"
 #include "gpk-debug.h"
 
+#if (!PK_CHECK_VERSION(0,9,1))
+#define pk_client_depends_on_async		pk_client_get_depends_async
+#define pk_client_required_by_async		pk_client_get_requires_async
+#endif
+
 typedef enum {
 	GPK_SEARCH_NAME,
 	GPK_SEARCH_DETAILS,
@@ -946,12 +951,11 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplicationPrivate *priv
 	/* get the requires */
 	package_ids = pk_package_ids_from_id (package_id_selected);
 
-	/* pk_client_get_depends/requires semantic is reversed */
-	pk_client_get_depends_async (PK_CLIENT (priv->task),
-				      pk_bitfield_value (PK_FILTER_ENUM_NONE),
-				      package_ids, TRUE, priv->cancellable,
-				      (PkProgressCallback) gpk_application_progress_cb, priv,
-				      (GAsyncReadyCallback) gpk_application_get_depends_cb, priv);
+	pk_client_depends_on_async (PK_CLIENT (priv->task),
+				    pk_bitfield_value (PK_FILTER_ENUM_NONE),
+				    package_ids, TRUE, priv->cancellable,
+				    (PkProgressCallback) gpk_application_progress_cb, priv,
+				    (GAsyncReadyCallback) gpk_application_get_depends_cb, priv);
 
 out:
 	g_free (package_id_selected);
@@ -1071,8 +1075,7 @@ gpk_application_menu_depends_cb (GtkAction *_action, GpkApplicationPrivate *priv
 	/* get the depends */
 	package_ids = pk_package_ids_from_id (package_id_selected);
 
-	/* pk_client_get_depends/require semantic is reversed */
-	pk_client_get_requires_async (PK_CLIENT (priv->task),
+	pk_client_required_by_async (PK_CLIENT (priv->task),
 				     pk_bitfield_value (PK_FILTER_ENUM_NONE),
 				     package_ids, TRUE, priv->cancellable,
 				     (PkProgressCallback) gpk_application_progress_cb, priv,
@@ -3029,11 +3032,11 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_files"));
 		gtk_widget_hide (widget);
 	}
-	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_DEPENDS) == FALSE) {
+	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_DEPENDS_ON) == FALSE) {
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_depends"));
 		gtk_widget_hide (widget);
 	}
-	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_REQUIRES) == FALSE) {
+	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_REQUIRED_BY) == FALSE) {
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_requires"));
 		gtk_widget_hide (widget);
 	}

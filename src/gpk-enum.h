@@ -65,6 +65,11 @@ typedef enum {
 #define PK_ERROR_ENUM_LOCK_REQUIRED			(PK_ERROR_ENUM_UNFINISHED_TRANSACTION+1)
 #endif
 
+#if (!PK_CHECK_VERSION(0,9,1))
+#define PK_ROLE_ENUM_DEPENDS_ON				(PK_ROLE_ENUM_GET_DEPENDS)
+#define PK_ROLE_ENUM_REQUIRED_BY			(PK_ROLE_ENUM_GET_REQUIRES)
+#endif
+
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;
 const gchar	*gpk_role_enum_to_localised_present	(PkRoleEnum	 role)

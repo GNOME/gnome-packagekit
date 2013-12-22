@@ -144,16 +144,15 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
 	{PK_ROLE_ENUM_ACCEPT_EULA,		"pk-package-info"},
 	{PK_ROLE_ENUM_CANCEL,			"process-stop"},
+	{PK_ROLE_ENUM_DEPENDS_ON,		"pk-package-info"},
 	{PK_ROLE_ENUM_DOWNLOAD_PACKAGES,	"pk-package-download"},
 	{PK_ROLE_ENUM_GET_CATEGORIES,		"pk-package-info"},
-	{PK_ROLE_ENUM_GET_DEPENDS,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_DETAILS,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_DISTRO_UPGRADES,	"pk-package-info"},
 	{PK_ROLE_ENUM_GET_FILES,		"pk-package-search"},
 	{PK_ROLE_ENUM_GET_OLD_TRANSACTIONS,	"pk-package-info"},
 	{PK_ROLE_ENUM_GET_PACKAGES,		"pk-package-search"},
 	{PK_ROLE_ENUM_GET_REPO_LIST,		"pk-package-sources"},
-	{PK_ROLE_ENUM_GET_REQUIRES,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_UPDATE_DETAIL,	"pk-package-info"},
 	{PK_ROLE_ENUM_GET_UPDATES,		"pk-package-info"},
 	{PK_ROLE_ENUM_INSTALL_FILES,		"pk-package-add"},
@@ -163,6 +162,7 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_REMOVE_PACKAGES,		"pk-package-delete"},
 	{PK_ROLE_ENUM_REPO_ENABLE,		"pk-package-sources"},
 	{PK_ROLE_ENUM_REPO_SET_DATA,		"pk-package-sources"},
+	{PK_ROLE_ENUM_REQUIRED_BY,		"pk-package-info"},
 	{PK_ROLE_ENUM_RESOLVE,			"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_DETAILS,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_FILE,		"pk-package-search"},
@@ -1202,7 +1202,7 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Unknown role type");
 		break;
-	case PK_ROLE_ENUM_GET_DEPENDS:
+	case PK_ROLE_ENUM_DEPENDS_ON:
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting dependencies");
 		break;
@@ -1214,7 +1214,7 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting details");
 		break;
-	case PK_ROLE_ENUM_GET_REQUIRES:
+	case PK_ROLE_ENUM_REQUIRED_BY:
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting requires");
 		break;
@@ -1338,7 +1338,7 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Unknown role type");
 		break;
-	case PK_ROLE_ENUM_GET_DEPENDS:
+	case PK_ROLE_ENUM_DEPENDS_ON:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got dependencies");
 		break;
@@ -1350,7 +1350,7 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got details");
 		break;
-	case PK_ROLE_ENUM_GET_REQUIRES:
+	case PK_ROLE_ENUM_REQUIRED_BY:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got requires");
 		break;
