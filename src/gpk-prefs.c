@@ -240,7 +240,7 @@ gpk_prefs_repo_enable_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *p
 	if (error_code != NULL) {
 		g_warning ("failed to set repo: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		window = GTK_WINDOW (gtk_builder_get_object (priv->builder, "dialog_prefs"));
-		/* TRANSLATORS: for one reason or another, we could not enable or disable a software source */
+		/* TRANSLATORS: for one reason or another, we could not enable or disable a package source */
 		gpk_error_dialog_modal (window, _("Failed to change status"),
 					gpk_error_enum_to_localised_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		goto out;
@@ -320,7 +320,7 @@ gpk_treeview_add_columns (GpkPrefsPrivate *priv, GtkTreeView *treeview)
 	/* column for text */
 	renderer = gtk_cell_renderer_text_new ();
 	/* TRANSLATORS: column for the source description */
-	column = gtk_tree_view_column_new_with_attributes (_("Software Source"), renderer,
+	column = gtk_tree_view_column_new_with_attributes (_("Package Source"), renderer,
 							   "markup", GPK_COLUMN_TEXT,
 							   NULL);
 	gtk_tree_view_column_set_sort_column_id (column, GPK_COLUMN_TEXT);
@@ -510,7 +510,7 @@ gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate
 		gtk_list_store_append (GTK_LIST_STORE(model), &iter);
 		gtk_list_store_set (priv->list_store, &iter,
 				    GPK_COLUMN_ENABLED, FALSE,
-				    GPK_COLUMN_TEXT, _("Getting software source list not supported by backend"),
+				    GPK_COLUMN_TEXT, _("Getting package source list not supported by backend"),
 				    GPK_COLUMN_ACTIVE, FALSE,
 				    GPK_COLUMN_SENSITIVE, FALSE,
 				    -1);
@@ -630,8 +630,8 @@ gpm_prefs_commandline_cb (GApplication *application,
 	argv = g_application_command_line_get_arguments (cmdline, &argc);
 
 	context = g_option_context_new (NULL);
-	/* TRANSLATORS: program name, an application to set per-user policy for updates */
-	g_option_context_set_summary(context, _("Software Update Preferences"));
+	/* TRANSLATORS: program name, an application to add and remove software repositories */
+	g_option_context_set_summary(context, _("Package Sources"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_add_group (context, gpk_debug_get_option_group ());
 	ret = g_option_context_parse (context, &argc, &argv, NULL);

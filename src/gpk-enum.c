@@ -358,7 +358,7 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 		text = _("Packages are not compatible");
 		break;
 	case PK_ERROR_ENUM_REPO_NOT_AVAILABLE:
-		text = _("Problem connecting to a software source");
+		text = _("Problem connecting to a package source");
 		break;
 	case PK_ERROR_ENUM_FAILED_INITIALIZATION:
 		text = _("Failed to initialize");
@@ -518,14 +518,14 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 			 "Please report this bug in your distribution bug tracker with the error description.");
 		break;
 	case PK_ERROR_ENUM_GPG_FAILURE:
-		text = _("A security trust relationship could not be made with software source.\n"
+		text = _("A security trust relationship could not be made with package source.\n"
 			 "Please check your security settings.");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_NOT_INSTALLED:
 		text = _("The package that is trying to be removed or updated is not already installed.");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_NOT_FOUND:
-		text = _("The package that is being modified was not found on your system or in any software source.");
+		text = _("The package that is being modified was not found on your system or in any package source.");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_ALREADY_INSTALLED:
 		text = _("The package that is trying to be installed is already installed.");
@@ -559,8 +559,8 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 			 "More information is available in the detailed report.");
 		break;
 	case PK_ERROR_ENUM_REPO_NOT_FOUND:
-		text = _("The remote software source name was not found.\n"
-			 "You may need to enable an item in Software Sources.");
+		text = _("The remote package source name was not found.\n"
+			 "You may need to enable an item in Package Sources.");
 		break;
 	case PK_ERROR_ENUM_CANNOT_REMOVE_SYSTEM_PACKAGE:
 		text = _("Removing a protected system package is not allowed.");
@@ -589,14 +589,14 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 		break;
 	case PK_ERROR_ENUM_FILE_CONFLICTS:
 		text = _("Two packages provide the same file.\n"
-			 "This is usually due to mixing packages from different software sources.");
+			 "This is usually due to mixing packages from different sources.");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_CONFLICTS:
 		text = _("Multiple packages exist that are not compatible with each other.\n"
-			 "This is usually due to mixing packages from different software sources.");
+			 "This is usually due to mixing packages from different sources.");
 		break;
 	case PK_ERROR_ENUM_REPO_NOT_AVAILABLE:
-		text = _("There was a (possibly temporary) problem connecting to a software source.\n"
+		text = _("There was a (possibly temporary) problem connecting to a package source.\n"
 			 "Please check the detailed error for further details.");
 		break;
 	case PK_ERROR_ENUM_FAILED_INITIALIZATION:
@@ -649,11 +649,11 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 			 "Check the file still exists and has not been deleted.");
 		break;
 	case PK_ERROR_ENUM_NO_MORE_MIRRORS_TO_TRY:
-		text = _("Required data could not be found on any of the configured software sources.\n"
+		text = _("Required data could not be found on any of the configured package sources.\n"
 			 "There were no more download mirrors that could be tried.");
 		break;
 	case PK_ERROR_ENUM_NO_DISTRO_UPGRADE_DATA:
-		text = _("Required upgrade data could not be found in any of the configured software sources.\n"
+		text = _("Required upgrade data could not be found in any of the configured package sources.\n"
 			 "The list of distribution upgrades will be unavailable.");
 		break;
 	case PK_ERROR_ENUM_INCOMPATIBLE_ARCHITECTURE:
@@ -687,7 +687,7 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 		text = _("The information about what requires this package could not be obtained.");
 		break;
 	case PK_ERROR_ENUM_CANNOT_DISABLE_REPOSITORY:
-		text = _("The specified software source could not be disabled.");
+		text = _("The specified package source could not be disabled.");
 		break;
 	case PK_ERROR_ENUM_RESTRICTED_DOWNLOAD:
 		text = _("The download could not be done automatically and should be done manually.\n"
@@ -723,7 +723,7 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 		text = _("The install root is invalid. Please contact your administrator.");
 		break;
 	case PK_ERROR_ENUM_CANNOT_FETCH_SOURCES:
-		text = _("The list of software sources could not be downloaded.");
+		text = _("The list of package sources could not be downloaded.");
 		break;
 	case PK_ERROR_ENUM_UNFINISHED_TRANSACTION:
 		text = _("A previous package management transaction was interrupted.");
@@ -1578,7 +1578,7 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		break;
 	case PK_GROUP_ENUM_REPOS:
 		/* TRANSLATORS: The group type */
-		text = _("Software sources");
+		text = _("Package sources");
 		break;
 	case PK_GROUP_ENUM_SCIENCE:
 		/* TRANSLATORS: The group type */

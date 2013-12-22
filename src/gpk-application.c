@@ -3417,7 +3417,7 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	g_signal_connect (selection, "changed",
 			  G_CALLBACK (gpk_application_groups_treeview_changed_cb), priv);
 
-	/* get repos, so we can show the full name in the software source box */
+	/* get repos, so we can show the full name in the package source box */
 	pk_client_get_repo_list_async (PK_CLIENT (priv->task),
 				       pk_bitfield_value (PK_FILTER_ENUM_NONE),
 				       priv->cancellable,

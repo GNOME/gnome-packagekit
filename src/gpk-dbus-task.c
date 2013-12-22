@@ -1086,7 +1086,7 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 				gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
 			gpk_modal_dialog_set_title (dtask->priv->dialog, title);
 			/* TRANSLATORS: message: could not find */
-			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The packages could not be found in any software source"));
+			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The packages could not be found in any package source"));
 			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: a link to the help file */
 			gpk_modal_dialog_set_action (dtask->priv->dialog, _("More information"));
@@ -1631,8 +1631,8 @@ gpk_dbus_task_codec_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDb
 				gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
 			/* TRANSLATORS: failed to search for codec */
 			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to search for plugin"));
-			/* TRANSLATORS: no software sources have the wanted codec */
-			gpk_modal_dialog_set_message (dtask->priv->dialog, _("Could not find plugin in any configured software source"));
+			/* TRANSLATORS: no package sources have the wanted codec */
+			gpk_modal_dialog_set_message (dtask->priv->dialog, _("Could not find plugin in any configured package source"));
 			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 
 			/* TRANSLATORS: button text */
@@ -1842,7 +1842,7 @@ gpk_dbus_task_mime_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDbu
 				gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
 			/* TRANSLATORS: title */
 			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to find software"));
-			/* TRANSLATORS: nothing found in the software sources that helps */
+			/* TRANSLATORS: nothing found in the package sources that helps */
 			gpk_modal_dialog_set_message (dtask->priv->dialog, _("No new applications can be found to handle this type of file"));
 			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
@@ -2441,8 +2441,8 @@ gpk_dbus_task_plasma_service_what_provides_cb (PkClient *client, GAsyncResult *r
 			else
 				gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
 			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to search for Plasma service"));
-			/* TRANSLATORS: no software sources have the wanted Plasma service */
-			gpk_modal_dialog_set_message (dtask->priv->dialog, _("Could not find service in any configured software source"));
+			/* TRANSLATORS: no package sources have the wanted Plasma service */
+			gpk_modal_dialog_set_message (dtask->priv->dialog, _("Could not find service in any configured package source"));
 			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 
 			/* TRANSLATORS: button text */
