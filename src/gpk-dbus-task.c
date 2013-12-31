@@ -320,7 +320,7 @@ gpk_dbus_task_error_msg (GpkDbusTask *dtask, const gchar *title, GError *error)
 				details = error->message;
 				break;
 			case PK_CLIENT_ERROR_INVALID_FILE:
-				/* TRANSLATORS: the user tried to install a file that was not compatable or broken */
+				/* TRANSLATORS: the user tried to install a file that was not compatible or broken */
 				message = _("The file is not valid.");
 				details = error->message;
 				break;

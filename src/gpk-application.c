@@ -3054,7 +3054,7 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 		gtk_tree_store_append (priv->groups_store, &iter, NULL);
 		icon_name = gpk_role_enum_to_icon_name (PK_ROLE_ENUM_GET_PACKAGES);
 		gtk_tree_store_set (priv->groups_store, &iter,
-				    /* TRANSLATORS: title: all of the packages on the system and availble in sources */
+				    /* TRANSLATORS: title: all of the packages on the system and available in sources */
 				    GROUPS_COLUMN_NAME, _("All packages"),
 				    /* TRANSLATORS: tooltip: all packages */
 				    GROUPS_COLUMN_SUMMARY, _("Show all packages"),
@@ -3160,7 +3160,7 @@ gpk_application_get_repo_list_cb (PkClient *client, GAsyncResult *res, GpkApplic
 		goto out;
 	}
 
-	/* add repos wih descriptions */
+	/* add repos with descriptions */
 	array = pk_results_get_repo_detail_array (results);
 	for (i=0; i<array->len; i++) {
 		item = g_ptr_array_index (array, i);
