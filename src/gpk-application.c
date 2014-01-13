@@ -892,19 +892,22 @@ gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, GpkApplica
 	if (array->len == 0) {
 		gpk_error_dialog_modal (window,
 					/* TRANSLATORS: no packages returned */
-					_("No software"),
+					_("No packages"),
 					/* TRANSLATORS: this package is not required by any others */
-					_("No other software requires this."), NULL);
+					_("No other packages require this package"), NULL);
 		goto out;
 	}
 
 	package_ids = pk_package_ids_from_id (package_id_selected);
 	name = gpk_dialog_package_id_name_join_locale (package_ids);
-	title = g_strdup_printf (_("Software requires %s"), name);
+	/* TRANSLATORS: title: how many packages require this package */
+	title = g_strdup_printf (ngettext ("%i package requires %s",
+					   "%i packages require %s",
+					   array->len), array->len, name);
 
 	/* TRANSLATORS: show a array of packages for the package */
-	message = g_strdup_printf (ngettext ("The software listed below require %s to function correctly.",
-					     "The software listed below require %s to function correctly.",
+	message = g_strdup_printf (ngettext ("Packages listed below require %s to function correctly.",
+					     "Packages listed below require %s to function correctly.",
 					     array->len), name);
 
 	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1018,18 +1021,23 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	if (array->len == 0) {
 		gpk_error_dialog_modal (window,
 					/* TRANSLATORS: no packages returned */
-					_("No software"),
+					_("No packages"),
 					/* TRANSLATORS: this package does not depend on any others */
-					_("This software does not depend on any other"), NULL);
+					_("This package does not depend on any others"), NULL);
 		goto out;
 	}
 
 	package_ids = pk_package_ids_from_id (package_id_selected);
 	name = gpk_dialog_package_id_name_join_locale (package_ids);
-	title = g_strdup_printf (_("Additional software is required for %s"), name);
+	/* TRANSLATORS: title: show the number of other packages we depend on */
+	title = g_strdup_printf (ngettext ("%i additional package is required for %s",
+					   "%i additional packages are required for %s",
+					   array->len), array->len, name);
 
 	/* TRANSLATORS: message: show the array of dependent packages for this package */
-	message = g_strdup_printf (_("%s requires the following additional software to function correctly."), name);
+	message = g_strdup_printf (ngettext ("Packages listed below are required for %s to function correctly.",
+					     "Packages listed below are required for %s to function correctly.",
+					     array->len), name);
 
 	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
@@ -1259,15 +1267,15 @@ gpk_application_suggest_better_search (GpkApplicationPrivate *priv)
 	if (priv->search_mode == GPK_MODE_GROUP ||
 	    priv->search_mode == GPK_MODE_ALL_PACKAGES) {
 		/* TRANSLATORS: be helpful, but this shouldn't happen */
-		message = _("Try entering a name in the search bar.");
+		message = _("Try entering a package name in the search bar.");
 	}  else if (priv->search_mode == GPK_MODE_SELECTED) {
 		/* TRANSLATORS: nothing in the package queue */
-		message = _("There is no software queued to be installed or removed.");
+		message = _("There are no packages queued to be installed or removed.");
 	} else {
 		if (priv->search_type == GPK_SEARCH_NAME ||
 		    priv->search_type == GPK_SEARCH_FILE)
 			/* TRANSLATORS: tell the user to switch to details search mode */
-			message = _("Try searching software descriptions by clicking the icon next to the search text.");
+			message = _("Try searching package descriptions by clicking the icon next to the search text.");
 		else
 			/* TRANSLATORS: tell the user to try harder */
 			message = _("Try again with a different search term.");
@@ -2577,7 +2585,7 @@ gpk_application_activate_about_cb (GSimpleAction *action,
 			       "website-label", _("PackageKit Website"),
 			       "website", "http://www.packagekit.org",
 				/* TRANSLATORS: description of NULL, gpk-application that is */
-			       "comments", _("Software management for GNOME"),
+			       "comments", _("Package Manager for GNOME"),
 			       "authors", authors,
 			       "documenters", documenters,
 			       "artists", artists,
