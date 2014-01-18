@@ -1,7 +1,7 @@
 # Thai translation for gnome-packagekit.
-# Copyright (C) 2011-2013 Free Software Foundation, Inc.
+# Copyright (C) 2011-2014 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gnome-packagekit package.
-# Akom Chotiphantawanon <knight2000@gmail.com>, 2011-2013.
+# Akom Chotiphantawanon <knight2000@gmail.com>, 2011-2014.
 #
 # TRANSLATORS NOTE:
 # Thai has no plural form. But we set nplurals=2 here because of some
@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-11-12 09:17+0000\n"
-"PO-Revision-Date: 2013-11-13 21:31+0700\n"
+"POT-Creation-Date: 2014-01-13 11:47+0000\n"
+"PO-Revision-Date: 2014-01-18 17:55+0700\n"
 "Last-Translator: Akom Chotiphantawanon <knight2000@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
 "Language: th\n"
@@ -337,8 +337,8 @@ msgid "Help"
 msgstr "วิธีใช้"
 
 #: ../data/gpk-application.ui.h:23
-msgid "About Software Install"
-msgstr "เกี่ยวกับโปรแกรมติดตั้งซอฟต์แวร์"
+msgid "About"
+msgstr "เกี่ยวกับ"
 
 #: ../data/gpk-application.ui.h:24
 msgid "_Quit"
@@ -359,8 +359,8 @@ msgstr "ยอมรับข้อ_ตกลง"
 #. TRANSLATORS: program name: application to install a package to provide a file
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2568
-#: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:67
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2580
+#: ../src/gpk-dbus-task.c:3215 ../src/gpk-install-local-file.c:67
 #: ../src/gpk-dbus-service.c:137 ../src/gpk-dbus-service.c:140
 msgid "Software Install"
 msgstr "ติดตั้งซอฟต์แวร์"
@@ -392,7 +392,7 @@ msgid ""
 msgstr "ปรับแต่งการปรับรุ่นซอฟต์แวร์และเปิดหรือปิดแหล่งซอฟต์แวร์ที่จะใช้"
 
 #. TRANSLATORS: program name, an application to set per-user policy for updates
-#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:665
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
 msgid "Software Update Preferences"
 msgstr "ปรับแต่งการปรับรุ่นซอฟต์แวร์"
 
@@ -405,62 +405,6 @@ msgstr "แหล่งซอฟต์แวร์คือแหล่งเก
 #: ../data/gpk-prefs.ui.h:4
 msgid "_Show debug and development software sources"
 msgstr "แ_สดงแหล่งซอฟต์แวร์สำหรับการดีบั๊กและงานพัฒนา"
-
-#. TRANSLATORS: the program name
-#: ../data/gpk-service-pack.ui.h:1 ../src/gpk-service-pack.c:817
-msgid "Service Pack Creator"
-msgstr "เครื่องมือสร้างเซอร์วิสแพ็ก"
-
-#: ../data/gpk-service-pack.ui.h:2
-msgid "Create"
-msgstr "สร้าง"
-
-#: ../data/gpk-service-pack.ui.h:3
-msgid "Create a copy of this computer's package list"
-msgstr "สร้างสำเนาของรายชื่อแพกเกจของคอมพิวเตอร์นี้"
-
-#: ../data/gpk-service-pack.ui.h:4
-msgid "Create an archive of all the pending updates"
-msgstr "สร้างแฟ้มจัดเก็บของรายการปรับรุ่นที่ค้างอยู่ทั้งหมด"
-
-#: ../data/gpk-service-pack.ui.h:5
-msgid "Create an archive of a specific package"
-msgstr "สร้างแฟ้มจัดเก็บของแพกเกจที่ระบุ"
-
-#: ../data/gpk-service-pack.ui.h:6
-msgid "Multiple packages can be specified using a comma delimited list"
-msgstr "สามารถระบุหลายแพกเกจได้โดยใช้เครื่องหมายจุลภาคคั่นรายชื่อ"
-
-#. TRANSLATORS: column for what was done, e.g. update-system
-#: ../data/gpk-service-pack.ui.h:7 ../src/gpk-log.c:295
-msgid "Action"
-msgstr "การดำเนินการ"
-
-#: ../data/gpk-service-pack.ui.h:8
-msgid "Destination package list:"
-msgstr "รายชื่อแพกเกจที่ต้องการ:"
-
-#: ../data/gpk-service-pack.ui.h:9
-msgid "Select a Package List File"
-msgstr "เลือกแฟ้มรายชื่อแพกเกจ"
-
-#: ../data/gpk-service-pack.ui.h:10
-msgid "Save New Service Pack"
-msgstr "บันทึกเซอร์วิสแพ็กใหม่"
-
-#: ../data/gpk-service-pack.ui.h:11
-msgid "Output directory:"
-msgstr "ไดเรกทอรีผลลัพธ์:"
-
-#. TRANSLATORS: column for what packages were upgraded
-#: ../data/gpk-service-pack.ui.h:12 ../data/gpk-update-viewer.ui.h:5
-#: ../src/gpk-log.c:322
-msgid "Details"
-msgstr "รายละเอียด"
-
-#: ../data/gpk-service-pack.ui.h:13
-msgid "Progress"
-msgstr "ความคืบหน้า"
 
 #: ../data/gpk-signature.ui.h:1
 msgid "Software signature is required"
@@ -517,13 +461,18 @@ msgstr ""
 msgid "_Upgrade"
 msgstr "_ปรับรุ่น"
 
+#. TRANSLATORS: column for what packages were upgraded
+#: ../data/gpk-update-viewer.ui.h:5 ../src/gpk-log.c:322
+msgid "Details"
+msgstr "รายละเอียด"
+
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:342
+#: ../src/gpk-application.c:347
 msgid "Pending"
 msgstr "รอดำเนินการ"
 
 #. TRANSLATORS: title: how many files are installed by the application
-#: ../src/gpk-application.c:588
+#: ../src/gpk-application.c:593
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
@@ -531,179 +480,187 @@ msgstr[0] "มีแฟ้ม %i แฟ้มถูกติดตั้งโ�
 msgstr[1] "มีแฟ้ม %i แฟ้มถูกติดตั้งโดย %s"
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:890 ../src/gpk-application.c:1017
-msgid "No software"
-msgstr "ไม่มีซอฟต์แวร์"
+#: ../src/gpk-application.c:895 ../src/gpk-application.c:1024
+msgid "No packages"
+msgstr "ไม่มี"
 
 #. TRANSLATORS: this package is not required by any others
-#: ../src/gpk-application.c:892
-msgid "No other software requires this."
-msgstr "ไม่มีซอฟต์แวร์อื่นที่ต้องใช้ซอฟต์แวร์นี้"
+#: ../src/gpk-application.c:897
+msgid "No other packages require this package"
+msgstr "ไม่มีแพกเกจอื่นที่ต้องใช้แพกเกจนี้"
 
-#: ../src/gpk-application.c:898
+#. TRANSLATORS: title: how many packages require this package
+#: ../src/gpk-application.c:904
 #, c-format
-msgid "Software requires %s"
-msgstr "ซอฟต์แวร์ต้องการ %s"
+msgid "%i package requires %s"
+msgid_plural "%i packages require %s"
+msgstr[0] "มี %i แพกเกจที่ต้องใช้ %s"
+msgstr[1] "มี %i แพกเกจที่ต้องใช้ %s"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:901
+#: ../src/gpk-application.c:909
 #, c-format
-msgid "The software listed below require %s to function correctly."
-msgid_plural "The software listed below require %s to function correctly."
-msgstr[0] "ซอฟต์แวร์ที่มีรายชื่อต่อไปนี้ต้องใช้ %s เพื่อจะทำงานอย่างถูกต้อง"
-msgstr[1] "ซอฟต์แวร์ที่มีรายชื่อต่อไปนี้ต้องใช้ %s เพื่อจะทำงานอย่างถูกต้อง"
+msgid "Packages listed below require %s to function correctly."
+msgid_plural "Packages listed below require %s to function correctly."
+msgstr[0] "แพกเกจที่มีรายชื่อต่อไปนี้ต้องใช้ %s เพื่อที่จะทำงานอย่างถูกต้อง"
+msgstr[1] "แพกเกจที่มีรายชื่อต่อไปนี้ต้องใช้ %s เพื่อที่จะทำงานอย่างถูกต้อง"
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1019
-msgid "This software does not depend on any other"
-msgstr "ซอฟต์แวร์นี้ไม่ขึ้นกับซอฟต์แวร์อื่นใด"
+#: ../src/gpk-application.c:1026
+msgid "This package does not depend on any others"
+msgstr "แพกเกจนี้ไม่ขึ้นกับแพกเกจอื่นใด"
 
-#: ../src/gpk-application.c:1025
+#. TRANSLATORS: title: show the number of other packages we depend on
+#: ../src/gpk-application.c:1033
 #, c-format
-msgid "Additional software is required for %s"
-msgstr "ต้องการซอฟต์แวร์เพิ่มเติมสำหรับ %s"
+msgid "%i additional package is required for %s"
+msgid_plural "%i additional packages are required for %s"
+msgstr[0] "ต้องการแพกเกจเพิ่มเติม %i แพกเกจสำหรับ %s"
+msgstr[1] "ต้องการแพกเกจเพิ่มเติม %i แพกเกจสำหรับ %s"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
-#: ../src/gpk-application.c:1028
+#: ../src/gpk-application.c:1038
 #, c-format
-msgid "%s requires the following additional software to function correctly."
-msgstr "%s ต้องการซอฟต์แวร์เพิ่มเติมต่อไปนี้ เพื่อทำงานอย่างถูกต้อง"
+msgid "Packages listed below are required for %s to function correctly."
+msgid_plural "Packages listed below are required for %s to function correctly."
+msgstr[0] "ต้องใช้แพกเกจที่มีรายชื่อต่อไปนี้เพื่อที่ %s จะทำงานอย่างถูกต้อง"
+msgstr[1] "ต้องใช้แพกเกจที่มีรายชื่อต่อไปนี้เพื่อที่ %s จะทำงานอย่างถูกต้อง"
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1098
+#: ../src/gpk-application.c:1109
 msgid "Invalid"
 msgstr "ไม่ถูกต้อง"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1251
+#: ../src/gpk-application.c:1262
 msgid "No results were found."
 msgstr "ไม่พบผลลัพธ์"
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1259
-msgid "Try entering a name in the search bar."
-msgstr "ลองป้อนชื่อในแถบค้นหา"
+#: ../src/gpk-application.c:1270
+msgid "Try entering a package name in the search bar."
+msgstr "ลองป้อนชื่อแพกเกจในแถบค้นหา"
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1262
-msgid "There is no software queued to be installed or removed."
-msgstr "ไม่มีซอฟต์แวร์ใดที่รอคิวติดตั้งหรือถอดถอนอยู่"
+#: ../src/gpk-application.c:1273
+msgid "There are no packages queued to be installed or removed."
+msgstr "ไม่มีแพกเกจใดที่รอคิวติดตั้งหรือถอดถอนอยู่"
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1267
+#: ../src/gpk-application.c:1278
 msgid ""
-"Try searching software descriptions by clicking the icon next to the search "
+"Try searching package descriptions by clicking the icon next to the search "
 "text."
-msgstr "ลองค้นคำบรรยายซอฟต์แวร์โดยคลิกที่ไอคอนถัดจากข้อความค้นหา"
+msgstr "ลองค้นคำบรรยายแพกเกจโดยคลิกที่ไอคอนถัดจากข้อความค้นหา"
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1270
+#: ../src/gpk-application.c:1281
 msgid "Try again with a different search term."
 msgstr "ลองอีกครั้งโดยใช้คำค้นอื่น"
 
 #. TRANSLATORS: title: invalid text in the search bar
-#: ../src/gpk-application.c:1534
+#: ../src/gpk-application.c:1545
 msgid "Invalid search text"
 msgstr "คำค้นไม่ถูกต้อง"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1536
+#: ../src/gpk-application.c:1547
 msgid "The search text contains invalid characters"
 msgstr "คำค้นมีอักขระที่ไม่ถูกต้อง"
 
 #. TRANSLATORS: title: we failed to execute the method
-#: ../src/gpk-application.c:1577
+#: ../src/gpk-application.c:1588
 msgid "The search could not be completed"
 msgstr "ไม่สามารถค้นหาจนเสร็จสมบูรณ์ได้"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1579
+#: ../src/gpk-application.c:1590
 msgid "Running the transaction failed"
 msgstr "ส่งคำสั่งไม่สำเร็จ"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1708
+#: ../src/gpk-application.c:1719
 msgid "Changes not applied"
 msgstr "การเปลี่ยนแปลงยังไม่ดำเนินการ"
 
-#: ../src/gpk-application.c:1709
+#: ../src/gpk-application.c:1720
 msgid "Close _Anyway"
 msgstr "_ปิดต่อไป"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1713
+#: ../src/gpk-application.c:1724
 msgid "You have made changes that have not yet been applied."
 msgstr "คุณมีรายการเปลี่ยนแปลงที่ยังไม่ได้ดำเนินการ"
 
-#: ../src/gpk-application.c:1714
+#: ../src/gpk-application.c:1725
 msgid "These changes will be lost if you close this window."
 msgstr "การเปลี่ยนแปลงเหล่านั้นจะสูญหายถ้าคุณปิดหน้าต่างนี้"
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2006 ../src/gpk-enum.c:1152 ../src/gpk-enum.c:1241
+#: ../src/gpk-application.c:2017 ../src/gpk-enum.c:1072 ../src/gpk-enum.c:1161
 msgid "Installed"
 msgstr "ติดตั้งแล้ว"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2022 ../src/gpk-application.c:2044
+#: ../src/gpk-application.c:2033 ../src/gpk-application.c:2055
 #: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
 msgid "Name"
 msgstr "ชื่อ"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2210
+#: ../src/gpk-application.c:2222
 msgid "Size"
 msgstr "ขนาด"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2213
+#: ../src/gpk-application.c:2225
 msgid "Installed size"
 msgstr "ขนาดที่ติดตั้ง"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2216
+#: ../src/gpk-application.c:2228
 msgid "Download size"
 msgstr "ขนาดที่ดาวน์โหลด"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2404
+#: ../src/gpk-application.c:2416
 msgid "Searching by name"
 msgstr "ค้นหาด้วยชื่อ"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2430
+#: ../src/gpk-application.c:2442
 msgid "Searching by description"
 msgstr "ค้นหาด้วยคำบรรยาย"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2456
+#: ../src/gpk-application.c:2468
 msgid "Searching by file"
 msgstr "ค้นหาด้วยแฟ้ม"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2479
+#: ../src/gpk-application.c:2491
 msgid "Search by name"
 msgstr "ค้นหาด้วยชื่อ"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2487
+#: ../src/gpk-application.c:2499
 msgid "Search by description"
 msgstr "ค้นหาด้วยคำบรรยาย"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2495
+#: ../src/gpk-application.c:2507
 msgid "Search by file name"
 msgstr "ค้นหาด้วยชื่อแฟ้ม"
 
-#: ../src/gpk-application.c:2537
+#: ../src/gpk-application.c:2549
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "อนุญาตสิทธิ์ภายใต้เงื่อนไข GNU General Public License รุ่นที่ 2"
 
-#: ../src/gpk-application.c:2538
+#: ../src/gpk-application.c:2550
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -714,7 +671,7 @@ msgstr ""
 "ภายใต้เงื่อนไขของ GNU General Public License ที่เผยแพร่โดยมูลนิธิซอฟต์แวร์เสรี "
 "ไม่ว่าจะเป็นสัญญาอนุญาตรุ่นที่ 2 หรือรุ่นถัดมา (ตามแต่คุณจะเลือก)"
 
-#: ../src/gpk-application.c:2542
+#: ../src/gpk-application.c:2554
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -725,7 +682,7 @@ msgstr ""
 "ไม่มีแม้การรับประกัน อรรถประโยชน์เชิงพาณิชย์ หรือความเหมาะสมสำหรับวัตถุประสงค์เฉพาะกิจใดๆ "
 "กรุณาอ่านGNU General Public License เพื่อดูรายละเอียดเพิ่มเติม"
 
-#: ../src/gpk-application.c:2546
+#: ../src/gpk-application.c:2558
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -736,56 +693,56 @@ msgstr ""
 "Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2552
+#: ../src/gpk-application.c:2564
 msgid "translator-credits"
-msgstr "Akom Chotiphantawanon <knight2000@gmail.com>, 2011"
+msgstr "Akom Chotiphantawanon <knight2000@gmail.com>"
 
-#: ../src/gpk-application.c:2573
+#: ../src/gpk-application.c:2585
 msgid "PackageKit Website"
 msgstr "เว็บไซต์ PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2576
-msgid "Software management for GNOME"
-msgstr "เครื่องมือจัดการซอฟต์แวร์สำหรับ GNOME"
+#: ../src/gpk-application.c:2588
+msgid "Package Manager for GNOME"
+msgstr "เครื่องมือจัดการแพกเกจของ GNOME"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2769
+#: ../src/gpk-application.c:2781
 msgid "Enter a search word or click a category to get started."
 msgstr "ป้อนคำค้นหรือคลิกหมวดหมู่เพื่อเริ่มต้น"
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2772
+#: ../src/gpk-application.c:2784
 msgid "Enter a search word to get started."
 msgstr "ป้อนคำค้นเพื่อเริ่มต้น"
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3011
+#: ../src/gpk-application.c:3023
 msgid "Exiting as properties could not be retrieved"
 msgstr "ขอจบการทำงาน เนื่องจากไม่สามารถดึงข้อมูลคุณสมบัติได้"
 
 #. TRANSLATORS: title: all of the packages on the system and available in sources
-#: ../src/gpk-application.c:3054
+#: ../src/gpk-application.c:3066
 msgid "All packages"
 msgstr "ทุกแพกเกจ"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3056
+#: ../src/gpk-application.c:3068
 msgid "Show all packages"
 msgstr "แสดงทุกแพกเกจ"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3481 ../src/gpk-update-viewer.c:3418
+#: ../src/gpk-application.c:3493 ../src/gpk-update-viewer.c:3397
 msgid "Show the program version and exit"
 msgstr "แสดงรุ่นของโปรแกรมแล้วออก"
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3495 ../src/gpk-log.c:498
+#: ../src/gpk-application.c:3507 ../src/gpk-log.c:498
 msgid "Install Software"
 msgstr "ติดตั้งซอฟต์แวร์"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3511
+#: ../src/gpk-application.c:3523
 msgid "Package installer"
 msgstr "เครื่องมือติดตั้งแพกเกจ"
 
@@ -910,28 +867,26 @@ msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s และ %s"
 
 #. TRANSLATORS: we failed to install
-#. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:244 ../src/gpk-dbus-task.c:487
-#: ../src/gpk-dbus-task.c:1173
+#: ../src/gpk-dbus-task.c:243 ../src/gpk-dbus-task.c:460
 msgid "Failed to install software"
 msgstr "ติดตั้งซอฟต์แวร์ไม่สำเร็จ"
 
 #. TRANSLATORS: we didn't select any applications that were returned
-#: ../src/gpk-dbus-task.c:246
+#: ../src/gpk-dbus-task.c:245
 msgid "No applications were chosen to be installed"
 msgstr "ไม่มีโปรแกรมที่เลือกเพื่อติดตั้ง"
 
 #. TRANSLATORS: detailed text about the error
-#: ../src/gpk-dbus-task.c:278
+#: ../src/gpk-dbus-task.c:277
 msgid "Error details"
 msgstr "รายละเอียดข้อผิดพลาด"
 
-#: ../src/gpk-dbus-task.c:278
-msgid "Software error details"
-msgstr "รายละเอียดข้อผิดพลาดของซอฟต์แวร์"
+#: ../src/gpk-dbus-task.c:277
+msgid "Package Manager error details"
+msgstr "รายละเอียดข้อผิดพลาดของเครื่องมือจัดการแพกเกจ"
 
 #. TRANSLATORS: default fallback error -- this should never happen
-#: ../src/gpk-dbus-task.c:293
+#: ../src/gpk-dbus-task.c:292
 msgid ""
 "Unknown error. Please refer to the detailed report and report in your "
 "distribution bug tracker."
@@ -939,45 +894,26 @@ msgstr ""
 "เกิดข้อผิดพลาดไม่ทราบสาเหตุ กรุณาตรวจสอบรายงานละเอียด "
 "และรายงานในเครื่องมือติดตามบั๊กของชุดจัดแจกของคุณ"
 
-#. TRANSLATORS: failed authentication
-#: ../src/gpk-dbus-task.c:310
-msgid "You don't have the necessary privileges to perform this action."
-msgstr "คุณไม่มีอภิสิทธิ์สำหรับดำเนินการนี้"
-
-#. TRANSLATORS: could not start system service
-#: ../src/gpk-dbus-task.c:315
-msgid "The software service could not be started."
-msgstr "ไม่สามารถเริ่มบริการซอฟต์แวร์"
-
-#. TRANSLATORS: the user tried to query for something invalid
-#: ../src/gpk-dbus-task.c:320
-msgid "The query is not valid."
-msgstr "คำสืบค้นไม่ถูกต้อง"
-
-#. TRANSLATORS: the user tried to install a file that was not compatable or broken
-#: ../src/gpk-dbus-task.c:325
-msgid "The file is not valid."
-msgstr "แฟ้มใช้การไม่ได้"
-
 #. TRANSLATORS: button: show details about the error
-#: ../src/gpk-dbus-task.c:392
+#: ../src/gpk-dbus-task.c:365
 msgid "Show details"
 msgstr "แสดงรายละเอียด"
 
 #. TRANSLATORS: title: installing packages
-#: ../src/gpk-dbus-task.c:524
-msgid "Installing software"
-msgstr "กำลังติดตั้งซอฟต์แวร์"
+#. TRANSLATORS: transaction state, installing packages
+#: ../src/gpk-dbus-task.c:497 ../src/gpk-enum.c:875
+msgid "Installing packages"
+msgstr "กำลังติดตั้งแพกเกจ"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:626 ../src/gpk-dbus-task.c:1394
+#: ../src/gpk-dbus-task.c:599 ../src/gpk-dbus-task.c:1371
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "ติดตั้งแฟ้มไม่สำเร็จ"
 msgstr[1] "ติดตั้งแฟ้มไม่สำเร็จ"
 
 #. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:715
+#: ../src/gpk-dbus-task.c:688
 msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
 msgstr[0] "คุณต้องการติดตั้งแฟ้มนี้หรือไม่?"
@@ -988,116 +924,130 @@ msgstr[1] "คุณต้องการติดตั้งแฟ้มเห
 #. TRANSLATORS: button: install codecs
 #. TRANSLATORS: button: install a font
 #. TRANSLATORS: button: install Plasma services
-#. TRANSLATORS: button: install packages in catalog
 #. TRANSLATORS: button: install printer drivers
-#. TRANSLATORS: button: install catalog
-#: ../src/gpk-dbus-task.c:724 ../src/gpk-dbus-task.c:1268
-#: ../src/gpk-dbus-task.c:1487 ../src/gpk-dbus-task.c:1690
-#: ../src/gpk-dbus-task.c:2150 ../src/gpk-dbus-task.c:2488
-#: ../src/gpk-dbus-task.c:2701 ../src/gpk-dbus-task.c:2823
-#: ../src/gpk-dbus-task.c:3176 ../src/gpk-task.c:404
+#: ../src/gpk-dbus-task.c:697 ../src/gpk-dbus-task.c:1245
+#: ../src/gpk-dbus-task.c:1464 ../src/gpk-dbus-task.c:1667
+#: ../src/gpk-dbus-task.c:2135 ../src/gpk-dbus-task.c:2477
+#: ../src/gpk-dbus-task.c:2712 ../src/gpk-task.c:404
 msgid "Install"
 msgstr "ติดตั้ง"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1047
+#: ../src/gpk-dbus-task.c:1020
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "ติดตั้งแฟ้มภายใน"
 msgstr[1] "ติดตั้งแฟ้มภายใน"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1107
+#: ../src/gpk-dbus-task.c:1080
 #, c-format
-msgid "Could not find software"
-msgstr "หาซอฟต์แวร์ไม่พบ"
+msgid "Could not find packages"
+msgstr "หาแพกเกจไม่พบ"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1116
-msgid "The software could not be found in any software source"
-msgstr "ไม่พบซอฟต์แวร์ในแหล่งซอฟต์แวร์ใดๆ"
+#: ../src/gpk-dbus-task.c:1089
+msgid "The packages could not be found in any software source"
+msgstr "ไม่พบแพกเกจนี้ในแหล่งซอฟต์แวร์ใดๆ"
 
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
-#: ../src/gpk-dbus-task.c:1119 ../src/gpk-dbus-task.c:1356
-#: ../src/gpk-dbus-task.c:1662 ../src/gpk-dbus-task.c:1868
-#: ../src/gpk-dbus-task.c:2123 ../src/gpk-dbus-task.c:2460
+#: ../src/gpk-dbus-task.c:1092 ../src/gpk-dbus-task.c:1333
+#: ../src/gpk-dbus-task.c:1639 ../src/gpk-dbus-task.c:1849
+#: ../src/gpk-dbus-task.c:2108 ../src/gpk-dbus-task.c:2449
 msgid "More information"
 msgstr "ข้อมูลเพิ่มเติม"
 
-#: ../src/gpk-dbus-task.c:1156
-msgid "The software is already installed"
-msgstr "ซอฟต์แวร์ติดตั้งอยู่ก่อนแล้ว"
+#: ../src/gpk-dbus-task.c:1129 ../src/gpk-enum.c:307
+msgid "The package is already installed"
+msgid_plural "The packages are already installed"
+msgstr[0] "แพกเกจติดตั้งอยู่ก่อนแล้ว"
+msgstr[1] "แพกเกจติดตั้งอยู่ก่อนแล้ว"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1158
+#: ../src/gpk-dbus-task.c:1133
 msgid "Nothing to do."
 msgstr "ไม่มีอะไรต้องทำ"
 
+#. TRANSLATORS: failed to install, shouldn't be shown
+#: ../src/gpk-dbus-task.c:1148
+msgid "Failed to install package"
+msgstr "ติดตั้งแพกเกจไม่สำเร็จ"
+
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1175
+#: ../src/gpk-dbus-task.c:1150
 msgid "Incorrect response from search"
 msgstr "คำตอบจากการค้นหาไม่ถูกต้อง"
 
-#: ../src/gpk-dbus-task.c:1253
-msgid "Additional software is required"
-msgstr "มีซอฟต์แวร์เพิ่มเติมต้องใช้"
+#. TRANSLATORS: a program needs a package, for instance openoffice-clipart
+#: ../src/gpk-dbus-task.c:1229
+msgid "An additional package is required:"
+msgid_plural "Additional packages are required:"
+msgstr[0] "มีแพกเกจเพิ่มเติมที่ต้องใช้:"
+msgstr[1] "มีแพกเกจเพิ่มเติมที่ต้องใช้:"
 
-#: ../src/gpk-dbus-task.c:1255
-msgid "Do you want to search for and install this software now?"
-msgstr "คุณต้องการค้นหาและติดตั้งซอฟต์แวร์นี้ตอนนี้เลยหรือไม่?"
+#. TRANSLATORS: ask the user if it's okay to search
+#: ../src/gpk-dbus-task.c:1232
+msgid "Do you want to search for and install this package now?"
+msgid_plural "Do you want to search for and install these packages now?"
+msgstr[0] "คุณต้องการค้นหาและติดตั้งแพกเกจนี้ตอนนี้เลยหรือไม่?"
+msgstr[1] "คุณต้องการค้นหาและติดตั้งแพกเกจเหล่านี้ตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1261
+#: ../src/gpk-dbus-task.c:1238
 #, c-format
-msgid "%s requires additional software"
-msgstr "%s ต้องการซอฟต์แวร์เพิ่มเติม"
+msgid "%s wants to install a package"
+msgid_plural "%s wants to install packages"
+msgstr[0] "%s ต้องการติดตั้งแพกเกจ"
+msgstr[1] "%s ต้องการติดตั้งแพกเกจ"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1264
-msgid "An application requires additional software"
-msgstr "มีโปรแกรมต้องการซอฟต์แวร์เพิ่มเติม"
+#: ../src/gpk-dbus-task.c:1241
+msgid "A program wants to install a package"
+msgid_plural "A program wants to install packages"
+msgstr[0] "มีโปรแกรมต้องการติดตั้งแพกเกจ"
+msgstr[1] "มีโปรแกรมต้องการติดตั้งแพกเกจ"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1281 ../src/gpk-dbus-task.c:2883
+#: ../src/gpk-dbus-task.c:1258 ../src/gpk-dbus-task.c:2772
 msgid "Searching for packages"
 msgstr "กำลังค้นหาแพกเกจ"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1351
+#: ../src/gpk-dbus-task.c:1328
 msgid "Failed to find package"
 msgstr "หาแพกเกจไม่พบ"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1353
+#: ../src/gpk-dbus-task.c:1330 ../src/gpk-dbus-task.c:2914
 msgid "The file could not be found in any packages"
 msgstr "ไม่พบแฟ้มนี้ในแพกเกจใด"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1391
+#: ../src/gpk-dbus-task.c:1368
 #, c-format
-msgid "%s already provides this file"
-msgstr "%s ได้จัดเตรียมแฟ้มนี้อยู่แล้ว"
+msgid "The %s package already provides this file"
+msgstr "แพกเกจ %s ได้จัดเตรียมแฟ้มนี้อยู่แล้ว"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1472
+#: ../src/gpk-dbus-task.c:1449
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "ต้องใช้แฟ้มต่อไปนี้:"
 msgstr[1] "ต้องใช้แฟ้มต่อไปนี้:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1475
+#: ../src/gpk-dbus-task.c:1452
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "คุณต้องการค้นหาแฟ้มนี้ตอนนี้เลยหรือไม่?"
 msgstr[1] "คุณต้องการค้นหาแฟ้มเหล่านี้ตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1480
+#: ../src/gpk-dbus-task.c:1457
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1105,7 +1055,7 @@ msgstr[0] "%s ต้องการติดตั้งแฟ้ม"
 msgstr[1] "%s ต้องการติดตั้งแฟ้ม"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1483
+#: ../src/gpk-dbus-task.c:1460
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "มีโปรแกรมต้องการติดตั้งแฟ้ม"
@@ -1113,27 +1063,27 @@ msgstr[1] "มีโปรแกรมต้องการติดตั้ง
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1499 ../src/gpk-dbus-task.c:3126
-#: ../src/gpk-enum.c:1311
+#: ../src/gpk-dbus-task.c:1476 ../src/gpk-dbus-task.c:3017
+#: ../src/gpk-enum.c:1231
 msgid "Searching for file"
 msgstr "กำลังค้นหาแฟ้ม"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1542
+#: ../src/gpk-dbus-task.c:1519
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "ต้องใช้ปลั๊กอินต่อไปนี้:"
 msgstr[1] "ต้องใช้ปลั๊กอินต่อไปนี้:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1560 ../src/gpk-dbus-task.c:2388
+#: ../src/gpk-dbus-task.c:1537 ../src/gpk-dbus-task.c:2377
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "คุณต้องการค้นหาตอนนี้เลยหรือไม่?"
 msgstr[1] "คุณต้องการค้นหาตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1573
+#: ../src/gpk-dbus-task.c:1550
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1141,7 +1091,7 @@ msgstr[0] "%s ต้องการปลั๊กอินเพิ่มเต
 msgstr[1] "%s ต้องการปลั๊กอินเพิ่มเติมเพื่ออ่านรหัสแฟ้มนี้"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1577
+#: ../src/gpk-dbus-task.c:1554
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1149,7 +1099,7 @@ msgstr[0] "%s ต้องการปลั๊กอินเพิ่มเต
 msgstr[1] "%s ต้องการปลั๊กอินเพิ่มเติมเพื่อลงรหัสแฟ้มนี้"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1581
+#: ../src/gpk-dbus-task.c:1558
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1157,90 +1107,92 @@ msgstr[0] "%s ต้องการปลั๊กอินเพิ่มเต
 msgstr[1] "%s ต้องการปลั๊กอินเพิ่มเติมสำหรับการดำเนินการนี้"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1587
+#: ../src/gpk-dbus-task.c:1564
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] "มีโปรแกรมต้องการปลั๊กอินเพิ่มเติมเพื่ออ่านรหัสแฟ้มนี้"
 msgstr[1] "มีโปรแกรมต้องการปลั๊กอินเพิ่มเติมเพื่ออ่านรหัสแฟ้มนี้"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1591
+#: ../src/gpk-dbus-task.c:1568
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] "มีโปรแกรมต้องการปลั๊กอินเพิ่มเติมเพื่อลงรหัสแฟ้มนี้"
 msgstr[1] "มีโปรแกรมต้องการปลั๊กอินเพิ่มเติมเพื่อลงรหัสแฟ้มนี้"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1595
+#: ../src/gpk-dbus-task.c:1572
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "มีโปรแกรมต้องการปลั๊กอินเพิ่มเติมสำหรับการดำเนินการนี้"
 msgstr[1] "มีโปรแกรมต้องการปลั๊กอินเพิ่มเติมสำหรับการดำเนินการนี้"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1601 ../src/gpk-dbus-task.c:1954
-#: ../src/gpk-dbus-task.c:2327 ../src/gpk-dbus-task.c:2400
+#: ../src/gpk-dbus-task.c:1578 ../src/gpk-dbus-task.c:1935
+#: ../src/gpk-dbus-task.c:2312 ../src/gpk-dbus-task.c:2389
 msgid "Search"
 msgstr "ค้นหา"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1656
+#: ../src/gpk-dbus-task.c:1633
 msgid "Failed to search for plugin"
 msgstr "ค้นหาปลั๊กอินไม่พบ"
 
 #. TRANSLATORS: no software sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1658
+#: ../src/gpk-dbus-task.c:1635
 msgid "Could not find plugin in any configured software source"
 msgstr "ไม่พบปลั๊กอินในแหล่งซอฟต์แวร์ใดที่ตั้งค่าไว้"
 
-#: ../src/gpk-dbus-task.c:1681 ../src/gpk-dbus-task.c:2479
+#: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2468
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "ติดตั้งปลั๊กอินต่อไปนี้"
 msgstr[1] "ติดตั้งปลั๊กอินต่อไปนี้"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1682 ../src/gpk-dbus-task.c:2143
-#: ../src/gpk-dbus-task.c:2480
-msgid "Do you want to install this software now?"
-msgstr "คุณต้องการติดตั้งซอฟต์แวร์นี้ตอนนี้เลยหรือไม่?"
+#: ../src/gpk-dbus-task.c:1659 ../src/gpk-dbus-task.c:2128
+#: ../src/gpk-dbus-task.c:2469 ../src/gpk-dbus-task.c:2704
+msgid "Do you want to install this package now?"
+msgid_plural "Do you want to install these packages now?"
+msgstr[0] "คุณต้องการติดตั้งแพกเกจนี้ตอนนี้เลยหรือไม่?"
+msgstr[1] "คุณต้องการติดตั้งแพกเกจเหล่านี้ตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1774
+#: ../src/gpk-dbus-task.c:1751
 msgid "Searching for plugins"
 msgstr "กำลังค้นหาปลั๊กอิน"
 
-#: ../src/gpk-dbus-task.c:1795
+#: ../src/gpk-dbus-task.c:1772
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "กำลังค้นหาปลั๊กอิน: %s"
 
-#: ../src/gpk-dbus-task.c:1834
+#: ../src/gpk-dbus-task.c:1815
 msgid "Failed to search for provides"
 msgstr "ค้นหาแพกเกจที่จัดเตรียมไม่พบ"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1863
+#: ../src/gpk-dbus-task.c:1844
 msgid "Failed to find software"
 msgstr "หาซอฟต์แวร์ไม่พบ"
 
 #. TRANSLATORS: nothing found in the software sources that helps
-#: ../src/gpk-dbus-task.c:1865
+#: ../src/gpk-dbus-task.c:1846
 msgid "No new applications can be found to handle this type of file"
 msgstr "ไม่พบโปรแกรมใหม่ที่สามารถดำเนินการกับแฟ้มชนิดนี้"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1936
+#: ../src/gpk-dbus-task.c:1917
 msgid "An additional program is required to open this type of file:"
 msgstr "ต้องการโปรแกรมเพิ่มเติมเพื่อเปิดแฟ้มชนิดนี้:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1939
+#: ../src/gpk-dbus-task.c:1920
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "คุณต้องการค้นหาโปรแกรมเพื่อเปิดแฟ้มชนิดนี้ตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1947
+#: ../src/gpk-dbus-task.c:1928
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1248,55 +1200,55 @@ msgstr[0] "%s ต้องการชนิด MIME ชนิดใหม่"
 msgstr[1] "%s ต้องการชนิด MIME ชนิดใหม่"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1950
+#: ../src/gpk-dbus-task.c:1931
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "มีโปรแกรมต้องการชนิด MIME ชนิดใหม่"
 msgstr[1] "มีโปรแกรมต้องการชนิด MIME ชนิดใหม่"
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1965
+#: ../src/gpk-dbus-task.c:1946
 msgid "Searching for file handlers"
 msgstr "กำลังค้นหาตัวดำเนินการสำหรับแฟ้ม"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2044
+#: ../src/gpk-dbus-task.c:2029
 msgid "Language tag not parsed"
 msgstr "แท็กภาษาไม่สามารถแจงได้"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2052
+#: ../src/gpk-dbus-task.c:2037
 msgid "Language code not matched"
 msgstr "ค้นหารหัสภาษาไม่พบ"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2112
+#: ../src/gpk-dbus-task.c:2097
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "หาแบบอักษรไม่พบ"
 msgstr[1] "หาแบบอักษรไม่พบ"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2120
+#: ../src/gpk-dbus-task.c:2105
 msgid "No new fonts can be found for this document"
 msgstr "ไม่พบแบบอักษรใหม่สำหรับเอกสารนี้"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2306
+#: ../src/gpk-dbus-task.c:2291
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] "ต้องการแบบอักษรเพิ่มเติมเพื่อแสดงเอกสารนี้อย่างถูกต้อง"
 msgstr[1] "ต้องการแบบอักษรเพิ่มเติมเพื่อแสดงเอกสารนี้อย่างถูกต้อง"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2310
-msgid "Do you want to search for a suitable font now?"
-msgid_plural "Do you want to search for suitable fonts now?"
-msgstr[0] "คุณต้องการค้นหาแบบอักษรที่เหมาะสมตอนนี้เลยหรือไม่?"
-msgstr[1] "คุณต้องการค้นหาแบบอักษรที่เหมาะสมตอนนี้เลยหรือไม่?"
+#: ../src/gpk-dbus-task.c:2295
+msgid "Do you want to search for a suitable package now?"
+msgid_plural "Do you want to search for suitable packages now?"
+msgstr[0] "คุณต้องการค้นหาแพกเกจที่เหมาะสมตอนนี้เลยหรือไม่?"
+msgstr[1] "คุณต้องการค้นหาแพกเกจที่เหมาะสมตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2320
+#: ../src/gpk-dbus-task.c:2305
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1304,117 +1256,88 @@ msgstr[0] "%s ต้องการติดตั้งแบบอักษร
 msgstr[1] "%s ต้องการติดตั้งแบบอักษร"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2323
+#: ../src/gpk-dbus-task.c:2308
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "มีโปรแกรมต้องการติดตั้งแบบอักษร"
 msgstr[1] "มีโปรแกรมต้องการติดตั้งแบบอักษร"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2339
+#: ../src/gpk-dbus-task.c:2324
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "กำลังค้นหาแบบอักษร"
 msgstr[1] "กำลังค้นหาแบบอักษร"
 
 #. TRANSLATORS: we are listing the services in a box
-#: ../src/gpk-dbus-task.c:2376
+#: ../src/gpk-dbus-task.c:2365
 msgid "The following service is required:"
 msgid_plural "The following services are required:"
 msgstr[0] "ต้องการบริการต่อไปนี้:"
 msgstr[1] "ต้องการบริการต่อไปนี้:"
 
-#: ../src/gpk-dbus-task.c:2396
+#: ../src/gpk-dbus-task.c:2385
 msgid "Plasma requires an additional service for this operation"
 msgid_plural "Plasma requires additional services for this operation"
 msgstr[0] "Plasma ต้องการบริการเพิ่มเติมสำหรับการดำเนินการนี้"
 msgstr[1] "Plasma ต้องการบริการเพิ่มเติมสำหรับการดำเนินการนี้"
 
-#: ../src/gpk-dbus-task.c:2454
+#: ../src/gpk-dbus-task.c:2443
 msgid "Failed to search for Plasma service"
 msgstr "ค้นหาบริการ Plasma ไม่สำเร็จ"
 
 #. TRANSLATORS: no software sources have the wanted Plasma service
-#: ../src/gpk-dbus-task.c:2456
+#: ../src/gpk-dbus-task.c:2445
 msgid "Could not find service in any configured software source"
 msgstr "ไม่พบบริการในแหล่งซอฟต์แวร์ใดที่ตั้งค่าไว้"
 
 #. TRANSLATORS: search for Plasma services
-#: ../src/gpk-dbus-task.c:2562
+#: ../src/gpk-dbus-task.c:2551
 msgid "Searching for services"
 msgstr "กำลังค้นหาบริการ"
 
-#: ../src/gpk-dbus-task.c:2581
+#: ../src/gpk-dbus-task.c:2570
 #, c-format
 msgid "Searching for service: %s"
 msgstr "กำลังค้นหาบริการ: %s"
 
-#: ../src/gpk-dbus-task.c:2658
-msgid "Could not process catalog"
-msgstr "ไม่สามารถดำเนินการแค็ตตาล็อก"
-
-#: ../src/gpk-dbus-task.c:2676
-msgid "No packages need to be installed"
-msgstr "ไม่มีแพกเกจที่ต้องติดตั้ง"
-
-#. TRANSLATORS: title: allow user to confirm
-#: ../src/gpk-dbus-task.c:2695
-msgid "Install packages in catalog?"
-msgstr "จะติดตั้งแพกเกจในแค็ตตาล็อกหรือไม่?"
-
-#. TRANSLATORS: display a list of packages to install
-#: ../src/gpk-dbus-task.c:2697
-msgid "The following packages are marked to be installed from the catalog:"
-msgstr "แพกเกจต่อไปนี้ถูกทำเครื่องหมายให้ติดตั้งจากแค็ตตาล็อก:"
-
-#: ../src/gpk-dbus-task.c:2738
+#: ../src/gpk-dbus-task.c:2627
 msgid "Failed to remove package"
 msgstr "ถอดถอนแพกเกจไม่สำเร็จ"
 
-#: ../src/gpk-dbus-task.c:2814
+#: ../src/gpk-dbus-task.c:2703
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "ติดตั้งไดรเวอร์ต่อไปนี้"
 msgstr[1] "ติดตั้งไดรเวอร์ต่อไปนี้"
 
-#: ../src/gpk-dbus-task.c:2815
-msgid "Do you want to install this driver now?"
-msgid_plural "Do you want to install these drivers now?"
-msgstr[0] "คุณต้องการติดตั้งไดรเวอร์นี้หรือไม่?"
-msgstr[1] "คุณต้องการติดตั้งไดรเวอร์เหล่านี้หรือไม่?"
-
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2967 ../src/gpk-enum.c:947
+#: ../src/gpk-dbus-task.c:2858 ../src/gpk-enum.c:867
 msgid "Removing packages"
 msgstr "กำลังถอดถอนแพกเกจ"
 
 #. TRANSLATORS: failed to find the package for the file
-#: ../src/gpk-dbus-task.c:3021
-msgid "Failed to find any software"
-msgstr "หาซอฟต์แวร์ไม่พบ"
-
-#. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:3023
-msgid "The file could not be found in any available software"
-msgstr "ไม่พบแฟ้มนี้ในซอฟต์แวร์ใด"
+#: ../src/gpk-dbus-task.c:2912
+msgid "Failed to find package for this file"
+msgstr "หาแพกเกจสำหรับแฟ้มนี้ไม่พบ"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:3099
+#: ../src/gpk-dbus-task.c:2990
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "แฟ้มต่อไปนี้จะถูกลบออก:"
 msgstr[1] "แฟ้มต่อไปนี้จะถูกลบออก:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:3102
+#: ../src/gpk-dbus-task.c:2993
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "คุณต้องการลบแฟ้มนี้ตอนนี้เลยหรือไม่?"
 msgstr[1] "คุณต้องการลบแฟ้มเหล่านี้ตอนนี้เลยหรือไม่?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:3107
+#: ../src/gpk-dbus-task.c:2998
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1422,7 +1345,7 @@ msgstr[0] "%s ต้องการลบแฟ้ม"
 msgstr[1] "%s ต้องการลบแฟ้ม"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:3110
+#: ../src/gpk-dbus-task.c:3001
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "มีโปรแกรมต้องการลบแฟ้ม"
@@ -1432,21 +1355,9 @@ msgstr[1] "มีโปรแกรมต้องการลบแฟ้ม"
 # Currently, occurence in ../src/gpk-dbus-task.c is for file.
 # So, just use general term for now. Let's file bug.
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:3114 ../src/gpk-task.c:409
+#: ../src/gpk-dbus-task.c:3005 ../src/gpk-task.c:409
 msgid "Remove"
 msgstr "ลบออก"
-
-#. TRANSLATORS: title to install package catalogs
-#: ../src/gpk-dbus-task.c:3167
-msgid "Do you want to install this catalog?"
-msgid_plural "Do you want to install these catalogs?"
-msgstr[0] "คุณต้องการติดตั้งแค็ตตาล็อกนี้หรือไม่?"
-msgstr[1] "คุณต้องการติดตั้งแค็ตตาล็อกเหล่านี้หรือไม่?"
-
-#. TRANSLATORS: title: install package catalogs, that is, instructions for installing
-#: ../src/gpk-dbus-task.c:3192
-msgid "Install catalogs"
-msgstr "ติดตั้งแค็ตตาล็อก"
 
 #. TRANSLATORS: This is when we have over 5 items, and we're not interested in detail
 #: ../src/gpk-dialog.c:72
@@ -1463,303 +1374,299 @@ msgid "Do not show this again"
 msgstr "ไม่ต้องแสดงข้อความนี้อีก"
 
 #. TRANSLATORS: this is compact disk (CD) media
-#: ../src/gpk-enum.c:269
+#: ../src/gpk-enum.c:248
 msgid "CD"
 msgstr "CD"
 
 #. TRANSLATORS: this is digital versatile disk (DVD) media
-#: ../src/gpk-enum.c:273
+#: ../src/gpk-enum.c:252
 msgid "DVD"
 msgstr "DVD"
 
 #. TRANSLATORS: this is either CD or DVD media
-#: ../src/gpk-enum.c:277
+#: ../src/gpk-enum.c:256
 msgid "disc"
 msgstr "แผ่น"
 
 #. TRANSLATORS: this is generic media of unknown type that we will install from
-#: ../src/gpk-enum.c:281
+#: ../src/gpk-enum.c:260
 msgid "media"
 msgstr "สื่อ"
 
-#: ../src/gpk-enum.c:298
+#: ../src/gpk-enum.c:277
 msgid "Failed with unknown error code"
 msgstr "ล้มเหลวโดยไม่ทราบรหัสข้อผิดพลาด"
 
-#: ../src/gpk-enum.c:301
+#: ../src/gpk-enum.c:280
 msgid "No network connection available"
 msgstr "ไม่มีการเชื่อมต่อเครือข่ายให้ใช้"
 
-#: ../src/gpk-enum.c:304
+#: ../src/gpk-enum.c:283
 msgid "No package cache is available."
 msgstr "ไม่มีแคชของแพกเกจให้ใช้"
 
-#: ../src/gpk-enum.c:307
+#: ../src/gpk-enum.c:286
 msgid "Out of memory"
 msgstr "หน่วยความจำหมด"
 
-#: ../src/gpk-enum.c:310
+#: ../src/gpk-enum.c:289
 msgid "Failed to create a thread"
 msgstr "สร้างเธรดไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:313
+#: ../src/gpk-enum.c:292
 msgid "Not supported by this backend"
 msgstr "ไม่รองรับโดยแบ็กเอนด์นี้"
 
-#: ../src/gpk-enum.c:316
+#: ../src/gpk-enum.c:295
 msgid "An internal system error has occurred"
 msgstr "เกิดข้อผิดพลาดภายในของระบบ"
 
-#: ../src/gpk-enum.c:319
+#: ../src/gpk-enum.c:298
 msgid "A security signature is not present"
 msgstr "ไม่ปรากฏลายเซ็นสำหรับการรักษาความปลอดภัย"
 
-#: ../src/gpk-enum.c:322
+#: ../src/gpk-enum.c:301
 msgid "The package is not installed"
 msgstr "แพกเกจไม่ได้ติดตั้ง"
 
-#: ../src/gpk-enum.c:325
+#: ../src/gpk-enum.c:304
 msgid "The package was not found"
 msgstr "ไม่พบแพกเกจ"
 
-#: ../src/gpk-enum.c:328
-msgid "The package is already installed"
-msgstr "แพกเกจติดตั้งอยู่ก่อนแล้ว"
-
-#: ../src/gpk-enum.c:331
+#: ../src/gpk-enum.c:310
 msgid "The package download failed"
 msgstr "ดาวน์โหลดแพกเกจไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:334
+#: ../src/gpk-enum.c:313
 msgid "The group was not found"
 msgstr "ไม่พบกลุ่ม"
 
-#: ../src/gpk-enum.c:337
+#: ../src/gpk-enum.c:316
 msgid "The group list was invalid"
 msgstr "รายชื่อกลุ่มไม่ถูกต้อง"
 
-#: ../src/gpk-enum.c:340
+#: ../src/gpk-enum.c:319
 msgid "Dependency resolution failed"
 msgstr "คำนวณความขึ้นต่อกันไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:343
+#: ../src/gpk-enum.c:322
 msgid "Search filter was invalid"
 msgstr "ตัวกรองการค้นหาไม่ถูกต้อง"
 
-#: ../src/gpk-enum.c:346
+#: ../src/gpk-enum.c:325
 msgid "The package identifier was not well formed"
 msgstr "ชื่อแพกเกจมีรูปแบบไม่ถูกต้อง"
 
-#: ../src/gpk-enum.c:349
+#: ../src/gpk-enum.c:328
 msgid "Transaction error"
 msgstr "ข้อผิดพลาดในรายการเปลี่ยนแปลง"
 
-#: ../src/gpk-enum.c:352
+#: ../src/gpk-enum.c:331
 msgid "Repository name was not found"
 msgstr "ไม่พบชื่อคลังแพกเกจ"
 
-#: ../src/gpk-enum.c:355
+#: ../src/gpk-enum.c:334
 msgid "Could not remove a protected system package"
 msgstr "ไม่สามารถถอดถอนแพกเกจระบบที่ป้องกันไว้"
 
-#: ../src/gpk-enum.c:358
+#: ../src/gpk-enum.c:337
 msgid "The action was canceled"
 msgstr "การดำเนินการถูกยกเลิก"
 
-#: ../src/gpk-enum.c:361
+#: ../src/gpk-enum.c:340
 msgid "The action was forcibly canceled"
 msgstr "การดำเนินการถูกบังคับให้ยกเลิก"
 
-#: ../src/gpk-enum.c:364
+#: ../src/gpk-enum.c:343
 msgid "Reading the configuration file failed"
 msgstr "อ่านแฟ้มค่าตั้งไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:367
+#: ../src/gpk-enum.c:346
 msgid "The action cannot be canceled"
 msgstr "การดำเนินการไม่สามารถยกเลิกได้"
 
-#: ../src/gpk-enum.c:370
+#: ../src/gpk-enum.c:349
 msgid "Source packages cannot be installed"
 msgstr "ไม่สามารถติดตั้งต้นฉบับแพกเกจได้"
 
-#: ../src/gpk-enum.c:373
+#: ../src/gpk-enum.c:352
 msgid "The license agreement failed"
 msgstr "การยอมรับข้อตกลงสัญญาอนุญาตล้มเหลว"
 
-#: ../src/gpk-enum.c:376
+#: ../src/gpk-enum.c:355
 msgid "Local file conflict between packages"
 msgstr "แฟ้มในเครื่องขัดแย้งกันระหว่างแพกเกจ"
 
-#: ../src/gpk-enum.c:379
+#: ../src/gpk-enum.c:358
 msgid "Packages are not compatible"
 msgstr "แพกเกจเข้ากันไม่ได้"
 
-#: ../src/gpk-enum.c:382
+#: ../src/gpk-enum.c:361
 msgid "Problem connecting to a software source"
 msgstr "มีปัญหาในการเชื่อมต่อไปยังแหล่งซอฟต์แวร์"
 
-#: ../src/gpk-enum.c:385
+#: ../src/gpk-enum.c:364
 msgid "Failed to initialize"
 msgstr "ตั้งต้นไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:388
+#: ../src/gpk-enum.c:367
 msgid "Failed to finalize"
 msgstr "จบไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:391
+#: ../src/gpk-enum.c:370
 msgid "Cannot get lock"
 msgstr "ล็อคไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:394
+#: ../src/gpk-enum.c:373
 msgid "No packages to update"
 msgstr "ไม่มีแพกเกจที่จะปรับรุ่น"
 
-#: ../src/gpk-enum.c:397
+#: ../src/gpk-enum.c:376
 msgid "Cannot write repository configuration"
 msgstr "ไม่สามารถเขียนค่าตั้งของคลังแพกเกจ"
 
-#: ../src/gpk-enum.c:400
+#: ../src/gpk-enum.c:379
 msgid "Local install failed"
 msgstr "ติดตั้งแฟ้มในเครื่องไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:403
+#: ../src/gpk-enum.c:382
 msgid "Bad security signature"
 msgstr "ลายเซ็นของระบบรักษาความปลอดภัยไม่ถูกต้อง"
 
-#: ../src/gpk-enum.c:406
+#: ../src/gpk-enum.c:385
 msgid "Missing security signature"
 msgstr "ไม่มีลายเซ็นของระบบรักษาความปลอดภัย"
 
-#: ../src/gpk-enum.c:409
+#: ../src/gpk-enum.c:388
 msgid "Repository configuration invalid"
 msgstr "ค่าตั้งคลังแพกเกจไม่ถูกต้อง"
 
-#: ../src/gpk-enum.c:412
+#: ../src/gpk-enum.c:391
 msgid "Invalid package file"
 msgstr "แฟ้มแพกเกจไม่ถูกต้อง"
 
-#: ../src/gpk-enum.c:415
+#: ../src/gpk-enum.c:394
 msgid "Package install blocked"
 msgstr "การติดตั้งแพกเกจถูกขัดขวาง"
 
-#: ../src/gpk-enum.c:418
+#: ../src/gpk-enum.c:397
 msgid "Package is corrupt"
 msgstr "แพกเกจเสียหาย"
 
-#: ../src/gpk-enum.c:421
+#: ../src/gpk-enum.c:400
 msgid "All packages are already installed"
 msgstr "ทุกแพกเกจถูกติดตั้งไว้เรียบร้อยแล้ว"
 
-#: ../src/gpk-enum.c:424
+#: ../src/gpk-enum.c:403
 msgid "The specified file could not be found"
 msgstr "ไม่พบแฟ้มที่ระบุ"
 
-#: ../src/gpk-enum.c:427
+#: ../src/gpk-enum.c:406
 msgid "No more mirrors are available"
 msgstr "ไม่มีแหล่งสำเนาอื่นอีก"
 
-#: ../src/gpk-enum.c:430
+#: ../src/gpk-enum.c:409
 msgid "No distribution upgrade data is available"
 msgstr "ไม่มีข้อมูลการปรับรุ่นข้ามชุดจัดแจก"
 
-#: ../src/gpk-enum.c:433
+#: ../src/gpk-enum.c:412
 msgid "Package is incompatible with this system"
 msgstr "แพกเกจไม่เข้ากับระบบนี้"
 
-#: ../src/gpk-enum.c:436
+#: ../src/gpk-enum.c:415
 msgid "No space is left on the disk"
 msgstr "ไม่มีพื้นที่ว่างในดิสก์"
 
 #. TRANSLATORS: this is the window title when a new CD or DVD is required
-#: ../src/gpk-enum.c:439 ../src/gpk-task.c:356
+#: ../src/gpk-enum.c:418 ../src/gpk-task.c:356
 msgid "A media change is required"
 msgstr "ต้องเปลี่ยนสื่อ"
 
-#: ../src/gpk-enum.c:442
+#: ../src/gpk-enum.c:421
 msgid "Authorization failed"
 msgstr "การยืนยันสิทธิ์ล้มเหลว"
 
-#: ../src/gpk-enum.c:445
+#: ../src/gpk-enum.c:424
 msgid "Update not found"
 msgstr "ไม่พบการปรับรุ่น"
 
-#: ../src/gpk-enum.c:448
+#: ../src/gpk-enum.c:427
 msgid "Cannot install from untrusted source"
 msgstr "ไม่สามารถติดตั้งจากแหล่งที่เชื่อถือไม่ได้"
 
-#: ../src/gpk-enum.c:451
+#: ../src/gpk-enum.c:430
 msgid "Cannot update from untrusted source"
 msgstr "ไม่สามารถปรับรุ่นจากแหล่งที่เชื่อถือไม่ได้"
 
-#: ../src/gpk-enum.c:454
+#: ../src/gpk-enum.c:433
 msgid "Cannot get the file list"
 msgstr "ไม่สามารถดึงรายชื่อแฟ้ม"
 
-#: ../src/gpk-enum.c:457
+#: ../src/gpk-enum.c:436
 msgid "Cannot get package requires"
 msgstr "ไม่สามารถดึงสิ่งที่ต้องการแพกเกจนี้"
 
-#: ../src/gpk-enum.c:460
+#: ../src/gpk-enum.c:439
 msgid "Cannot disable source"
 msgstr "ไม่สามารถปิดใช้งานแหล่ง"
 
-#: ../src/gpk-enum.c:463
+#: ../src/gpk-enum.c:442
 msgid "The download failed"
 msgstr "ดาวน์โหลดไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:466
+#: ../src/gpk-enum.c:445
 msgid "Package failed to configure"
 msgstr "ตั้งค่าแพกเกจไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:469
+#: ../src/gpk-enum.c:448
 msgid "Package failed to build"
 msgstr "ประกอบสร้างแพกเกจไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:472
+#: ../src/gpk-enum.c:451
 msgid "Package failed to install"
 msgstr "ติดตั้งแพกเกจไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:475
+#: ../src/gpk-enum.c:454
 msgid "Package failed to be removed"
 msgstr "ถอดถอนแพกเกจไม่สำเร็จ"
 
-#: ../src/gpk-enum.c:478
+#: ../src/gpk-enum.c:457
 msgid "Update failed due to running process"
 msgstr "ปรับรุ่นไม่สำเร็จเนื่องจากมีโพรเซสกำลังทำงาน"
 
-#: ../src/gpk-enum.c:481
+#: ../src/gpk-enum.c:460
 msgid "The package database was changed"
 msgstr "ฐานข้อมูลแพกเกจมีการเปลี่ยนแปลง"
 
-#: ../src/gpk-enum.c:484
+#: ../src/gpk-enum.c:463
 msgid "Virtual provide type is not supported"
 msgstr "ไม่รองรับชนิดของสิ่งจัดเตรียมเสมือน"
 
-#: ../src/gpk-enum.c:487
+#: ../src/gpk-enum.c:466
 msgid "Install root is invalid"
 msgstr "รากของการติดตั้งไม่ถูกต้อง"
 
-#: ../src/gpk-enum.c:490
+#: ../src/gpk-enum.c:469
 msgid "Cannot fetch install sources"
 msgstr "ไม่สามารถดึงข้อมูลแหล่งติดตั้ง"
 
-#: ../src/gpk-enum.c:493
+#: ../src/gpk-enum.c:472
 msgid "Rescheduled due to priority"
 msgstr "ถูกปรับเปลี่ยนลำดับตามความสำคัญ"
 
-#: ../src/gpk-enum.c:496
+#: ../src/gpk-enum.c:475
 msgid "Unfinished transaction"
 msgstr "รายการเปลี่ยนแปลงไม่เสร็จ"
 
-#: ../src/gpk-enum.c:499
+#: ../src/gpk-enum.c:478
 msgid "Lock required"
 msgstr "ต้องการการล็อค"
 
-#: ../src/gpk-enum.c:516
+#: ../src/gpk-enum.c:495
 msgid "Failed with unknown error code."
 msgstr "ล้มเหลวโดยไม่ทราบรหัสข้อผิดพลาด"
 
-#: ../src/gpk-enum.c:519
+#: ../src/gpk-enum.c:498
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
@@ -1767,7 +1674,7 @@ msgstr ""
 "ไม่มีการเชื่อมต่อเครือข่ายให้ใช้\n"
 "กรุณาตรวจสอบการตั้งค่าการเชื่อมต่อของคุณแล้วลองอีกครั้ง"
 
-#: ../src/gpk-enum.c:523
+#: ../src/gpk-enum.c:502
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
@@ -1775,7 +1682,7 @@ msgstr ""
 "จำเป็นต้องสร้างรายชื่อแพกเกจใหม่\n"
 "ซึ่งแบ็กเอนด์ควรจะได้ทำไปแล้วโดยอัตโนมัติ"
 
-#: ../src/gpk-enum.c:527
+#: ../src/gpk-enum.c:506
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
@@ -1784,11 +1691,11 @@ msgstr ""
 "บริการที่รับผิดชอบดำเนินการคำขอของผู้ใช้ไม่มีหน่วยความจำให้ใช้\n"
 "กรุณาเริ่มคอมพิวเตอร์ของคุณใหม่"
 
-#: ../src/gpk-enum.c:531
+#: ../src/gpk-enum.c:510
 msgid "A thread could not be created to service the user request."
 msgstr "ไม่สามารถสร้างเธรดเพื่อบริการคำขอของผู้ใช้ได้"
 
-#: ../src/gpk-enum.c:534
+#: ../src/gpk-enum.c:513
 msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug in your distribution bug tracker as this should not have "
@@ -1797,7 +1704,7 @@ msgstr ""
 "การดำเนินการไม่มีการรองรับโดยแบ็กเอนด์นี้\n"
 "กรุณารายงานบั๊กที่เครื่องมือติดตามบั๊กของชุดจัดแจกของคุณ เพราะเรื่องนี้ไม่ควรเกิดขึ้น"
 
-#: ../src/gpk-enum.c:538
+#: ../src/gpk-enum.c:517
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug in your distribution bug tracker with the error "
@@ -1806,7 +1713,7 @@ msgstr ""
 "เกิดปัญหาที่เราไม่คาดคิด\n"
 "กรุณารายงานบั๊กที่เครื่องมือติดตามบั๊กของชุดจัดแจกของคุณ พร้อมกับบรรยายข้อผิดพลาด"
 
-#: ../src/gpk-enum.c:542
+#: ../src/gpk-enum.c:521
 msgid ""
 "A security trust relationship could not be made with software source.\n"
 "Please check your security settings."
@@ -1814,22 +1721,22 @@ msgstr ""
 "ไม่สามารถเชื่อมโยงความเชื่อถือด้านระบบรักษาความปลอดภัยกับแหล่งซอฟต์แวร์ได้\n"
 "กรุณาตรวจสอบการตั้งค่าการรักษาความปลอดภัยของคุณ"
 
-#: ../src/gpk-enum.c:546
+#: ../src/gpk-enum.c:525
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
 msgstr "แพกเกจที่กำลังจะถอดถอนหรือปรับรุ่นไม่ได้ติดตั้งไว้"
 
-#: ../src/gpk-enum.c:549
+#: ../src/gpk-enum.c:528
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "software source."
 msgstr "ไม่พบแพกเกจที่กำลังเปลี่ยนแปลงในระบบของคุณหรือในแหล่งซอฟต์แวร์ใด"
 
-#: ../src/gpk-enum.c:552
+#: ../src/gpk-enum.c:531
 msgid "The package that is trying to be installed is already installed."
 msgstr "แพกเกจที่กำลังจะติดตั้งได้ติดตั้งอยู่ก่อนแล้ว"
 
-#: ../src/gpk-enum.c:555
+#: ../src/gpk-enum.c:534
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
@@ -1837,7 +1744,7 @@ msgstr ""
 "ดาวน์โหลดแพกเกจไม่สำเร็จ\n"
 "กรุณาตรวจสอบการเชื่อมต่อเครือข่ายของคุณ"
 
-#: ../src/gpk-enum.c:559
+#: ../src/gpk-enum.c:538
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
@@ -1845,7 +1752,7 @@ msgstr ""
 "ไม่พบกลุ่มชนิดนี้\n"
 "กรุณาตรวจสอบรายชื่อกลุ่มของคุณแล้วลองอีกครั้ง"
 
-#: ../src/gpk-enum.c:563
+#: ../src/gpk-enum.c:542
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source "
@@ -1854,7 +1761,7 @@ msgstr ""
 "ไม่สามารถโหลดรายชื่อกลุ่มได้\n"
 "การปรับข้อมูลแคชของคุณอาจช่วยได้ แม้ว่าโดยปกติแล้วอาการนี้จะเป็นข้อผิดพลาดของแหล่งซอฟต์แวร์"
 
-#: ../src/gpk-enum.c:568
+#: ../src/gpk-enum.c:547
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
@@ -1862,11 +1769,11 @@ msgstr ""
 "ไม่พบแพกเกจที่จะทำให้การดำเนินการนี้เสร็จสมบูรณ์ได้\n"
 "ดูข้อมูลเพิ่มเติมได้ในรายงานละเอียด"
 
-#: ../src/gpk-enum.c:572
+#: ../src/gpk-enum.c:551
 msgid "The search filter was not correctly formed."
 msgstr "ตัวกรองการค้นหามีรูปแบบไม่ถูกต้อง"
 
-#: ../src/gpk-enum.c:575
+#: ../src/gpk-enum.c:554
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
@@ -1874,7 +1781,7 @@ msgstr ""
 "ชื่อแพกเกจที่ส่งไปยังเซิร์ฟเวอร์มีรูปแบบไม่ถูกต้อง\n"
 "โดยปกติ อาการนี้บ่งชี้ว่ามีข้อผิดพลาดภายใน และคุณควรรายงานบั๊กนี้"
 
-#: ../src/gpk-enum.c:579
+#: ../src/gpk-enum.c:558
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
@@ -1882,7 +1789,7 @@ msgstr ""
 "เกิดข้อผิดพลาดในรายการเปลี่ยนแปลง ซึ่งไม่มีการระบุ\n"
 "ดูข้อมูลเพิ่มเติมได้ในรายงานละเอียด"
 
-#: ../src/gpk-enum.c:583
+#: ../src/gpk-enum.c:562
 msgid ""
 "The remote software source name was not found.\n"
 "You may need to enable an item in Software Sources."
@@ -1890,15 +1797,15 @@ msgstr ""
 "ไม่พบชื่อของแหล่งซอฟต์แวร์ในเครือข่าย\n"
 "คุณอาจต้องเปิดใช้รายการใดรายการหนึ่งใน \"แหล่งซอฟต์แวร์\""
 
-#: ../src/gpk-enum.c:587
+#: ../src/gpk-enum.c:566
 msgid "Removing a protected system package is not allowed."
 msgstr "ไม่อนุญาตให้ถอดถอนแพกเกจระบบซึ่งมีการป้องกันไว้"
 
-#: ../src/gpk-enum.c:590
+#: ../src/gpk-enum.c:569
 msgid "The action was canceled successfully and no packages were changed."
 msgstr "การดำเนินการถูกยกเลิกสำเร็จแล้ว และไม่มีแพกเกจใดมีการเปลี่ยนแปลง"
 
-#: ../src/gpk-enum.c:593
+#: ../src/gpk-enum.c:572
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
@@ -1906,7 +1813,7 @@ msgstr ""
 "การดำเนินการถูกยกเลิกสำเร็จแล้ว และไม่มีแพกเกจใดมีการเปลี่ยนแปลง\n"
 "แต่แบ็กเอนด์ไม่ได้จบการทำงานอย่างสะอาด"
 
-#: ../src/gpk-enum.c:597
+#: ../src/gpk-enum.c:576
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
@@ -1914,11 +1821,11 @@ msgstr ""
 "ไม่สามารถเปิดแฟ้มค่าตั้งสำหรับระบบแพกเกจเฉพาะระบบ\n"
 "กรุณาตรวจสอบการตั้งค่าให้แน่ใจว่าถูกต้อง"
 
-#: ../src/gpk-enum.c:601
+#: ../src/gpk-enum.c:580
 msgid "The action cannot be canceled at this time."
 msgstr "การดำเนินการไม่สามารถยกเลิกได้ในตอนนี้"
 
-#: ../src/gpk-enum.c:604
+#: ../src/gpk-enum.c:583
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
@@ -1926,7 +1833,7 @@ msgstr ""
 "โดยปกติต้นฉบับแพกเกจไม่ได้ติดตั้งด้วยวิธีนี้\n"
 "กรุณาตรวจสอบนามสกุลของแฟ้มที่คุณพยายามติดตั้ง"
 
-#: ../src/gpk-enum.c:608
+#: ../src/gpk-enum.c:587
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
@@ -1934,7 +1841,7 @@ msgstr ""
 "คุณไม่ได้ยอมรับข้อตกลงสัญญาอนุญาต\n"
 "ก่อนที่จะใช้ซอฟต์แวร์นี้ คุณต้องยอมรับสัญญาอนุญาตเสียก่อน"
 
-#: ../src/gpk-enum.c:612
+#: ../src/gpk-enum.c:591
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different software sources."
@@ -1942,7 +1849,7 @@ msgstr ""
 "มีแพกเกจสองแพกเกจที่จัดเตรียมแฟ้มเดียวกัน\n"
 "โดยปกติ อาการนี้มักเกิดจากการผสมแพกเกจจากแหล่งซอฟต์แวร์หลายแหล่ง"
 
-#: ../src/gpk-enum.c:616
+#: ../src/gpk-enum.c:595
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different software sources."
@@ -1950,7 +1857,7 @@ msgstr ""
 "มีแพกเกจหลายแพกเกจที่เข้ากันไม่ได้\n"
 "โดยปกติ อาการนี้มักเกิดจากการผสมแพกเกจจากแหล่งซอฟต์แวร์หลายแหล่ง"
 
-#: ../src/gpk-enum.c:620
+#: ../src/gpk-enum.c:599
 msgid ""
 "There was a (possibly temporary) problem connecting to a software source.\n"
 "Please check the detailed error for further details."
@@ -1958,7 +1865,7 @@ msgstr ""
 "เกิดปัญหา (ซึ่งอาจจะชั่วคราว) ในการเชื่อมต่อไปยังแหล่งซอฟต์แวร์\n"
 "กรุณาดูรายละเอียดเพิ่มเติมได้จากข้อผิดพลาดแบบละเอียด"
 
-#: ../src/gpk-enum.c:624
+#: ../src/gpk-enum.c:603
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
@@ -1966,7 +1873,7 @@ msgstr ""
 "ตั้งต้นแบ็กเอนด์ระบบแพกเกจไม่สำเร็จ\n"
 "อาจมีเครื่องมือจัดการแพกเกจอื่นกำลังทำงานอยู่"
 
-#: ../src/gpk-enum.c:628
+#: ../src/gpk-enum.c:607
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
@@ -1974,7 +1881,7 @@ msgstr ""
 "ปิดแบ็กเอนด์ไม่สำเร็จ\n"
 "โดยปกติ ข้อผิดพลาดนี้สามารถละเลยได้"
 
-#: ../src/gpk-enum.c:632
+#: ../src/gpk-enum.c:611
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
@@ -1982,15 +1889,15 @@ msgstr ""
 "แบ็กเอนด์ระบบแพกเกจไม่สามารถขอล็อคเพื่อเข้าทำงานได้\n"
 "กรุณาปิดเครื่องมือจัดการแพกเกจแบบเดิมทั้งหมดที่คุณอาจจะเปิดอยู่"
 
-#: ../src/gpk-enum.c:636
+#: ../src/gpk-enum.c:615
 msgid "None of the selected packages could be updated."
 msgstr "ไม่มีแพกเกจใดที่เลือกไว้ที่สามารถปรับรุ่นได้"
 
-#: ../src/gpk-enum.c:639
+#: ../src/gpk-enum.c:618
 msgid "The repository configuration could not be modified."
 msgstr "ไม่สามารถเปลี่ยนแปลงค่าตั้งของคลังแพกเกจได้"
 
-#: ../src/gpk-enum.c:642
+#: ../src/gpk-enum.c:621
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
@@ -1998,11 +1905,11 @@ msgstr ""
 "ติดตั้งแฟ้มในเครื่องไม่สำเร็จ\n"
 "ดูข้อมูลเพิ่มเติมได้ในรายงานละเอียด"
 
-#: ../src/gpk-enum.c:646
+#: ../src/gpk-enum.c:625
 msgid "The package security signature could not be verified."
 msgstr "ตรวจสอบลายเซ็นของระบบรักษาความปลอดภัยของแพกเกจไม่ผ่าน"
 
-#: ../src/gpk-enum.c:649
+#: ../src/gpk-enum.c:628
 msgid ""
 "The package security signature is missing and this package is untrusted.\n"
 "This package was not signed when created."
@@ -2010,11 +1917,11 @@ msgstr ""
 "ไม่มีลายเซ็นของระบบรักษาความปลอดภัยในแพกเกจ ทำให้แพกเกจนี้เชื่อถือไม่ได้\n"
 "แพกเกจนี้ไม่มีการเซ็นกำกับเมื่อสร้าง"
 
-#: ../src/gpk-enum.c:653
+#: ../src/gpk-enum.c:632
 msgid "Repository configuration was invalid and could not be read."
 msgstr "ค่าตั้งของคลังแพกเกจไม่ถูกต้อง และไม่สามารถอ่านได้"
 
-#: ../src/gpk-enum.c:656
+#: ../src/gpk-enum.c:635
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
@@ -2022,23 +1929,23 @@ msgstr ""
 "แพกเกจที่คุณพยายามติดตั้งนั้นใช้การไม่ได้\n"
 "แฟ้มแพกเกจอาจเสียหาย หรือไม่ใช่แฟ้มแพกเกจที่เหมาะสม"
 
-#: ../src/gpk-enum.c:660
+#: ../src/gpk-enum.c:639
 msgid ""
 "Installation of this package prevented by your packaging system's "
 "configuration."
 msgstr "การติดตั้งแพกเกจนี้ถูกขวางไว้โดยค่าตั้งของระบบแพกเกจของคุณ"
 
-#: ../src/gpk-enum.c:663
+#: ../src/gpk-enum.c:642
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr "แพกเกจที่ดาวน์โหลดมานั้นเสียหาย ต้องดาวน์โหลดใหม่"
 
-#: ../src/gpk-enum.c:666
+#: ../src/gpk-enum.c:645
 msgid ""
 "All of the packages selected for install are already installed on the system."
 msgstr "ทุกแพกเกจที่คุณเลือกติดตั้งนั้นได้ถูกติดตั้งไว้ก่อนแล้วในระบบ"
 
-#: ../src/gpk-enum.c:669
+#: ../src/gpk-enum.c:648
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
@@ -2046,7 +1953,7 @@ msgstr ""
 "ไม่พบแฟ้มที่ระบุในระบบ\n"
 "กรุณาตรวจสอบว่าตัวแฟ้มยังอยู่และยังไม่ถูกลบไป"
 
-#: ../src/gpk-enum.c:673
+#: ../src/gpk-enum.c:652
 msgid ""
 "Required data could not be found on any of the configured software sources.\n"
 "There were no more download mirrors that could be tried."
@@ -2054,7 +1961,7 @@ msgstr ""
 "ไม่พบข้อมูลที่ต้องการในแหล่งซอฟต์แวร์ใดที่ได้ตั้งค่าไว้\n"
 "และไม่มีแหล่งสำเนาอื่นที่จะลองได้อีกแล้ว"
 
-#: ../src/gpk-enum.c:677
+#: ../src/gpk-enum.c:656
 msgid ""
 "Required upgrade data could not be found in any of the configured software "
 "sources.\n"
@@ -2063,12 +1970,12 @@ msgstr ""
 "ไม่พบข้อมูลการปรับรุ่นที่ต้องการในแหล่งซอฟต์แวร์ใดที่ได้ตั้งค่าไว้\n"
 "จะไม่มีรายชื่อของการปรับรุ่นข้ามชุดจัดแจก"
 
-#: ../src/gpk-enum.c:681
+#: ../src/gpk-enum.c:660
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
 msgstr "แพกเกจที่กำลังพยายามติดตั้งนั้นเข้ากันไม่ได้กับระบบนี้"
 
-#: ../src/gpk-enum.c:684
+#: ../src/gpk-enum.c:663
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
@@ -2076,11 +1983,11 @@ msgstr ""
 "มีที่ว่างไม่พอในอุปกรณ์\n"
 "กรุณาเคลียร์พื้นที่ในดิสก์ของระบบก่อนที่จะดำเนินการต่อไป"
 
-#: ../src/gpk-enum.c:688
+#: ../src/gpk-enum.c:667
 msgid "Additional media is required to complete the transaction."
 msgstr "ต้องใช้สื่อเพิ่มเติมเพื่อดำเนินการให้เสร็จสมบูรณ์"
 
-#: ../src/gpk-enum.c:691
+#: ../src/gpk-enum.c:670
 msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
@@ -2088,7 +1995,7 @@ msgstr ""
 "คุณยืนยันตัวบุคคลไม่สำเร็จ\n"
 "กรุณาตรวจสอบรหัสผ่านหรือค่าตั้งของบัญชีต่างๆ"
 
-#: ../src/gpk-enum.c:695
+#: ../src/gpk-enum.c:674
 msgid ""
 "The specified update could not be found.\n"
 "It could have already been installed or no longer available on the remote "
@@ -2097,27 +2004,27 @@ msgstr ""
 "ไม่พบรายการปรับรุ่นที่ระบุ\n"
 "เป็นไปได้ว่าอาจติดตั้งไปเรียบร้อยแล้ว หรืออาจไม่มีอยู่ในเซิร์ฟเวอร์แล้วก็ได้"
 
-#: ../src/gpk-enum.c:699
+#: ../src/gpk-enum.c:678
 msgid "The package could not be installed from untrusted source."
 msgstr "ไม่สามารถติดตั้งแพกเกจจากแหล่งที่เชื่อถือไม่ได้"
 
-#: ../src/gpk-enum.c:702
+#: ../src/gpk-enum.c:681
 msgid "The package could not be updated from untrusted source."
 msgstr "ไม่สามารถปรับรุ่นแพกเกจจากแหล่งที่เชื่อถือไม่ได้"
 
-#: ../src/gpk-enum.c:705
+#: ../src/gpk-enum.c:684
 msgid "The file list is not available for this package."
 msgstr "ไม่มีรายชื่อแฟ้มสำหรับแพกเกจนี้"
 
-#: ../src/gpk-enum.c:708
+#: ../src/gpk-enum.c:687
 msgid "The information about what requires this package could not be obtained."
 msgstr "ไม่สามารถดึงข้อมูลเกี่ยวกับสิ่งที่ต้องการแพกเกจนี้ได้"
 
-#: ../src/gpk-enum.c:711
+#: ../src/gpk-enum.c:690
 msgid "The specified software source could not be disabled."
 msgstr "ไม่สามารถปิดใช้งานแหล่งซอฟต์แวร์ที่ระบุได้"
 
-#: ../src/gpk-enum.c:714
+#: ../src/gpk-enum.c:693
 msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
@@ -2125,7 +2032,7 @@ msgstr ""
 "ไม่สามารถดาวน์โหลดแบบอัตโนมัติได้ และคุณต้องดาวน์โหลดเอง\n"
 "ดูข้อมูลเพิ่มเติมได้ในรายงานละเอียด"
 
-#: ../src/gpk-enum.c:718
+#: ../src/gpk-enum.c:697
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
@@ -2133,7 +2040,7 @@ msgstr ""
 "แพกเกจใดแพกเกจหนึ่งที่เลือกไว้ตั้งค่าไม่สำเร็จ\n"
 "ดูข้อมูลเพิ่มเติมได้ในรายงานละเอียด"
 
-#: ../src/gpk-enum.c:722
+#: ../src/gpk-enum.c:701
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
@@ -2141,7 +2048,7 @@ msgstr ""
 "แพกเกจใดแพกเกจหนึ่งที่เลือกไว้ประกอบสร้างไม่สำเร็จ\n"
 "ดูข้อมูลเพิ่มเติมได้ในรายงานละเอียด"
 
-#: ../src/gpk-enum.c:726
+#: ../src/gpk-enum.c:705
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
@@ -2149,7 +2056,7 @@ msgstr ""
 "แพกเกจใดแพกเกจหนึ่งที่เลือกไว้ติดตั้งไม่สำเร็จ\n"
 "ดูข้อมูลเพิ่มเติมได้ในรายงานละเอียด"
 
-#: ../src/gpk-enum.c:730
+#: ../src/gpk-enum.c:709
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
@@ -2157,7 +2064,7 @@ msgstr ""
 "แพกเกจใดแพกเกจหนึ่งที่เลือกไว้ถอดถอนไม่สำเร็จ\n"
 "ดูข้อมูลเพิ่มเติมได้ในรายงานละเอียด"
 
-#: ../src/gpk-enum.c:734
+#: ../src/gpk-enum.c:713
 msgid ""
 "A program is running that has to be closed before the update can proceed.\n"
 "More information is available in the detailed report."
@@ -2165,338 +2072,273 @@ msgstr ""
 "มีโปรแกรมทำงานอยู่ซึ่งต้องปิดก่อนจึงจะสามารถดำเนินการปรับรุ่นต่อไปได้\n"
 "ดูข้อมูลเพิ่มเติมได้ในรายงานละเอียด"
 
-#: ../src/gpk-enum.c:738
+#: ../src/gpk-enum.c:717
 msgid "The package database was changed while the request was running."
 msgstr "ฐานข้อมูลแพกเกจมีการเปลี่ยนแปลงระหว่างดำเนินการคำขอ"
 
-#: ../src/gpk-enum.c:741
+#: ../src/gpk-enum.c:720
 msgid "The virtual provide type is not supported by this system."
 msgstr "ไม่รองรับชนิดของสิ่งจัดเตรียมเสมือนนี้ในระบบนี้"
 
-#: ../src/gpk-enum.c:744
+#: ../src/gpk-enum.c:723
 msgid "The install root is invalid. Please contact your administrator."
 msgstr "รากของการติดตั้งไม่ถูกต้อง กรุณาติดต่อผู้ดูแลระบบ"
 
-#: ../src/gpk-enum.c:747
+#: ../src/gpk-enum.c:726
 msgid "The list of software sources could not be downloaded."
 msgstr "ไม่สามารถดาวน์โหลดรายชื่อของแหล่งซอฟต์แวร์"
 
-#: ../src/gpk-enum.c:750
+#: ../src/gpk-enum.c:729
 msgid "A previous package management transaction was interrupted."
 msgstr "รายการเปลี่ยนแปลงก่อนหน้านี้ของการจัดการแพกเกจถูกขัดจังหวะ"
 
-#: ../src/gpk-enum.c:753
+#: ../src/gpk-enum.c:732
 msgid ""
 "The transaction has been canceled and will be retried when the system is "
 "idle."
 msgstr "การดำเนินการถูกยกเลิก และจะทำใหม่อีกครั้งเมื่อระบบไม่มีการใช้งาน"
 
-#: ../src/gpk-enum.c:756
+#: ../src/gpk-enum.c:735
 msgid "A package manager lock is required."
 msgstr "ต้องการล็อคเครื่องมือจัดการแพกเกจ"
 
-#: ../src/gpk-enum.c:773
+#: ../src/gpk-enum.c:752
 msgid "No restart is necessary."
 msgstr "ไม่จำเป็นต้องเริ่มต้นใหม่"
 
-#: ../src/gpk-enum.c:776
+#: ../src/gpk-enum.c:755
 msgid "You will be required to restart this application."
 msgstr "คุณจะต้องเริ่มต้นโปรแกรมนี้ใหม่"
 
-#: ../src/gpk-enum.c:779
+#: ../src/gpk-enum.c:758
 msgid "You will be required to log out and back in."
 msgstr "คุณจะต้องออกจากระบบแล้วกลับเข้ามาใหม่"
 
-#: ../src/gpk-enum.c:782
+#: ../src/gpk-enum.c:761
 msgid "A restart will be required."
 msgstr "จะต้องเริ่มเปิดเครื่องใหม่"
 
-#: ../src/gpk-enum.c:785
+#: ../src/gpk-enum.c:764
 msgid "You will be required to log out and back in due to a security update."
 msgstr "คุณจะต้องออกจากระบบแล้วกลับเข้ามาใหม่ เนื่องจากมีการปรับปรุงการรักษาความปลอดภัย"
 
-#: ../src/gpk-enum.c:788
+#: ../src/gpk-enum.c:767
 msgid "A restart will be required due to a security update."
 msgstr "จะต้องเริ่มเปิดเครื่องใหม่ เนื่องจากมีการปรับปรุงการรักษาความปลอดภัย"
 
-#: ../src/gpk-enum.c:805
+#: ../src/gpk-enum.c:784
 msgid "No restart is required."
 msgstr "ไม่จำเป็นต้องเริ่มต้นใหม่"
 
-#: ../src/gpk-enum.c:808
+#: ../src/gpk-enum.c:787
 msgid "A restart is required."
 msgstr "ต้องเริ่มเปิดเครื่องใหม่"
 
-#: ../src/gpk-enum.c:811
+#: ../src/gpk-enum.c:790
 msgid "You need to log out and log back in."
 msgstr "คุณต้องออกจากระบบแล้วกลับเข้ามาใหม่"
 
-#: ../src/gpk-enum.c:814
+#: ../src/gpk-enum.c:793
 msgid "You need to restart the application."
 msgstr "คุณต้องเริ่มต้นโปรแกรมนี้ใหม่"
 
-#: ../src/gpk-enum.c:817
+#: ../src/gpk-enum.c:796
 msgid "You need to log out and log back in to remain secure."
 msgstr "คุณต้องออกจากระบบแล้วกลับเข้ามาใหม่ เพื่อให้ระบบมีความปลอดภัย"
 
-#: ../src/gpk-enum.c:820
+#: ../src/gpk-enum.c:799
 msgid "A restart is required to remain secure."
 msgstr "ต้องเริ่มเปิดเครื่องใหม่ เพื่อให้ระบบมีความปลอดภัย"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:838
+#: ../src/gpk-enum.c:817
 msgid "Stable"
 msgstr "คงที่"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:842
+#: ../src/gpk-enum.c:821
 msgid "Unstable"
 msgstr "ไม่คงที่"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:846
+#: ../src/gpk-enum.c:825
 msgid "Testing"
 msgstr "ทดสอบ"
 
-#: ../src/gpk-enum.c:863
-msgid "A mirror is possibly broken"
-msgstr "แหล่งสำเนาอาจเสียหาย"
-
-#: ../src/gpk-enum.c:866
-msgid "The connection was refused"
-msgstr "การเชื่อมต่อถูกปฏิเสธ"
-
-#: ../src/gpk-enum.c:869
-msgid "The parameter was invalid"
-msgstr "พารามิเตอร์ไม่ถูกต้อง"
-
-#: ../src/gpk-enum.c:872
-msgid "The priority was invalid"
-msgstr "ลำดับความสำคัญไม่ถูกต้อง"
-
-#: ../src/gpk-enum.c:875
-msgid "Backend warning"
-msgstr "คำเตือนจากแบ็กเอนด์"
-
-#: ../src/gpk-enum.c:878
-msgid "Daemon warning"
-msgstr "คำเตือนจากดีมอน"
-
-#: ../src/gpk-enum.c:881
-msgid "The package list cache is being rebuilt"
-msgstr "กำลังสร้างแคชของรายชื่อแพกเกจใหม่"
-
-#: ../src/gpk-enum.c:884
-msgid "A newer package exists"
-msgstr "มีแพกเกจที่ใหม่กว่า"
-
-#: ../src/gpk-enum.c:887
-msgid "Could not find package"
-msgstr "หาแพกเกจไม่พบ"
-
-#: ../src/gpk-enum.c:890
-msgid "Configuration files were changed"
-msgstr "แฟ้มค่าตั้งมีการเปลี่ยนแปลง"
-
-#: ../src/gpk-enum.c:893
-msgid "Package is already installed"
-msgstr "แพกเกจถูกติดตั้งไว้ก่อนแล้ว"
-
-#: ../src/gpk-enum.c:896
-msgid "Automatic cleanup is being ignored"
-msgstr "จะละเลยการล้างข้อมูลอัตโนมัติ"
-
-#: ../src/gpk-enum.c:899
-msgid "Software source download failed"
-msgstr "ดาวน์โหลดแหล่งซอฟต์แวร์ไม่สำเร็จ"
-
-#: ../src/gpk-enum.c:902
-msgid "This software source is for developers only"
-msgstr "แหล่งซอฟต์แวร์นี้สำหรับนักพัฒนาเท่านั้น"
-
-#: ../src/gpk-enum.c:905
-msgid "Other updates have been held back"
-msgstr "รายการปรับรุ่นอื่นได้ถูกยับยั้งไว้"
-
 #. TRANSLATORS: This is when the transaction status is not known
-#: ../src/gpk-enum.c:923
+#: ../src/gpk-enum.c:843
 msgid "Unknown state"
 msgstr "ไม่ทราบสถานะ"
 
 #. TRANSLATORS: transaction state, the daemon is in the process of starting
-#: ../src/gpk-enum.c:927
+#: ../src/gpk-enum.c:847
 msgid "Starting"
 msgstr "กำลังเริ่ม"
 
 #. TRANSLATORS: transaction state, the transaction is waiting for another to complete
-#: ../src/gpk-enum.c:931
+#: ../src/gpk-enum.c:851
 msgid "Waiting in queue"
 msgstr "กำลังรอในคิว"
 
 #. TRANSLATORS: transaction state, just started
-#: ../src/gpk-enum.c:935
+#: ../src/gpk-enum.c:855
 msgid "Running"
 msgstr "กำลังทำงาน"
 
 #. TRANSLATORS: transaction state, is querying data
-#: ../src/gpk-enum.c:939
+#: ../src/gpk-enum.c:859
 msgid "Querying"
 msgstr "กำลังสอบถาม"
 
 #. TRANSLATORS: transaction state, getting data from a server
-#: ../src/gpk-enum.c:943
+#: ../src/gpk-enum.c:863
 msgid "Getting information"
 msgstr "กำลังอ่านข้อมูล"
 
 #. TRANSLATORS: transaction state, downloading package files
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:951 ../src/gpk-enum.c:1383
+#: ../src/gpk-enum.c:871 ../src/gpk-enum.c:1303
 msgid "Downloading packages"
 msgstr "กำลังดาวน์โหลดแพกเกจ"
 
-#. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-enum.c:955
-msgid "Installing packages"
-msgstr "กำลังติดตั้งแพกเกจ"
-
 #. TRANSLATORS: transaction state, refreshing internal lists
-#: ../src/gpk-enum.c:959
+#: ../src/gpk-enum.c:879
 msgid "Refreshing software list"
 msgstr "กำลังปรับข้อมูลรายชื่อแพกเกจ"
 
 #. TRANSLATORS: transaction state, installing updates
-#: ../src/gpk-enum.c:963
+#: ../src/gpk-enum.c:883
 msgid "Installing updates"
 msgstr "กำลังติดตั้งรายการปรับรุ่น"
 
 #. TRANSLATORS: transaction state, removing old packages, and cleaning config files
-#: ../src/gpk-enum.c:967
+#: ../src/gpk-enum.c:887
 msgid "Cleaning up packages"
 msgstr "กำลังล้างข้อมูลแพกเกจ"
 
 #. TRANSLATORS: transaction state, obsoleting old packages
-#: ../src/gpk-enum.c:971
+#: ../src/gpk-enum.c:891
 msgid "Obsoleting packages"
 msgstr "กำลังปลดระวางแพกเกจเก่า"
 
 #. TRANSLATORS: transaction state, checking the transaction before we do it
-#: ../src/gpk-enum.c:975
+#: ../src/gpk-enum.c:895
 msgid "Resolving dependencies"
 msgstr "กำลังคำนวณความขึ้นต่อกัน"
 
 #. TRANSLATORS: transaction state, checking if we have all the security keys for the operation
-#: ../src/gpk-enum.c:979
+#: ../src/gpk-enum.c:899
 msgid "Checking signatures"
 msgstr "กำลังตรวจสอบลายเซ็น"
 
 #. TRANSLATORS: transaction state, when we're doing a test transaction
-#: ../src/gpk-enum.c:983
+#: ../src/gpk-enum.c:903
 msgid "Testing changes"
 msgstr "กำลังทดสอบความเปลี่ยนแปลง"
 
 #. TRANSLATORS: transaction state, when we're writing to the system package database
-#: ../src/gpk-enum.c:987
+#: ../src/gpk-enum.c:907
 msgid "Committing changes"
 msgstr "กำลังเก็บบันทึกความเปลี่ยนแปลง"
 
 #. TRANSLATORS: transaction state, requesting data from a server
-#: ../src/gpk-enum.c:991
+#: ../src/gpk-enum.c:911
 msgid "Requesting data"
 msgstr "กำลังร้องขอข้อมูล"
 
 #. TRANSLATORS: transaction state, all done!
-#: ../src/gpk-enum.c:995
+#: ../src/gpk-enum.c:915
 msgid "Finished"
 msgstr "เสร็จสิ้น"
 
 #. TRANSLATORS: transaction state, in the process of canceling
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:999 ../src/gpk-enum.c:1343
+#: ../src/gpk-enum.c:919 ../src/gpk-enum.c:1263
 msgid "Canceling"
 msgstr "กำลังยกเลิก"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1003
+#: ../src/gpk-enum.c:923
 msgid "Downloading repository information"
 msgstr "กำลังดาวน์โหลดข้อมูลของคลังแพกเกจ"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1007
+#: ../src/gpk-enum.c:927
 msgid "Downloading list of packages"
 msgstr "กำลังดาวน์โหลดรายชื่อแพกเกจ"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1011
+#: ../src/gpk-enum.c:931
 msgid "Downloading file lists"
 msgstr "กำลังดาวน์โหลดรายชื่อแฟ้ม"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1015
+#: ../src/gpk-enum.c:935
 msgid "Downloading lists of changes"
 msgstr "กำลังดาวน์โหลดรายการเปลี่ยนแปลง"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1019
+#: ../src/gpk-enum.c:939
 msgid "Downloading groups"
 msgstr "กำลังดาวน์โหลดกลุ่ม"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:1023
+#: ../src/gpk-enum.c:943
 msgid "Downloading update information"
 msgstr "กำลังดาวน์โหลดข้อมูลการปรับรุ่น"
 
 #. TRANSLATORS: transaction state, repackaging delta files
-#: ../src/gpk-enum.c:1027
+#: ../src/gpk-enum.c:947
 msgid "Repackaging files"
 msgstr "กำลังจัดทำแพกเกจแฟ้มต่างๆ คืน"
 
 #. TRANSLATORS: transaction state, loading databases
-#: ../src/gpk-enum.c:1031
+#: ../src/gpk-enum.c:951
 msgid "Loading cache"
 msgstr "กำลังโหลดแคช"
 
 #. TRANSLATORS: transaction state, scanning for running processes
-#: ../src/gpk-enum.c:1035
+#: ../src/gpk-enum.c:955
 msgid "Scanning installed applications"
 msgstr "กำลังตรวจข้อมูลโปรแกรมที่ติดตั้งไว้"
 
 #. TRANSLATORS: transaction state, generating a list of packages installed on the system
-#: ../src/gpk-enum.c:1039
+#: ../src/gpk-enum.c:959
 msgid "Generating package lists"
 msgstr "กำลังสร้างข้อมูลรายชื่อแพกเกจ"
 
 #. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
-#: ../src/gpk-enum.c:1043
+#: ../src/gpk-enum.c:963
 msgid "Waiting for package manager lock"
 msgstr "กำลังรอล็อคโปรแกรมจัดการแพกเกจ"
 
 #. TRANSLATORS: waiting for user to type in a password
-#: ../src/gpk-enum.c:1047
+#: ../src/gpk-enum.c:967
 msgid "Waiting for authentication"
 msgstr "กำลังรอการยืนยันตัวบุคคล"
 
 #. TRANSLATORS: we are updating the list of processes
-#: ../src/gpk-enum.c:1051
+#: ../src/gpk-enum.c:971
 msgid "Updating the list of running applications"
 msgstr "กำลังปรับข้อมูลรายชื่อโปรแกรมที่ทำงานอยู่"
 
 #. TRANSLATORS: we are checking executable files in use
-#: ../src/gpk-enum.c:1055
+#: ../src/gpk-enum.c:975
 msgid "Checking for applications currently in use"
 msgstr "กำลังตรวจสอบโปรแกรมที่กำลังมีการใช้งานอยู่"
 
 #. TRANSLATORS: we are checking for libraries in use
-#: ../src/gpk-enum.c:1059
+#: ../src/gpk-enum.c:979
 msgid "Checking for libraries currently in use"
 msgstr "กำลังตรวจสอบไลบรารีที่กำลังมีการใช้งานอยู่"
 
 #. TRANSLATORS: we are copying package files to prepare to install
-#: ../src/gpk-enum.c:1063
+#: ../src/gpk-enum.c:983
 msgid "Copying files"
 msgstr "กำลังคัดลอกแฟ้ม"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1081
+#: ../src/gpk-enum.c:1001
 #, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
@@ -2504,7 +2346,7 @@ msgstr[0] "การปรับรุ่นเล็กน้อย %i รา�
 msgstr[1] "การปรับรุ่นเล็กน้อย %i รายการ"
 
 #. TRANSLATORS: type of update in the case that we don't have any data
-#: ../src/gpk-enum.c:1085
+#: ../src/gpk-enum.c:1005
 #, c-format
 msgid "%i update"
 msgid_plural "%i updates"
@@ -2512,7 +2354,7 @@ msgstr[0] "การปรับรุ่น %i รายการ"
 msgstr[1] "การปรับรุ่น %i รายการ"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1089
+#: ../src/gpk-enum.c:1009
 #, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
@@ -2520,7 +2362,7 @@ msgstr[0] "การปรับรุ่นสำคัญ %i รายกา�
 msgstr[1] "การปรับรุ่นสำคัญ %i รายการ"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1093
+#: ../src/gpk-enum.c:1013
 #, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
@@ -2528,7 +2370,7 @@ msgstr[0] "การปรับรุ่นด้านการรักษา
 msgstr[1] "การปรับรุ่นด้านการรักษาความปลอดภัย %i รายการ"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1097
+#: ../src/gpk-enum.c:1017
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
@@ -2536,7 +2378,7 @@ msgstr[0] "การปรับรุ่นแก้บั๊ก %i ราย�
 msgstr[1] "การปรับรุ่นแก้บั๊ก %i รายการ"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1101
+#: ../src/gpk-enum.c:1021
 #, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
@@ -2544,7 +2386,7 @@ msgstr[0] "การปรับรุ่นเพิ่มความสาม
 msgstr[1] "การปรับรุ่นเพิ่มความสามารถ %i รายการ"
 
 #. TRANSLATORS: number of updates that cannot be installed due to deps
-#: ../src/gpk-enum.c:1105
+#: ../src/gpk-enum.c:1025
 #, c-format
 msgid "%i blocked update"
 msgid_plural "%i blocked updates"
@@ -2552,595 +2394,585 @@ msgstr[0] "การปรับรุ่นที่ถูกกั้นไว
 msgstr[1] "การปรับรุ่นที่ถูกกั้นไว้ %i รายการ"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1123
+#: ../src/gpk-enum.c:1043
 msgid "Trivial update"
 msgstr "การปรับรุ่นเล็กน้อย"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1127
+#: ../src/gpk-enum.c:1047
 msgid "Normal update"
 msgstr "การปรับรุ่นปกติ"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1131
+#: ../src/gpk-enum.c:1051
 msgid "Important update"
 msgstr "การปรับรุ่นที่สำคัญ"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1135
+#: ../src/gpk-enum.c:1055
 msgid "Security update"
 msgstr "การปรับรุ่นด้านการรักษาความปลอดภัย"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1139
+#: ../src/gpk-enum.c:1059
 msgid "Bug fix update"
 msgstr "การปรับรุ่นเพื่อแก้บั๊ก"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1143
+#: ../src/gpk-enum.c:1063
 msgid "Enhancement update"
 msgstr "การปรับรุ่นเพื่อเพิ่มความสามารถ"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1147
+#: ../src/gpk-enum.c:1067
 msgid "Blocked update"
 msgstr "การปรับรุ่นที่ถูกกั้นไว้"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
-#: ../src/gpk-enum.c:1157
+#: ../src/gpk-enum.c:1077
 msgid "Available"
 msgstr "มีให้ติดตั้ง"
 
 #. TRANSLATORS: The type of package
-#: ../src/gpk-enum.c:1161
+#: ../src/gpk-enum.c:1081
 msgid "Trusted"
 msgstr "เชื่อถือได้"
 
 #. TRANSLATORS: The type of package
-#: ../src/gpk-enum.c:1165
+#: ../src/gpk-enum.c:1085
 msgid "Untrusted"
 msgstr "เชื่อถือไม่ได้"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1183 ../src/gpk-service-pack.c:441
+#: ../src/gpk-enum.c:1103
 msgid "Downloading"
 msgstr "กำลังดาวน์โหลด"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1187
+#: ../src/gpk-enum.c:1107
 msgid "Updating"
 msgstr "กำลังปรับรุ่น"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1191 ../src/gpk-enum.c:1327
+#: ../src/gpk-enum.c:1111 ../src/gpk-enum.c:1247
 msgid "Installing"
 msgstr "กำลังติดตั้ง"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1195 ../src/gpk-enum.c:1323
+#: ../src/gpk-enum.c:1115 ../src/gpk-enum.c:1243
 msgid "Removing"
 msgstr "กำลังถอดถอน"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1199
+#: ../src/gpk-enum.c:1119
 msgid "Cleaning up"
 msgstr "กำลังล้างข้อมูล"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1203
+#: ../src/gpk-enum.c:1123
 msgid "Obsoleting"
 msgstr "กำลังปลดระวาง"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1207
+#: ../src/gpk-enum.c:1127
 msgid "Reinstalling"
 msgstr "กำลังติดตั้งซ้ำ"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1211
+#: ../src/gpk-enum.c:1131
 msgid "Preparing"
 msgstr "กำลังเตรียมการ"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1215
+#: ../src/gpk-enum.c:1135
 msgid "Decompressing"
 msgstr "กำลังแตก"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1233
+#: ../src/gpk-enum.c:1153
 msgid "Downloaded"
 msgstr "ดาวน์โหลดแล้ว"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1237
+#: ../src/gpk-enum.c:1157
 msgid "Updated"
 msgstr "ปรับรุ่นแล้ว"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1245
+#: ../src/gpk-enum.c:1165
 msgid "Removed"
 msgstr "ถอดถอนแล้ว"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1249
+#: ../src/gpk-enum.c:1169
 msgid "Cleaned up"
 msgstr "ล้างข้อมูลแล้ว"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1253 ../src/gpk-task.c:414
+#: ../src/gpk-enum.c:1173 ../src/gpk-task.c:414
 msgid "Obsoleted"
 msgstr "ปลดระวางแล้ว"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1257
+#: ../src/gpk-enum.c:1177
 msgid "Reinstalled"
 msgstr "ติดตั้งซ้ำแล้ว"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1261
+#: ../src/gpk-enum.c:1181
 msgid "Prepared"
 msgstr "เตรียมการแล้ว"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1265
+#: ../src/gpk-enum.c:1185
 msgid "Decompressed"
 msgstr "แตกแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1283 ../src/gpk-enum.c:1423
+#: ../src/gpk-enum.c:1203 ../src/gpk-enum.c:1339
 msgid "Unknown role type"
 msgstr "ชนิดของ role ที่ไม่รู้จัก"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1287
+#: ../src/gpk-enum.c:1207
 msgid "Getting dependencies"
 msgstr "กำลังดึงข้อมูลสิ่งที่ต้องใช้"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1291
+#: ../src/gpk-enum.c:1211
 msgid "Getting update detail"
 msgstr "กำลังดึงรายละเอียดการปรับรุ่น"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1295
+#: ../src/gpk-enum.c:1215
 msgid "Getting details"
 msgstr "กำลังดึงรายละเอียด"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1299
+#: ../src/gpk-enum.c:1219
 msgid "Getting requires"
 msgstr "กำลังดึงสิ่งที่ต้องใช้"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1303
+#: ../src/gpk-enum.c:1223
 msgid "Getting updates"
 msgstr "กำลังดึงแพกเกจปรับรุ่น"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1307
+#: ../src/gpk-enum.c:1227
 msgid "Searching details"
 msgstr "กำลังค้นรายละเอียด"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1315
+#: ../src/gpk-enum.c:1235
 msgid "Searching groups"
 msgstr "กำลังค้นกลุ่ม"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1319
+#: ../src/gpk-enum.c:1239
 msgid "Searching for package name"
 msgstr "กำลังค้นหาชื่อแพกเกจ"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1331
+#: ../src/gpk-enum.c:1251
 msgid "Installing file"
 msgstr "กำลังติดตั้งแฟ้ม"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1335
+#: ../src/gpk-enum.c:1255
 msgid "Refreshing package cache"
 msgstr "กำลังปรับข้อมูลแคชของแพกเกจ"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1339
+#: ../src/gpk-enum.c:1259
 msgid "Updating packages"
 msgstr "กำลังปรับรุ่นแพกเกจ"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1347
+#: ../src/gpk-enum.c:1267
 msgid "Getting list of repositories"
 msgstr "กำลังอ่านรายชื่อคลังแพกเกจ"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1351
+#: ../src/gpk-enum.c:1271
 msgid "Enabling repository"
 msgstr "กำลังเปิดใช้คลังแพกเกจ"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1355
+#: ../src/gpk-enum.c:1275
 msgid "Setting repository data"
 msgstr "กำลังกำหนดข้อมูลคลังแพกเกจ"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1359
+#: ../src/gpk-enum.c:1279
 msgid "Resolving"
 msgstr "กำลังคำนวณ"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1363
+#: ../src/gpk-enum.c:1283
 msgid "Getting file list"
 msgstr "กำลังอ่านรายชื่อแฟ้ม"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1367
+#: ../src/gpk-enum.c:1287
 msgid "Getting what provides"
 msgstr "กำลังอ่านสิ่งที่แพกเกจจัดเตรียม"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1371
+#: ../src/gpk-enum.c:1291
 msgid "Installing signature"
 msgstr "กำลังติดตั้งลายเซ็น"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1375
+#: ../src/gpk-enum.c:1295
 msgid "Getting package lists"
 msgstr "กำลังดึงรายชื่อแพกเกจ"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1379
+#: ../src/gpk-enum.c:1299
 msgid "Accepting EULA"
 msgstr "กำลังยอมรับ EULA"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1387
+#: ../src/gpk-enum.c:1307
 msgid "Getting distribution upgrade information"
 msgstr "กำลังดึงข้อมูลการปรับรุ่นข้ามชุดจัดแจก"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1391
+#: ../src/gpk-enum.c:1311
 msgid "Getting categories"
 msgstr "กำลังดึงข้อมูลหมวด"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1395
+#: ../src/gpk-enum.c:1315
 msgid "Getting old transactions"
 msgstr "กำลังอ่านข้อมูลการดำเนินการเก่า"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1399
-msgid "Upgrading system"
-msgstr "กำลังปรับรุ่นระบบ"
-
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1403
+#: ../src/gpk-enum.c:1319
 msgid "Repairing the system"
 msgstr "กำลังซ่อมแซมระบบ"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1427
+#: ../src/gpk-enum.c:1343
 msgid "Got dependencies"
 msgstr "ได้ข้อมูลสิ่งที่ต้องใช้แล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1431
+#: ../src/gpk-enum.c:1347
 msgid "Got update detail"
 msgstr "ได้รายละเอียดการปรับรุ่นแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1435
+#: ../src/gpk-enum.c:1351
 msgid "Got details"
 msgstr "ได้รายละเอียดแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1439
+#: ../src/gpk-enum.c:1355
 msgid "Got requires"
 msgstr "ได้สิ่งที่ต้องใช้แล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1443
+#: ../src/gpk-enum.c:1359
 msgid "Got updates"
 msgstr "ได้แพกเกจปรับรุ่นแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1447
+#: ../src/gpk-enum.c:1363
 msgid "Searched for package details"
 msgstr "ค้นหารายละเอียดแพกเกจแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1451
+#: ../src/gpk-enum.c:1367
 msgid "Searched for file"
 msgstr "ค้นหาแฟ้มแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1455
+#: ../src/gpk-enum.c:1371
 msgid "Searched groups"
 msgstr "ค้นหากลุ่มแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1459
+#: ../src/gpk-enum.c:1375
 msgid "Searched for package name"
 msgstr "ค้นหาชื่อแพกเกจแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1463
+#: ../src/gpk-enum.c:1379
 msgid "Removed packages"
 msgstr "ถอดถอนแพกเกจแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1467
+#: ../src/gpk-enum.c:1383
 msgid "Installed packages"
 msgstr "ติดตั้งแพกเกจแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1471
+#: ../src/gpk-enum.c:1387
 msgid "Installed local files"
 msgstr "ติดตั้งแฟ้มในเครื่องแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1475
+#: ../src/gpk-enum.c:1391
 msgid "Refreshed package cache"
 msgstr "ปรับข้อมูลแคชของแพกเกจแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1479
+#: ../src/gpk-enum.c:1395
 msgid "Updated packages"
 msgstr "ปรับรุ่นแพกเกจแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1483
+#: ../src/gpk-enum.c:1399
 msgid "Canceled"
 msgstr "ยกเลิกแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1487
+#: ../src/gpk-enum.c:1403
 msgid "Got list of repositories"
 msgstr "ได้รายชื่อคลังแพกเกจแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1491
+#: ../src/gpk-enum.c:1407
 msgid "Enabled repository"
 msgstr "เปิดใช้คลังแพกเกจแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1495
+#: ../src/gpk-enum.c:1411
 msgid "Set repository data"
 msgstr "กำหนดข้อมูลคลังแพกเกจแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1499
+#: ../src/gpk-enum.c:1415
 msgid "Resolved"
 msgstr "คำนวณเสร็จแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1503
+#: ../src/gpk-enum.c:1419
 msgid "Got file list"
 msgstr "ได้รายชื่อแฟ้มแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1507
+#: ../src/gpk-enum.c:1423
 msgid "Got what provides"
 msgstr "ได้สิ่งที่แพกเกจจัดเตรียมแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1511
+#: ../src/gpk-enum.c:1427
 msgid "Installed signature"
 msgstr "ติดตั้งลายเซ็นแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1515
+#: ../src/gpk-enum.c:1431
 msgid "Got package lists"
 msgstr "ได้รายชื่อแพกเกจแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1519
+#: ../src/gpk-enum.c:1435
 msgid "Accepted EULA"
 msgstr "ยอมรับ EULA แล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1523
+#: ../src/gpk-enum.c:1439
 msgid "Downloaded packages"
 msgstr "ดาวน์โหลดแพกเกจแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1527
+#: ../src/gpk-enum.c:1443
 msgid "Got distribution upgrades"
 msgstr "ได้ข้อมูลการปรับรุ่นข้ามชุดจัดแจกแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1531
+#: ../src/gpk-enum.c:1447
 msgid "Got categories"
 msgstr "ได้ข้อมูลหมวดแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1535
+#: ../src/gpk-enum.c:1451
 msgid "Got old transactions"
 msgstr "ได้ข้อมูลการดำเนินการเก่าแล้ว"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1539
-msgid "Upgraded system"
-msgstr "ปรับรุ่นระบบแล้ว"
-
-#. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1543
+#: ../src/gpk-enum.c:1455
 msgid "Repaired the system"
 msgstr "ซ่อมแซมระบบแล้ว"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1561
+#: ../src/gpk-enum.c:1473
 msgid "Accessibility"
 msgstr "สิ่งอำนวยความสะดวก"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1565
+#: ../src/gpk-enum.c:1477
 msgid "Accessories"
 msgstr "เครื่องใช้ไม้สอย"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1569
+#: ../src/gpk-enum.c:1481
 msgid "Education"
 msgstr "การศึกษา"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1573
+#: ../src/gpk-enum.c:1485
 msgid "Games"
 msgstr "เกม"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1577
+#: ../src/gpk-enum.c:1489
 msgid "Graphics"
 msgstr "รูปภาพ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1581
+#: ../src/gpk-enum.c:1493
 msgid "Internet"
 msgstr "อินเทอร์เน็ต"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1585
+#: ../src/gpk-enum.c:1497
 msgid "Office"
 msgstr "สำนักงาน"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1589 ../src/gpk-task.c:434
+#: ../src/gpk-enum.c:1501 ../src/gpk-task.c:434
 msgid "Other"
 msgstr "อื่นๆ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1593
+#: ../src/gpk-enum.c:1505
 msgid "Programming"
 msgstr "เขียนโปรแกรม"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1597
+#: ../src/gpk-enum.c:1509
 msgid "Multimedia"
 msgstr "สื่อประสม"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1601
+#: ../src/gpk-enum.c:1513
 msgid "System"
 msgstr "ระบบ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1605
+#: ../src/gpk-enum.c:1517
 msgid "GNOME desktop"
 msgstr "เดสก์ท็อป GNOME"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1609
+#: ../src/gpk-enum.c:1521
 msgid "KDE desktop"
 msgstr "เดสก์ท็อป KDE"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1613
+#: ../src/gpk-enum.c:1525
 msgid "Xfce desktop"
 msgstr "เดสก์ท็อป Xfce"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1617
+#: ../src/gpk-enum.c:1529
 msgid "Other desktops"
 msgstr "เดสก์ท็อปอื่น"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1621
+#: ../src/gpk-enum.c:1533
 msgid "Publishing"
 msgstr "งานพิมพ์"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1625
+#: ../src/gpk-enum.c:1537
 msgid "Servers"
 msgstr "เซิร์ฟเวอร์"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1629
+#: ../src/gpk-enum.c:1541
 msgid "Fonts"
 msgstr "แบบอักษร"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1633
+#: ../src/gpk-enum.c:1545
 msgid "Admin tools"
 msgstr "เครื่องมือดูแลระบบ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1637
+#: ../src/gpk-enum.c:1549
 msgid "Legacy"
 msgstr "ระบบเก่า"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1641
+#: ../src/gpk-enum.c:1553
 msgid "Localization"
 msgstr "งานปรับให้เข้ากับท้องถิ่น"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1645
+#: ../src/gpk-enum.c:1557
 msgid "Virtualization"
 msgstr "การจำลองเครื่องเสมือน"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1649
+#: ../src/gpk-enum.c:1561
 msgid "Security"
 msgstr "ระบบรักษาความปลอดภัย"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1653
+#: ../src/gpk-enum.c:1565
 msgid "Power management"
 msgstr "การจัดการพลังงาน"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1657
+#: ../src/gpk-enum.c:1569
 msgid "Communication"
 msgstr "การสื่อสาร"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1661
+#: ../src/gpk-enum.c:1573
 msgid "Network"
 msgstr "เครือข่าย"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1665
+#: ../src/gpk-enum.c:1577
 msgid "Maps"
 msgstr "แผนที่"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1669
+#: ../src/gpk-enum.c:1581
 msgid "Software sources"
 msgstr "แหล่งซอฟต์แวร์"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1673
+#: ../src/gpk-enum.c:1585
 msgid "Science"
 msgstr "วิทยาศาสตร์"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1677
+#: ../src/gpk-enum.c:1589
 msgid "Documentation"
 msgstr "เอกสาร"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1681
+#: ../src/gpk-enum.c:1593
 msgid "Electronics"
 msgstr "อิเล็กทรอนิกส์"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1685
+#: ../src/gpk-enum.c:1597
 msgid "Package collections"
 msgstr "ชุดแพกเกจ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1689
+#: ../src/gpk-enum.c:1601
 msgid "Vendor"
 msgstr "ผู้จำหน่าย"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1693
+#: ../src/gpk-enum.c:1605
 msgid "Newest packages"
 msgstr "แพกเกจใหม่ล่าสุด"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1697
+#: ../src/gpk-enum.c:1609
 msgid "Unknown group"
 msgstr "ไม่ทราบกลุ่ม"
 
@@ -3350,6 +3182,11 @@ msgstr "%d %B %Ey"
 msgid "Date"
 msgstr "วันที่"
 
+#. TRANSLATORS: column for what was done, e.g. update-system
+#: ../src/gpk-log.c:295
+msgid "Action"
+msgstr "การดำเนินการ"
+
 #. TRANSLATORS: column for the user name, e.g. Richard Hughes
 #: ../src/gpk-log.c:328
 msgid "User name"
@@ -3391,7 +3228,7 @@ msgid "Set the filter to this value"
 msgstr "ตั้งค่าตัวกรองเป็นค่าที่กำหนด"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:813 ../src/gpk-prefs.c:656
+#: ../src/gpk-log.c:813 ../src/gpk-prefs.c:625
 msgid "Set the parent window to make this modal"
 msgstr "กำหนดหน้าต่างแม่เพื่อทำให้หน้าต่างเป็นโมดัล"
 
@@ -3406,132 +3243,41 @@ msgid "Remaining time: %s"
 msgstr "เวลาที่เหลือ: %s"
 
 #. TRANSLATORS: for one reason or another, we could not enable or disable a software source
-#: ../src/gpk-prefs.c:270
+#: ../src/gpk-prefs.c:244
 msgid "Failed to change status"
 msgstr "เปลี่ยนสถานะไม่สำเร็จ"
 
 #. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-prefs.c:345
+#: ../src/gpk-prefs.c:314
 msgid "Enabled"
 msgstr "เปิดใช้งาน"
 
 #. TRANSLATORS: column for the source description
-#: ../src/gpk-prefs.c:354
+#: ../src/gpk-prefs.c:323
 msgid "Software Source"
 msgstr "แหล่งซอฟต์แวร์"
 
 #. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-prefs.c:416
+#: ../src/gpk-prefs.c:385
 msgid "Failed to get the list of sources"
 msgstr "อ่านรายชื่อของแหล่งไม่สำเร็จ"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:523 ../src/gpk-update-viewer.c:3176
+#: ../src/gpk-prefs.c:492 ../src/gpk-update-viewer.c:3155
 msgid "Exiting as backend details could not be retrieved"
 msgstr "จะออกจากโปรแกรมเนื่องจากไม่สามารถดึงรายละเอียดของแบ็กเอนด์ได้"
 
-#: ../src/gpk-prefs.c:544
+#: ../src/gpk-prefs.c:513
 msgid "Getting software source list not supported by backend"
 msgstr "แบ็กเอนด์ไม่รองรับการอ่านรายชื่อแหล่งซอฟต์แวร์"
 
-#. TRANSLATORS: cannot resolve name to package name
-#: ../src/gpk-service-pack.c:260
-#, c-format
-msgid "Could not find any packages named '%s'"
-msgstr "ไม่พบแพกเกจใดที่มีชื่อว่า '%s'"
-
-#. TRANSLATORS: cannot find any valid package names
-#: ../src/gpk-service-pack.c:272
-msgid "Could not find any valid package names"
-msgstr "ไม่พบชื่อแพกเกจที่ถูกต้องใดๆ"
-
-#. TRANSLATORS: cannot get package array
-#: ../src/gpk-service-pack.c:336
-#, c-format
-msgid "Could not get array of installed packages: %s"
-msgstr "ไม่สามารถอ่านแอร์เรย์ของแพกเกจที่ติดตั้ง: %s"
-
-#: ../src/gpk-service-pack.c:355
-#, c-format
-msgid "Could not save to file: %s"
-msgstr "ไม่สามารถบันทึกลงแฟ้ม: %s"
-
-#. TRANSLATORS: we could not create the pack file, generic error
-#. TRANSLATORS: Could not create package array
-#. TRANSLATORS: we could not read the file array for the destination computer
-#: ../src/gpk-service-pack.c:405 ../src/gpk-service-pack.c:529
-#: ../src/gpk-service-pack.c:551 ../src/gpk-service-pack.c:560
-#: ../src/gpk-service-pack.c:600
-msgid "Create error"
-msgstr "ข้อผิดพลาดของการสร้าง"
-
-#: ../src/gpk-service-pack.c:405
-msgid "Cannot create service pack"
-msgstr "ไม่สามารถสร้างเซอร์วิสแพ็ก"
-
-#: ../src/gpk-service-pack.c:529
-msgid "Cannot copy system package array"
-msgstr "ไม่สามารถคัดลอกแอร์เรย์ของแพกเกจของระบบ"
-
-#: ../src/gpk-service-pack.c:551
-msgid "No package name selected"
-msgstr "ไม่ได้เลือกชื่อแพกเกจ"
-
-#. TRANSLATORS: progress bar text
-#: ../src/gpk-service-pack.c:573
-msgid "Refreshing system package array"
-msgstr "กำลังปรับข้อมูลแอร์เรย์ของแพกเกจของระบบ"
-
-#. TRANSLATORS: we could not reset internal state
-#: ../src/gpk-service-pack.c:580
-msgid "Refresh error"
-msgstr "ข้อผิดพลาดของการปรับข้อมูล"
-
-#: ../src/gpk-service-pack.c:580
-msgid "Could not refresh package array"
-msgstr "ไม่สามารถปรับข้อมูลแอร์เรย์ของแพกเกจ"
-
-#: ../src/gpk-service-pack.c:600
-msgid "Cannot read destination package array"
-msgstr "ไม่สามารถอ่านแอร์เรย์ของแพกเกจปลายทาง"
-
-#. TRANSLATORS: file search type, lists of packages
-#: ../src/gpk-service-pack.c:732
-msgid "Package array files"
-msgstr "แฟ้มแอร์เรย์ของแพกเกจ"
-
-#. TRANSLATORS: file search type, service pack destination file type
-#: ../src/gpk-service-pack.c:739
-msgid "Service pack files"
-msgstr "แฟ้มเซอร์วิสแพ็ก"
-
-#. TRANSLATORS: the constants should not be translated
-#: ../src/gpk-service-pack.c:799
-msgid "Set the option, allowable values are 'array', 'updates' and 'package'"
-msgstr "ตั้งค่าตัวเลือก ค่าที่ใช้ได้คือ 'array', 'updates' และ 'package'"
-
-#. TRANSLATORS: this refers to the GtkTextEntry in gpk-service-pack
-#: ../src/gpk-service-pack.c:802
-msgid "Add the package name to the text entry box"
-msgstr "เพิ่มชื่อแพกเกจเข้าในกล่องป้อนข้อความ"
-
-#. TRANSLATORS: this is the destination computer package array
-#: ../src/gpk-service-pack.c:805
-msgid "Set the remote package array file name"
-msgstr "กำหนดชื่อแฟ้มของรายชื่อแพกเกจสำหรับเครื่องปลายทาง"
-
-#. TRANSLATORS: this is the file output directory
-#: ../src/gpk-service-pack.c:808
-msgid "Set the default output directory"
-msgstr "กำหนดไดเรกทอรีปริยายสำหรับผลลัพธ์"
-
 #. TRANSLATORS: we don't have a lot to go on here
-#: ../src/gpk-update-viewer.c:184
+#: ../src/gpk-update-viewer.c:183
 msgid "Failed to process request."
 msgstr "ดำเนินการรายการร้องขอไม่สำเร็จ"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:212
+#: ../src/gpk-update-viewer.c:211
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "before the changes will be applied."
@@ -3539,12 +3285,12 @@ msgstr ""
 "บางส่วนของการปรับรุ่นที่ได้ติดตั้งไปแล้ว ต้องเริ่มเปิดคอมพิวเตอร์ใหม่ ก่อนที่การเปลี่ยนแปลงจะมีผล"
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:214 ../src/gpk-update-viewer.c:220
+#: ../src/gpk-update-viewer.c:213 ../src/gpk-update-viewer.c:219
 msgid "Restart Computer"
 msgstr "เริ่มเปิดคอมพิวเตอร์ใหม่"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:218
+#: ../src/gpk-update-viewer.c:217
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "to remain secure."
@@ -3552,7 +3298,7 @@ msgstr ""
 "บางส่วนของการปรับรุ่นที่ได้ติดตั้งไปแล้ว ต้องเริ่มเปิดคอมพิวเตอร์ใหม่ เพื่อให้ระบบมีความปลอดภัย"
 
 #. TRANSLATORS: the message text for the log out
-#: ../src/gpk-update-viewer.c:224
+#: ../src/gpk-update-viewer.c:223
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "before the changes will be applied."
@@ -3561,12 +3307,12 @@ msgstr ""
 "ก่อนที่การเปลี่ยนแปลงจะมีผล"
 
 #. TRANSLATORS: the button text for the log out
-#: ../src/gpk-update-viewer.c:226 ../src/gpk-update-viewer.c:232
+#: ../src/gpk-update-viewer.c:225 ../src/gpk-update-viewer.c:231
 msgid "Log Out"
 msgstr "ออกจากระบบ"
 
 #. TRANSLATORS: the message text for the log out
-#: ../src/gpk-update-viewer.c:230
+#: ../src/gpk-update-viewer.c:229
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "to remain secure."
@@ -3575,83 +3321,83 @@ msgstr ""
 "เพื่อให้ระบบมีความปลอดภัย"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:276
+#: ../src/gpk-update-viewer.c:275
 msgid "Could not restart"
 msgstr "ไม่สามารถเริ่มเปิดเครื่องใหม่ได้"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:345
+#: ../src/gpk-update-viewer.c:344
 msgid "Some updates were not installed"
 msgstr "การปรับรุ่นบางส่วนไม่ได้ติดตั้ง"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:414 ../src/gpk-update-viewer.c:425
+#: ../src/gpk-update-viewer.c:413 ../src/gpk-update-viewer.c:424
 msgid "Could not update packages"
 msgstr "ไม่สามารถปรับรุ่นแพกเกจได้"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:493 ../src/gpk-update-viewer.c:514
+#: ../src/gpk-update-viewer.c:489 ../src/gpk-update-viewer.c:510
 msgid "Updates installed"
 msgstr "ติดตั้งรายการปรับรุ่นต่างๆ แล้ว"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:503
+#: ../src/gpk-update-viewer.c:499
 msgid "All updates were installed successfully."
 msgstr "ติดตั้งรายการปรับรุ่นทั้งหมดสำเร็จแล้ว"
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:506
+#: ../src/gpk-update-viewer.c:502
 msgid "The selected updates were installed successfully."
 msgstr "ติดตั้งรายการปรับรุ่นที่เลือกสำเร็จแล้ว"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:721
+#: ../src/gpk-update-viewer.c:717
 msgid "Trivial updates"
 msgstr "การปรับรุ่นเล็กน้อย"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:725
+#: ../src/gpk-update-viewer.c:721
 msgid "Important updates"
 msgstr "การปรับรุ่นที่สำคัญ"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:729
+#: ../src/gpk-update-viewer.c:725
 msgid "Security updates"
 msgstr "การปรับรุ่นด้านการรักษาความปลอดภัย"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:733
+#: ../src/gpk-update-viewer.c:729
 msgid "Bug fix updates"
 msgstr "การปรับรุ่นเพื่อแก้บั๊ก"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:737
+#: ../src/gpk-update-viewer.c:733
 msgid "Enhancement updates"
 msgstr "การปรับรุ่นเพื่อเพิ่มความสามารถ"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:741
+#: ../src/gpk-update-viewer.c:737
 msgid "Blocked updates"
 msgstr "การปรับรุ่นที่ถูกกั้นไว้"
 
 #. TRANSLATORS: The type of update, i.e. unspecified
-#: ../src/gpk-update-viewer.c:745
+#: ../src/gpk-update-viewer.c:741
 msgid "Other updates"
 msgstr "การปรับรุ่นอื่นๆ"
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1010
+#: ../src/gpk-update-viewer.c:1006
 msgid "Getting the list of updates"
 msgstr "กำลังอ่านรายการปรับรุ่น"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1255
+#: ../src/gpk-update-viewer.c:1251
 msgid "Could not run upgrade script"
 msgstr "ไม่สามารถเรียกทำงานสคริปต์ปรับรุ่น"
 
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1286
+#: ../src/gpk-update-viewer.c:1282
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -3664,38 +3410,38 @@ msgstr[1] ""
 "การเชื่อมต่อเครือข่ายที่ใช้อยู่เป็นบรอดแบนด์ไร้สาย ซึ่งอาจมีราคาแพงสำหรับการปรับรุ่นแพกเกจเหล่านี้"
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1376
+#: ../src/gpk-update-viewer.c:1372
 msgid "There are no updates available"
 msgstr "ไม่มีรายการปรับรุ่น"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1435
+#: ../src/gpk-update-viewer.c:1431
 msgid "No updates are available"
 msgstr "ไม่มีรายการปรับรุ่น"
 
 #. TRANSLATORS: no network connection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1437
+#: ../src/gpk-update-viewer.c:1433
 msgid "No network connection was detected."
 msgstr "ตรวจไม่พบการเชื่อมต่อเครือข่าย"
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1454
+#: ../src/gpk-update-viewer.c:1450
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_ติดตั้งแพกเกจปรับรุ่น"
 msgstr[1] "_ติดตั้งแพกเกจปรับรุ่น"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1463
+#: ../src/gpk-update-viewer.c:1459
 msgid "All software is up to date"
 msgstr "ซอฟต์แวร์ทั้งหมดเป็นรุ่นล่าสุดแล้ว"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1465
+#: ../src/gpk-update-viewer.c:1461
 msgid "There are no software updates available for your computer at this time."
 msgstr "ไม่มีการปรับรุ่นซอฟต์แวร์สำหรับคอมพิวเตอร์ของคุณในขณะนี้"
 
-#: ../src/gpk-update-viewer.c:1492
+#: ../src/gpk-update-viewer.c:1488
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -3703,7 +3449,7 @@ msgstr[0] "มีการปรับรุ่น %i รายการ"
 msgstr[1] "มีการปรับรุ่น %i รายการ"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1508
+#: ../src/gpk-update-viewer.c:1504
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -3711,7 +3457,7 @@ msgstr[0] "เลือกการปรับรุ่นอยู่ %i ร�
 msgstr[1] "เลือกการปรับรุ่นอยู่ %i รายการ"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1516
+#: ../src/gpk-update-viewer.c:1512
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -3719,50 +3465,50 @@ msgstr[0] "เลือกการปรับรุ่นอยู่ %i ร�
 msgstr[1] "เลือกการปรับรุ่นอยู่ %i รายการ (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1713
+#: ../src/gpk-update-viewer.c:1709
 msgid "Status"
 msgstr "สถานะ"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1973
+#: ../src/gpk-update-viewer.c:1969
 msgid "This update will add new features and expand functionality."
 msgstr "การปรับรุ่นนี้จะเพิ่มคุณลักษณะใหม่และขยายการทำงาน"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1977
+#: ../src/gpk-update-viewer.c:1973
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "การปรับรุ่นนี้จะแก้ไขบั๊กและปัญหาไม่วิกฤติอื่นๆ"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1981
+#: ../src/gpk-update-viewer.c:1977
 msgid "This update is important as it may solve critical problems."
 msgstr "การปรับรุ่นนี้สำคัญมากเพราะอาจแก้ปัญหาวิกฤติ"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1985
+#: ../src/gpk-update-viewer.c:1981
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr "การปรับรุ่นนี้จำเป็น เพื่อแก้ปัญหาระบบรักษาความปลอดภัยและอุดรูรั่วของแพกเกจนี้"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1989
+#: ../src/gpk-update-viewer.c:1985
 msgid "This update is blocked."
 msgstr "การปรับรุ่นถูกบล็อค"
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:2001
+#: ../src/gpk-update-viewer.c:1997
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "การแจ้งเหตุนี้ประกาศเมื่อ %s และล่าสุดเมื่อ %s"
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:2008
+#: ../src/gpk-update-viewer.c:2004
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "การแจ้งเหตุนี้ประกาศเมื่อ %s"
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:2030 ../src/gpk-update-viewer.c:2054
+#: ../src/gpk-update-viewer.c:2026 ../src/gpk-update-viewer.c:2050
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -3770,7 +3516,7 @@ msgstr[0] "สำหรับข้อมูลเพิ่มเติมเก
 msgstr[1] "สำหรับข้อมูลเพิ่มเติมเกี่ยวกับการปรับรุ่นนี้ กรุณาดูที่เว็บไซต์เหล่านี้:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:2037 ../src/gpk-update-viewer.c:2062
+#: ../src/gpk-update-viewer.c:2033 ../src/gpk-update-viewer.c:2058
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -3781,7 +3527,7 @@ msgstr[0] "สำหรับข้อมูลเพิ่มเติมเก
 msgstr[1] "สำหรับข้อมูลเพิ่มเติมเกี่ยวกับแก้ไขบั๊กนี้ กรุณาดูที่เว็บไซต์เหล่านี้:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2044 ../src/gpk-update-viewer.c:2070
+#: ../src/gpk-update-viewer.c:2040 ../src/gpk-update-viewer.c:2066
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -3790,28 +3536,28 @@ msgstr[0] "สำหรับข้อมูลเพิ่มเติมเก
 msgstr[1] "สำหรับข้อมูลเพิ่มเติมเกี่ยวกับการความปลอดภัยนี้ กรุณาเปิดเว็บไซต์เหล่านี้:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2079
+#: ../src/gpk-update-viewer.c:2075
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
 msgstr "เครื่องคอมพิวเตอร์จะต้องเริ่มทำงานใหม่หลังการปรับรุ่น เพื่อให้การเปลี่ยนแปลงมีผล"
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2083
+#: ../src/gpk-update-viewer.c:2079
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
 msgstr "คุณต้องออกจากระบบและกลับเข้ามาใหม่หลังการปรับรุ่น เพื่อให้การเปลี่ยนแปลงมีผล"
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2090
+#: ../src/gpk-update-viewer.c:2086
 msgid ""
 "The classification of this update is unstable which means it is not designed "
 "for production use."
 msgstr "การปรับรุ่นนี้จัดว่าไม่เสถียร ซึ่งหมายความว่าไม่ได้ออกแบบมาสำหรับการใช้งานหน้างาน"
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2094
+#: ../src/gpk-update-viewer.c:2090
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -3820,90 +3566,90 @@ msgstr ""
 "หรือความถดถอยที่คุณพบ"
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2103
+#: ../src/gpk-update-viewer.c:2099
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
 msgstr "จะแสดงปูมของนักพัฒนา เนื่องจากไม่มีคำบรรยายสำหรับการปรับรุ่นนี้:"
 
-#: ../src/gpk-update-viewer.c:2157
+#: ../src/gpk-update-viewer.c:2153
 msgid "Loading…"
 msgstr "กำลังโหลด…"
 
-#: ../src/gpk-update-viewer.c:2160
+#: ../src/gpk-update-viewer.c:2156
 msgid "No update details available."
 msgstr "ไม่มีรายละเอียดการปรับรุ่น"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2192 ../src/gpk-update-viewer.c:2290
-#: ../src/gpk-update-viewer.c:2310
+#: ../src/gpk-update-viewer.c:2188 ../src/gpk-update-viewer.c:2286
+#: ../src/gpk-update-viewer.c:2306
 msgid "Could not get update details"
 msgstr "ไม่สามารถดึงรายละเอียดของการปรับรุ่น"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2212
+#: ../src/gpk-update-viewer.c:2208
 msgid "Could not get package details"
 msgstr "ไม่สามารถดึงรายละเอียดของแพกเกจ"
 
-#: ../src/gpk-update-viewer.c:2212 ../src/gpk-update-viewer.c:2310
+#: ../src/gpk-update-viewer.c:2208 ../src/gpk-update-viewer.c:2306
 msgid "No results were returned."
 msgstr "ไม่มีผลส่งกลับมา"
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2545
+#: ../src/gpk-update-viewer.c:2541
 msgid "Select all"
 msgstr "เลือกทั้งหมด"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2553
+#: ../src/gpk-update-viewer.c:2549
 msgid "Unselect all"
 msgstr "ล้างการเลือกทั้งหมด"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2560
+#: ../src/gpk-update-viewer.c:2556
 msgid "Select security updates"
 msgstr "เลือกรายการปรับรุ่นด้านความปลอดภัย"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2566
+#: ../src/gpk-update-viewer.c:2562
 msgid "Ignore this update"
 msgstr "ละเลยการปรับรุ่นนี้"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2677
+#: ../src/gpk-update-viewer.c:2671
 msgid "Could not get updates"
 msgstr "ไม่สามารถดึงรายการปรับรุ่น"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2830
+#: ../src/gpk-update-viewer.c:2809
 msgid "Checking for updates…"
 msgstr "กำลังตรวจสอบการปรับรุ่น…"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3109
+#: ../src/gpk-update-viewer.c:3088
 msgid "Could not get list of distribution upgrades"
 msgstr "ไม่สามารถดึงรายชื่อของการปรับรุ่นข้ามชุดจัดแจก"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3139
+#: ../src/gpk-update-viewer.c:3118
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "มีชุดจัดแจกรุ่นใหม่ '%s' แล้ว"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3387
+#: ../src/gpk-update-viewer.c:3366
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
 msgstr "การปรับรุ่นอื่นๆ จะถูกระงับไว้ เนื่องจากมีแพกเกจสำคัญของระบบบางแพกเกจต้องติดตั้งก่อน"
 
-#: ../src/gpk-update-viewer.c:3432
+#: ../src/gpk-update-viewer.c:3411
 msgid "Update Software"
 msgstr "ปรับรุ่นซอฟต์แวร์"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3449
+#: ../src/gpk-update-viewer.c:3428
 msgid "Software Update Viewer"
 msgstr "เครื่องมือแสดงรายการปรับรุ่นซอฟต์แวร์"
 
@@ -3927,6 +3673,226 @@ msgstr "ตัวเลือกสำหรับการดีบั๊ก"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "แสดงตัวเลือกสำหรับการดีบั๊ก"
+
+#~ msgid "No software"
+#~ msgstr "ไม่มีซอฟต์แวร์"
+
+#~ msgid "Software requires %s"
+#~ msgstr "ซอฟต์แวร์ต้องการ %s"
+
+#~ msgid "The software listed below require %s to function correctly."
+#~ msgid_plural "The software listed below require %s to function correctly."
+#~ msgstr[0] "ซอฟต์แวร์ที่มีรายชื่อต่อไปนี้ต้องใช้ %s เพื่อจะทำงานอย่างถูกต้อง"
+#~ msgstr[1] "ซอฟต์แวร์ที่มีรายชื่อต่อไปนี้ต้องใช้ %s เพื่อจะทำงานอย่างถูกต้อง"
+
+#~ msgid "%s requires the following additional software to function correctly."
+#~ msgstr "%s ต้องการซอฟต์แวร์เพิ่มเติมต่อไปนี้ เพื่อทำงานอย่างถูกต้อง"
+
+#~ msgid "Software management for GNOME"
+#~ msgstr "เครื่องมือจัดการซอฟต์แวร์สำหรับ GNOME"
+
+#~ msgid "Software error details"
+#~ msgstr "รายละเอียดข้อผิดพลาดของซอฟต์แวร์"
+
+#~ msgid "You don't have the necessary privileges to perform this action."
+#~ msgstr "คุณไม่มีอภิสิทธิ์สำหรับดำเนินการนี้"
+
+#~ msgid "The software service could not be started."
+#~ msgstr "ไม่สามารถเริ่มบริการซอฟต์แวร์"
+
+#~ msgid "The query is not valid."
+#~ msgstr "คำสืบค้นไม่ถูกต้อง"
+
+#~ msgid "The file is not valid."
+#~ msgstr "แฟ้มใช้การไม่ได้"
+
+#~ msgid "Installing software"
+#~ msgstr "กำลังติดตั้งซอฟต์แวร์"
+
+#~ msgid "Could not find software"
+#~ msgstr "หาซอฟต์แวร์ไม่พบ"
+
+#~ msgid "The software is already installed"
+#~ msgstr "ซอฟต์แวร์ติดตั้งอยู่ก่อนแล้ว"
+
+#~ msgid "%s requires additional software"
+#~ msgstr "%s ต้องการซอฟต์แวร์เพิ่มเติม"
+
+#~ msgid "An application requires additional software"
+#~ msgstr "มีโปรแกรมต้องการซอฟต์แวร์เพิ่มเติม"
+
+#~ msgid "Do you want to install this driver now?"
+#~ msgid_plural "Do you want to install these drivers now?"
+#~ msgstr[0] "คุณต้องการติดตั้งไดรเวอร์นี้หรือไม่?"
+#~ msgstr[1] "คุณต้องการติดตั้งไดรเวอร์เหล่านี้หรือไม่?"
+
+#~ msgid "Failed to find any software"
+#~ msgstr "หาซอฟต์แวร์ไม่พบ"
+
+#~ msgid "The file could not be found in any available software"
+#~ msgstr "ไม่พบแฟ้มนี้ในซอฟต์แวร์ใด"
+
+#~ msgid "About Software Install"
+#~ msgstr "เกี่ยวกับโปรแกรมติดตั้งซอฟต์แวร์"
+
+#~ msgid "Service Pack Creator"
+#~ msgstr "เครื่องมือสร้างเซอร์วิสแพ็ก"
+
+#~ msgid "Create"
+#~ msgstr "สร้าง"
+
+#~ msgid "Create a copy of this computer's package list"
+#~ msgstr "สร้างสำเนาของรายชื่อแพกเกจของคอมพิวเตอร์นี้"
+
+#~ msgid "Create an archive of all the pending updates"
+#~ msgstr "สร้างแฟ้มจัดเก็บของรายการปรับรุ่นที่ค้างอยู่ทั้งหมด"
+
+#~ msgid "Create an archive of a specific package"
+#~ msgstr "สร้างแฟ้มจัดเก็บของแพกเกจที่ระบุ"
+
+#~ msgid "Multiple packages can be specified using a comma delimited list"
+#~ msgstr "สามารถระบุหลายแพกเกจได้โดยใช้เครื่องหมายจุลภาคคั่นรายชื่อ"
+
+#~ msgid "Destination package list:"
+#~ msgstr "รายชื่อแพกเกจที่ต้องการ:"
+
+#~ msgid "Select a Package List File"
+#~ msgstr "เลือกแฟ้มรายชื่อแพกเกจ"
+
+#~ msgid "Save New Service Pack"
+#~ msgstr "บันทึกเซอร์วิสแพ็กใหม่"
+
+#~ msgid "Output directory:"
+#~ msgstr "ไดเรกทอรีผลลัพธ์:"
+
+#~ msgid "Progress"
+#~ msgstr "ความคืบหน้า"
+
+#~ msgid "Could not process catalog"
+#~ msgstr "ไม่สามารถดำเนินการแค็ตตาล็อก"
+
+#~ msgid "No packages need to be installed"
+#~ msgstr "ไม่มีแพกเกจที่ต้องติดตั้ง"
+
+#~ msgid "Install packages in catalog?"
+#~ msgstr "จะติดตั้งแพกเกจในแค็ตตาล็อกหรือไม่?"
+
+#~ msgid "The following packages are marked to be installed from the catalog:"
+#~ msgstr "แพกเกจต่อไปนี้ถูกทำเครื่องหมายให้ติดตั้งจากแค็ตตาล็อก:"
+
+#~ msgid "Do you want to install this catalog?"
+#~ msgid_plural "Do you want to install these catalogs?"
+#~ msgstr[0] "คุณต้องการติดตั้งแค็ตตาล็อกนี้หรือไม่?"
+#~ msgstr[1] "คุณต้องการติดตั้งแค็ตตาล็อกเหล่านี้หรือไม่?"
+
+#~ msgid "Install catalogs"
+#~ msgstr "ติดตั้งแค็ตตาล็อก"
+
+#~ msgid "A mirror is possibly broken"
+#~ msgstr "แหล่งสำเนาอาจเสียหาย"
+
+#~ msgid "The connection was refused"
+#~ msgstr "การเชื่อมต่อถูกปฏิเสธ"
+
+#~ msgid "The parameter was invalid"
+#~ msgstr "พารามิเตอร์ไม่ถูกต้อง"
+
+#~ msgid "The priority was invalid"
+#~ msgstr "ลำดับความสำคัญไม่ถูกต้อง"
+
+#~ msgid "Backend warning"
+#~ msgstr "คำเตือนจากแบ็กเอนด์"
+
+#~ msgid "Daemon warning"
+#~ msgstr "คำเตือนจากดีมอน"
+
+#~ msgid "The package list cache is being rebuilt"
+#~ msgstr "กำลังสร้างแคชของรายชื่อแพกเกจใหม่"
+
+#~ msgid "A newer package exists"
+#~ msgstr "มีแพกเกจที่ใหม่กว่า"
+
+#~ msgid "Could not find package"
+#~ msgstr "หาแพกเกจไม่พบ"
+
+#~ msgid "Configuration files were changed"
+#~ msgstr "แฟ้มค่าตั้งมีการเปลี่ยนแปลง"
+
+#~ msgid "Package is already installed"
+#~ msgstr "แพกเกจถูกติดตั้งไว้ก่อนแล้ว"
+
+#~ msgid "Automatic cleanup is being ignored"
+#~ msgstr "จะละเลยการล้างข้อมูลอัตโนมัติ"
+
+#~ msgid "Software source download failed"
+#~ msgstr "ดาวน์โหลดแหล่งซอฟต์แวร์ไม่สำเร็จ"
+
+#~ msgid "This software source is for developers only"
+#~ msgstr "แหล่งซอฟต์แวร์นี้สำหรับนักพัฒนาเท่านั้น"
+
+#~ msgid "Other updates have been held back"
+#~ msgstr "รายการปรับรุ่นอื่นได้ถูกยับยั้งไว้"
+
+#~ msgid "Upgrading system"
+#~ msgstr "กำลังปรับรุ่นระบบ"
+
+#~ msgid "Upgraded system"
+#~ msgstr "ปรับรุ่นระบบแล้ว"
+
+#~ msgid "Could not find any packages named '%s'"
+#~ msgstr "ไม่พบแพกเกจใดที่มีชื่อว่า '%s'"
+
+#~ msgid "Could not find any valid package names"
+#~ msgstr "ไม่พบชื่อแพกเกจที่ถูกต้องใดๆ"
+
+#~ msgid "Could not get array of installed packages: %s"
+#~ msgstr "ไม่สามารถอ่านแอร์เรย์ของแพกเกจที่ติดตั้ง: %s"
+
+#~ msgid "Could not save to file: %s"
+#~ msgstr "ไม่สามารถบันทึกลงแฟ้ม: %s"
+
+#~ msgid "Create error"
+#~ msgstr "ข้อผิดพลาดของการสร้าง"
+
+#~ msgid "Cannot create service pack"
+#~ msgstr "ไม่สามารถสร้างเซอร์วิสแพ็ก"
+
+#~ msgid "Cannot copy system package array"
+#~ msgstr "ไม่สามารถคัดลอกแอร์เรย์ของแพกเกจของระบบ"
+
+#~ msgid "No package name selected"
+#~ msgstr "ไม่ได้เลือกชื่อแพกเกจ"
+
+#~ msgid "Refreshing system package array"
+#~ msgstr "กำลังปรับข้อมูลแอร์เรย์ของแพกเกจของระบบ"
+
+#~ msgid "Refresh error"
+#~ msgstr "ข้อผิดพลาดของการปรับข้อมูล"
+
+#~ msgid "Could not refresh package array"
+#~ msgstr "ไม่สามารถปรับข้อมูลแอร์เรย์ของแพกเกจ"
+
+#~ msgid "Cannot read destination package array"
+#~ msgstr "ไม่สามารถอ่านแอร์เรย์ของแพกเกจปลายทาง"
+
+#~ msgid "Package array files"
+#~ msgstr "แฟ้มแอร์เรย์ของแพกเกจ"
+
+#~ msgid "Service pack files"
+#~ msgstr "แฟ้มเซอร์วิสแพ็ก"
+
+#~ msgid ""
+#~ "Set the option, allowable values are 'array', 'updates' and 'package'"
+#~ msgstr "ตั้งค่าตัวเลือก ค่าที่ใช้ได้คือ 'array', 'updates' และ 'package'"
+
+#~ msgid "Add the package name to the text entry box"
+#~ msgstr "เพิ่มชื่อแพกเกจเข้าในกล่องป้อนข้อความ"
+
+#~ msgid "Set the remote package array file name"
+#~ msgstr "กำหนดชื่อแฟ้มของรายชื่อแพกเกจสำหรับเครื่องปลายทาง"
+
+#~ msgid "Set the default output directory"
+#~ msgstr "กำหนดไดเรกทอรีปริยายสำหรับผลลัพธ์"
 
 #~ msgid "Ask the user if files should be copied to a non-private directory"
 #~ msgstr "ถามผู้ใช้ว่าจะคัดลอกแฟ้มไปยังไดเรกทอรีที่ไม่ใช่ส่วนตัวหรือไม่"
@@ -4204,42 +4170,6 @@ msgstr "แสดงตัวเลือกสำหรับการดีบ
 #~ msgid ""
 #~ "The request failed. More details are available in the detailed report."
 #~ msgstr "ร้องขอไม่สำเร็จ มีรายละเอียดเพิ่มเติมในรายงานแบบละเอียด"
-
-#~ msgid "No packages"
-#~ msgstr "ไม่มี"
-
-#~ msgid "%i package requires %s"
-#~ msgid_plural "%i packages require %s"
-#~ msgstr[0] "มี %i แพกเกจที่ต้องใช้ %s"
-#~ msgstr[1] "มี %i แพกเกจที่ต้องใช้ %s"
-
-#~ msgid "Packages listed below are required for %s to function correctly."
-#~ msgid_plural ""
-#~ "Packages listed below are required for %s to function correctly."
-#~ msgstr[0] "ต้องใช้แพกเกจที่มีรายชื่อต่อไปนี้เพื่อที่ %s จะทำงานอย่างถูกต้อง"
-#~ msgstr[1] "ต้องใช้แพกเกจที่มีรายชื่อต่อไปนี้เพื่อที่ %s จะทำงานอย่างถูกต้อง"
-
-#~ msgid "Package Manager error details"
-#~ msgstr "รายละเอียดข้อผิดพลาดของเครื่องมือจัดการแพกเกจ"
-
-#~ msgid "Failed to install package"
-#~ msgstr "ติดตั้งแพกเกจไม่สำเร็จ"
-
-#~ msgid "Could not find packages"
-#~ msgstr "หาแพกเกจไม่พบ"
-
-#~ msgid "%s wants to install a package"
-#~ msgid_plural "%s wants to install packages"
-#~ msgstr[0] "%s ต้องการติดตั้งแพกเกจ"
-#~ msgstr[1] "%s ต้องการติดตั้งแพกเกจ"
-
-#~ msgid "A program wants to install a package"
-#~ msgid_plural "A program wants to install packages"
-#~ msgstr[0] "มีโปรแกรมต้องการติดตั้งแพกเกจ"
-#~ msgstr[1] "มีโปรแกรมต้องการติดตั้งแพกเกจ"
-
-#~ msgid "Failed to find package for this file"
-#~ msgstr "หาแพกเกจสำหรับแฟ้มนี้ไม่พบ"
 
 #~ msgid "Failed to install package from name"
 #~ msgstr "ติดตั้งแพกเกจจากชื่อไม่สำเร็จ"
