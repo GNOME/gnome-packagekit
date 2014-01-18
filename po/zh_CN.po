@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-01-13 11:47+0000\n"
-"PO-Revision-Date: 2013-12-28 17:22+0800\n"
+"POT-Creation-Date: 2014-01-14 11:04+0000\n"
+"PO-Revision-Date: 2014-01-18 17:10+0800\n"
 "Last-Translator: Tong Hui <tonghuix@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -487,10 +487,8 @@ msgstr "无软件包"
 
 #. TRANSLATORS: this package is not required by any others
 #: ../src/gpk-application.c:897
-#, fuzzy
-#| msgid "No other software requires this."
 msgid "No other packages require this package"
-msgstr "没有其他软件需要此软件包。"
+msgstr "没有其他软件包需要此软件包"
 
 #. TRANSLATORS: title: how many packages require this package
 #: ../src/gpk-application.c:904
@@ -501,29 +499,22 @@ msgstr[0] "%i 个软件包需要 %s"
 
 #. TRANSLATORS: show a array of packages for the package
 #: ../src/gpk-application.c:909
-#, fuzzy, c-format
-#| msgid "Packages listed below are required for %s to function correctly."
-#| msgid_plural ""
-#| "Packages listed below are required for %s to function correctly."
+#, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
-msgstr[0] "需要以下软件包以使 %s 正常运行"
+msgstr[0] "需要以下软件包以使 %s 正常运行。"
 
 #. TRANSLATORS: this package does not depend on any others
 #: ../src/gpk-application.c:1026
-#, fuzzy
-#| msgid "This software does not depend on any other"
 msgid "This package does not depend on any others"
 msgstr "此软件不依赖于其他软件包"
 
 #. TRANSLATORS: title: show the number of other packages we depend on
 #: ../src/gpk-application.c:1033
-#, fuzzy, c-format
-#| msgid "An additional package is required:"
-#| msgid_plural "Additional packages are required:"
+#, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
-msgstr[0] "需要一个附加软件包："
+msgstr[0] "%2$s 需要 %1$i个软件包"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #: ../src/gpk-application.c:1038
@@ -544,28 +535,20 @@ msgstr "结果未找到。"
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
 #: ../src/gpk-application.c:1270
-#, fuzzy
-#| msgid "Try entering a name in the search bar."
 msgid "Try entering a package name in the search bar."
-msgstr "请尝试在搜索栏中输入一个名称。"
+msgstr "请尝试在搜索栏中输入一个软件包名称。"
 
 #. TRANSLATORS: nothing in the package queue
 #: ../src/gpk-application.c:1273
-#, fuzzy
-#| msgid "There is no software queued to be installed or removed."
 msgid "There are no packages queued to be installed or removed."
-msgstr "队列中没有要被安装或删除的软件。"
+msgstr "队列中没有要安装或删除的软件包。"
 
 #. TRANSLATORS: tell the user to switch to details search mode
 #: ../src/gpk-application.c:1278
-#, fuzzy
-#| msgid ""
-#| "Try searching software descriptions by clicking the icon next to the "
-#| "search text."
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
-msgstr "请尝试单击搜索文本旁边的图标来搜索软件描述。"
+msgstr "请尝试单击搜索文本旁边的图标来搜索软件包描述。"
 
 #. TRANSLATORS: tell the user to try harder
 #: ../src/gpk-application.c:1281
@@ -712,7 +695,8 @@ msgstr ""
 "Aron Xu <aronxu@gnome.org>, 2010\n"
 "wei Li <lw124124@gmail.com>, 2011\n"
 "tuhaihe <wangdianjin@linuxdeepin.com>, 2012\n"
-"YunQiang Su <wzssyqa@gmail.com>, 2011"
+"YunQiang Su <wzssyqa@gmail.com>, 2011\n"
+"Tong Hui <tonghuix@gmail.com>, 2014"
 
 #: ../src/gpk-application.c:2585
 msgid "PackageKit Website"
@@ -720,10 +704,8 @@ msgstr "PackageKit 网站"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
 #: ../src/gpk-application.c:2588
-#, fuzzy
-#| msgid "Package Manager"
 msgid "Package Manager for GNOME"
-msgstr "软件包管理器"
+msgstr "GNOME 软件包管理器"
 
 #. TRANSLATORS: welcome text if we can click the group array
 #: ../src/gpk-application.c:2781
@@ -954,10 +936,8 @@ msgstr "找不到软件包"
 
 #. TRANSLATORS: message: could not find
 #: ../src/gpk-dbus-task.c:1089
-#, fuzzy
-#| msgid "The software could not be found in any software source"
 msgid "The packages could not be found in any software source"
-msgstr "无法在任何软件源中找到该软件"
+msgstr "无法在任何软件源中找到该软件包"
 
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
@@ -971,8 +951,6 @@ msgid "More information"
 msgstr "更多信息"
 
 #: ../src/gpk-dbus-task.c:1129 ../src/gpk-enum.c:307
-#, fuzzy
-#| msgid "The package is already installed"
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "该软件包已经安装"
@@ -1000,11 +978,9 @@ msgstr[0] "需要一个附加软件包："
 
 #. TRANSLATORS: ask the user if it's okay to search
 #: ../src/gpk-dbus-task.c:1232
-#, fuzzy
-#| msgid "Do you want to search for and install this software now?"
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
-msgstr[0] "您想立刻查找并安装此软件吗？"
+msgstr[0] "您想立刻查找并安装此软件包吗？"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-dbus-task.c:1238
@@ -1036,10 +1012,9 @@ msgstr "文件无法在任何软件包中找到"
 
 #. TRANSLATORS: we've already got a package that provides this file
 #: ../src/gpk-dbus-task.c:1368
-#, fuzzy, c-format
-#| msgid "%s already provides this file"
+#, c-format
 msgid "The %s package already provides this file"
-msgstr "%s 已经提供了此文件"
+msgstr "软件包 %s 已经提供了此文件"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
 #: ../src/gpk-dbus-task.c:1449
@@ -1148,11 +1123,9 @@ msgstr[0] "安装以下插件"
 #. TRANSLATORS: title: show a list of fonts
 #: ../src/gpk-dbus-task.c:1659 ../src/gpk-dbus-task.c:2128
 #: ../src/gpk-dbus-task.c:2469 ../src/gpk-dbus-task.c:2704
-#, fuzzy
-#| msgid "Do you want to install this software now?"
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
-msgstr[0] "您想立刻安装此软件吗？"
+msgstr[0] "您想立刻安装此软件包吗？"
 
 #. TRANSLATORS: search for codec
 #: ../src/gpk-dbus-task.c:1751
@@ -1235,12 +1208,9 @@ msgstr[0] "要正确查看此文件，需要附加的字体。"
 
 #. TRANSLATORS: we need to download a new font package to display a document
 #: ../src/gpk-dbus-task.c:2295
-#, fuzzy
-#| msgid "Do you want to search for a suitable font now?"
-#| msgid_plural "Do you want to search for suitable fonts now?"
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
-msgstr[0] "您想立刻搜索合适的字体吗？"
+msgstr[0] "您想立刻搜索合适的软件包吗？"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-dbus-task.c:2305
