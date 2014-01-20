@@ -3458,9 +3458,6 @@ main (int argc, char *argv[])
 #ifdef HAVE_SYSTEMD
 	if (proxy != NULL)
 		systemd_proxy_free (proxy);
-#else
-	if (console != NULL)
-		g_object_unref (console);
 #endif
 	if (control != NULL)
 		g_object_unref (control);
