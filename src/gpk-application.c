@@ -2577,7 +2577,7 @@ gpk_application_activate_about_cb (GSimpleAction *action,
 
 	gtk_window_set_default_icon_name (GPK_ICON_SOFTWARE_INSTALLER);
 	gtk_show_about_dialog (GTK_WINDOW (main_window),
-                               "program-name", _("Software Install"),
+                               "program-name", _("Packages"),
 			       "version", PACKAGE_VERSION,
 			       "copyright", "Copyright \xc2\xa9 2007-2009 Richard Hughes",
 			       "license", license_trans,
