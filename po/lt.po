@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-01-14 16:14+0000\n"
-"PO-Revision-Date: 2014-01-14 22:36+0200\n"
+"POT-Creation-Date: 2014-01-29 15:05+0000\n"
+"PO-Revision-Date: 2014-01-31 22:47+0200\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -23,29 +23,39 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.6\n"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:1
-msgid "GNOME Package Installer"
-msgstr "GNOME paketų diegtuvė"
+#| msgid "GNOME Package Installer"
+msgid "GNOME Packages"
+msgstr "GNOME paketai"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:2
+#| msgid ""
+#| "Package Installer allows you to install and remove packages on your "
+#| "system. You can view search packages by name, details or even file name "
+#| "and also see dependencies of one package on other packages. Searching by "
+#| "groups is possible and is an easy way to find software in your favorite "
+#| "desktop environment."
 msgid ""
-"Package Installer allows you to install and remove packages on your system. "
-"You can view search packages by name, details or even file name and also see "
+"Packages allows you to install and remove packages on your system. You can "
+"view search packages by name, details or even file name and also see "
 "dependencies of one package on other packages. Searching by groups is "
 "possible and is an easy way to find software in your favorite desktop "
 "environment."
 msgstr ""
-"Paketų diegtuvė leidžia įdiegti bei pašalinti paketus iš jūsų sistemos. "
-"Galite matyti paketus pagal pavadinimą, detalią informaciją ar net failo "
+"Paketai leidžia įdiegti bei pašalinti paketus iš jūsų sistemos. Galite "
+"matyti paketus pagal pavadinimą, detalią informaciją ar net failo "
 "pavadinimą, taip pat matyti paketo priklausomybes nuo kitų paketų. Galima "
 "paieška pagal grupes, kuri yra paprastas būdas rasti jūsų mėgiamą "
 "darbastalio aplinką."
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:3
+#| msgid ""
+#| "Package Installer uses PackageKit and can work on any distribution using "
+#| "the native package management framework."
 msgid ""
-"Package Installer uses PackageKit and can work on any distribution using the "
-"native package management framework."
+"Packages uses PackageKit and can work on any distribution using the native "
+"package management framework."
 msgstr ""
-"Paketų diegtuvė naudoja PackageKit ir gali veikti bet kurioje distribucijoje "
+"Paketai naudoja PackageKit ir gali veikti bet kurioje distribucijoje "
 "naudojant jos įprastinę paketų valdymo sistemą."
 
 #: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1
@@ -254,7 +264,8 @@ msgstr ""
 "Kai rodoma sąsaja iš seanso D-Bus užklausos, priverstinai naudoti šias "
 "parinktis."
 
-#: ../data/gpk-application.desktop.in.h:1
+#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
+#: ../src/gpk-application.c:2580
 msgid "Packages"
 msgstr "Paketai"
 
@@ -265,10 +276,6 @@ msgstr "Įdiegti ar šalinti sistemoje įdiegtą programinę įrangą"
 #: ../data/gpk-application.desktop.in.h:3
 msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
 msgstr "Atnaujinimai;Šaltiniai;Saugyklos;Nustatymai;Įdiegti;"
-
-#: ../data/gpk-application.ui.h:1
-msgid "Software"
-msgstr "Programinė įranga"
 
 #: ../data/gpk-application.ui.h:2
 msgid "Apply Changes"
@@ -378,17 +385,25 @@ msgstr "_Sutikti su sąlygomis"
 
 #. TRANSLATORS: program name: application to install a package to provide a file
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2580
-#: ../src/gpk-dbus-task.c:3215 ../src/gpk-install-local-file.c:67
-#: ../src/gpk-dbus-service.c:137 ../src/gpk-dbus-service.c:140
+#: ../data/gpk-dbus-service.desktop.in.h:1 ../src/gpk-dbus-task.c:3215
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-dbus-service.c:137
+#: ../src/gpk-dbus-service.c:140
 msgid "Software Install"
 msgstr "Programinės įrangos įdiegimas"
 
 #: ../data/gpk-dbus-service.desktop.in.h:2
-#: ../data/gpk-install-local-file.desktop.in.h:2
 msgid "Install selected software on the system"
 msgstr "Įdiegti pasirinktą programinę įrangą sistemoje"
+
+#: ../data/gpk-install-local-file.desktop.in.h:1
+#| msgid "Package installer"
+msgid "Package Install"
+msgstr "Paketų diegtuvė"
+
+#: ../data/gpk-install-local-file.desktop.in.h:2
+#| msgid "Install selected software on the system"
+msgid "Install selected packages on the system"
+msgstr "Įdiegti pasirinktus paketus sistemoje"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:826
 msgid "Software Log Viewer"
@@ -463,8 +478,9 @@ msgid "Do you recognize the user and trust this key?"
 msgstr "Ar atpažįstate šį naudotoją ir pasitikite šiuo raktu?"
 
 #: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
-msgid "Software Update"
-msgstr "Programinės įrangos atnaujinimas"
+#| msgid "GNOME Package Updater"
+msgid "Package Updater"
+msgstr "Paketų atnaujinimas"
 
 #: ../data/gpk-update-viewer.desktop.in.h:2
 msgid "Update software installed on the system"
@@ -507,20 +523,17 @@ msgstr[2] "%i failų įdiegus programa %s"
 
 #. TRANSLATORS: no packages returned
 #: ../src/gpk-application.c:895 ../src/gpk-application.c:1024
-#| msgid "All packages"
 msgid "No packages"
 msgstr "Nėra paketų"
 
 #. TRANSLATORS: this package is not required by any others
 #: ../src/gpk-application.c:897
-#| msgid "No other software requires this."
 msgid "No other packages require this package"
 msgstr "Jokiam kitam paketui šio paketo nereikia"
 
 #. TRANSLATORS: title: how many packages require this package
 #: ../src/gpk-application.c:904
 #, c-format
-#| msgid "Cannot get package requires"
 msgid "%i package requires %s"
 msgid_plural "%i packages require %s"
 msgstr[0] "%i paketui reikia %s"
@@ -530,8 +543,6 @@ msgstr[2] "%i paketų reikia %s"
 #. TRANSLATORS: show a array of packages for the package
 #: ../src/gpk-application.c:909
 #, c-format
-#| msgid "The software listed below require %s to function correctly."
-#| msgid_plural "The software listed below require %s to function correctly."
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
 msgstr[0] "Žemiau išvardintiems paketams reikia %s, kad veiktų tvarkingai."
@@ -540,14 +551,12 @@ msgstr[2] "Žemiau išvardintiems paketams reikia %s, kad veiktų tvarkingai."
 
 #. TRANSLATORS: this package does not depend on any others
 #: ../src/gpk-application.c:1026
-#| msgid "This software does not depend on any other"
 msgid "This package does not depend on any others"
 msgstr "Šis paketas nepriklauso nuo jokio kito"
 
 #. TRANSLATORS: title: show the number of other packages we depend on
 #: ../src/gpk-application.c:1033
 #, c-format
-#| msgid "Additional software is required for %s"
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
 msgstr[0] "%2$s reikia %1$i papildomo paketo"
@@ -557,8 +566,6 @@ msgstr[2] "%2$s reikia %1$i papildomo paketo"
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #: ../src/gpk-application.c:1038
 #, c-format
-#| msgid "The software listed below require %s to function correctly."
-#| msgid_plural "The software listed below require %s to function correctly."
 msgid "Packages listed below are required for %s to function correctly."
 msgid_plural "Packages listed below are required for %s to function correctly."
 msgstr[0] "Žemiau išvardinti paketai reikalingi %s, kad veiktų tvarkingai."
@@ -577,21 +584,16 @@ msgstr "Nieko nerasta."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
 #: ../src/gpk-application.c:1270
-#| msgid "Try entering a name in the search bar."
 msgid "Try entering a package name in the search bar."
 msgstr "Bandykite įvesti paketo pavadinimą paieškos juostoje."
 
 #. TRANSLATORS: nothing in the package queue
 #: ../src/gpk-application.c:1273
-#| msgid "There is no software queued to be installed or removed."
 msgid "There are no packages queued to be installed or removed."
 msgstr "Eilėje nėra paketų įdiegimui ar pašalinimui."
 
 #. TRANSLATORS: tell the user to switch to details search mode
 #: ../src/gpk-application.c:1278
-#| msgid ""
-#| "Try searching software descriptions by clicking the icon next to the "
-#| "search text."
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -754,7 +756,6 @@ msgstr "PackageKit tinklalapis"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
 #: ../src/gpk-application.c:2588
-#| msgid "Software management for GNOME"
 msgid "Package Manager for GNOME"
 msgstr "GNOME paketų tvarkyklė"
 
@@ -942,7 +943,6 @@ msgid "Error details"
 msgstr "Klaidos informacija"
 
 #: ../src/gpk-dbus-task.c:277
-#| msgid "Software error details"
 msgid "Package Manager error details"
 msgstr "Paketų tvarkyklės klaidos informacija"
 
@@ -1006,13 +1006,11 @@ msgstr[2] "Įdiegti vietinius failus"
 #. TRANSLATORS: couldn't resolve name to package
 #: ../src/gpk-dbus-task.c:1080
 #, c-format
-#| msgid "Could not update packages"
 msgid "Could not find packages"
 msgstr "Nepavyko rasti paketų"
 
 #. TRANSLATORS: message: could not find
 #: ../src/gpk-dbus-task.c:1089
-#| msgid "The software could not be found in any software source"
 msgid "The packages could not be found in any software source"
 msgstr "Paketų nepavyko rasti jokiame programinės įrangos šaltinyje"
 
@@ -1028,7 +1026,6 @@ msgid "More information"
 msgstr "Išsamesnė informacija"
 
 #: ../src/gpk-dbus-task.c:1129 ../src/gpk-enum.c:307
-#| msgid "The package is already installed"
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "Paketas jau yra įdiegtas"
@@ -1042,7 +1039,6 @@ msgstr "Nieko nereikia atlikti"
 
 #. TRANSLATORS: failed to install, shouldn't be shown
 #: ../src/gpk-dbus-task.c:1148
-#| msgid "Failed to find package"
 msgid "Failed to install package"
 msgstr "Nepavyko įdiegti paketo"
 
@@ -1053,7 +1049,6 @@ msgstr "Paieška grąžino netinkamą atsaką"
 
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
 #: ../src/gpk-dbus-task.c:1229
-#| msgid "Additional software is required"
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
 msgstr[0] "Reikalingi papildomi paketai:"
@@ -1062,7 +1057,6 @@ msgstr[2] "Reikalingi papildomi paketai:"
 
 #. TRANSLATORS: ask the user if it's okay to search
 #: ../src/gpk-dbus-task.c:1232
-#| msgid "Do you want to search for and install this software now?"
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "Ar norite surasti ir įdiegti šį paketą dabar?"
@@ -1072,8 +1066,6 @@ msgstr[2] "Ar norite surasti ir įdiegti šiuos paketus dabar?"
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-dbus-task.c:1238
 #, c-format
-#| msgid "%s wants to install a file"
-#| msgid_plural "%s wants to install files"
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
 msgstr[0] "%s pageidauja įdiegti paketą"
@@ -1082,8 +1074,6 @@ msgstr[2] "%s pageidauja įdiegti paketus"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-dbus-task.c:1241
-#| msgid "A program wants to install a file"
-#| msgid_plural "A program wants to install files"
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
 msgstr[0] "Programa pageidauja įdiegti paketą"
@@ -1108,7 +1098,6 @@ msgstr "Failas nerastas jokiame pakete"
 #. TRANSLATORS: we've already got a package that provides this file
 #: ../src/gpk-dbus-task.c:1368
 #, c-format
-#| msgid "%s already provides this file"
 msgid "The %s package already provides this file"
 msgstr "Paketas %s jau suteikia šį failą"
 
@@ -1246,7 +1235,6 @@ msgstr[2] "Įdiegti šiuos įskiepius"
 #. TRANSLATORS: title: show a list of fonts
 #: ../src/gpk-dbus-task.c:1659 ../src/gpk-dbus-task.c:2128
 #: ../src/gpk-dbus-task.c:2469 ../src/gpk-dbus-task.c:2704
-#| msgid "Do you want to install this software now?"
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Ar norite įdiegti šį paketą dabar?"
@@ -1345,8 +1333,6 @@ msgstr[2] ""
 
 #. TRANSLATORS: we need to download a new font package to display a document
 #: ../src/gpk-dbus-task.c:2295
-#| msgid "Do you want to search for a suitable font now?"
-#| msgid_plural "Do you want to search for suitable fonts now?"
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "Ar norite ieškoti tinkamo paketo dabar?"
@@ -1432,7 +1418,6 @@ msgstr "Šalinami paketai"
 
 #. TRANSLATORS: failed to find the package for the file
 #: ../src/gpk-dbus-task.c:2912
-#| msgid "Failed to find package"
 msgid "Failed to find package for this file"
 msgstr "Nepavyko rasti paketo šiam failui"
 
