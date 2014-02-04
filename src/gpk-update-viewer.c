@@ -1456,9 +1456,9 @@ gpk_update_viewer_reconsider_info (void)
 		if (len == 0) {
 			gpk_update_viewer_modal_error_with_timeout (
 					/* TRANSLATORS: title: nothing to do */
-					_("All software is up to date"),
+					_("All packages are up to date"),
 					/* TRANSLATORS: tell the user the problem */
-					_("There are no software updates available for your computer at this time."));
+					_("There are no package updates available for your computer at this time."));
 			goto out;
 		}
 	}
@@ -3408,7 +3408,7 @@ main (int argc, char *argv[])
 	gtk_init (&argc, &argv);
 
 	context = g_option_context_new (NULL);
-	g_option_context_set_summary (context, _("Update Software"));
+	g_option_context_set_summary (context, _("Update Packages"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_add_group (context, gpk_debug_get_option_group ());
 	g_option_context_add_group (context, gtk_get_option_group (TRUE));
@@ -3424,8 +3424,8 @@ main (int argc, char *argv[])
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   GPK_DATA G_DIR_SEPARATOR_S "icons");
 
-	/* TRANSLATORS: title to pass to to the user if there are not enough privs */
-	ret = gpk_check_privileged_user (_("Software Update Viewer"), TRUE);
+	/* TRANSLATORS: title to pass to the user if there are not enough privs */
+	ret = gpk_check_privileged_user (_("Package Updater"), TRUE);
 	if (!ret)
 		return 1;
 
