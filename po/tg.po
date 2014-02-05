@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: Tajik Gnome\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-02-04 16:09+0000\n"
-"PO-Revision-Date: 2014-02-05 10:47+0500\n"
+"POT-Creation-Date: 2014-02-05 05:50+0000\n"
+"PO-Revision-Date: 2014-02-05 10:53+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: \n"
 "Language: tg\n"
@@ -169,12 +169,10 @@ msgstr ""
 "\", \"тафсилот\", ё \"файл\""
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:21
-#| msgid "Show all repositories in the software source viewer"
 msgid "Show all repositories in the package source viewer"
 msgstr "Намоиш додани ҳамаи анборҳои маълумот дар тамошобини манбаи бастаҳо"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:22
-#| msgid "Show all repositories in the software source viewer."
 msgid "Show all repositories in the package source viewer."
 msgstr "Намоиш додани ҳамаи анборҳои маълумот дар тамошобини манбаи бастаҳо."
 
@@ -335,7 +333,6 @@ msgstr "Тафтиши навсозиҳо"
 #. TRANSLATORS: program name, an application to add and remove software repositories
 #: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
 #: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
-#| msgid "Packages"
 msgid "Package Sources"
 msgstr "Манбаҳои бастаҳо"
 
@@ -412,14 +409,10 @@ msgid "Filter"
 msgstr "Филтр"
 
 #: ../data/gpk-prefs.desktop.in.h:2
-#| msgid "Enabled repository"
 msgid "Enable or disable package repositories"
 msgstr "Фаъол ё ғайрифаъол кардани анбори бастаҳои нармафзор"
 
 #: ../data/gpk-prefs.ui.h:2
-#| msgid ""
-#| "A software source contains packages that can be installed on this "
-#| "computer."
 msgid ""
 "A package source contains packages that can be installed on this computer."
 msgstr ""
@@ -427,7 +420,6 @@ msgstr ""
 
 #. shows extra -source, -debuginfo, and -devel sources
 #: ../data/gpk-prefs.ui.h:4
-#| msgid "_Show debug and development software sources"
 msgid "_Show debug and development package sources"
 msgstr "_Намоиши манбаҳои бастаҳои ислоҳи хатоҳо ва рушд"
 
@@ -463,7 +455,9 @@ msgstr "Баста:"
 msgid "Do you recognize the user and trust this key?"
 msgstr "Оё шумо корбарро бозшиносӣ ва ба ин тугма бовар кардед?"
 
+#. TRANSLATORS: title to pass to the user if there are not enough privs
 #: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
+#: ../src/gpk-update-viewer.c:3428
 msgid "Package Updater"
 msgstr "Навсозии бастаҳо"
 
@@ -476,12 +470,15 @@ msgid "_Install Updates"
 msgstr "_Насб кардани навсозиҳо"
 
 #: ../data/gpk-update-viewer.ui.h:3
+#| msgid ""
+#| "Software updates correct errors, eliminate security vulnerabilities and "
+#| "provide new features."
 msgid ""
-"Software updates correct errors, eliminate security vulnerabilities and "
+"Package updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
-"Нармафзор хатоҳои дурустро навсозӣ мекунад, осебпазирии амниятиро бартараф "
-"карда хусусиятҳои навро таъмин менамояд."
+"Навсозиҳои бастаҳо хатоҳоро ислоҳ мекунанд, амнияти системаро беҳтар мекунад "
+"ва хусусиятҳои навро таъмин менамояд."
 
 #: ../data/gpk-update-viewer.ui.h:4
 msgid "_Upgrade"
@@ -983,7 +980,6 @@ msgstr "Бастаҳо ёфт нашуданд"
 
 #. TRANSLATORS: message: could not find
 #: ../src/gpk-dbus-task.c:1089
-#| msgid "The packages could not be found in any software source"
 msgid "The packages could not be found in any package source"
 msgstr "Бастаҳо дар ягон манбаи бастаҳо ёфт нашуданд"
 
@@ -1177,7 +1173,6 @@ msgstr "Ҷустуҷӯи плагин қатъ карда шуд"
 
 #. TRANSLATORS: no package sources have the wanted codec
 #: ../src/gpk-dbus-task.c:1635
-#| msgid "Could not find plugin in any configured software source"
 msgid "Could not find plugin in any configured package source"
 msgstr "Плагин дар ҳеҷ кадоме аз манбаҳои бастаҳои танзимшуда ёфт нашуд"
 
@@ -1328,7 +1323,6 @@ msgstr "Ҷустуҷӯи хидмати Plasma қатъ карда шуд"
 
 #. TRANSLATORS: no package sources have the wanted Plasma service
 #: ../src/gpk-dbus-task.c:2445
-#| msgid "Could not find service in any configured software source"
 msgid "Could not find service in any configured package source"
 msgstr "Хидматро дар ягон манбаи бастаҳои танзимшуда ёфта наметавонад"
 
@@ -1540,7 +1534,6 @@ msgid "Packages are not compatible"
 msgstr "Бастаҳо мувофиқ нестанд"
 
 #: ../src/gpk-enum.c:361
-#| msgid "Problem connecting to a software source"
 msgid "Problem connecting to a package source"
 msgstr "Мушкилии пайвастшавӣ ба манбаи бастаҳо"
 
@@ -1755,9 +1748,6 @@ msgstr ""
 "гузориш диҳед."
 
 #: ../src/gpk-enum.c:521
-#| msgid ""
-#| "A security trust relationship could not be made with software source.\n"
-#| "Please check your security settings."
 msgid ""
 "A security trust relationship could not be made with package source.\n"
 "Please check your security settings."
@@ -1772,9 +1762,6 @@ msgstr ""
 "Бастае, ки барои тоза ё навсозӣ шудан кӯшиш мекунад, ҳоло насб нашудааст."
 
 #: ../src/gpk-enum.c:528
-#| msgid ""
-#| "The package that is being modified was not found on your system or in any "
-#| "software source."
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "package source."
@@ -1841,9 +1828,6 @@ msgstr ""
 "Иттилооти бештар дар гузориши муфассул дастрас аст."
 
 #: ../src/gpk-enum.c:562
-#| msgid ""
-#| "The remote software source name was not found.\n"
-#| "You may need to enable an item in Software Sources."
 msgid ""
 "The remote package source name was not found.\n"
 "You may need to enable an item in Package Sources."
@@ -1896,9 +1880,6 @@ msgid ""
 msgstr "Барои истифодаи ин нармафзор шумо бояд иҷозатномаро қабул намоед."
 
 #: ../src/gpk-enum.c:591
-#| msgid ""
-#| "Two packages provide the same file.\n"
-#| "This is usually due to mixing packages from different software sources."
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different sources."
@@ -1907,9 +1888,6 @@ msgstr ""
 "Ин асосан аз сабаби омехташавии бастаҳо аз манбаҳои бастаҳои гуногун аст."
 
 #: ../src/gpk-enum.c:595
-#| msgid ""
-#| "Multiple packages exist that are not compatible with each other.\n"
-#| "This is usually due to mixing packages from different software sources."
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different sources."
@@ -1918,10 +1896,6 @@ msgstr ""
 "Ин асосан аз сабаби омехташавии бастаҳо аз манбаҳои бастаҳои гуногун аст."
 
 #: ../src/gpk-enum.c:599
-#| msgid ""
-#| "There was a (possibly temporary) problem connecting to a software "
-#| "source.\n"
-#| "Please check the detailed error for further details."
 msgid ""
 "There was a (possibly temporary) problem connecting to a package source.\n"
 "Please check the detailed error for further details."
@@ -2021,10 +1995,6 @@ msgstr ""
 "Файлро то вақти мавҷуд будан ва нест нашудан санҷед."
 
 #: ../src/gpk-enum.c:652
-#| msgid ""
-#| "Required data could not be found on any of the configured software "
-#| "sources.\n"
-#| "There were no more download mirrors that could be tried."
 msgid ""
 "Required data could not be found on any of the configured package sources.\n"
 "There were no more download mirrors that could be tried."
@@ -2033,10 +2003,6 @@ msgstr ""
 "Оинаҳои боргирии дигаре барои кӯшиш кардан вуҷуд надоштанд."
 
 #: ../src/gpk-enum.c:656
-#| msgid ""
-#| "Required upgrade data could not be found in any of the configured "
-#| "software sources.\n"
-#| "The list of distribution upgrades will be unavailable."
 msgid ""
 "Required upgrade data could not be found in any of the configured package "
 "sources.\n"
@@ -2097,7 +2063,6 @@ msgid "The information about what requires this package could not be obtained."
 msgstr "Иттилоот дар бораи чизҳои лозима барои ин баста дастнорас ҳастанд."
 
 #: ../src/gpk-enum.c:690
-#| msgid "The specified software source could not be disabled."
 msgid "The specified package source could not be disabled."
 msgstr "Манбаи бастаҳои муайяншуда ғайрифаъол нашуд."
 
@@ -2164,7 +2129,6 @@ msgid "The install root is invalid. Please contact your administrator."
 msgstr "Решаи насб беэътибор аст. Луфтан бо маъмури худ тамос гиред."
 
 #: ../src/gpk-enum.c:726
-#| msgid "The list of software sources could not be downloaded."
 msgid "The list of package sources could not be downloaded."
 msgstr "Рӯйхати манбаҳои бастаҳо боргирӣ шуда наметавонад."
 
@@ -3020,7 +2984,6 @@ msgstr "Харитаҳо"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1581
-#| msgid "Packages"
 msgid "Package sources"
 msgstr "Манбаҳои бастаҳо"
 
@@ -3347,7 +3310,6 @@ msgstr "Фаъол"
 
 #. TRANSLATORS: column for the source description
 #: ../src/gpk-prefs.c:323
-#| msgid "Package"
 msgid "Package Source"
 msgstr "Манбаи бастаҳо"
 
@@ -3362,7 +3324,6 @@ msgid "Exiting as backend details could not be retrieved"
 msgstr "тафсилоти мавҷудбуда ҳамчун пуштибонӣ бозёбӣ нашуданд"
 
 #: ../src/gpk-prefs.c:513
-#| msgid "Getting software source list not supported by backend"
 msgid "Getting package source list not supported by backend"
 msgstr "Дарёфти рӯйхати манбаи бастаҳое, ки бо сервер дастгирӣ намешавад"
 
@@ -3532,14 +3493,18 @@ msgstr[1] "_Насб кардани навсозиҳо"
 
 #. TRANSLATORS: title: nothing to do
 #: ../src/gpk-update-viewer.c:1459
-msgid "All software is up to date"
-msgstr "Ҳамаи нармафзорҳо навсозӣ шудаанд"
+#| msgid "All software is up to date"
+msgid "All packages are up to date"
+msgstr "Ҳамаи бастаҳо навсозӣ шудаанд"
 
 #. TRANSLATORS: tell the user the problem
 #: ../src/gpk-update-viewer.c:1461
-msgid "There are no software updates available for your computer at this time."
+#| msgid ""
+#| "There are no software updates available for your computer at this time."
+msgid "There are no package updates available for your computer at this time."
 msgstr ""
-"Дар ҳоли ҳозир ҳеҷ навсозии дастрас барои компютери шумо вуҷуд надорад."
+"Дар ҳоли ҳозир ягон бастаи навсозии дастрас барои компютери шумо вуҷуд "
+"надорад."
 
 #: ../src/gpk-update-viewer.c:1488
 #, c-format
@@ -3765,13 +3730,9 @@ msgstr ""
 "аввал насб карда шаванд."
 
 #: ../src/gpk-update-viewer.c:3411
-msgid "Update Software"
-msgstr "Навсозӣ кардани нармафзор"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3428
-msgid "Software Update Viewer"
-msgstr "Тамошобини навсозии нармафзор"
+#| msgid "Updated packages"
+msgid "Update Packages"
+msgstr "Бастаҳои навсозӣ"
 
 #: ../src/gpk-dbus-service.c:126
 msgid "Do not exit after the request has been processed"
@@ -3793,6 +3754,12 @@ msgstr "Имконоти ислоҳи нуқсонҳо"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Намоиш додани имконоти ислоҳи нуқсонҳо"
+
+#~ msgid "Update Software"
+#~ msgstr "Навсозӣ кардани нармафзор"
+
+#~ msgid "Software Update Viewer"
+#~ msgstr "Тамошобини навсозии нармафзор"
 
 #~ msgid "Software Sources"
 #~ msgstr "Манбаҳои нармафзор"
