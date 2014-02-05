@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-01-13 11:47+0000\n"
-"PO-Revision-Date: 2014-01-13 13:45+0100\n"
+"POT-Creation-Date: 2014-02-05 08:33+0000\n"
+"PO-Revision-Date: 2014-02-05 13:12+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -24,30 +24,40 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.5\n"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:1
-msgid "GNOME Package Installer"
-msgstr "Instalador de paquetes de GNOME"
+#| msgid "GNOME Package Installer"
+msgid "GNOME Packages"
+msgstr "Paquetes de GNOME"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:2
+#| msgid ""
+#| "Package Installer allows you to install and remove packages on your "
+#| "system. You can view search packages by name, details or even file name "
+#| "and also see dependencies of one package on other packages. Searching by "
+#| "groups is possible and is an easy way to find software in your favorite "
+#| "desktop environment."
 msgid ""
-"Package Installer allows you to install and remove packages on your system. "
-"You can view search packages by name, details or even file name and also see "
+"Packages allows you to install and remove packages on your system. You can "
+"view search packages by name, details or even file name and also see "
 "dependencies of one package on other packages. Searching by groups is "
 "possible and is an easy way to find software in your favorite desktop "
 "environment."
 msgstr ""
-"El instalador de paquetes le permite instalar y quitar paquetes de su "
-"sistema. Puede buscar paquetes por nombre, detalles o cualquier nombre de "
-"archivo y también ver las dependencias de un paquete sobre otros. Es posible "
-"buscar por grupos y es una buena manera de encontrar software para su "
-"entorno de escritorio preferido."
+"Paquetes le permite instalar y quitar paquetes de su sistema. Puede buscar "
+"paquetes por nombre, detalles o cualquier nombre de archivo y también ver "
+"las dependencias de un paquete sobre otros. Es posible buscar por grupos y "
+"es una buena manera de encontrar software para su entorno de escritorio "
+"preferido."
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:3
+#| msgid ""
+#| "Package Installer uses PackageKit and can work on any distribution using "
+#| "the native package management framework."
 msgid ""
-"Package Installer uses PackageKit and can work on any distribution using the "
-"native package management framework."
+"Packages uses PackageKit and can work on any distribution using the native "
+"package management framework."
 msgstr ""
-"El instalador de paquetes usa PackageKit y puede usarse en cualquier "
-"distribución junto con el gestor de paquetes nativo."
+"Paquetes usa PackageKit y puede usarse en cualquier distribución junto con "
+"el gestor de paquetes nativo."
 
 #: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1
 msgid "GNOME Package Updater"
@@ -174,11 +184,15 @@ msgstr ""
 "«nombre», «detalles» o «archivo»."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:21
-msgid "Show all repositories in the software source viewer"
+#, fuzzy
+#| msgid "Show all repositories in the software source viewer"
+msgid "Show all repositories in the package source viewer"
 msgstr "Mostrar todos los repositorios en el visor de repositorios de software"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:22
-msgid "Show all repositories in the software source viewer."
+#, fuzzy
+#| msgid "Show all repositories in the software source viewer."
+msgid "Show all repositories in the package source viewer."
 msgstr ""
 "Mostrar todos los repositorios en el visor de repositorios de software."
 
@@ -257,7 +271,8 @@ msgstr ""
 "Al mostrar la IU desde una solicitud de sesión de DBUS, forzar la activación "
 "de estas opciones."
 
-#: ../data/gpk-application.desktop.in.h:1
+#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
+#: ../src/gpk-application.c:2580
 msgid "Packages"
 msgstr "Paquetes"
 
@@ -270,10 +285,6 @@ msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
 msgstr ""
 "Actualizaciones;Actualizar;Fuentes;Repositorios;Preferencias;Instalar;"
 "Guardar;"
-
-#: ../data/gpk-application.ui.h:1
-msgid "Software"
-msgstr "Software"
 
 #: ../data/gpk-application.ui.h:2
 msgid "Apply Changes"
@@ -337,9 +348,13 @@ msgstr "Paquetes dependientes"
 msgid "Check for Updates"
 msgstr "Comprobar si hay actualizaciones"
 
-#: ../data/gpk-application.ui.h:17
-msgid "Software Sources"
-msgstr "Repositorios de software"
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
+#, fuzzy
+#| msgid "Packages"
+msgid "Package Sources"
+msgstr "Paquetes"
 
 #: ../data/gpk-application.ui.h:18
 msgid "Refresh Package Lists"
@@ -383,16 +398,26 @@ msgstr "_Aceptar acuerdo"
 
 #. TRANSLATORS: program name: application to install a package to provide a file
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2580
-#: ../src/gpk-dbus-task.c:3215 ../src/gpk-install-local-file.c:67
-#: ../src/gpk-dbus-service.c:137 ../src/gpk-dbus-service.c:140
+#: ../data/gpk-dbus-service.desktop.in.h:1 ../src/gpk-dbus-task.c:3215
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-dbus-service.c:137
+#: ../src/gpk-dbus-service.c:140
 msgid "Software Install"
 msgstr "Instalador de software"
 
 #: ../data/gpk-dbus-service.desktop.in.h:2
-#: ../data/gpk-install-local-file.desktop.in.h:2
 msgid "Install selected software on the system"
+msgstr "Instalar el software seleccionado en el sistema"
+
+#: ../data/gpk-install-local-file.desktop.in.h:1
+#, fuzzy
+#| msgid "Package installer"
+msgid "Package Install"
+msgstr "Instalador de paquetes"
+
+#: ../data/gpk-install-local-file.desktop.in.h:2
+#, fuzzy
+#| msgid "Install selected software on the system"
+msgid "Install selected packages on the system"
 msgstr "Instalar el software seleccionado en el sistema"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:826
@@ -407,32 +432,28 @@ msgstr "Vea las tareas de mantenimiento de paquetes anteriores"
 msgid "Filter"
 msgstr "Filtros"
 
-#: ../data/gpk-prefs.desktop.in.h:1
-msgid "Software Settings"
-msgstr "Configuración del software"
-
 #: ../data/gpk-prefs.desktop.in.h:2
-msgid ""
-"Change software update preferences and enable or disable software sources"
-msgstr ""
-"Cambiar las preferencias de actualizaciones de software y activar o "
-"desactivar los repositorios de software"
-
-#. TRANSLATORS: program name, an application to set per-user policy for updates
-#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
-msgid "Software Update Preferences"
-msgstr "Preferencias de actualización de software"
+#, fuzzy
+#| msgid "Enable or disable software sources"
+msgid "Enable or disable package repositories"
+msgstr "Habilitar o deshabilitar repositorios de software"
 
 #: ../data/gpk-prefs.ui.h:2
+#, fuzzy
+#| msgid ""
+#| "A software source contains packages that can be installed on this "
+#| "computer."
 msgid ""
-"A software source contains packages that can be installed on this computer."
+"A package source contains packages that can be installed on this computer."
 msgstr ""
 "Un repositorio de software contiene paquetes que se pueden instalar en este "
 "equipo."
 
-#. shows extra -source, -debuginfo, and -devel software sources
+#. shows extra -source, -debuginfo, and -devel sources
 #: ../data/gpk-prefs.ui.h:4
-msgid "_Show debug and development software sources"
+#, fuzzy
+#| msgid "_Show debug and development software sources"
+msgid "_Show debug and development package sources"
 msgstr "_Mostrar repositorios de software de depuración y desarrollo"
 
 #: ../data/gpk-signature.ui.h:1
@@ -467,9 +488,13 @@ msgstr "Paquete:"
 msgid "Do you recognize the user and trust this key?"
 msgstr "¿Reconoce a este usuario y confía en esta clave?"
 
+#. TRANSLATORS: title to pass to the user if there are not enough privs
 #: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
-msgid "Software Update"
-msgstr "Actualización de software"
+#: ../src/gpk-update-viewer.c:3428
+#, fuzzy
+#| msgid "GNOME Package Updater"
+msgid "Package Updater"
+msgstr "Actualizador de paquetes de GNOME"
 
 #: ../data/gpk-update-viewer.desktop.in.h:2
 msgid "Update software installed on the system"
@@ -480,8 +505,12 @@ msgid "_Install Updates"
 msgstr "_Instalar actualizaciones"
 
 #: ../data/gpk-update-viewer.ui.h:3
+#, fuzzy
+#| msgid ""
+#| "Software updates correct errors, eliminate security vulnerabilities and "
+#| "provide new features."
 msgid ""
-"Software updates correct errors, eliminate security vulnerabilities and "
+"Package updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
 "Las actualizaciones de software corrigen errores, eliminan vulnerabilidades "
@@ -516,7 +545,6 @@ msgstr "No hay paquetes"
 
 #. TRANSLATORS: this package is not required by any others
 #: ../src/gpk-application.c:897
-#| msgid "No other software requires this."
 msgid "No other packages require this package"
 msgstr "No hay otros paquetes que requieran éste"
 
@@ -531,9 +559,6 @@ msgstr[1] "%i paquetes adicionales requieren %s"
 #. TRANSLATORS: show a array of packages for the package
 #: ../src/gpk-application.c:909
 #, c-format
-#| msgid "Packages listed below are required for %s to function correctly."
-#| msgid_plural ""
-#| "Packages listed below are required for %s to function correctly."
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
 msgstr[0] ""
@@ -544,7 +569,6 @@ msgstr[1] ""
 
 #. TRANSLATORS: this package does not depend on any others
 #: ../src/gpk-application.c:1026
-#| msgid "This software does not depend on any other"
 msgid "This package does not depend on any others"
 msgstr "Este paquete no depende de ningún otro"
 
@@ -580,21 +604,16 @@ msgstr "No se han encontrado resultados"
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
 #: ../src/gpk-application.c:1270
-#| msgid "Try entering a name in the search bar."
 msgid "Try entering a package name in the search bar."
 msgstr "Pruebe a introducir un nombre en la barra de búsqueda."
 
 #. TRANSLATORS: nothing in the package queue
 #: ../src/gpk-application.c:1273
-#| msgid "There is no software queued to be installed or removed."
 msgid "There are no packages queued to be installed or removed."
 msgstr "No hay ningún paquete esperando para ser instalarse o eliminarse."
 
 #. TRANSLATORS: tell the user to switch to details search mode
 #: ../src/gpk-application.c:1278
-#| msgid ""
-#| "Try searching software descriptions by clicking the icon next to the "
-#| "search text."
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -757,7 +776,6 @@ msgstr "Página web de PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
 #: ../src/gpk-application.c:2588
-#| msgid "Package Manager"
 msgid "Package Manager for GNOME"
 msgstr "Gestor de paquetes para GNOME"
 
@@ -1004,8 +1022,9 @@ msgstr "No se pudieron encontrar los paquetes"
 
 #. TRANSLATORS: message: could not find
 #: ../src/gpk-dbus-task.c:1089
-#| msgid "The software could not be found in any software source"
-msgid "The packages could not be found in any software source"
+#, fuzzy
+#| msgid "The packages could not be found in any software source"
+msgid "The packages could not be found in any package source"
 msgstr ""
 "No se pudieron encontrar los paquetes en ningún repositorio de software"
 
@@ -1021,7 +1040,6 @@ msgid "More information"
 msgstr "Más información"
 
 #: ../src/gpk-dbus-task.c:1129 ../src/gpk-enum.c:307
-#| msgid "The package is already installed"
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "El paquete ya está instalado"
@@ -1051,7 +1069,6 @@ msgstr[1] "Se necesitan paquetes adicionales:"
 
 #. TRANSLATORS: ask the user if it's okay to search
 #: ../src/gpk-dbus-task.c:1232
-#| msgid "Do you want to search for and install this software now?"
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "¿Quiere buscar e instalar este paquete ahora?"
@@ -1090,7 +1107,6 @@ msgstr "No se pudo encontrar el archivo en ningún paquete"
 #. TRANSLATORS: we've already got a package that provides this file
 #: ../src/gpk-dbus-task.c:1368
 #, c-format
-#| msgid "%s already provides this file"
 msgid "The %s package already provides this file"
 msgstr "El paquete %s ya proporciona este archivo"
 
@@ -1204,9 +1220,11 @@ msgstr "Buscar"
 msgid "Failed to search for plugin"
 msgstr "Falló al buscar el complemento"
 
-#. TRANSLATORS: no software sources have the wanted codec
+#. TRANSLATORS: no package sources have the wanted codec
 #: ../src/gpk-dbus-task.c:1635
-msgid "Could not find plugin in any configured software source"
+#, fuzzy
+#| msgid "Could not find plugin in any configured software source"
+msgid "Could not find plugin in any configured package source"
 msgstr ""
 "No se pudo encontrar el complemento en ninguno de los repositorios de "
 "software configurados"
@@ -1220,7 +1238,6 @@ msgstr[1] "Instalar los siguientes complementos"
 #. TRANSLATORS: title: show a list of fonts
 #: ../src/gpk-dbus-task.c:1659 ../src/gpk-dbus-task.c:2128
 #: ../src/gpk-dbus-task.c:2469 ../src/gpk-dbus-task.c:2704
-#| msgid "Do you want to install these packages now?"
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "¿Quiere instalar este paquete ahora?"
@@ -1245,7 +1262,7 @@ msgstr "Falló al buscar proveedores"
 msgid "Failed to find software"
 msgstr "Falló al buscar el paquete"
 
-#. TRANSLATORS: nothing found in the software sources that helps
+#. TRANSLATORS: nothing found in the package sources that helps
 #: ../src/gpk-dbus-task.c:1846
 msgid "No new applications can be found to handle this type of file"
 msgstr ""
@@ -1315,8 +1332,6 @@ msgstr[1] ""
 
 #. TRANSLATORS: we need to download a new font package to display a document
 #: ../src/gpk-dbus-task.c:2295
-#| msgid "Do you want to search for a suitable font now?"
-#| msgid_plural "Do you want to search for suitable fonts now?"
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "¿Quiere buscar un paquete adecuado ahora?"
@@ -1361,9 +1376,11 @@ msgstr[1] "Plasma necesita complementos adicionales para esta operación"
 msgid "Failed to search for Plasma service"
 msgstr "Falló al buscar el servicio de Plasma"
 
-#. TRANSLATORS: no software sources have the wanted Plasma service
+#. TRANSLATORS: no package sources have the wanted Plasma service
 #: ../src/gpk-dbus-task.c:2445
-msgid "Could not find service in any configured software source"
+#, fuzzy
+#| msgid "Could not find service in any configured software source"
+msgid "Could not find service in any configured package source"
 msgstr ""
 "No se pudo encontrar el servicio en ninguna de las fuentes de software "
 "configuradas"
@@ -1576,7 +1593,9 @@ msgid "Packages are not compatible"
 msgstr "Los paquetes no son compatibles"
 
 #: ../src/gpk-enum.c:361
-msgid "Problem connecting to a software source"
+#, fuzzy
+#| msgid "Problem connecting to a software source"
+msgid "Problem connecting to a package source"
 msgstr "Problema al conectarse a un repositorio de software"
 
 #: ../src/gpk-enum.c:364
@@ -1791,8 +1810,12 @@ msgstr ""
 "descripción del error."
 
 #: ../src/gpk-enum.c:521
+#, fuzzy
+#| msgid ""
+#| "A security trust relationship could not be made with software source.\n"
+#| "Please check your security settings."
 msgid ""
-"A security trust relationship could not be made with software source.\n"
+"A security trust relationship could not be made with package source.\n"
 "Please check your security settings."
 msgstr ""
 "No se pudo establecer una relación de confianza con los repositorios de "
@@ -1805,9 +1828,13 @@ msgid ""
 msgstr "El paquete que intenta quitar o actualizar no está instalado."
 
 #: ../src/gpk-enum.c:528
+#, fuzzy
+#| msgid ""
+#| "The package that is being modified was not found on your system or in any "
+#| "software source."
 msgid ""
 "The package that is being modified was not found on your system or in any "
-"software source."
+"package source."
 msgstr ""
 "El paquete que se va a modificar no se ha encontrado en su sistema ni en "
 "ningún repositorio de software."
@@ -1872,9 +1899,13 @@ msgstr ""
 "Dispone de más información en el informe detallado."
 
 #: ../src/gpk-enum.c:562
+#, fuzzy
+#| msgid ""
+#| "The remote software source name was not found.\n"
+#| "You may need to enable an item in Software Sources."
 msgid ""
-"The remote software source name was not found.\n"
-"You may need to enable an item in Software Sources."
+"The remote package source name was not found.\n"
+"You may need to enable an item in Package Sources."
 msgstr ""
 "No se encontró el nombre del repositorio de software remoto.\n"
 "Es posible que deba habilitar un elemento en Repositorios de software"
@@ -1924,26 +1955,39 @@ msgstr ""
 "Para utilizar este software, debe aceptar la licencia."
 
 #: ../src/gpk-enum.c:591
+#, fuzzy
+#| msgid ""
+#| "Two packages provide the same file.\n"
+#| "This is usually due to mixing packages from different software sources."
 msgid ""
 "Two packages provide the same file.\n"
-"This is usually due to mixing packages from different software sources."
+"This is usually due to mixing packages from different sources."
 msgstr ""
 "Dos paquetes proporcionan el mismo archivo.\n"
 "Habitualmente esto sucede al mezclar paquetes de diferentes repositorios de "
 "software"
 
 #: ../src/gpk-enum.c:595
+#, fuzzy
+#| msgid ""
+#| "Multiple packages exist that are not compatible with each other.\n"
+#| "This is usually due to mixing packages from different software sources."
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
-"This is usually due to mixing packages from different software sources."
+"This is usually due to mixing packages from different sources."
 msgstr ""
 "Existen múltiples paquetes que no son compatibles con otros.\n"
 "Habitualmente esto sucede al mezclar paquetes de diferentes repositorios de "
 "software."
 
 #: ../src/gpk-enum.c:599
+#, fuzzy
+#| msgid ""
+#| "There was a (possibly temporary) problem connecting to a software "
+#| "source.\n"
+#| "Please check the detailed error for further details."
 msgid ""
-"There was a (possibly temporary) problem connecting to a software source.\n"
+"There was a (possibly temporary) problem connecting to a package source.\n"
 "Please check the detailed error for further details."
 msgstr ""
 "Ha habido un problema (posiblemente temporal) al conectarse a un repositorio "
@@ -2047,8 +2091,13 @@ msgstr ""
 "Compruebe que el archivo todavía existe y que no se ha eliminado."
 
 #: ../src/gpk-enum.c:652
+#, fuzzy
+#| msgid ""
+#| "Required data could not be found on any of the configured software "
+#| "sources.\n"
+#| "There were no more download mirrors that could be tried."
 msgid ""
-"Required data could not be found on any of the configured software sources.\n"
+"Required data could not be found on any of the configured package sources.\n"
 "There were no more download mirrors that could be tried."
 msgstr ""
 "No se pudo encontrar los datos necesarios en ninguno de los repositorios de "
@@ -2056,8 +2105,13 @@ msgstr ""
 "No hay más repositorios de descarga que se puedan probar."
 
 #: ../src/gpk-enum.c:656
+#, fuzzy
+#| msgid ""
+#| "Required upgrade data could not be found in any of the configured "
+#| "software sources.\n"
+#| "The list of distribution upgrades will be unavailable."
 msgid ""
-"Required upgrade data could not be found in any of the configured software "
+"Required upgrade data could not be found in any of the configured package "
 "sources.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
@@ -2120,7 +2174,9 @@ msgstr ""
 "No se pudo obtener la información sobre los requerimientos de este paquete."
 
 #: ../src/gpk-enum.c:690
-msgid "The specified software source could not be disabled."
+#, fuzzy
+#| msgid "The specified software source could not be disabled."
+msgid "The specified package source could not be disabled."
 msgstr "No se pudo desactivar el software especificado."
 
 #: ../src/gpk-enum.c:693
@@ -2188,7 +2244,9 @@ msgid "The install root is invalid. Please contact your administrator."
 msgstr "La raíz de instalación no es válida. Contacte con su administrador."
 
 #: ../src/gpk-enum.c:726
-msgid "The list of software sources could not be downloaded."
+#, fuzzy
+#| msgid "The list of software sources could not be downloaded."
+msgid "The list of package sources could not be downloaded."
 msgstr "No se pudo descargar la lista de fuentes de software."
 
 #: ../src/gpk-enum.c:729
@@ -3044,8 +3102,10 @@ msgstr "Mapas"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1581
-msgid "Software sources"
-msgstr "Repositorios de software"
+#, fuzzy
+#| msgid "Packages"
+msgid "Package sources"
+msgstr "Paquetes"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1585
@@ -3354,7 +3414,7 @@ msgstr "Visor de sucesos"
 msgid "Remaining time: %s"
 msgstr "Tiempo restante: %s"
 
-#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
+#. TRANSLATORS: for one reason or another, we could not enable or disable a package source
 #: ../src/gpk-prefs.c:244
 msgid "Failed to change status"
 msgstr "Falló al cambiar el estado"
@@ -3366,8 +3426,10 @@ msgstr "Activado"
 
 #. TRANSLATORS: column for the source description
 #: ../src/gpk-prefs.c:323
-msgid "Software Source"
-msgstr "Repositorios de software"
+#, fuzzy
+#| msgid "Package"
+msgid "Package Source"
+msgstr "Paquete"
 
 #. TRANSLATORS: for one reason or another, we could not get the list of sources
 #: ../src/gpk-prefs.c:385
@@ -3380,7 +3442,9 @@ msgid "Exiting as backend details could not be retrieved"
 msgstr "Saliendo puesto que no se pudieron obtener los detalles del «backend»"
 
 #: ../src/gpk-prefs.c:513
-msgid "Getting software source list not supported by backend"
+#, fuzzy
+#| msgid "Getting software source list not supported by backend"
+msgid "Getting package source list not supported by backend"
 msgstr ""
 "El «backend» no soporta la obtención de listas de repositorios de software"
 
@@ -3551,12 +3615,17 @@ msgstr[1] "_Instalar actualizaciones"
 
 #. TRANSLATORS: title: nothing to do
 #: ../src/gpk-update-viewer.c:1459
-msgid "All software is up to date"
+#, fuzzy
+#| msgid "All software is up to date"
+msgid "All packages are up to date"
 msgstr "Todo el software está actualizado"
 
 #. TRANSLATORS: tell the user the problem
 #: ../src/gpk-update-viewer.c:1461
-msgid "There are no software updates available for your computer at this time."
+#, fuzzy
+#| msgid ""
+#| "There are no software updates available for your computer at this time."
+msgid "There are no package updates available for your computer at this time."
 msgstr "No hay actualizaciones disponibles para su equipo en este momento."
 
 #: ../src/gpk-update-viewer.c:1488
@@ -3788,13 +3857,10 @@ msgstr ""
 "algunos paquetes importantes del sistema."
 
 #: ../src/gpk-update-viewer.c:3411
-msgid "Update Software"
-msgstr "Actualizar software"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3428
-msgid "Software Update Viewer"
-msgstr "Visor de actualizaciones de software"
+#, fuzzy
+#| msgid "Update packages"
+msgid "Update Packages"
+msgstr "Actualizar paquetes"
 
 #: ../src/gpk-dbus-service.c:126
 msgid "Do not exit after the request has been processed"
@@ -3816,6 +3882,39 @@ msgstr "Opciones de depuración"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Mostrar las opciones de depuración"
+
+#~ msgid "Software"
+#~ msgstr "Software"
+
+#~ msgid "Software Sources"
+#~ msgstr "Repositorios de software"
+
+#~ msgid "Software Settings"
+#~ msgstr "Configuración del software"
+
+#~ msgid ""
+#~ "Change software update preferences and enable or disable software sources"
+#~ msgstr ""
+#~ "Cambiar las preferencias de actualizaciones de software y activar o "
+#~ "desactivar los repositorios de software"
+
+#~ msgid "Software Update Preferences"
+#~ msgstr "Preferencias de actualización de software"
+
+#~ msgid "Software Update"
+#~ msgstr "Actualización de software"
+
+#~ msgid "Software sources"
+#~ msgstr "Repositorios de software"
+
+#~ msgid "Software Source"
+#~ msgstr "Repositorios de software"
+
+#~ msgid "Update Software"
+#~ msgstr "Actualizar software"
+
+#~ msgid "Software Update Viewer"
+#~ msgstr "Visor de actualizaciones de software"
 
 #~ msgid "No software"
 #~ msgstr "No hay paquetes"
@@ -4810,9 +4909,6 @@ msgstr "Mostrar las opciones de depuración"
 #~ msgid "New package manager message"
 #~ msgstr "Mensaje nuevo del gestor de paquetes"
 
-#~ msgid "Enable or disable software sources"
-#~ msgstr "Habilitar o deshabilitar repositorios de software"
-
 #~ msgid "Software Source Viewer"
 #~ msgstr "Visor de repositorios de software"
 
@@ -5347,9 +5443,6 @@ msgstr "Mostrar las opciones de depuración"
 
 #~ msgid "Failed to update packages"
 #~ msgstr "Falló al actualizar los paquetes"
-
-#~ msgid "Update packages"
-#~ msgstr "Actualizar paquetes"
 
 #~ msgid "Failed to install signature"
 #~ msgstr "Falló al instalar la firma"
