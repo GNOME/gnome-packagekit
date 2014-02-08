@@ -15,7 +15,7 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-01-14 16:14+0000\n"
+"POT-Creation-Date: 2014-02-07 20:30+0000\n"
 "PO-Revision-Date: 2014-01-18 19:55+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
@@ -27,30 +27,30 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.6\n"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:1
-msgid "GNOME Package Installer"
-msgstr "Instalátor balíčků GNOME"
+msgid "GNOME Packages"
+msgstr "Balíčky GNOME"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:2
 msgid ""
-"Package Installer allows you to install and remove packages on your system. "
-"You can view search packages by name, details or even file name and also see "
+"Packages allows you to install and remove packages on your system. You can "
+"view search packages by name, details or even file name and also see "
 "dependencies of one package on other packages. Searching by groups is "
 "possible and is an easy way to find software in your favorite desktop "
 "environment."
 msgstr ""
-"Aplikace Instalátor balíčků vám umožňuje instalovat a odebírat balíčky ve vašem "
-"systému. Balíčky můžete hledat podle názvu, podrobného popisu i názvu "
+"Aplikace Balíčky vám umožňuje instalovat a odebírat balíčky ve "
+"vašem systému. Balíčky můžete hledat podle názvu, podrobného popisu i názvu "
 "souboru a můžete vidět závislosti balíčku na jiných balíčcích. Balíčky "
 "můžete procházet také roztříděné do skupin, což je snadný způsob, jak najít "
 "software pro své oblíbené pracovní prostředí."
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:3
 msgid ""
-"Package Installer uses PackageKit and can work on any distribution using the "
-"native package management framework."
+"Packages uses PackageKit and can work on any distribution using the native "
+"package management framework."
 msgstr ""
-"Instalátor balíčků využívá PackageKit a dokáží pracovat v libovolné "
-"distribuci pomocí jejího původního jádra pro správu balíčků."
+"Balíčky využívají PackageKit a dokáží pracovat v libovolné distribuci pomocí "
+"jejího původního jádra pro správu balíčků."
 
 #: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1
 msgid "GNOME Package Updater"
@@ -179,12 +179,12 @@ msgstr ""
 "„details“ (podrobnosti) nebo „file“ (soubor)."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:21
-msgid "Show all repositories in the software source viewer"
-msgstr "Zobrazovat všechny zdroje v prohlížeči zdrojů"
+msgid "Show all repositories in the package source viewer"
+msgstr "V prohlížeči zdrojů balíčků zobrazovat všechny repozitáře"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:22
-msgid "Show all repositories in the software source viewer."
-msgstr "Zobrazovat všechny zdroje v prohlížeči softwarových zdrojů."
+msgid "Show all repositories in the package source viewer."
+msgstr "V prohlížeči zdrojů balíčků zobrazovat všechny repozitáře."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:23
 msgid "Only show the newest updates in the list"
@@ -260,23 +260,20 @@ msgstr ""
 "Vynutit zapnutí těchto voleb, když se zobrazuje uživatelského rozhraní na "
 "požadavek ze sběrnice D-Bus."
 
-#: ../data/gpk-application.desktop.in.h:1
+#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
+#: ../src/gpk-application.c:2580
 msgid "Packages"
 msgstr "Balíčky"
 
 #: ../data/gpk-application.desktop.in.h:2
 msgid "Add or remove software installed on the system"
-msgstr "Přidat nebo odebrat software instalovaný v systému"
+msgstr "Přidávejte nebo odebírejte software instalovaný v systému"
 
 #: ../data/gpk-application.desktop.in.h:3
 msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
 msgstr ""
 "aktualizace;aktualizovat;povýšení;povýšit;zdroje;repozitáře;předvolby;"
 "instalovat;instalace;úložiště;"
-
-#: ../data/gpk-application.ui.h:1
-msgid "Software"
-msgstr "Software"
 
 #: ../data/gpk-application.ui.h:2
 msgid "Apply Changes"
@@ -339,9 +336,11 @@ msgstr "Závislé balíčky"
 msgid "Check for Updates"
 msgstr "Zkontrolovat aktualizace"
 
-#: ../data/gpk-application.ui.h:17
-msgid "Software Sources"
-msgstr "Zdroje softwaru"
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
+msgid "Package Sources"
+msgstr "Zdroje balíčků"
 
 #: ../data/gpk-application.ui.h:18
 msgid "Refresh Package Lists"
@@ -385,17 +384,23 @@ msgstr "_Přijmout licenci"
 
 #. TRANSLATORS: program name: application to install a package to provide a file
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2580
-#: ../src/gpk-dbus-task.c:3215 ../src/gpk-install-local-file.c:67
-#: ../src/gpk-dbus-service.c:137 ../src/gpk-dbus-service.c:140
+#: ../data/gpk-dbus-service.desktop.in.h:1 ../src/gpk-dbus-task.c:3215
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-dbus-service.c:137
+#: ../src/gpk-dbus-service.c:140
 msgid "Software Install"
 msgstr "Instalace softwaru"
 
 #: ../data/gpk-dbus-service.desktop.in.h:2
-#: ../data/gpk-install-local-file.desktop.in.h:2
 msgid "Install selected software on the system"
-msgstr "Instalovat vybraný software do tohoto systému"
+msgstr "Instalujte vybraný software do tohoto systému"
+
+#: ../data/gpk-install-local-file.desktop.in.h:1
+msgid "Package Install"
+msgstr "Instalace balíčků"
+
+#: ../data/gpk-install-local-file.desktop.in.h:2
+msgid "Install selected packages on the system"
+msgstr "Instalujte vybraný software do tohoto systému"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:826
 msgid "Software Log Viewer"
@@ -403,38 +408,27 @@ msgstr "Prohlížeč záznamů softwaru"
 
 #: ../data/gpk-log.desktop.in.h:2
 msgid "View past package management tasks"
-msgstr "Zobrazit poslední úkoly správy balíčků"
+msgstr "Zobrazte si poslední úkoly správy balíčků"
 
 #: ../data/gpk-log.ui.h:2
 msgid "Filter"
 msgstr "Filtr"
 
-#: ../data/gpk-prefs.desktop.in.h:1
-msgid "Software Settings"
-msgstr "Nastavení softwaru"
-
 #: ../data/gpk-prefs.desktop.in.h:2
-msgid ""
-"Change software update preferences and enable or disable software sources"
-msgstr ""
-"Změnit nastavení aktualizací softwaru a povolit nebo zakázat zdroje softwaru"
-
-#. TRANSLATORS: program name, an application to set per-user policy for updates
-#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
-msgid "Software Update Preferences"
-msgstr "Nastavení aktualizací softwaru"
+msgid "Enable or disable package repositories"
+msgstr "Povolte nebo zakažte repozitáře balíčků"
 
 #: ../data/gpk-prefs.ui.h:2
 msgid ""
-"A software source contains packages that can be installed on this computer."
+"A package source contains packages that can be installed on this computer."
 msgstr ""
-"Zdroj softwaru obsahuje balíčky, které je možné nainstalovat na tento "
+"Zdroj balíčků obsahuje balíčky, které je možné nainstalovat na tento "
 "počítač."
 
-#. shows extra -source, -debuginfo, and -devel software sources
+#. shows extra -source, -debuginfo, and -devel sources
 #: ../data/gpk-prefs.ui.h:4
-msgid "_Show debug and development software sources"
-msgstr "_Zobrazit zdroje softwaru pro ladění a vývoj"
+msgid "_Show debug and development package sources"
+msgstr "_Zobrazit zdroje balíčků pro ladění a vývoj"
 
 #: ../data/gpk-signature.ui.h:1
 msgid "Software signature is required"
@@ -468,13 +462,15 @@ msgstr "Balíček:"
 msgid "Do you recognize the user and trust this key?"
 msgstr "Znáte tohoto uživatele a důvěřujete tomuto klíči?"
 
+#. TRANSLATORS: title to pass to the user if there are not enough privs
 #: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
-msgid "Software Update"
-msgstr "Aktualizace softwaru"
+#: ../src/gpk-update-viewer.c:3428
+msgid "Package Updater"
+msgstr "Aktualizace balíčků"
 
 #: ../data/gpk-update-viewer.desktop.in.h:2
 msgid "Update software installed on the system"
-msgstr "Aktualizovat software instalovaný v tomto systému"
+msgstr "Aktualizujte software instalovaný v tomto systému"
 
 #: ../data/gpk-update-viewer.ui.h:2
 msgid "_Install Updates"
@@ -482,11 +478,11 @@ msgstr "_Instalovat aktualizace"
 
 #: ../data/gpk-update-viewer.ui.h:3
 msgid ""
-"Software updates correct errors, eliminate security vulnerabilities and "
+"Package updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
-"Aktualizace softwaru opravuje chyby, zamezuje bezpečnostním rizikům a "
-"přináší nové funkce."
+"Aktualizace balíčků opravují chyby, zamezuje bezpečnostním rizikům a "
+"přinášejí nové funkce."
 
 #: ../data/gpk-update-viewer.ui.h:4
 msgid "_Upgrade"
@@ -1000,8 +996,8 @@ msgstr "Balíčky se nepodařilo vyhledat"
 
 #. TRANSLATORS: message: could not find
 #: ../src/gpk-dbus-task.c:1089
-msgid "The packages could not be found in any software source"
-msgstr "Balíčky nebyly nalezeny v žádném zdroji softwaru"
+msgid "The packages could not be found in any package source"
+msgstr "Balíčky nebyly nalezeny v žádném zdroji balíčků"
 
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
@@ -1210,10 +1206,10 @@ msgstr "Vyhledat"
 msgid "Failed to search for plugin"
 msgstr "Zásuvný modul se nepodařilo vyhledat"
 
-#. TRANSLATORS: no software sources have the wanted codec
+#. TRANSLATORS: no package sources have the wanted codec
 #: ../src/gpk-dbus-task.c:1635
-msgid "Could not find plugin in any configured software source"
-msgstr "Zásuvný modul se nezdařilo nalézt v žádném nastaveném zdroji softwaru"
+msgid "Could not find plugin in any configured package source"
+msgstr "Zásuvný modul se nezdařilo nalézt v žádném nastaveném zdroji balíčků"
 
 #: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2468
 msgid "Install the following plugin"
@@ -1250,7 +1246,7 @@ msgstr "Nezdařilo se vyhledat poskytované"
 msgid "Failed to find software"
 msgstr "Nezdařilo se vyhledat software"
 
-#. TRANSLATORS: nothing found in the software sources that helps
+#. TRANSLATORS: nothing found in the package sources that helps
 #: ../src/gpk-dbus-task.c:1846
 msgid "No new applications can be found to handle this type of file"
 msgstr "Žádná nová aplikace pro daný typ souboru nebyla nalezena"
@@ -1373,10 +1369,10 @@ msgstr[2] "Plasma pro tuto operaci vyžaduje doplňkové služby"
 msgid "Failed to search for Plasma service"
 msgstr "Nezdařilo se vyhledat službu Plasma"
 
-#. TRANSLATORS: no software sources have the wanted Plasma service
+#. TRANSLATORS: no package sources have the wanted Plasma service
 #: ../src/gpk-dbus-task.c:2445
-msgid "Could not find service in any configured software source"
-msgstr "Službu se nezdařilo najít v žádném nastavené zdroji softwaru"
+msgid "Could not find service in any configured package source"
+msgstr "Službu se nezdařilo najít v žádném nastavené zdroji balíčků"
 
 #. TRANSLATORS: search for Plasma services
 #: ../src/gpk-dbus-task.c:2551
@@ -1591,8 +1587,8 @@ msgid "Packages are not compatible"
 msgstr "Balíčky nejsou kompatibilní"
 
 #: ../src/gpk-enum.c:361
-msgid "Problem connecting to a software source"
-msgstr "Problém při připojování ke zdroji softwaru"
+msgid "Problem connecting to a package source"
+msgstr "Problém při připojování ke zdroji balíčků"
 
 #: ../src/gpk-enum.c:364
 msgid "Failed to initialize"
@@ -1806,11 +1802,11 @@ msgstr ""
 
 #: ../src/gpk-enum.c:521
 msgid ""
-"A security trust relationship could not be made with software source.\n"
+"A security trust relationship could not be made with package source.\n"
 "Please check your security settings."
 msgstr ""
-"Se softwarovým zdrojem nemohl být vytvořen bezpečnostní vztah důvěry.\n"
-"Prosím zkontrolujte svá bezpečnostní nastavení."
+"Se zdrojem balíčků nemohl být vytvořen bezpečnostní vztah důvěry.\n"
+"Zkontrolujte prosím svá bezpečnostní nastavení."
 
 #: ../src/gpk-enum.c:525
 msgid ""
@@ -1821,10 +1817,10 @@ msgstr ""
 #: ../src/gpk-enum.c:528
 msgid ""
 "The package that is being modified was not found on your system or in any "
-"software source."
+"package source."
 msgstr ""
-"Právě upravovaný balíček nebyl nalezen na vašem systému nebo v žádném zdroji "
-"softwaru."
+"Právě upravovaný balíček nebyl nalezen na vašem systému nebo v některém ze "
+"zdrojů balíčků."
 
 #: ../src/gpk-enum.c:531
 msgid "The package that is trying to be installed is already installed."
@@ -1886,11 +1882,11 @@ msgstr ""
 
 #: ../src/gpk-enum.c:562
 msgid ""
-"The remote software source name was not found.\n"
-"You may need to enable an item in Software Sources."
+"The remote package source name was not found.\n"
+"You may need to enable an item in Package Sources."
 msgstr ""
-"Název vzdáleného zdroje software nebyl nalezen.\n"
-"Možná bude potřeba povolit nějakou položku ve zdrojích softwaru."
+"Název vzdáleného zdroje balíčků nebyl nalezen.\n"
+"Možná bude potřeba povolit některou položku ve zdrojích balíčků."
 
 #: ../src/gpk-enum.c:566
 msgid "Removing a protected system package is not allowed."
@@ -1939,26 +1935,26 @@ msgstr ""
 #: ../src/gpk-enum.c:591
 msgid ""
 "Two packages provide the same file.\n"
-"This is usually due to mixing packages from different software sources."
+"This is usually due to mixing packages from different sources."
 msgstr ""
 "Dva balíčky poskytují stejný soubor.\n"
-"Toto je obvykle kvůli míchání balíčků z různých zdrojů softwaru."
+"To nastává obvykle kvůli míchání balíčků z různých zdrojů balíčků."
 
 #: ../src/gpk-enum.c:595
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
-"This is usually due to mixing packages from different software sources."
+"This is usually due to mixing packages from different sources."
 msgstr ""
 "Existuje více balíčků, které nejsou navzájem kompatibilní.\n"
-"Tato situace nastává obvykle kvůli míchání balíčků z různých zdrojů softwaru."
+"To nastává obvykle kvůli míchání balíčků z různých zdrojů balíčků."
 
 #: ../src/gpk-enum.c:599
 msgid ""
-"There was a (possibly temporary) problem connecting to a software source.\n"
+"There was a (possibly temporary) problem connecting to a package source.\n"
 "Please check the detailed error for further details."
 msgstr ""
-"Nastal (pravděpodobně dočasný) problém s připojením ke zdroji softwaru.\n"
-"Pokud chcete vědět více podrobností, zkontrolujte podrobné chybové hlášení."
+"Nastal (pravděpodobně dočasný) problém s připojením ke zdroji balíčků.\n"
+"Pokud chcete vědět více podrobností, podívejte se na podrobné chybové hlášení."
 
 #: ../src/gpk-enum.c:603
 msgid ""
@@ -2053,21 +2049,20 @@ msgstr ""
 
 #: ../src/gpk-enum.c:652
 msgid ""
-"Required data could not be found on any of the configured software sources.\n"
+"Required data could not be found on any of the configured package sources.\n"
 "There were no more download mirrors that could be tried."
 msgstr ""
-"Vyžadovaná data nemohla být nalezena v žádném z nastavených softwarových "
-"zdrojů.\n"
-"Už zde nebylo žádné další zrcadlo."
+"Požadovaná data nebyla nalezena v žádném z nastavených zdrojů balíčků.\n"
+"A už není k dispozici žádné další zrcadlo, na kterém by se to dalo zkusit."
 
 #: ../src/gpk-enum.c:656
 msgid ""
-"Required upgrade data could not be found in any of the configured software "
+"Required upgrade data could not be found in any of the configured package "
 "sources.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
-"Vyžadované údaje o povýšení nebyly nalezeny v žádném z nastavených zdrojů "
-"softwaru.\n"
+"Požadované údaje o povýšení nebyly nalezeny v žádném z nastavených zdrojů "
+"balíčků.\n"
 "Seznam povýšení verze distribuce nebude dostupný."
 
 #: ../src/gpk-enum.c:660
@@ -2122,8 +2117,8 @@ msgid "The information about what requires this package could not be obtained."
 msgstr "Nelze získat informace o tom, co tento balíček vyžaduje."
 
 #: ../src/gpk-enum.c:690
-msgid "The specified software source could not be disabled."
-msgstr "Zvolený zdroj softwaru nelze zakázat."
+msgid "The specified package source could not be disabled."
+msgstr "Zvolený zdroj balíčků nelze zakázat."
 
 #: ../src/gpk-enum.c:693
 msgid ""
@@ -2186,8 +2181,8 @@ msgid "The install root is invalid. Please contact your administrator."
 msgstr "Kořen instalace je neplatný. Kontaktujte prosím svého správce."
 
 #: ../src/gpk-enum.c:726
-msgid "The list of software sources could not be downloaded."
-msgstr "Seznam zdrojů softwaru nelze stáhnout."
+msgid "The list of package sources could not be downloaded."
+msgstr "Seznam zdrojů balíčků nelze stáhnout."
 
 #: ../src/gpk-enum.c:729
 msgid "A previous package management transaction was interrupted."
@@ -3050,8 +3045,8 @@ msgstr "Mapy"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1581
-msgid "Software sources"
-msgstr "Zdroje softwaru"
+msgid "Package sources"
+msgstr "Zdroje balíčků"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1585
@@ -3374,7 +3369,7 @@ msgstr "Prohlížeč záznamů"
 msgid "Remaining time: %s"
 msgstr "Zbývající čas: %s"
 
-#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
+#. TRANSLATORS: for one reason or another, we could not enable or disable a package source
 #: ../src/gpk-prefs.c:244
 msgid "Failed to change status"
 msgstr "Nepodařilo se změnit stav"
@@ -3386,8 +3381,8 @@ msgstr "Povoleno"
 
 #. TRANSLATORS: column for the source description
 #: ../src/gpk-prefs.c:323
-msgid "Software Source"
-msgstr "Zdroj softwaru"
+msgid "Package Source"
+msgstr "Zdroj balíčků"
 
 #. TRANSLATORS: for one reason or another, we could not get the list of sources
 #: ../src/gpk-prefs.c:385
@@ -3400,8 +3395,8 @@ msgid "Exiting as backend details could not be retrieved"
 msgstr "Ukončuje se, protože nemohly být získány podrobnosti od výkonné části"
 
 #: ../src/gpk-prefs.c:513
-msgid "Getting software source list not supported by backend"
-msgstr "Získávání seznamu zdrojů softwaru není podporováno výkonnou částí"
+msgid "Getting package source list not supported by backend"
+msgstr "Získávání seznamu zdrojů balíčků není podporováno výkonnou částí"
 
 #. TRANSLATORS: we don't have a lot to go on here
 #: ../src/gpk-update-viewer.c:183
@@ -3570,13 +3565,13 @@ msgstr[2] "_Instalovat aktualizace"
 
 #. TRANSLATORS: title: nothing to do
 #: ../src/gpk-update-viewer.c:1459
-msgid "All software is up to date"
-msgstr "Veškerý software je aktualizovaný"
+msgid "All packages are up to date"
+msgstr "Veškeré balíčky jsou aktuální"
 
 #. TRANSLATORS: tell the user the problem
 #: ../src/gpk-update-viewer.c:1461
-msgid "There are no software updates available for your computer at this time."
-msgstr "Momentálně nejsou pro tento počítač dostupné žádné aktualizace."
+msgid "There are no package updates available for your computer at this time."
+msgstr "Momentálně nejsou pro tento počítač dostupné žádné aktualizace balíčků."
 
 #: ../src/gpk-update-viewer.c:1488
 #, c-format
@@ -3807,13 +3802,8 @@ msgstr ""
 "některé důležité systémové balíčky."
 
 #: ../src/gpk-update-viewer.c:3411
-msgid "Update Software"
-msgstr "Aktualizovat software"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3428
-msgid "Software Update Viewer"
-msgstr "Prohlížeč aktualizací softwaru"
+msgid "Update Packages"
+msgstr "Aktualizovat balíčky"
 
 #: ../src/gpk-dbus-service.c:126
 msgid "Do not exit after the request has been processed"
