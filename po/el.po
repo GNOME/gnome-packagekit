@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-01-29 15:05+0000\n"
-"PO-Revision-Date: 2014-01-30 20:35+0300\n"
+"POT-Creation-Date: 2014-02-10 08:06+0000\n"
+"PO-Revision-Date: 2014-02-10 11:28+0300\n"
 "Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
 "Language-Team: team@lists.gnome.gr\n"
 "Language: el\n"
@@ -179,14 +179,12 @@ msgstr ""
 "\"λεπτομέρειες\", ή \"αρχείο\"."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:21
-msgid "Show all repositories in the software source viewer"
-msgstr ""
-"Να εμφανίζονται όλα τα αποθετήρια στο εργαλείο προβολής πηγών λογισμικού"
+msgid "Show all repositories in the package source viewer"
+msgstr "Να εμφανίζονται όλα τα αποθετήρια στη προβολή πηγών λογισμικού"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:22
-msgid "Show all repositories in the software source viewer."
-msgstr ""
-"Να εμφανίζονται όλα τα αποθετήρια στο εργαλείο προβολής πηγών λογισμικού."
+msgid "Show all repositories in the package source viewer."
+msgstr "Να εμφανίζονται όλα τα αποθετήρια στην προβολή πηγών λογισμικού."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:23
 msgid "Only show the newest updates in the list"
@@ -351,9 +349,11 @@ msgstr "Εξαρτώμενα πακέτα"
 msgid "Check for Updates"
 msgstr "Έλεγχος για ενημερώσεις"
 
-#: ../data/gpk-application.ui.h:17
-msgid "Software Sources"
-msgstr "Πηγές λογισμικού"
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
+msgid "Package Sources"
+msgstr "Πηγές πακέτου"
 
 #: ../data/gpk-application.ui.h:18
 msgid "Refresh Package Lists"
@@ -427,33 +427,21 @@ msgstr "Προβολή παλαιότερων εργασιών διαχείρι�
 msgid "Filter"
 msgstr "Φίλτρο"
 
-#: ../data/gpk-prefs.desktop.in.h:1
-msgid "Software Settings"
-msgstr "Ρυθμίσεις Λογισμικού"
-
 #: ../data/gpk-prefs.desktop.in.h:2
-msgid ""
-"Change software update preferences and enable or disable software sources"
-msgstr ""
-"Αλλαγή των προτιμήσεων ενημερώσεων λογισμικού και ενεργοποίηση ή "
-"απενεργοποίηση πηγών λογισμικού"
-
-#. TRANSLATORS: program name, an application to set per-user policy for updates
-#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
-msgid "Software Update Preferences"
-msgstr "Προτιμήσεις ενημερώσεων λογισμικού"
+msgid "Enable or disable package repositories"
+msgstr "Ενεργοποίηση ή απενεργοποίηση αποθετηρίων πακέτου"
 
 #: ../data/gpk-prefs.ui.h:2
 msgid ""
-"A software source contains packages that can be installed on this computer."
+"A package source contains packages that can be installed on this computer."
 msgstr ""
-"Μια πηγή λογισμικού περιέχει πακέτα τα οποία μπορούν να εγκατασταθούν σε "
-"αυτόν το υπολογιστή."
+"Μια πηγή πακέτου περιέχει πακέτα τα οποία μπορούν να εγκατασταθούν σε αυτόν "
+"το υπολογιστή."
 
-#. shows extra -source, -debuginfo, and -devel software sources
+#. shows extra -source, -debuginfo, and -devel sources
 #: ../data/gpk-prefs.ui.h:4
-msgid "_Show debug and development software sources"
-msgstr "_Εμφάνιση πηγών λογισμικού για αποσφαλμάτωση και ανάπτυξη προγραμμάτων"
+msgid "_Show debug and development package sources"
+msgstr "_Εμφάνιση πηγών πακέτου για αποσφαλμάτωση και ανάπτυξη"
 
 #: ../data/gpk-signature.ui.h:1
 msgid "Software signature is required"
@@ -487,7 +475,9 @@ msgstr "Πακέτο:"
 msgid "Do you recognize the user and trust this key?"
 msgstr "Αναγνωρίζετε αυτό το χρήστη και εμπιστεύεστε το κλειδί του;"
 
+#. TRANSLATORS: title to pass to the user if there are not enough privs
 #: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
+#: ../src/gpk-update-viewer.c:3428
 msgid "Package Updater"
 msgstr "Ενημέρωση πακέτου"
 
@@ -501,11 +491,11 @@ msgstr "Ε_γκατάσταση ενημερώσεων"
 
 #: ../data/gpk-update-viewer.ui.h:3
 msgid ""
-"Software updates correct errors, eliminate security vulnerabilities and "
+"Package updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
-"Οι ενημερώσεις λογισμικού διορθώνουν τυχόν σφάλματα, εξαλείφουν κενά "
-"ασφαλείας και παρέχουν νέες λειτουργίες."
+"Οι ενημερώσεις πακέτου διορθώνουν σφάλματα, εξαλείφουν κενά ασφαλείας και "
+"παρέχουν νέα γνωρίσματα."
 
 #: ../data/gpk-update-viewer.ui.h:4
 msgid "_Upgrade"
@@ -760,9 +750,7 @@ msgstr ""
 " Τζένη Πετούμενου <epetoumenou@gmail.com>\n"
 " Γιάννη Κατσαμπίρης <giannis1_86@hotmail.com>\n"
 " Νίκος Χαρωνιτάκης <nikosx@gmail.com>\n"
-"\n"
-"Για περισσότερες πληροφορίες, επισκεφθείτε \n"
-"την σελίδα http://www.gnome.gr/"
+"Για περισσότερες πληροφορίες, http://www.gnome.gr/"
 
 #: ../src/gpk-application.c:2585
 msgid "PackageKit Website"
@@ -1017,7 +1005,7 @@ msgstr "Δε βρέθηκαν πακέτα"
 
 #. TRANSLATORS: message: could not find
 #: ../src/gpk-dbus-task.c:1089
-msgid "The packages could not be found in any software source"
+msgid "The packages could not be found in any package source"
 msgstr "Δε βρέθηκαν τα πακέτα σε καμία πηγή λογισμικού"
 
 #. TRANSLATORS: button: a link to the help file
@@ -1218,10 +1206,10 @@ msgstr "Αναζήτηση"
 msgid "Failed to search for plugin"
 msgstr "Απέτυχε η αναζήτηση για το πρόσθετο"
 
-#. TRANSLATORS: no software sources have the wanted codec
+#. TRANSLATORS: no package sources have the wanted codec
 #: ../src/gpk-dbus-task.c:1635
-msgid "Could not find plugin in any configured software source"
-msgstr "Δε βρέθηκε το πρόσθετο σε καμία ενεργοποιημένη πηγή λογισμικού"
+msgid "Could not find plugin in any configured package source"
+msgstr "Δε βρέθηκε το πρόσθετο σε καμία ρυθμισμένη πηγή πακέτου"
 
 #: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2468
 msgid "Install the following plugin"
@@ -1256,7 +1244,7 @@ msgstr "Απέτυχε η αναζήτηση για πακέτα που να π�
 msgid "Failed to find software"
 msgstr "Δε βρέθηκε το λογισμικό"
 
-#. TRANSLATORS: nothing found in the software sources that helps
+#. TRANSLATORS: nothing found in the package sources that helps
 #: ../src/gpk-dbus-task.c:1846
 msgid "No new applications can be found to handle this type of file"
 msgstr ""
@@ -1371,10 +1359,10 @@ msgstr[1] "Το plasma απαιτεί επιπλέον υπηρεσίες για
 msgid "Failed to search for Plasma service"
 msgstr "Απέτυχε η αναζήτηση υπηρεσίας Plasma"
 
-#. TRANSLATORS: no software sources have the wanted Plasma service
+#. TRANSLATORS: no package sources have the wanted Plasma service
 #: ../src/gpk-dbus-task.c:2445
-msgid "Could not find service in any configured software source"
-msgstr "Δε βρέθηκε υπηρεσία σε καμία ενεργοποιημένη πηγή λογισμικού"
+msgid "Could not find service in any configured package source"
+msgstr "Δε βρέθηκε υπηρεσία σε καμία ρυθμισμένη πηγή πακέτου"
 
 #. TRANSLATORS: search for Plasma services
 #: ../src/gpk-dbus-task.c:2551
@@ -1584,8 +1572,8 @@ msgid "Packages are not compatible"
 msgstr "Τα πακέτα δεν είναι συμβατά μεταξύ τους"
 
 #: ../src/gpk-enum.c:361
-msgid "Problem connecting to a software source"
-msgstr "Εμφανίστηκε πρόβλημα στη σύνδεση με μια πηγή λογισμικού"
+msgid "Problem connecting to a package source"
+msgstr "Εμφανίστηκε πρόβλημα σύνδεσης με μια πηγή πακέτου"
 
 #: ../src/gpk-enum.c:364
 msgid "Failed to initialize"
@@ -1802,11 +1790,11 @@ msgstr ""
 
 #: ../src/gpk-enum.c:521
 msgid ""
-"A security trust relationship could not be made with software source.\n"
+"A security trust relationship could not be made with package source.\n"
 "Please check your security settings."
 msgstr ""
 "Δεν ήταν δυνατή η εγκαθίδρυση σχέσης εμπιστοσύνης και ασφάλειας με την πηγή "
-"λογισμικού.\n"
+"πακέτου.\n"
 "Παρακαλώ, ελέγξτε τις ρυθμίσεις ασφαλείας σας."
 
 #: ../src/gpk-enum.c:525
@@ -1819,10 +1807,10 @@ msgstr ""
 #: ../src/gpk-enum.c:528
 msgid ""
 "The package that is being modified was not found on your system or in any "
-"software source."
+"package source."
 msgstr ""
 "Το πακέτο που προσπαθείτε να τροποποιήσετε δε βρέθηκε στο σύστημά σας ή στις "
-"πηγές λογισμικού."
+"πηγές πακέτου."
 
 #: ../src/gpk-enum.c:531
 msgid "The package that is trying to be installed is already installed."
@@ -1886,11 +1874,11 @@ msgstr ""
 
 #: ../src/gpk-enum.c:562
 msgid ""
-"The remote software source name was not found.\n"
-"You may need to enable an item in Software Sources."
+"The remote package source name was not found.\n"
+"You may need to enable an item in Package Sources."
 msgstr ""
-"Δεν βρέθηκε το όνομα της απομακρυσμένης πηγής λογισμικού.\n"
-"Ίσως πρέπει να ενεργοποιήσετε κάποια επιπλέον πηγή λογισμικού."
+"Δεν βρέθηκε το όνομα της απομακρυσμένης πηγής πακέτου.\n"
+"Ίσως πρέπει να ενεργοποιήσετε κάποιο στοιχείο στις πηγές πακέτου."
 
 #: ../src/gpk-enum.c:566
 msgid "Removing a protected system package is not allowed."
@@ -1939,29 +1927,26 @@ msgstr ""
 #: ../src/gpk-enum.c:591
 msgid ""
 "Two packages provide the same file.\n"
-"This is usually due to mixing packages from different software sources."
+"This is usually due to mixing packages from different sources."
 msgstr ""
 "Δύο πακέτα παρέχουν το ίδιο αρχείο.\n"
-"Αυτό συνήθως οφείλεται στην ανάμιξη πακέτων από διαφορετικές πηγές "
-"λογισμικού."
+"Αυτό συνήθως οφείλεται στην ανάμιξη πακέτων από διαφορετικές πηγές."
 
 #: ../src/gpk-enum.c:595
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
-"This is usually due to mixing packages from different software sources."
+"This is usually due to mixing packages from different sources."
 msgstr ""
-"Διάφορα πακέτα δεν είναι συμβατά μεταξύ τους.\n"
-"Αυτό συνήθως οφείλεται στην ανάμιξη πακέτων από διαφορετικές πηγές "
-"λογισμικού."
+"Υπάρχουν πολλαπλά πακέτα που δεν είναι συμβατά μεταξύ τους.\n"
+"Αυτό συνήθως οφείλεται στην ανάμιξη πακέτων από διαφορετικές πηγές."
 
 #: ../src/gpk-enum.c:599
 msgid ""
-"There was a (possibly temporary) problem connecting to a software source.\n"
+"There was a (possibly temporary) problem connecting to a package source.\n"
 "Please check the detailed error for further details."
 msgstr ""
-"Εμφανίστηκε πρόβλημα (πιθανώς προσωρινό) στη σύνδεση με μια πηγή "
-"λογισμικού.\n"
-"Για περισσότερες πληροφορίες, ελέγξτε τη λεπτομερή αναφορά."
+"Εμφανίστηκε πρόβλημα (πιθανώς προσωρινό) στη σύνδεση με μια πηγή πακέτου.\n"
+"Για περισσότερες πληροφορίες, ελέγξτε το λεπτομερές σφάλμα."
 
 #: ../src/gpk-enum.c:603
 msgid ""
@@ -2062,23 +2047,22 @@ msgstr ""
 
 #: ../src/gpk-enum.c:652
 msgid ""
-"Required data could not be found on any of the configured software sources.\n"
+"Required data could not be found on any of the configured package sources.\n"
 "There were no more download mirrors that could be tried."
 msgstr ""
-"Δε βρέθηκαν τα απαιτούμενα δεδομένα σε καμία από τις ενεργοποιημένες πηγές "
-"λογισμικού.\n"
-"Δεν υπάρχουν άλλοι εναλλακτικοί σύνδεσμοι που να μπορούν να χρησιμοποιηθούν "
-"για τη λήψη."
+"Δε βρέθηκαν τα απαιτούμενα δεδομένα σε καμία από τις ρυθμισμένες πηγές "
+"πακέτου.\n"
+"Δεν υπάρχουν άλλοι σύνδεσμοι μεταφόρτωσης που να μπορούν να δοκιμαστούν."
 
 #: ../src/gpk-enum.c:656
 msgid ""
-"Required upgrade data could not be found in any of the configured software "
+"Required upgrade data could not be found in any of the configured package "
 "sources.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
-"Δε βρέθηκαν οι απαιτούμενες πληροφορίες για αναβαθμίσεις σε καμία από τις "
-"ενεργοποιημένες πηγές λογισμικού.\n"
-"Δε θα είναι διαθέσιμη η λίστα των αναβαθμίσεων της διανομής."
+"Δε βρέθηκαν τα απαιτούμενα δεδομένα αναβάθμισης σε καμία από τις ρυθμισμένες "
+"πηγές πακέτου.\n"
+"Δε θα είναι διαθέσιμος ο κατάλογος των αναβαθμίσεων της διανομής."
 
 #: ../src/gpk-enum.c:660
 msgid ""
@@ -2133,8 +2117,8 @@ msgid "The information about what requires this package could not be obtained."
 msgstr "Δεν ήταν δυνατή η λήψη πληροφοριών για το τι απαιτεί αυτό το πακέτο."
 
 #: ../src/gpk-enum.c:690
-msgid "The specified software source could not be disabled."
-msgstr "Δεν ήταν δυνατή η απενεργοποίηση της ζητούμενης πηγής λογισμικού."
+msgid "The specified package source could not be disabled."
+msgstr "Αδύνατη η απενεργοποίηση της συγκεκριμένης πηγής πακέτου."
 
 #: ../src/gpk-enum.c:693
 msgid ""
@@ -2200,8 +2184,8 @@ msgstr ""
 "διαχειριστή του συστήματος σας."
 
 #: ../src/gpk-enum.c:726
-msgid "The list of software sources could not be downloaded."
-msgstr "Αδυναμία λήψης της λίστας πηγών λογισμικού."
+msgid "The list of package sources could not be downloaded."
+msgstr "Αδυναμία λήψης του καταλόγου πηγών πακέτου."
 
 #: ../src/gpk-enum.c:729
 msgid "A previous package management transaction was interrupted."
@@ -3059,8 +3043,8 @@ msgstr "Χάρτες"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1581
-msgid "Software sources"
-msgstr "Πηγές λογισμικού"
+msgid "Package sources"
+msgstr "Πηγές πακέτου"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1585
@@ -3384,7 +3368,7 @@ msgstr "Προβολή καταγραφών"
 msgid "Remaining time: %s"
 msgstr "Χρόνος που απομένει : %s"
 
-#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
+#. TRANSLATORS: for one reason or another, we could not enable or disable a package source
 #: ../src/gpk-prefs.c:244
 msgid "Failed to change status"
 msgstr "Απέτυχε η αλλαγή της κατάστασης"
@@ -3396,8 +3380,8 @@ msgstr "Ενεργή"
 
 #. TRANSLATORS: column for the source description
 #: ../src/gpk-prefs.c:323
-msgid "Software Source"
-msgstr "Πηγή λογισμικού"
+msgid "Package Source"
+msgstr "Πηγή πακέτου"
 
 #. TRANSLATORS: for one reason or another, we could not get the list of sources
 #: ../src/gpk-prefs.c:385
@@ -3412,10 +3396,8 @@ msgstr ""
 "σύστημα υποστήριξης"
 
 #: ../src/gpk-prefs.c:513
-msgid "Getting software source list not supported by backend"
-msgstr ""
-"Η λήψη της λίστας πηγών λογισμικού δεν υποστηρίζεται από το σύστημα "
-"υποστήριξης"
+msgid "Getting package source list not supported by backend"
+msgstr "Η λήψη του καταλόγου πηγών πακέτου δεν υποστηρίζεται από το παρασκήνιο"
 
 #. TRANSLATORS: we don't have a lot to go on here
 #: ../src/gpk-update-viewer.c:183
@@ -3583,14 +3565,15 @@ msgstr[1] "Ε_γκατάσταση ενημερώσεων"
 
 #. TRANSLATORS: title: nothing to do
 #: ../src/gpk-update-viewer.c:1459
-msgid "All software is up to date"
-msgstr "Όλο το λογισμικό σας είναι ενημερωμένο"
+msgid "All packages are up to date"
+msgstr "Όλο τα πακέτα σας είναι ενημερωμένα"
 
 #. TRANSLATORS: tell the user the problem
 #: ../src/gpk-update-viewer.c:1461
-msgid "There are no software updates available for your computer at this time."
+msgid "There are no package updates available for your computer at this time."
 msgstr ""
-"Δεν υπάρχουν διαθέσιμες ενημερώσεις για τον υπολογιστή σας αυτή την στιγμή."
+"Δεν υπάρχουν διαθέσιμες ενημερώσεις κανενός πακέτου για τον υπολογιστή σας "
+"αυτή την στιγμή."
 
 #: ../src/gpk-update-viewer.c:1488
 #, c-format
@@ -3826,13 +3809,8 @@ msgstr ""
 "πρώτα μερικά σημαντικά πακέτα συστήματος."
 
 #: ../src/gpk-update-viewer.c:3411
-msgid "Update Software"
-msgstr "Ενημέρωση λογισμικού"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3428
-msgid "Software Update Viewer"
-msgstr "Προβολή ενημερώσεων λογισμικού"
+msgid "Update Packages"
+msgstr "Ενημέρωση πακέτων"
 
 #: ../src/gpk-dbus-service.c:126
 msgid "Do not exit after the request has been processed"
@@ -3854,6 +3832,33 @@ msgstr "Επιλογές αποσφαλμάτωσης"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Προβολή επιλογών αποσφαλμάτωσης"
+
+#~ msgid "Software Sources"
+#~ msgstr "Πηγές λογισμικού"
+
+#~ msgid "Software Settings"
+#~ msgstr "Ρυθμίσεις Λογισμικού"
+
+#~ msgid ""
+#~ "Change software update preferences and enable or disable software sources"
+#~ msgstr ""
+#~ "Αλλαγή των προτιμήσεων ενημερώσεων λογισμικού και ενεργοποίηση ή "
+#~ "απενεργοποίηση πηγών λογισμικού"
+
+#~ msgid "Software Update Preferences"
+#~ msgstr "Προτιμήσεις ενημερώσεων λογισμικού"
+
+#~ msgid "Software sources"
+#~ msgstr "Πηγές λογισμικού"
+
+#~ msgid "Software Source"
+#~ msgstr "Πηγή λογισμικού"
+
+#~ msgid "Update Software"
+#~ msgstr "Ενημέρωση λογισμικού"
+
+#~ msgid "Software Update Viewer"
+#~ msgstr "Προβολή ενημερώσεων λογισμικού"
 
 #~ msgid "Software"
 #~ msgstr "Λογισμικό"
