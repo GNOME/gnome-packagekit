@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-01-29 15:05+0000\n"
-"PO-Revision-Date: 2014-01-31 22:47+0200\n"
+"POT-Creation-Date: 2014-02-11 20:06+0000\n"
+"PO-Revision-Date: 2014-02-11 23:00+0200\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -23,17 +23,10 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.6\n"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:1
-#| msgid "GNOME Package Installer"
 msgid "GNOME Packages"
 msgstr "GNOME paketai"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:2
-#| msgid ""
-#| "Package Installer allows you to install and remove packages on your "
-#| "system. You can view search packages by name, details or even file name "
-#| "and also see dependencies of one package on other packages. Searching by "
-#| "groups is possible and is an easy way to find software in your favorite "
-#| "desktop environment."
 msgid ""
 "Packages allows you to install and remove packages on your system. You can "
 "view search packages by name, details or even file name and also see "
@@ -48,9 +41,6 @@ msgstr ""
 "darbastalio aplinką."
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:3
-#| msgid ""
-#| "Package Installer uses PackageKit and can work on any distribution using "
-#| "the native package management framework."
 msgid ""
 "Packages uses PackageKit and can work on any distribution using the native "
 "package management framework."
@@ -181,12 +171,14 @@ msgstr ""
 "Numatytoji paieškos veiksena. Parinktys yra „name“, „details“ arba „file“."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:21
-msgid "Show all repositories in the software source viewer"
-msgstr "Rodyti visas saugyklas programinės įrangos šaltinių žiūryklėje"
+#| msgid "Show all repositories in the software source viewer"
+msgid "Show all repositories in the package source viewer"
+msgstr "Rodyti visas saugyklas paketų šaltinių žiūryklėje"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:22
-msgid "Show all repositories in the software source viewer."
-msgstr "Rodyti visas saugyklas programinės įrangos šaltinių žiūryklėje."
+#| msgid "Show all repositories in the software source viewer."
+msgid "Show all repositories in the package source viewer."
+msgstr "Rodyti visas saugyklas paketų šaltinių žiūryklėje."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:23
 msgid "Only show the newest updates in the list"
@@ -339,9 +331,12 @@ msgstr "Reikalingas paketams"
 msgid "Check for Updates"
 msgstr "Tikrinti, ar yra atnaujinimų"
 
-#: ../data/gpk-application.ui.h:17
-msgid "Software Sources"
-msgstr "Programinės įrangos saugyklos"
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
+#| msgid "Packages"
+msgid "Package Sources"
+msgstr "Paketų šaltiniai"
 
 #: ../data/gpk-application.ui.h:18
 msgid "Refresh Package Lists"
@@ -396,12 +391,10 @@ msgid "Install selected software on the system"
 msgstr "Įdiegti pasirinktą programinę įrangą sistemoje"
 
 #: ../data/gpk-install-local-file.desktop.in.h:1
-#| msgid "Package installer"
 msgid "Package Install"
 msgstr "Paketų diegtuvė"
 
 #: ../data/gpk-install-local-file.desktop.in.h:2
-#| msgid "Install selected software on the system"
 msgid "Install selected packages on the system"
 msgstr "Įdiegti pasirinktus paketus sistemoje"
 
@@ -417,33 +410,25 @@ msgstr "Rodyti ankstesnes paketų tvarkymo užduotis"
 msgid "Filter"
 msgstr "Filtras"
 
-#: ../data/gpk-prefs.desktop.in.h:1
-msgid "Software Settings"
-msgstr "Programinės įrangos nustatymai"
-
 #: ../data/gpk-prefs.desktop.in.h:2
-msgid ""
-"Change software update preferences and enable or disable software sources"
-msgstr ""
-"Pakeisti programinės įrangos atnaujinimo nustatymus ir įjungti/išjungti "
-"saugyklas"
-
-#. TRANSLATORS: program name, an application to set per-user policy for updates
-#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
-msgid "Software Update Preferences"
-msgstr "Programinės įrangos atnaujinimo nustatymai"
+#| msgid "Enabled repository"
+msgid "Enable or disable package repositories"
+msgstr "Įjungti arba išjungti paketų saugyklas"
 
 #: ../data/gpk-prefs.ui.h:2
+#| msgid ""
+#| "A software source contains packages that can be installed on this "
+#| "computer."
 msgid ""
-"A software source contains packages that can be installed on this computer."
+"A package source contains packages that can be installed on this computer."
 msgstr ""
-"Programinės įrangos saugykla turi paketus, kurie gali būti įdiegti šiame "
-"kompiuteryje."
+"Paketų šaltinis turi paketus, kuriuos galima įdiegti šiame kompiuteryje."
 
-#. shows extra -source, -debuginfo, and -devel software sources
+#. shows extra -source, -debuginfo, and -devel sources
 #: ../data/gpk-prefs.ui.h:4
-msgid "_Show debug and development software sources"
-msgstr "_Rodyti derinimo ir programuotojų programinės įrangos saugyklas"
+#| msgid "_Show debug and development software sources"
+msgid "_Show debug and development package sources"
+msgstr "_Rodyti derinimo ir programuotojų paketų šaltinius"
 
 #: ../data/gpk-signature.ui.h:1
 msgid "Software signature is required"
@@ -477,8 +462,9 @@ msgstr "Paketas:"
 msgid "Do you recognize the user and trust this key?"
 msgstr "Ar atpažįstate šį naudotoją ir pasitikite šiuo raktu?"
 
+#. TRANSLATORS: title to pass to the user if there are not enough privs
 #: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
-#| msgid "GNOME Package Updater"
+#: ../src/gpk-update-viewer.c:3428
 msgid "Package Updater"
 msgstr "Paketų atnaujinimas"
 
@@ -491,12 +477,15 @@ msgid "_Install Updates"
 msgstr "Į_diegti atnaujinimus"
 
 #: ../data/gpk-update-viewer.ui.h:3
+#| msgid ""
+#| "Software updates correct errors, eliminate security vulnerabilities and "
+#| "provide new features."
 msgid ""
-"Software updates correct errors, eliminate security vulnerabilities and "
+"Package updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
 msgstr ""
-"Programinės įrangos atnaujinimai ištaiso klaidas, pašalina saugumo spragas "
-"ir suteikia naujų funkcijų."
+"Paketų atnaujinimai ištaiso klaidas, pašalina saugumo spragas ir suteikia "
+"naujų funkcijų."
 
 #: ../data/gpk-update-viewer.ui.h:4
 msgid "_Upgrade"
@@ -1011,8 +1000,9 @@ msgstr "Nepavyko rasti paketų"
 
 #. TRANSLATORS: message: could not find
 #: ../src/gpk-dbus-task.c:1089
-msgid "The packages could not be found in any software source"
-msgstr "Paketų nepavyko rasti jokiame programinės įrangos šaltinyje"
+#| msgid "The packages could not be found in any software source"
+msgid "The packages could not be found in any package source"
+msgstr "Paketų nepavyko rasti jokiame paketų šaltinyje"
 
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
@@ -1219,11 +1209,11 @@ msgstr "Ieškoti"
 msgid "Failed to search for plugin"
 msgstr "Nepavyko rasti įskiepio"
 
-#. TRANSLATORS: no software sources have the wanted codec
+#. TRANSLATORS: no package sources have the wanted codec
 #: ../src/gpk-dbus-task.c:1635
-msgid "Could not find plugin in any configured software source"
-msgstr ""
-"Nepavyko rasti įskiepio nei vienoje nurodytoje programinės įrangos saugykloje"
+#| msgid "Could not find plugin in any configured software source"
+msgid "Could not find plugin in any configured package source"
+msgstr "Nepavyko rasti įskiepio nei viename nurodytame paketų šaltinyje"
 
 #: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2468
 msgid "Install the following plugin"
@@ -1260,7 +1250,7 @@ msgstr "Nepavyko rasti teikėjo"
 msgid "Failed to find software"
 msgstr "Nepavyko rasti programinės įrangos"
 
-#. TRANSLATORS: nothing found in the software sources that helps
+#. TRANSLATORS: nothing found in the package sources that helps
 #: ../src/gpk-dbus-task.c:1846
 msgid "No new applications can be found to handle this type of file"
 msgstr "Nepavyko rasti naujų programų šio tipo failams apdoroti"
@@ -1383,11 +1373,11 @@ msgstr[2] "Plasma reikalauja papildomų tarnybų šiai operacijai"
 msgid "Failed to search for Plasma service"
 msgstr "Nepavyko rasti Plasma tarnybos"
 
-#. TRANSLATORS: no software sources have the wanted Plasma service
+#. TRANSLATORS: no package sources have the wanted Plasma service
 #: ../src/gpk-dbus-task.c:2445
-msgid "Could not find service in any configured software source"
-msgstr ""
-"Nepavyko rasti tarnybos nei vienoje nurodytoje programinės įrangos saugykloje"
+#| msgid "Could not find service in any configured software source"
+msgid "Could not find service in any configured package source"
+msgstr "Nepavyko rasti tarnybos nei viename nurodytame paketų šaltinyje"
 
 #. TRANSLATORS: search for Plasma services
 #: ../src/gpk-dbus-task.c:2551
@@ -1602,8 +1592,9 @@ msgid "Packages are not compatible"
 msgstr "Paketai nesuderinami"
 
 #: ../src/gpk-enum.c:361
-msgid "Problem connecting to a software source"
-msgstr "Kilo problemų jungiantis prie programinės įrangos saugyklos"
+#| msgid "Problem connecting to a software source"
+msgid "Problem connecting to a package source"
+msgstr "Kilo problemų jungiantis prie paketų šaltinio"
 
 #: ../src/gpk-enum.c:364
 msgid "Failed to initialize"
@@ -1816,11 +1807,14 @@ msgstr ""
 "apibūdindami klaidą."
 
 #: ../src/gpk-enum.c:521
+#| msgid ""
+#| "A security trust relationship could not be made with software source.\n"
+#| "Please check your security settings."
 msgid ""
-"A security trust relationship could not be made with software source.\n"
+"A security trust relationship could not be made with package source.\n"
 "Please check your security settings."
 msgstr ""
-"Nepavyko užmegzti patikimo saugaus ryšio su programinės įrangos saugykla.\n"
+"Nepavyko užmegzti patikimo saugaus ryšio su paketų šaltiniu.\n"
 "Patikrinkite saugumo nustatymus."
 
 #: ../src/gpk-enum.c:525
@@ -1829,12 +1823,14 @@ msgid ""
 msgstr "Paketas, kurį bandoma pašalinti ar atnaujinti, dar neįdiegtas."
 
 #: ../src/gpk-enum.c:528
+#| msgid ""
+#| "The package that is being modified was not found on your system or in any "
+#| "software source."
 msgid ""
 "The package that is being modified was not found on your system or in any "
-"software source."
+"package source."
 msgstr ""
-"Keistinas paketas nerastas nei jūsų sistemoje, nei jokioje programinės "
-"įrangos saugykloje."
+"Keičiamas paketas nerastas nei jūsų sistemoje, nei jokiame paketų šaltinyje."
 
 #: ../src/gpk-enum.c:531
 msgid "The package that is trying to be installed is already installed."
@@ -1895,12 +1891,15 @@ msgstr ""
 "Daugiau informacijos rasite išsamioje ataskaitoje."
 
 #: ../src/gpk-enum.c:562
+#| msgid ""
+#| "The remote software source name was not found.\n"
+#| "You may need to enable an item in Software Sources."
 msgid ""
-"The remote software source name was not found.\n"
-"You may need to enable an item in Software Sources."
+"The remote package source name was not found.\n"
+"You may need to enable an item in Package Sources."
 msgstr ""
-"Nutolusi programinės įrangos saugykla nerasta.\n"
-"Jums gali reikėti įjungti šią programinės įrangos saugyklą."
+"Nutolęs paketų šaltinis nerastas.\n"
+"Jums gali reikėti įjungti elementą paketų šaltiniuose."
 
 #: ../src/gpk-enum.c:566
 msgid "Removing a protected system package is not allowed."
@@ -1947,30 +1946,37 @@ msgstr ""
 "Norėdami naudoti šį failą, turite sutikti su licencija."
 
 #: ../src/gpk-enum.c:591
+#| msgid ""
+#| "Two packages provide the same file.\n"
+#| "This is usually due to mixing packages from different software sources."
 msgid ""
 "Two packages provide the same file.\n"
-"This is usually due to mixing packages from different software sources."
+"This is usually due to mixing packages from different sources."
 msgstr ""
-"Du paketai suteikia tą patį failą.\n"
-"Taip dažniausiai atsitinka maišant paketus iš skirtingų programinės įrangos "
-"saugyklų."
+"Du paketai pateikia tą patį failą.\n"
+"Taip dažniausiai atsitinka maišant paketus iš skirtingų šaltinių."
 
 #: ../src/gpk-enum.c:595
+#| msgid ""
+#| "Multiple packages exist that are not compatible with each other.\n"
+#| "This is usually due to mixing packages from different software sources."
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
-"This is usually due to mixing packages from different software sources."
+"This is usually due to mixing packages from different sources."
 msgstr ""
 "Yra keletas paketų, nesuderinamų tarpusavyje.\n"
-"Taip dažniausiai atsitinka naudojant paketus iš skirtingų programinės "
-"įrangos saugyklų."
+"Taip dažniausiai atsitinka naudojant paketus iš skirtingų šaltinių."
 
 #: ../src/gpk-enum.c:599
+#| msgid ""
+#| "There was a (possibly temporary) problem connecting to a software "
+#| "source.\n"
+#| "Please check the detailed error for further details."
 msgid ""
-"There was a (possibly temporary) problem connecting to a software source.\n"
+"There was a (possibly temporary) problem connecting to a package source.\n"
 "Please check the detailed error for further details."
 msgstr ""
-"Problema (greičiausiai laikina) jungiantis prie programinės įrangos "
-"saugyklos.\n"
+"Problema (greičiausiai laikina) jungiantis prie paketų šaltinio.\n"
 "Daugiau informacijos rasite detaliame klaidos aprašyme."
 
 #: ../src/gpk-enum.c:603
@@ -2064,22 +2070,29 @@ msgstr ""
 "Patikrinkite, ar failas vis dar yra ir nebuvo ištrintas."
 
 #: ../src/gpk-enum.c:652
+#| msgid ""
+#| "Required data could not be found on any of the configured software "
+#| "sources.\n"
+#| "There were no more download mirrors that could be tried."
 msgid ""
-"Required data could not be found on any of the configured software sources.\n"
+"Required data could not be found on any of the configured package sources.\n"
 "There were no more download mirrors that could be tried."
 msgstr ""
-"Reikiamų duomenų nerasta jokioje nustatytoje programinės įrangos "
-"saugykloje.\n"
+"Reikiamų duomenų nerasta jokiame nustatytame paketų šaltinyje.\n"
 "Nėra kitų dubliuojamųjų tinklaviečių, kurias būtų galima pamėginti."
 
 #: ../src/gpk-enum.c:656
+#| msgid ""
+#| "Required upgrade data could not be found in any of the configured "
+#| "software sources.\n"
+#| "The list of distribution upgrades will be unavailable."
 msgid ""
-"Required upgrade data could not be found in any of the configured software "
+"Required upgrade data could not be found in any of the configured package "
 "sources.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
-"Reikalingi atnaujinimo duomenys nerasti jokioje nustatytoje programinės "
-"įrangos saugykloje.\n"
+"Reikalingi atnaujinimo duomenys nerasti jokiame nustatytame paketų "
+"šaltinyje.\n"
 "Distributyvo atnaujinimų sąrašas bus neprieinamas."
 
 #: ../src/gpk-enum.c:660
@@ -2133,8 +2146,9 @@ msgid "The information about what requires this package could not be obtained."
 msgstr "Nepavyko gauti informacijos apie tai, ko reikalauja šis paketas."
 
 #: ../src/gpk-enum.c:690
-msgid "The specified software source could not be disabled."
-msgstr "Nurodyta programinės įrangos saugykla negali būti išjungta."
+#| msgid "The specified software source could not be disabled."
+msgid "The specified package source could not be disabled."
+msgstr "Nurodytas paketų šaltinis negali būti išjungtas."
 
 #: ../src/gpk-enum.c:693
 msgid ""
@@ -2197,8 +2211,9 @@ msgid "The install root is invalid. Please contact your administrator."
 msgstr "Diegimo šaknis netinkama. Susisiekite su sistemos administratoriumi."
 
 #: ../src/gpk-enum.c:726
-msgid "The list of software sources could not be downloaded."
-msgstr "Nepavyko parsiųsti programinės įrangos saugyklų sąrašo."
+#| msgid "The list of software sources could not be downloaded."
+msgid "The list of package sources could not be downloaded."
+msgstr "Nepavyko parsiųsti paketų šaltinių sąrašo."
 
 #: ../src/gpk-enum.c:729
 msgid "A previous package management transaction was interrupted."
@@ -3059,8 +3074,9 @@ msgstr "Žemėlapiai"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1581
-msgid "Software sources"
-msgstr "Programinės įrangos saugyklos"
+#| msgid "Packages"
+msgid "Package sources"
+msgstr "Paketų šaltiniai"
 
 #. TRANSLATORS: The group type
 #: ../src/gpk-enum.c:1585
@@ -3396,7 +3412,7 @@ msgstr "Žurnalų peržiūra"
 msgid "Remaining time: %s"
 msgstr "Likęs laikas: %s"
 
-#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
+#. TRANSLATORS: for one reason or another, we could not enable or disable a package source
 #: ../src/gpk-prefs.c:244
 msgid "Failed to change status"
 msgstr "Nepavyko pakeisti būsenos"
@@ -3408,8 +3424,9 @@ msgstr "Įjungta"
 
 #. TRANSLATORS: column for the source description
 #: ../src/gpk-prefs.c:323
-msgid "Software Source"
-msgstr "Programinės įrangos saugykla"
+#| msgid "Package"
+msgid "Package Source"
+msgstr "Paketų šaltinis"
 
 #. TRANSLATORS: for one reason or another, we could not get the list of sources
 #: ../src/gpk-prefs.c:385
@@ -3422,9 +3439,9 @@ msgid "Exiting as backend details could not be retrieved"
 msgstr "Išeinama, kadangi nepavyko gauti posistemės informacijos"
 
 #: ../src/gpk-prefs.c:513
-msgid "Getting software source list not supported by backend"
-msgstr ""
-"Ši posistemė nesuteikia galimybės gauti programinės įrangos saugyklų sąrašą"
+#| msgid "Getting software source list not supported by backend"
+msgid "Getting package source list not supported by backend"
+msgstr "Ši posistemė nesuteikia galimybės gauti paketų šaltinių sąrašą"
 
 #. TRANSLATORS: we don't have a lot to go on here
 #: ../src/gpk-update-viewer.c:183
@@ -3596,13 +3613,16 @@ msgstr[2] "Į_diegti atnaujinimus"
 
 #. TRANSLATORS: title: nothing to do
 #: ../src/gpk-update-viewer.c:1459
-msgid "All software is up to date"
-msgstr "Visa programinė įranga atnaujinta"
+#| msgid "All software is up to date"
+msgid "All packages are up to date"
+msgstr "Visa paketai yra atnaujinti"
 
 #. TRANSLATORS: tell the user the problem
 #: ../src/gpk-update-viewer.c:1461
-msgid "There are no software updates available for your computer at this time."
-msgstr "Šiuo metu jūsų kompiuteriui nėra jokių atnaujinimų."
+#| msgid ""
+#| "There are no software updates available for your computer at this time."
+msgid "There are no package updates available for your computer at this time."
+msgstr "Šiuo metu jūsų kompiuteriui nėra jokių paketų atnaujinimų."
 
 #: ../src/gpk-update-viewer.c:1488
 #, c-format
@@ -3837,13 +3857,9 @@ msgstr ""
 "svarbius sisteminius paketus."
 
 #: ../src/gpk-update-viewer.c:3411
-msgid "Update Software"
-msgstr "Atnaujinti programinę įrangą"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3428
-msgid "Software Update Viewer"
-msgstr "Programinės įrangos atnaujinimo žiūryklė"
+#| msgid "Updated packages"
+msgid "Update Packages"
+msgstr "Atnaujinti paketus"
 
 #: ../src/gpk-dbus-service.c:126
 msgid "Do not exit after the request has been processed"
