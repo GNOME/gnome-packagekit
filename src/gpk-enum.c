@@ -148,8 +148,10 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_DOWNLOAD_PACKAGES,	"pk-package-download"},
 	{PK_ROLE_ENUM_GET_CATEGORIES,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_DETAILS,		"pk-package-info"},
+	{PK_ROLE_ENUM_GET_DETAILS_LOCAL,	"pk-package-search"},
 	{PK_ROLE_ENUM_GET_DISTRO_UPGRADES,	"pk-package-info"},
 	{PK_ROLE_ENUM_GET_FILES,		"pk-package-search"},
+	{PK_ROLE_ENUM_GET_FILES_LOCAL,		"pk-package-search"},
 	{PK_ROLE_ENUM_GET_OLD_TRANSACTIONS,	"pk-package-info"},
 	{PK_ROLE_ENUM_GET_PACKAGES,		"pk-package-search"},
 	{PK_ROLE_ENUM_GET_REPO_LIST,		"pk-package-sources"},
@@ -162,6 +164,7 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_REMOVE_PACKAGES,		"pk-package-delete"},
 	{PK_ROLE_ENUM_REPO_ENABLE,		"pk-package-sources"},
 	{PK_ROLE_ENUM_REPO_SET_DATA,		"pk-package-sources"},
+	{PK_ROLE_ENUM_REPO_REMOVE,		"pk-package-sources"},
 	{PK_ROLE_ENUM_REQUIRED_BY,		"pk-package-info"},
 	{PK_ROLE_ENUM_RESOLVE,			"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_DETAILS,		"pk-package-search"},
@@ -1211,6 +1214,7 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		text = _("Getting update detail");
 		break;
 	case PK_ROLE_ENUM_GET_DETAILS:
+	case PK_ROLE_ENUM_GET_DETAILS_LOCAL:
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting details");
 		break;
@@ -1270,6 +1274,10 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Enabling repository");
 		break;
+	case PK_ROLE_ENUM_REPO_REMOVE:
+		/* TRANSLATORS: The role of the transaction, in present tense */
+		text = _("Removing repository");
+		break;
 	case PK_ROLE_ENUM_REPO_SET_DATA:
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Setting repository data");
@@ -1279,6 +1287,7 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 		text = _("Resolving");
 		break;
 	case PK_ROLE_ENUM_GET_FILES:
+	case PK_ROLE_ENUM_GET_FILES_LOCAL:
 		/* TRANSLATORS: The role of the transaction, in present tense */
 		text = _("Getting file list");
 		break;
@@ -1347,6 +1356,7 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		text = _("Got update detail");
 		break;
 	case PK_ROLE_ENUM_GET_DETAILS:
+	case PK_ROLE_ENUM_GET_DETAILS_LOCAL:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got details");
 		break;
@@ -1406,6 +1416,10 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Enabled repository");
 		break;
+	case PK_ROLE_ENUM_REPO_REMOVE:
+		/* TRANSLATORS: The role of the transaction, in past tense */
+		text = _("Removed repository");
+		break;
 	case PK_ROLE_ENUM_REPO_SET_DATA:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Set repository data");
@@ -1415,6 +1429,7 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		text = _("Resolved");
 		break;
 	case PK_ROLE_ENUM_GET_FILES:
+	case PK_ROLE_ENUM_GET_FILES_LOCAL:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got file list");
 		break;
