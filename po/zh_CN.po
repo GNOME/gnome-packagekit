@@ -8,15 +8,17 @@
 # tuhaihe <wangdianjin@linuxdeepin.com>, 2012.
 # YunQiang Su <wzssyqa@gmail.com>, 2011, 2012.
 # Tong Hui <tonghuix@gmail.com>, 2013.
+# sphinx <yishanj@gmail.com>, 2014.
 #
+
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-01-14 11:04+0000\n"
-"PO-Revision-Date: 2014-01-18 17:10+0800\n"
-"Last-Translator: Tong Hui <tonghuix@gmail.com>\n"
+"POT-Creation-Date: 2014-02-21 20:04+0000\n"
+"PO-Revision-Date: 2014-02-23 18:32+0800\n"
+"Last-Translator: sphinx <yishanj@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -26,28 +28,28 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.5\n"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:1
-msgid "GNOME Package Installer"
-msgstr "GNOME 软件包安装程序"
+msgid "GNOME Packages"
+msgstr "GNOME Packages"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:2
 msgid ""
-"Package Installer allows you to install and remove packages on your system. "
-"You can view search packages by name, details or even file name and also see "
+"Packages allows you to install and remove packages on your system. You can "
+"view search packages by name, details or even file name and also see "
 "dependencies of one package on other packages. Searching by groups is "
 "possible and is an easy way to find software in your favorite desktop "
 "environment."
 msgstr ""
-"软件包安装程序允许您安装和卸载系统里的软件包。您可以按包名、描述或者文件名查"
-"看和搜索软件包，并能看到软件包之间的依赖关系。同时提供了分类搜索，查找您最爱"
-"的桌面环境下的软件会更加容易。"
+"Packages 允许您安装和卸载系统里的软件包。您可以按包名、描述或者文件名查看和搜"
+"索软件包，并能看到软件包之间的依赖关系。同时提供了分类搜索，查找您喜爱的桌面"
+"环境下的软件会更加容易。"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:3
 msgid ""
-"Package Installer uses PackageKit and can work on any distribution using the "
-"native package management framework."
+"Packages uses PackageKit and can work on any distribution using the native "
+"package management framework."
 msgstr ""
-"软件包安装程序使用 PackageKit ，它使用原生的软件包管理框架，可以在任何发行版"
-"上运行。"
+"Packages 使用 PackageKit ，它使用原生的软件包管理框架，可以在任何发行版上运"
+"行。"
 
 #: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1
 msgid "GNOME Package Updater"
@@ -72,13 +74,13 @@ msgstr ""
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:1
 msgid "Automatically remove unused dependencies"
-msgstr "自动删除不再使用的依赖"
+msgstr "自动移除不再使用的依赖"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:2
 msgid ""
 "When removing a package, also remove those dependencies that are not "
 "required by other packages."
-msgstr "当删除一个软件包时，同时删除其他软件包不再需要的依赖。"
+msgstr "当移除一个软件包时，同时移除其他软件包不再需要的依赖。"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:3
 msgid "Ask the user if additional packages should be installed"
@@ -165,12 +167,12 @@ msgid ""
 msgstr "默认使用的搜索模式。可选项为“名称”、“细节”或“文件”。"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:21
-msgid "Show all repositories in the software source viewer"
-msgstr "在软件源查看器显示所有软件仓库"
+msgid "Show all repositories in the package source viewer"
+msgstr "在软件包来源查看器中显示所有软件仓库"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:22
-msgid "Show all repositories in the software source viewer."
-msgstr "在软件源查看器显示所有软件仓库。"
+msgid "Show all repositories in the package source viewer."
+msgstr "在软件包来源查看器中显示所有软件仓库。"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:23
 msgid "Only show the newest updates in the list"
@@ -237,23 +239,20 @@ msgid ""
 "turned on."
 msgstr "当显示来自会话 D-Bus 请求的用户界面时，强制开启这些选项。"
 
-#: ../data/gpk-application.desktop.in.h:1
+#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
+#: ../src/gpk-application.c:2580
 msgid "Packages"
 msgstr "软件包"
 
 #: ../data/gpk-application.desktop.in.h:2
 msgid "Add or remove software installed on the system"
-msgstr "添加或删除系统中安装的软件"
+msgstr "添加或移除系统中安装的软件"
 
 #: ../data/gpk-application.desktop.in.h:3
 msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
 msgstr ""
 "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;更新;升级;源;"
 "库;仓库;首选项;偏好;安装;商店;"
-
-#: ../data/gpk-application.ui.h:1
-msgid "Software"
-msgstr "软件"
 
 #: ../data/gpk-application.ui.h:2
 msgid "Apply Changes"
@@ -289,7 +288,7 @@ msgstr "安装软件包"
 
 #: ../data/gpk-application.ui.h:10
 msgid "Remove Package"
-msgstr "删除软件包"
+msgstr "移除软件包"
 
 #: ../data/gpk-application.ui.h:11
 msgid "Visit home page for selected package"
@@ -315,9 +314,11 @@ msgstr "从属的软件包"
 msgid "Check for Updates"
 msgstr "检查更新"
 
-#: ../data/gpk-application.ui.h:17
-msgid "Software Sources"
-msgstr "软件源"
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
+msgid "Package Sources"
+msgstr "软件包来源"
 
 #: ../data/gpk-application.ui.h:18
 msgid "Refresh Package Lists"
@@ -361,17 +362,23 @@ msgstr "接受许可协议(_A)"
 
 #. TRANSLATORS: program name: application to install a package to provide a file
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2580
-#: ../src/gpk-dbus-task.c:3215 ../src/gpk-install-local-file.c:67
-#: ../src/gpk-dbus-service.c:137 ../src/gpk-dbus-service.c:140
+#: ../data/gpk-dbus-service.desktop.in.h:1 ../src/gpk-dbus-task.c:3215
+#: ../src/gpk-install-local-file.c:67 ../src/gpk-dbus-service.c:137
+#: ../src/gpk-dbus-service.c:140
 msgid "Software Install"
 msgstr "软件安装程序"
 
 #: ../data/gpk-dbus-service.desktop.in.h:2
-#: ../data/gpk-install-local-file.desktop.in.h:2
 msgid "Install selected software on the system"
 msgstr "在系统中安装选定的软件"
+
+#: ../data/gpk-install-local-file.desktop.in.h:1
+msgid "Package Install"
+msgstr "软件包安装"
+
+#: ../data/gpk-install-local-file.desktop.in.h:2
+msgid "Install selected packages on the system"
+msgstr "在系统中安装选定的软件包"
 
 #: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:826
 msgid "Software Log Viewer"
@@ -385,29 +392,19 @@ msgstr "查看以前的包管理任务"
 msgid "Filter"
 msgstr "过滤"
 
-#: ../data/gpk-prefs.desktop.in.h:1
-msgid "Software Settings"
-msgstr "软件设置"
-
 #: ../data/gpk-prefs.desktop.in.h:2
-msgid ""
-"Change software update preferences and enable or disable software sources"
-msgstr "更改软件更新首选项并启用或禁用软件源"
-
-#. TRANSLATORS: program name, an application to set per-user policy for updates
-#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
-msgid "Software Update Preferences"
-msgstr "软件更新首选项"
+msgid "Enable or disable package repositories"
+msgstr "启用或禁用软件仓库"
 
 #: ../data/gpk-prefs.ui.h:2
 msgid ""
-"A software source contains packages that can be installed on this computer."
-msgstr "一个包含可以安装到此计算机的软件包的软件源。"
+"A package source contains packages that can be installed on this computer."
+msgstr "一个包含可以安装到此计算机的软件包的软件包来源。"
 
-#. shows extra -source, -debuginfo, and -devel software sources
+#. shows extra -source, -debuginfo, and -devel sources
 #: ../data/gpk-prefs.ui.h:4
-msgid "_Show debug and development software sources"
-msgstr "显示调试及开发软件来源(_S)"
+msgid "_Show debug and development package sources"
+msgstr "显示调试及开发软件包来源(_S)"
 
 #: ../data/gpk-signature.ui.h:1
 msgid "Software signature is required"
@@ -441,9 +438,11 @@ msgstr "软件包："
 msgid "Do you recognize the user and trust this key?"
 msgstr "您认得这位用户并信任此密钥吗？"
 
+#. TRANSLATORS: title to pass to the user if there are not enough privs
 #: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
-msgid "Software Update"
-msgstr "软件更新"
+#: ../src/gpk-update-viewer.c:3428
+msgid "Package Updater"
+msgstr "软件包更新程序"
 
 #: ../data/gpk-update-viewer.desktop.in.h:2
 msgid "Update software installed on the system"
@@ -455,9 +454,9 @@ msgstr "安装更新(_I)"
 
 #: ../data/gpk-update-viewer.ui.h:3
 msgid ""
-"Software updates correct errors, eliminate security vulnerabilities and "
+"Package updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
-msgstr "软件更新可更正软件中的错误、修补安全漏洞以及提供新功能。"
+msgstr "软件包更新可更正软件中的错误、修补安全漏洞以及提供新功能。"
 
 #: ../data/gpk-update-viewer.ui.h:4
 msgid "_Upgrade"
@@ -541,7 +540,7 @@ msgstr "请尝试在搜索栏中输入一个软件包名称。"
 #. TRANSLATORS: nothing in the package queue
 #: ../src/gpk-application.c:1273
 msgid "There are no packages queued to be installed or removed."
-msgstr "队列中没有要安装或删除的软件包。"
+msgstr "队列中没有要安装或移除的软件包。"
 
 #. TRANSLATORS: tell the user to switch to details search mode
 #: ../src/gpk-application.c:1278
@@ -596,7 +595,7 @@ msgstr "如您关闭窗口，这些更改将会丢失。"
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2017 ../src/gpk-enum.c:1072 ../src/gpk-enum.c:1161
+#: ../src/gpk-application.c:2017 ../src/gpk-enum.c:1075 ../src/gpk-enum.c:1164
 msgid "Installed"
 msgstr "已安装"
 
@@ -893,7 +892,7 @@ msgstr "显示详情"
 
 #. TRANSLATORS: title: installing packages
 #. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:497 ../src/gpk-enum.c:875
+#: ../src/gpk-dbus-task.c:497 ../src/gpk-enum.c:878
 msgid "Installing packages"
 msgstr "正在安装软件包"
 
@@ -936,8 +935,8 @@ msgstr "找不到软件包"
 
 #. TRANSLATORS: message: could not find
 #: ../src/gpk-dbus-task.c:1089
-msgid "The packages could not be found in any software source"
-msgstr "无法在任何软件源中找到该软件包"
+msgid "The packages could not be found in any package source"
+msgstr "无法在任何软件源中找到该软件包来源"
 
 #. TRANSLATORS: button: a link to the help file
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
@@ -950,7 +949,7 @@ msgstr "无法在任何软件源中找到该软件包"
 msgid "More information"
 msgstr "更多信息"
 
-#: ../src/gpk-dbus-task.c:1129 ../src/gpk-enum.c:307
+#: ../src/gpk-dbus-task.c:1129 ../src/gpk-enum.c:310
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "该软件包已经安装"
@@ -1044,7 +1043,7 @@ msgstr[0] "某个程序需要安装一个文件"
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
 #: ../src/gpk-dbus-task.c:1476 ../src/gpk-dbus-task.c:3017
-#: ../src/gpk-enum.c:1231
+#: ../src/gpk-enum.c:1235
 msgid "Searching for file"
 msgstr "正在查找文件"
 
@@ -1110,10 +1109,10 @@ msgstr "搜索"
 msgid "Failed to search for plugin"
 msgstr "搜索插件失败"
 
-#. TRANSLATORS: no software sources have the wanted codec
+#. TRANSLATORS: no package sources have the wanted codec
 #: ../src/gpk-dbus-task.c:1635
-msgid "Could not find plugin in any configured software source"
-msgstr "无法在任何已配置的软件源中找到插件"
+msgid "Could not find plugin in any configured package source"
+msgstr "无法在任何已配置的软件包来源中找到插件"
 
 #: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2468
 msgid "Install the following plugin"
@@ -1146,7 +1145,7 @@ msgstr "查找提供信息失败"
 msgid "Failed to find software"
 msgstr "查找软件失败"
 
-#. TRANSLATORS: nothing found in the software sources that helps
+#. TRANSLATORS: nothing found in the package sources that helps
 #: ../src/gpk-dbus-task.c:1846
 msgid "No new applications can be found to handle this type of file"
 msgstr "找不到可处理此文件类型的新应用程序"
@@ -1246,10 +1245,10 @@ msgstr[0] "Plasma 需要其他服务来执行此操作"
 msgid "Failed to search for Plasma service"
 msgstr "搜索 Plasma 服务失败"
 
-#. TRANSLATORS: no software sources have the wanted Plasma service
+#. TRANSLATORS: no package sources have the wanted Plasma service
 #: ../src/gpk-dbus-task.c:2445
-msgid "Could not find service in any configured software source"
-msgstr "无法在任何已配置的软件源中找到服务"
+msgid "Could not find service in any configured package source"
+msgstr "无法在任何已配置的软件包来源中找到服务"
 
 #. TRANSLATORS: search for Plasma services
 #: ../src/gpk-dbus-task.c:2551
@@ -1263,7 +1262,7 @@ msgstr "正在搜索服务: %s"
 
 #: ../src/gpk-dbus-task.c:2627
 msgid "Failed to remove package"
-msgstr "删除软件包失败"
+msgstr "移除软件包失败"
 
 #: ../src/gpk-dbus-task.c:2703
 msgid "Install the following driver"
@@ -1272,7 +1271,7 @@ msgstr[0] "安装以下驱动"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2858 ../src/gpk-enum.c:867
+#: ../src/gpk-dbus-task.c:2858 ../src/gpk-enum.c:870
 msgid "Removing packages"
 msgstr "正在删除软件包"
 
@@ -1285,31 +1284,31 @@ msgstr "查找含有此文件的软件包失败"
 #: ../src/gpk-dbus-task.c:2990
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
-msgstr[0] "以下文件将删除："
+msgstr[0] "以下文件将移除："
 
 #. TRANSLATORS: confirm with the user
 #: ../src/gpk-dbus-task.c:2993
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
-msgstr[0] "是否要立即删除以下文件？"
+msgstr[0] "是否要立即移除以下文件？"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-dbus-task.c:2998
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
-msgstr[0] "%s 要删除文件"
+msgstr[0] "%s 要移除文件"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
 #: ../src/gpk-dbus-task.c:3001
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
-msgstr[0] "某程序要删除文件"
+msgstr[0] "某程序要移除文件"
 
 #. TRANSLATORS: button: confirm to search for packages
 #: ../src/gpk-dbus-task.c:3005 ../src/gpk-task.c:409
 msgid "Remove"
-msgstr "删除"
+msgstr "移除"
 
 #. TRANSLATORS: This is when we have over 5 items, and we're not interested in detail
 #: ../src/gpk-dialog.c:72
@@ -1326,299 +1325,299 @@ msgid "Do not show this again"
 msgstr "不再显示"
 
 #. TRANSLATORS: this is compact disk (CD) media
-#: ../src/gpk-enum.c:248
+#: ../src/gpk-enum.c:251
 msgid "CD"
 msgstr "CD"
 
 #. TRANSLATORS: this is digital versatile disk (DVD) media
-#: ../src/gpk-enum.c:252
+#: ../src/gpk-enum.c:255
 msgid "DVD"
 msgstr "DVD"
 
 #. TRANSLATORS: this is either CD or DVD media
-#: ../src/gpk-enum.c:256
+#: ../src/gpk-enum.c:259
 msgid "disc"
 msgstr "光盘"
 
 #. TRANSLATORS: this is generic media of unknown type that we will install from
-#: ../src/gpk-enum.c:260
+#: ../src/gpk-enum.c:263
 msgid "media"
 msgstr "媒体"
 
-#: ../src/gpk-enum.c:277
+#: ../src/gpk-enum.c:280
 msgid "Failed with unknown error code"
 msgstr "处理失败，错误代码未知"
 
-#: ../src/gpk-enum.c:280
+#: ../src/gpk-enum.c:283
 msgid "No network connection available"
 msgstr "没有可用的网络连接"
 
-#: ../src/gpk-enum.c:283
+#: ../src/gpk-enum.c:286
 msgid "No package cache is available."
 msgstr "没有可用的软件包缓存。"
 
-#: ../src/gpk-enum.c:286
+#: ../src/gpk-enum.c:289
 msgid "Out of memory"
 msgstr "内存不足"
 
-#: ../src/gpk-enum.c:289
+#: ../src/gpk-enum.c:292
 msgid "Failed to create a thread"
 msgstr "创建进程失败"
 
-#: ../src/gpk-enum.c:292
+#: ../src/gpk-enum.c:295
 msgid "Not supported by this backend"
 msgstr "此后端不支持"
 
-#: ../src/gpk-enum.c:295
+#: ../src/gpk-enum.c:298
 msgid "An internal system error has occurred"
 msgstr "发生了一个内部系统错误"
 
-#: ../src/gpk-enum.c:298
+#: ../src/gpk-enum.c:301
 msgid "A security signature is not present"
 msgstr "安全签名不存在"
 
-#: ../src/gpk-enum.c:301
+#: ../src/gpk-enum.c:304
 msgid "The package is not installed"
 msgstr "软件包未安装"
 
-#: ../src/gpk-enum.c:304
+#: ../src/gpk-enum.c:307
 msgid "The package was not found"
 msgstr "软件包未找到"
 
-#: ../src/gpk-enum.c:310
+#: ../src/gpk-enum.c:313
 msgid "The package download failed"
 msgstr "软件包下载失败"
 
-#: ../src/gpk-enum.c:313
+#: ../src/gpk-enum.c:316
 msgid "The group was not found"
 msgstr "组别未找到"
 
-#: ../src/gpk-enum.c:316
+#: ../src/gpk-enum.c:319
 msgid "The group list was invalid"
 msgstr "组别列表不合法"
 
-#: ../src/gpk-enum.c:319
+#: ../src/gpk-enum.c:322
 msgid "Dependency resolution failed"
 msgstr "依赖关系解析失败"
 
-#: ../src/gpk-enum.c:322
+#: ../src/gpk-enum.c:325
 msgid "Search filter was invalid"
 msgstr "搜索过滤关键字不合法"
 
-#: ../src/gpk-enum.c:325
+#: ../src/gpk-enum.c:328
 msgid "The package identifier was not well formed"
 msgstr "软件包标识符有问题"
 
-#: ../src/gpk-enum.c:328
+#: ../src/gpk-enum.c:331
 msgid "Transaction error"
 msgstr "处理过程错误"
 
-#: ../src/gpk-enum.c:331
+#: ../src/gpk-enum.c:334
 msgid "Repository name was not found"
 msgstr "软件仓库名称未找到"
 
-#: ../src/gpk-enum.c:334
-msgid "Could not remove a protected system package"
-msgstr "无法删除一个被保护的系统软件包"
-
 #: ../src/gpk-enum.c:337
+msgid "Could not remove a protected system package"
+msgstr "无法移除一个被保护的系统软件包"
+
+#: ../src/gpk-enum.c:340
 msgid "The action was canceled"
 msgstr "动作已取消"
 
-#: ../src/gpk-enum.c:340
+#: ../src/gpk-enum.c:343
 msgid "The action was forcibly canceled"
 msgstr "动作已强制取消"
 
-#: ../src/gpk-enum.c:343
+#: ../src/gpk-enum.c:346
 msgid "Reading the configuration file failed"
 msgstr "读取配置文件失败"
 
-#: ../src/gpk-enum.c:346
+#: ../src/gpk-enum.c:349
 msgid "The action cannot be canceled"
 msgstr "动作无法取消"
 
-#: ../src/gpk-enum.c:349
+#: ../src/gpk-enum.c:352
 msgid "Source packages cannot be installed"
 msgstr "源码包无法安装"
 
-#: ../src/gpk-enum.c:352
+#: ../src/gpk-enum.c:355
 msgid "The license agreement failed"
 msgstr "许可协议失败"
 
-#: ../src/gpk-enum.c:355
+#: ../src/gpk-enum.c:358
 msgid "Local file conflict between packages"
 msgstr "软件包之间存在本地文件冲突"
 
-#: ../src/gpk-enum.c:358
+#: ../src/gpk-enum.c:361
 msgid "Packages are not compatible"
 msgstr "软件包不兼容"
 
-#: ../src/gpk-enum.c:361
-msgid "Problem connecting to a software source"
-msgstr "连接到一个软件源时出现问题"
-
 #: ../src/gpk-enum.c:364
+msgid "Problem connecting to a package source"
+msgstr "连接到一个软件包来源时出现问题"
+
+#: ../src/gpk-enum.c:367
 msgid "Failed to initialize"
 msgstr "初始化失败"
 
-#: ../src/gpk-enum.c:367
+#: ../src/gpk-enum.c:370
 msgid "Failed to finalize"
 msgstr "无法完成"
 
-#: ../src/gpk-enum.c:370
+#: ../src/gpk-enum.c:373
 msgid "Cannot get lock"
 msgstr "无法获取锁"
 
-#: ../src/gpk-enum.c:373
+#: ../src/gpk-enum.c:376
 msgid "No packages to update"
 msgstr "没有软件包可更新"
 
-#: ../src/gpk-enum.c:376
+#: ../src/gpk-enum.c:379
 msgid "Cannot write repository configuration"
 msgstr "无法写入软件仓库配置"
 
-#: ../src/gpk-enum.c:379
+#: ../src/gpk-enum.c:382
 msgid "Local install failed"
 msgstr "本地安装失败"
 
-#: ../src/gpk-enum.c:382
+#: ../src/gpk-enum.c:385
 msgid "Bad security signature"
 msgstr "错误的安全签名"
 
-#: ../src/gpk-enum.c:385
+#: ../src/gpk-enum.c:388
 msgid "Missing security signature"
 msgstr "安全签名缺失"
 
-#: ../src/gpk-enum.c:388
+#: ../src/gpk-enum.c:391
 msgid "Repository configuration invalid"
 msgstr "软件仓库配置失败"
 
-#: ../src/gpk-enum.c:391
+#: ../src/gpk-enum.c:394
 msgid "Invalid package file"
 msgstr "不合法的软件包文件"
 
-#: ../src/gpk-enum.c:394
+#: ../src/gpk-enum.c:397
 msgid "Package install blocked"
 msgstr "软件包安装被阻止"
 
-#: ../src/gpk-enum.c:397
+#: ../src/gpk-enum.c:400
 msgid "Package is corrupt"
 msgstr "软件包已损坏"
 
-#: ../src/gpk-enum.c:400
+#: ../src/gpk-enum.c:403
 msgid "All packages are already installed"
 msgstr "全部软件包已安装"
 
-#: ../src/gpk-enum.c:403
+#: ../src/gpk-enum.c:406
 msgid "The specified file could not be found"
 msgstr "指定的文件无法找到"
 
-#: ../src/gpk-enum.c:406
+#: ../src/gpk-enum.c:409
 msgid "No more mirrors are available"
 msgstr "没有更多可用的镜像"
 
-#: ../src/gpk-enum.c:409
+#: ../src/gpk-enum.c:412
 msgid "No distribution upgrade data is available"
 msgstr "没有可用的发行版升级数据"
 
-#: ../src/gpk-enum.c:412
+#: ../src/gpk-enum.c:415
 msgid "Package is incompatible with this system"
 msgstr "软件包与本系统不兼容"
 
-#: ../src/gpk-enum.c:415
+#: ../src/gpk-enum.c:418
 msgid "No space is left on the disk"
 msgstr "磁盘上没有剩余空间"
 
 #. TRANSLATORS: this is the window title when a new CD or DVD is required
-#: ../src/gpk-enum.c:418 ../src/gpk-task.c:356
+#: ../src/gpk-enum.c:421 ../src/gpk-task.c:356
 msgid "A media change is required"
 msgstr "需要更换媒体"
 
-#: ../src/gpk-enum.c:421
+#: ../src/gpk-enum.c:424
 msgid "Authorization failed"
 msgstr "认证失败"
 
-#: ../src/gpk-enum.c:424
+#: ../src/gpk-enum.c:427
 msgid "Update not found"
 msgstr "找不到更新"
 
-#: ../src/gpk-enum.c:427
+#: ../src/gpk-enum.c:430
 msgid "Cannot install from untrusted source"
 msgstr "无法从不信任的来源安装"
 
-#: ../src/gpk-enum.c:430
+#: ../src/gpk-enum.c:433
 msgid "Cannot update from untrusted source"
 msgstr "无法从不信任的来源更新"
 
-#: ../src/gpk-enum.c:433
+#: ../src/gpk-enum.c:436
 msgid "Cannot get the file list"
 msgstr "无法获取文件列表"
 
-#: ../src/gpk-enum.c:436
+#: ../src/gpk-enum.c:439
 msgid "Cannot get package requires"
 msgstr "无法获取软件包需求"
 
-#: ../src/gpk-enum.c:439
+#: ../src/gpk-enum.c:442
 msgid "Cannot disable source"
 msgstr "无法禁用源"
 
-#: ../src/gpk-enum.c:442
+#: ../src/gpk-enum.c:445
 msgid "The download failed"
 msgstr "下载失败"
 
-#: ../src/gpk-enum.c:445
-msgid "Package failed to configure"
-msgstr "软件包配置失败"
-
 #: ../src/gpk-enum.c:448
-msgid "Package failed to build"
-msgstr "软件包构建失败"
+msgid "Package failed to configure"
+msgstr "配置失软件包败"
 
 #: ../src/gpk-enum.c:451
-msgid "Package failed to install"
-msgstr "软件包安装失败"
+msgid "Package failed to build"
+msgstr "构建软件包失败"
 
 #: ../src/gpk-enum.c:454
-msgid "Package failed to be removed"
-msgstr "软件包删除失败"
+msgid "Package failed to install"
+msgstr "安装软件包失败"
 
 #: ../src/gpk-enum.c:457
+msgid "Package failed to be removed"
+msgstr "移除软件包失败"
+
+#: ../src/gpk-enum.c:460
 msgid "Update failed due to running process"
 msgstr "由于进程正在运行，更新失败"
 
-#: ../src/gpk-enum.c:460
+#: ../src/gpk-enum.c:463
 msgid "The package database was changed"
 msgstr "软件包数据库已更改"
 
-#: ../src/gpk-enum.c:463
+#: ../src/gpk-enum.c:466
 msgid "Virtual provide type is not supported"
 msgstr "虚拟包含类型尚不支持"
 
-#: ../src/gpk-enum.c:466
+#: ../src/gpk-enum.c:469
 msgid "Install root is invalid"
 msgstr "安装根无效"
 
-#: ../src/gpk-enum.c:469
+#: ../src/gpk-enum.c:472
 msgid "Cannot fetch install sources"
 msgstr "无法取回安装源"
 
-#: ../src/gpk-enum.c:472
+#: ../src/gpk-enum.c:475
 msgid "Rescheduled due to priority"
 msgstr "因优先级而进行了重新调度"
 
-#: ../src/gpk-enum.c:475
+#: ../src/gpk-enum.c:478
 msgid "Unfinished transaction"
 msgstr "未完成的处理过程"
 
-#: ../src/gpk-enum.c:478
+#: ../src/gpk-enum.c:481
 msgid "Lock required"
 msgstr "获取需要的软件"
 
-#: ../src/gpk-enum.c:495
+#: ../src/gpk-enum.c:498
 msgid "Failed with unknown error code."
 msgstr "处理失败，错误代码未知。"
 
-#: ../src/gpk-enum.c:498
+#: ../src/gpk-enum.c:501
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
@@ -1626,7 +1625,7 @@ msgstr ""
 "没有可用的网络连接。\n"
 "请检查您的连接设置后重试。"
 
-#: ../src/gpk-enum.c:502
+#: ../src/gpk-enum.c:505
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
@@ -1634,18 +1633,18 @@ msgstr ""
 "软件列表需要重建。\n"
 "此项任务应由后端自动完成。"
 
-#: ../src/gpk-enum.c:506
+#: ../src/gpk-enum.c:509
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
 "Please restart your computer."
 msgstr "处理用户请求的服务没有足够的内存空间来运行。请尝试重新启动计算机。"
 
-#: ../src/gpk-enum.c:510
+#: ../src/gpk-enum.c:513
 msgid "A thread could not be created to service the user request."
 msgstr "无法建立处理用户请求的线程。"
 
-#: ../src/gpk-enum.c:513
+#: ../src/gpk-enum.c:516
 msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug in your distribution bug tracker as this should not have "
@@ -1654,7 +1653,7 @@ msgstr ""
 "该后端不支持此动作。\n"
 "请报告至您的发行版本的错误跟踪系统，因为此问题本不应发生。"
 
-#: ../src/gpk-enum.c:517
+#: ../src/gpk-enum.c:520
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug in your distribution bug tracker with the error "
@@ -1663,30 +1662,30 @@ msgstr ""
 "发生了一个意外的问题。\n"
 "请在您发行版的缺陷追踪系统中连同错误描述报告这一故障。"
 
-#: ../src/gpk-enum.c:521
+#: ../src/gpk-enum.c:524
 msgid ""
-"A security trust relationship could not be made with software source.\n"
+"A security trust relationship could not be made with package source.\n"
 "Please check your security settings."
 msgstr ""
-"无法确认软件源的安全信任关系。\n"
+"无法确认软件包来源的安全信任关系。\n"
 "请检查您的安全设置。"
-
-#: ../src/gpk-enum.c:525
-msgid ""
-"The package that is trying to be removed or updated is not already installed."
-msgstr "试图更新或删除的软件包没有安装。"
 
 #: ../src/gpk-enum.c:528
 msgid ""
-"The package that is being modified was not found on your system or in any "
-"software source."
-msgstr "在系统以及软件源中找不到修改的软件包。"
+"The package that is trying to be removed or updated is not already installed."
+msgstr "试图更新或移除的软件包没有安装。"
 
 #: ../src/gpk-enum.c:531
+msgid ""
+"The package that is being modified was not found on your system or in any "
+"package source."
+msgstr "在系统以及软件包来源中找不到修改的软件包。"
+
+#: ../src/gpk-enum.c:534
 msgid "The package that is trying to be installed is already installed."
 msgstr "欲安装的软件包已安装。"
 
-#: ../src/gpk-enum.c:534
+#: ../src/gpk-enum.c:537
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
@@ -1694,7 +1693,7 @@ msgstr ""
 "软件包下载失败。\n"
 "请检查网络连接。"
 
-#: ../src/gpk-enum.c:538
+#: ../src/gpk-enum.c:541
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
@@ -1702,7 +1701,7 @@ msgstr ""
 "组别未找到。\n"
 "请检查您的分组列表并重试。"
 
-#: ../src/gpk-enum.c:542
+#: ../src/gpk-enum.c:545
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source "
@@ -1711,7 +1710,7 @@ msgstr ""
 "组别列表无法加载。\n"
 "刷新缓存可能会解决问题，虽然这通常是软件源的错误。"
 
-#: ../src/gpk-enum.c:547
+#: ../src/gpk-enum.c:550
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
@@ -1719,11 +1718,11 @@ msgstr ""
 "允许动作完成的某个软件包无法找到。\n"
 "请参看详细报告已获取更多信息。"
 
-#: ../src/gpk-enum.c:551
+#: ../src/gpk-enum.c:554
 msgid "The search filter was not correctly formed."
 msgstr "搜索过滤关键字不正确。"
 
-#: ../src/gpk-enum.c:554
+#: ../src/gpk-enum.c:557
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
@@ -1731,7 +1730,7 @@ msgstr ""
 "软件包标识符在发送至服务器时不正确。\n"
 "此类现象通常由一个内部错误造成，请报告。"
 
-#: ../src/gpk-enum.c:558
+#: ../src/gpk-enum.c:561
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
@@ -1739,23 +1738,23 @@ msgstr ""
 "发生了一个未指定的处理过程错误。\n"
 "更多信息可在详细报告中查看。"
 
-#: ../src/gpk-enum.c:562
+#: ../src/gpk-enum.c:565
 msgid ""
-"The remote software source name was not found.\n"
-"You may need to enable an item in Software Sources."
+"The remote package source name was not found.\n"
+"You may need to enable an item in Package Sources."
 msgstr ""
-"找不到远程软件源名称。\n"
+"找不到远程软件包来源名称。\n"
 "您可能需要在软件源列表中启用它。"
 
-#: ../src/gpk-enum.c:566
+#: ../src/gpk-enum.c:569
 msgid "Removing a protected system package is not allowed."
 msgstr "不允许删除被保护的系统软件包。"
 
-#: ../src/gpk-enum.c:569
+#: ../src/gpk-enum.c:572
 msgid "The action was canceled successfully and no packages were changed."
 msgstr "动作已取消，没有软件包被更改。"
 
-#: ../src/gpk-enum.c:572
+#: ../src/gpk-enum.c:575
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
@@ -1763,7 +1762,7 @@ msgstr ""
 "动作已取消，没有软件包被更改。\n"
 "后端没有安全地退出。"
 
-#: ../src/gpk-enum.c:576
+#: ../src/gpk-enum.c:579
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
@@ -1771,11 +1770,11 @@ msgstr ""
 "本地软件包配置文件无法打开。\n"
 "请确认配置是合法的。"
 
-#: ../src/gpk-enum.c:580
+#: ../src/gpk-enum.c:583
 msgid "The action cannot be canceled at this time."
 msgstr "此时无法取消动作。"
 
-#: ../src/gpk-enum.c:583
+#: ../src/gpk-enum.c:586
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
@@ -1783,7 +1782,7 @@ msgstr ""
 "源码包在正常情况下不应由此方式安装。\n"
 "请检查您要安装的文件扩展名。"
 
-#: ../src/gpk-enum.c:587
+#: ../src/gpk-enum.c:590
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
@@ -1791,31 +1790,31 @@ msgstr ""
 "未接受许可协议。\n"
 "要使用此软件，您必须接受许可协议。"
 
-#: ../src/gpk-enum.c:591
+#: ../src/gpk-enum.c:594
 msgid ""
 "Two packages provide the same file.\n"
-"This is usually due to mixing packages from different software sources."
+"This is usually due to mixing packages from different sources."
 msgstr ""
 "两个软件包提供同一个文件。\n"
-"这通常是由于混用不同软件源造成的。"
+"这通常是由于混用不同的源造成的。"
 
-#: ../src/gpk-enum.c:595
+#: ../src/gpk-enum.c:598
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
-"This is usually due to mixing packages from different software sources."
+"This is usually due to mixing packages from different sources."
 msgstr ""
 "存在多个互不兼容的软件包。\n"
-"这通常是由于混用不同软件源造成的。"
+"这通常是由于混用不同的源造成的。"
 
-#: ../src/gpk-enum.c:599
+#: ../src/gpk-enum.c:602
 msgid ""
-"There was a (possibly temporary) problem connecting to a software source.\n"
+"There was a (possibly temporary) problem connecting to a package source.\n"
 "Please check the detailed error for further details."
 msgstr ""
-"连接到软件源出现问题 (可能是临时的)。\n"
+"连接到软件包来源时出现问题 (可能是临时的)。\n"
 "请检查详细错误信息以获取详情。"
 
-#: ../src/gpk-enum.c:603
+#: ../src/gpk-enum.c:606
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
@@ -1823,7 +1822,7 @@ msgstr ""
 "初始化软件包后端失败。\n"
 "此类现象可能在同时使用其他软件包工具时发生。"
 
-#: ../src/gpk-enum.c:607
+#: ../src/gpk-enum.c:610
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
@@ -1831,7 +1830,7 @@ msgstr ""
 "关闭后端实例失败。\n"
 "此类错误通常可忽略。"
 
-#: ../src/gpk-enum.c:611
+#: ../src/gpk-enum.c:614
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
@@ -1839,15 +1838,15 @@ msgstr ""
 "无法获取软件包后端的互斥锁。\n"
 "请关闭其他可能打开的软件包管理工具。"
 
-#: ../src/gpk-enum.c:615
+#: ../src/gpk-enum.c:618
 msgid "None of the selected packages could be updated."
 msgstr "选定的软件包没有可供升级的。"
 
-#: ../src/gpk-enum.c:618
+#: ../src/gpk-enum.c:621
 msgid "The repository configuration could not be modified."
 msgstr "软件仓库配置无法修改。"
 
-#: ../src/gpk-enum.c:621
+#: ../src/gpk-enum.c:624
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
@@ -1855,11 +1854,11 @@ msgstr ""
 "安装本地文件失败。\n"
 "请参看详细报告以获取更多信息。"
 
-#: ../src/gpk-enum.c:625
+#: ../src/gpk-enum.c:628
 msgid "The package security signature could not be verified."
 msgstr "软件包安全签名无法确认。"
 
-#: ../src/gpk-enum.c:628
+#: ../src/gpk-enum.c:631
 msgid ""
 "The package security signature is missing and this package is untrusted.\n"
 "This package was not signed when created."
@@ -1867,11 +1866,11 @@ msgstr ""
 "软件包安全签名缺失，此软件包不被信任。\n"
 "此软件包在创建时没有被签名。"
 
-#: ../src/gpk-enum.c:632
+#: ../src/gpk-enum.c:635
 msgid "Repository configuration was invalid and could not be read."
 msgstr "软件仓库配置不合法，无法读取。"
 
-#: ../src/gpk-enum.c:635
+#: ../src/gpk-enum.c:638
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
@@ -1879,23 +1878,23 @@ msgstr ""
 "您试图安装的软件包不合法。\n"
 "软件包文件可能已损坏，或者不是一个正确的软件包。"
 
-#: ../src/gpk-enum.c:639
+#: ../src/gpk-enum.c:642
 msgid ""
 "Installation of this package prevented by your packaging system's "
 "configuration."
 msgstr "您的系统配置不允许安装此软件包。"
 
-#: ../src/gpk-enum.c:642
+#: ../src/gpk-enum.c:645
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr "已下载的软件包已损坏，需重新下载。"
 
-#: ../src/gpk-enum.c:645
+#: ../src/gpk-enum.c:648
 msgid ""
 "All of the packages selected for install are already installed on the system."
 msgstr "所有选定安装的软件包在您的系统中已经安装。"
 
-#: ../src/gpk-enum.c:648
+#: ../src/gpk-enum.c:651
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
@@ -1903,29 +1902,29 @@ msgstr ""
 "指定的文件在系统中找不到。\n"
 "请检查文件仍存在且未被删除。"
 
-#: ../src/gpk-enum.c:652
+#: ../src/gpk-enum.c:655
 msgid ""
-"Required data could not be found on any of the configured software sources.\n"
+"Required data could not be found on any of the configured package sources.\n"
 "There were no more download mirrors that could be tried."
 msgstr ""
-"需要的数据在配置的软件源中找不到。\n"
+"需要的数据在配置的软件包来源中找不到。\n"
 "没有更多的下载镜像可供尝试。"
 
-#: ../src/gpk-enum.c:656
+#: ../src/gpk-enum.c:659
 msgid ""
-"Required upgrade data could not be found in any of the configured software "
+"Required upgrade data could not be found in any of the configured package "
 "sources.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
-"需要的升级数据在配置的软件源中找不到。\n"
+"需要的升级数据在配置的软件包来源中找不到。\n"
 "发行版升级列表将不可用。"
 
-#: ../src/gpk-enum.c:660
+#: ../src/gpk-enum.c:663
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
 msgstr "试图安装的软件包与本系统不兼容。"
 
-#: ../src/gpk-enum.c:663
+#: ../src/gpk-enum.c:666
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
@@ -1933,11 +1932,11 @@ msgstr ""
 "硬盘上没有足够的空间。\n"
 "请尝试清理硬盘，以执行此操作。"
 
-#: ../src/gpk-enum.c:667
+#: ../src/gpk-enum.c:670
 msgid "Additional media is required to complete the transaction."
 msgstr "需附加媒体以完成处理过程。"
 
-#: ../src/gpk-enum.c:670
+#: ../src/gpk-enum.c:673
 msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
@@ -1945,7 +1944,7 @@ msgstr ""
 "您没有提供正确的认证信息。\n"
 "请检查密码或账户设置。"
 
-#: ../src/gpk-enum.c:674
+#: ../src/gpk-enum.c:677
 msgid ""
 "The specified update could not be found.\n"
 "It could have already been installed or no longer available on the remote "
@@ -1954,27 +1953,27 @@ msgstr ""
 "找不到指定的更新。\n"
 "可能此更新已被安装或在远程服务器上已不再可用。"
 
-#: ../src/gpk-enum.c:678
+#: ../src/gpk-enum.c:681
 msgid "The package could not be installed from untrusted source."
 msgstr "软件包无法从一个不信任的来源安装。"
 
-#: ../src/gpk-enum.c:681
+#: ../src/gpk-enum.c:684
 msgid "The package could not be updated from untrusted source."
 msgstr "软件包无法从一个不信任的来源更新。"
 
-#: ../src/gpk-enum.c:684
+#: ../src/gpk-enum.c:687
 msgid "The file list is not available for this package."
 msgstr "文件列表对此软件包不可用。"
 
-#: ../src/gpk-enum.c:687
+#: ../src/gpk-enum.c:690
 msgid "The information about what requires this package could not be obtained."
 msgstr "有关哪些软件需要此软件包的信息无法获取。"
 
-#: ../src/gpk-enum.c:690
-msgid "The specified software source could not be disabled."
-msgstr "指定的软件源无法禁用。"
-
 #: ../src/gpk-enum.c:693
+msgid "The specified package source could not be disabled."
+msgstr "指定的软件包来源无法禁用。"
+
+#: ../src/gpk-enum.c:696
 msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
@@ -1982,7 +1981,7 @@ msgstr ""
 "下载无法自动完成，应手动完成。\n"
 "请参看详细报告已获取更多信息。"
 
-#: ../src/gpk-enum.c:697
+#: ../src/gpk-enum.c:700
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
@@ -1990,7 +1989,7 @@ msgstr ""
 "某个选定的软件包无法正确配置。\n"
 "请参看详细报告以获取更多信息。"
 
-#: ../src/gpk-enum.c:701
+#: ../src/gpk-enum.c:704
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
@@ -1998,7 +1997,7 @@ msgstr ""
 "某个选定的软件包无法正确构建。\n"
 "请参看详细报告以获取更多信息。"
 
-#: ../src/gpk-enum.c:705
+#: ../src/gpk-enum.c:708
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
@@ -2006,15 +2005,15 @@ msgstr ""
 "某个选定的软件包无法正确安装。\n"
 "请参看详细报告以获取更多信息。"
 
-#: ../src/gpk-enum.c:709
+#: ../src/gpk-enum.c:712
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
 msgstr ""
-"某个选定的软件包无法正确删除。\n"
+"某个选定的软件包无法正确移除。\n"
 "更多信息可在详细报告中查看。"
 
-#: ../src/gpk-enum.c:713
+#: ../src/gpk-enum.c:716
 msgid ""
 "A program is running that has to be closed before the update can proceed.\n"
 "More information is available in the detailed report."
@@ -2022,900 +2021,910 @@ msgstr ""
 "某个正在运行的程序在更新可以进行之前必须关闭。\n"
 "请参看详细报告已获取更多信息。"
 
-#: ../src/gpk-enum.c:717
+#: ../src/gpk-enum.c:720
 msgid "The package database was changed while the request was running."
 msgstr "在执行请求过程中软件包数据库已更改。"
 
-#: ../src/gpk-enum.c:720
+#: ../src/gpk-enum.c:723
 msgid "The virtual provide type is not supported by this system."
 msgstr "此系统不支持虚拟提供类型。"
 
-#: ../src/gpk-enum.c:723
+#: ../src/gpk-enum.c:726
 msgid "The install root is invalid. Please contact your administrator."
 msgstr "安装根无效，请联系系统管理员。"
 
-#: ../src/gpk-enum.c:726
-msgid "The list of software sources could not be downloaded."
-msgstr "无法下载指定的软件源列表。"
-
 #: ../src/gpk-enum.c:729
+msgid "The list of package sources could not be downloaded."
+msgstr "无法下载指定的软件包来源列表。"
+
+#: ../src/gpk-enum.c:732
 msgid "A previous package management transaction was interrupted."
 msgstr "一个先前的包管理过程异常中断。"
 
-#: ../src/gpk-enum.c:732
+#: ../src/gpk-enum.c:735
 msgid ""
 "The transaction has been canceled and will be retried when the system is "
 "idle."
 msgstr "处理过程已被取消，并将在系统空闲时重试。"
 
-#: ../src/gpk-enum.c:735
+#: ../src/gpk-enum.c:738
 msgid "A package manager lock is required."
 msgstr "需要包管理锁。"
 
-#: ../src/gpk-enum.c:752
+#: ../src/gpk-enum.c:755
 msgid "No restart is necessary."
 msgstr "无需重新启动。"
 
-#: ../src/gpk-enum.c:755
+#: ../src/gpk-enum.c:758
 msgid "You will be required to restart this application."
 msgstr "您将需要重新启动此应用程序。"
 
-#: ../src/gpk-enum.c:758
+#: ../src/gpk-enum.c:761
 msgid "You will be required to log out and back in."
 msgstr "您将需要注销后重新登录。"
 
-#: ../src/gpk-enum.c:761
+#: ../src/gpk-enum.c:764
 msgid "A restart will be required."
 msgstr "需重新启动。"
 
-#: ../src/gpk-enum.c:764
+#: ../src/gpk-enum.c:767
 msgid "You will be required to log out and back in due to a security update."
 msgstr "由于一个安全更新，您将需要注销后重新登录。"
 
-#: ../src/gpk-enum.c:767
+#: ../src/gpk-enum.c:770
 msgid "A restart will be required due to a security update."
 msgstr "由于一个安全更新，需重新启动。"
 
-#: ../src/gpk-enum.c:784
+#: ../src/gpk-enum.c:787
 msgid "No restart is required."
 msgstr "无需重新启动。"
 
-#: ../src/gpk-enum.c:787
+#: ../src/gpk-enum.c:790
 msgid "A restart is required."
 msgstr "需重新启动。"
 
-#: ../src/gpk-enum.c:790
+#: ../src/gpk-enum.c:793
 msgid "You need to log out and log back in."
 msgstr "您需要注销后重新登录。"
 
-#: ../src/gpk-enum.c:793
+#: ../src/gpk-enum.c:796
 msgid "You need to restart the application."
 msgstr "您需要重新启动应用程序。"
 
-#: ../src/gpk-enum.c:796
+#: ../src/gpk-enum.c:799
 msgid "You need to log out and log back in to remain secure."
 msgstr "您需要注销后重新登录以保持安全。"
 
-#: ../src/gpk-enum.c:799
+#: ../src/gpk-enum.c:802
 msgid "A restart is required to remain secure."
 msgstr "需重新启动以保持安全性。"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:817
+#: ../src/gpk-enum.c:820
 msgid "Stable"
 msgstr "稳定版"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:821
+#: ../src/gpk-enum.c:824
 msgid "Unstable"
 msgstr "不稳定版"
 
 #. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:825
+#: ../src/gpk-enum.c:828
 msgid "Testing"
 msgstr "测试版"
 
 #. TRANSLATORS: This is when the transaction status is not known
-#: ../src/gpk-enum.c:843
+#: ../src/gpk-enum.c:846
 msgid "Unknown state"
 msgstr "未知状态"
 
 #. TRANSLATORS: transaction state, the daemon is in the process of starting
-#: ../src/gpk-enum.c:847
+#: ../src/gpk-enum.c:850
 msgid "Starting"
 msgstr "正在开始"
 
 #. TRANSLATORS: transaction state, the transaction is waiting for another to complete
-#: ../src/gpk-enum.c:851
+#: ../src/gpk-enum.c:854
 msgid "Waiting in queue"
 msgstr "正在队列中等待"
 
 #. TRANSLATORS: transaction state, just started
-#: ../src/gpk-enum.c:855
+#: ../src/gpk-enum.c:858
 msgid "Running"
 msgstr "正在运行"
 
 #. TRANSLATORS: transaction state, is querying data
-#: ../src/gpk-enum.c:859
+#: ../src/gpk-enum.c:862
 msgid "Querying"
 msgstr "正在查询"
 
 #. TRANSLATORS: transaction state, getting data from a server
-#: ../src/gpk-enum.c:863
+#: ../src/gpk-enum.c:866
 msgid "Getting information"
 msgstr "正在获取信息"
 
 #. TRANSLATORS: transaction state, downloading package files
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:871 ../src/gpk-enum.c:1303
+#: ../src/gpk-enum.c:874 ../src/gpk-enum.c:1312
 msgid "Downloading packages"
 msgstr "正在下载软件包"
 
 #. TRANSLATORS: transaction state, refreshing internal lists
-#: ../src/gpk-enum.c:879
+#: ../src/gpk-enum.c:882
 msgid "Refreshing software list"
 msgstr "正在刷新软件包列表"
 
 #. TRANSLATORS: transaction state, installing updates
-#: ../src/gpk-enum.c:883
+#: ../src/gpk-enum.c:886
 msgid "Installing updates"
 msgstr "正在安装更新"
 
 #. TRANSLATORS: transaction state, removing old packages, and cleaning config files
-#: ../src/gpk-enum.c:887
+#: ../src/gpk-enum.c:890
 msgid "Cleaning up packages"
 msgstr "正在清理软件包"
 
 #. TRANSLATORS: transaction state, obsoleting old packages
-#: ../src/gpk-enum.c:891
+#: ../src/gpk-enum.c:894
 msgid "Obsoleting packages"
 msgstr "正在将软件包标记为无用"
 
 #. TRANSLATORS: transaction state, checking the transaction before we do it
-#: ../src/gpk-enum.c:895
+#: ../src/gpk-enum.c:898
 msgid "Resolving dependencies"
 msgstr "正在解析依赖关系"
 
 #. TRANSLATORS: transaction state, checking if we have all the security keys for the operation
-#: ../src/gpk-enum.c:899
+#: ../src/gpk-enum.c:902
 msgid "Checking signatures"
 msgstr "正在检查签名"
 
 #. TRANSLATORS: transaction state, when we're doing a test transaction
-#: ../src/gpk-enum.c:903
+#: ../src/gpk-enum.c:906
 msgid "Testing changes"
 msgstr "正在测试更改"
 
 #. TRANSLATORS: transaction state, when we're writing to the system package database
-#: ../src/gpk-enum.c:907
+#: ../src/gpk-enum.c:910
 msgid "Committing changes"
 msgstr "正在进行更改"
 
 #. TRANSLATORS: transaction state, requesting data from a server
-#: ../src/gpk-enum.c:911
+#: ../src/gpk-enum.c:914
 msgid "Requesting data"
 msgstr "正在请求数据"
 
 #. TRANSLATORS: transaction state, all done!
-#: ../src/gpk-enum.c:915
+#: ../src/gpk-enum.c:918
 msgid "Finished"
 msgstr "正在完成"
 
 #. TRANSLATORS: transaction state, in the process of canceling
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:919 ../src/gpk-enum.c:1263
+#: ../src/gpk-enum.c:922 ../src/gpk-enum.c:1267
 msgid "Canceling"
 msgstr "正在取消"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:923
+#: ../src/gpk-enum.c:926
 msgid "Downloading repository information"
 msgstr "正在下载软件仓库信息"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:927
+#: ../src/gpk-enum.c:930
 msgid "Downloading list of packages"
 msgstr "正在下载软件包列表"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:931
+#: ../src/gpk-enum.c:934
 msgid "Downloading file lists"
 msgstr "正在下载文件列表"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:935
+#: ../src/gpk-enum.c:938
 msgid "Downloading lists of changes"
 msgstr "正在下载变动列表"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:939
+#: ../src/gpk-enum.c:942
 msgid "Downloading groups"
 msgstr "正在下载分组"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:943
+#: ../src/gpk-enum.c:946
 msgid "Downloading update information"
 msgstr "正在下载更新信息"
 
 #. TRANSLATORS: transaction state, repackaging delta files
-#: ../src/gpk-enum.c:947
+#: ../src/gpk-enum.c:950
 msgid "Repackaging files"
 msgstr "正在重新打包文件"
 
 #. TRANSLATORS: transaction state, loading databases
-#: ../src/gpk-enum.c:951
+#: ../src/gpk-enum.c:954
 msgid "Loading cache"
 msgstr "正在加载缓存"
 
 #. TRANSLATORS: transaction state, scanning for running processes
-#: ../src/gpk-enum.c:955
+#: ../src/gpk-enum.c:958
 msgid "Scanning installed applications"
 msgstr "正在扫描已安装的应用程序"
 
 #. TRANSLATORS: transaction state, generating a list of packages installed on the system
-#: ../src/gpk-enum.c:959
+#: ../src/gpk-enum.c:962
 msgid "Generating package lists"
 msgstr "正在生成软件包列表"
 
 #. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
-#: ../src/gpk-enum.c:963
+#: ../src/gpk-enum.c:966
 msgid "Waiting for package manager lock"
 msgstr "正在等待软件包管理器锁"
 
 #. TRANSLATORS: waiting for user to type in a password
-#: ../src/gpk-enum.c:967
+#: ../src/gpk-enum.c:970
 msgid "Waiting for authentication"
 msgstr "等待认证"
 
 #. TRANSLATORS: we are updating the list of processes
-#: ../src/gpk-enum.c:971
+#: ../src/gpk-enum.c:974
 msgid "Updating the list of running applications"
 msgstr "正在更新运行中的应用程序的列表"
 
 #. TRANSLATORS: we are checking executable files in use
-#: ../src/gpk-enum.c:975
+#: ../src/gpk-enum.c:978
 msgid "Checking for applications currently in use"
 msgstr "检查当前正在使用的应用程序"
 
 #. TRANSLATORS: we are checking for libraries in use
-#: ../src/gpk-enum.c:979
+#: ../src/gpk-enum.c:982
 msgid "Checking for libraries currently in use"
 msgstr "检查当前正在使用的库"
 
 #. TRANSLATORS: we are copying package files to prepare to install
-#: ../src/gpk-enum.c:983
+#: ../src/gpk-enum.c:986
 msgid "Copying files"
 msgstr "正在复制文件"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1001
+#: ../src/gpk-enum.c:1004
 #, c-format
 msgid "%i trivial update"
 msgid_plural "%i trivial updates"
 msgstr[0] "%i 个小更新"
 
 #. TRANSLATORS: type of update in the case that we don't have any data
-#: ../src/gpk-enum.c:1005
+#: ../src/gpk-enum.c:1008
 #, c-format
 msgid "%i update"
 msgid_plural "%i updates"
 msgstr[0] "%i 个更新"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1009
+#: ../src/gpk-enum.c:1012
 #, c-format
 msgid "%i important update"
 msgid_plural "%i important updates"
 msgstr[0] "%i 个重要更新"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1013
+#: ../src/gpk-enum.c:1016
 #, c-format
 msgid "%i security update"
 msgid_plural "%i security updates"
 msgstr[0] "%i 个安全更新"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1017
+#: ../src/gpk-enum.c:1020
 #, c-format
 msgid "%i bug fix update"
 msgid_plural "%i bug fix updates"
 msgstr[0] "%i 个错误修正更新"
 
 #. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1021
+#: ../src/gpk-enum.c:1024
 #, c-format
 msgid "%i enhancement update"
 msgid_plural "%i enhancement updates"
 msgstr[0] "%i 个增强更新"
 
 #. TRANSLATORS: number of updates that cannot be installed due to deps
-#: ../src/gpk-enum.c:1025
+#: ../src/gpk-enum.c:1028
 #, c-format
 msgid "%i blocked update"
 msgid_plural "%i blocked updates"
 msgstr[0] "%i 个无法进行的更新"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1043
+#: ../src/gpk-enum.c:1046
 msgid "Trivial update"
 msgstr "小更新"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1047
+#: ../src/gpk-enum.c:1050
 msgid "Normal update"
 msgstr "正常更新"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1051
+#: ../src/gpk-enum.c:1054
 msgid "Important update"
 msgstr "重要更新"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1055
+#: ../src/gpk-enum.c:1058
 msgid "Security update"
 msgstr "安全更新"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1059
+#: ../src/gpk-enum.c:1062
 msgid "Bug fix update"
 msgstr "错误修正更新"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1063
+#: ../src/gpk-enum.c:1066
 msgid "Enhancement update"
 msgstr "增强更新"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1067
+#: ../src/gpk-enum.c:1070
 msgid "Blocked update"
 msgstr "无法进行的更新"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
-#: ../src/gpk-enum.c:1077
+#: ../src/gpk-enum.c:1080
 msgid "Available"
 msgstr "可用"
 
 #. TRANSLATORS: The type of package
-#: ../src/gpk-enum.c:1081
+#: ../src/gpk-enum.c:1084
 msgid "Trusted"
 msgstr "信任"
 
 #. TRANSLATORS: The type of package
-#: ../src/gpk-enum.c:1085
+#: ../src/gpk-enum.c:1088
 msgid "Untrusted"
 msgstr "不信任"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1103
+#: ../src/gpk-enum.c:1106
 msgid "Downloading"
 msgstr "正在下载"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1107
+#: ../src/gpk-enum.c:1110
 msgid "Updating"
 msgstr "正在更新"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1111 ../src/gpk-enum.c:1247
+#: ../src/gpk-enum.c:1114 ../src/gpk-enum.c:1251
 msgid "Installing"
 msgstr "正在安装"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1115 ../src/gpk-enum.c:1243
+#: ../src/gpk-enum.c:1118 ../src/gpk-enum.c:1247
 msgid "Removing"
 msgstr "正在删除"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1119
+#: ../src/gpk-enum.c:1122
 msgid "Cleaning up"
 msgstr "正在清理"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1123
+#: ../src/gpk-enum.c:1126
 msgid "Obsoleting"
 msgstr "正在标记为无用软件包"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1127
+#: ../src/gpk-enum.c:1130
 msgid "Reinstalling"
 msgstr "正在重新安装"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1131
+#: ../src/gpk-enum.c:1134
 msgid "Preparing"
 msgstr "正在准备"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1135
+#: ../src/gpk-enum.c:1138
 msgid "Decompressing"
 msgstr "正在解压缩"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1153
+#: ../src/gpk-enum.c:1156
 msgid "Downloaded"
 msgstr "已下载"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1157
+#: ../src/gpk-enum.c:1160
 msgid "Updated"
 msgstr "已更新"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1165
+#: ../src/gpk-enum.c:1168
 msgid "Removed"
-msgstr "已删除"
+msgstr "已移除"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1169
+#: ../src/gpk-enum.c:1172
 msgid "Cleaned up"
 msgstr "已清理"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1173 ../src/gpk-task.c:414
+#: ../src/gpk-enum.c:1176 ../src/gpk-task.c:414
 msgid "Obsoleted"
 msgstr "已成为无用软件包"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1177
+#: ../src/gpk-enum.c:1180
 msgid "Reinstalled"
 msgstr "已重新安装"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1181
+#: ../src/gpk-enum.c:1184
 msgid "Prepared"
 msgstr "已准备"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1185
+#: ../src/gpk-enum.c:1188
 msgid "Decompressed"
 msgstr "已解压缩"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1203 ../src/gpk-enum.c:1339
+#: ../src/gpk-enum.c:1206 ../src/gpk-enum.c:1348
 msgid "Unknown role type"
 msgstr "未知角色类型"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1207
+#: ../src/gpk-enum.c:1210
 msgid "Getting dependencies"
 msgstr "正在获取依赖关系"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1211
+#: ../src/gpk-enum.c:1214
 msgid "Getting update detail"
 msgstr "正在获取更新详细信息"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1215
+#: ../src/gpk-enum.c:1219
 msgid "Getting details"
 msgstr "正在获取详细信息"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1219
+#: ../src/gpk-enum.c:1223
 msgid "Getting requires"
 msgstr "正在获取需求信息"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1223
+#: ../src/gpk-enum.c:1227
 msgid "Getting updates"
 msgstr "正在获取更新"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1227
+#: ../src/gpk-enum.c:1231
 msgid "Searching details"
 msgstr "正在搜索详细信息"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1235
+#: ../src/gpk-enum.c:1239
 msgid "Searching groups"
 msgstr "正在搜索组别"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1239
+#: ../src/gpk-enum.c:1243
 msgid "Searching for package name"
 msgstr "正在搜索软件包名称"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1251
+#: ../src/gpk-enum.c:1255
 msgid "Installing file"
 msgstr "正在安装文件"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1255
+#: ../src/gpk-enum.c:1259
 msgid "Refreshing package cache"
 msgstr "正在刷新软件包缓存"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1259
+#: ../src/gpk-enum.c:1263
 msgid "Updating packages"
 msgstr "正在更新软件包"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1267
+#: ../src/gpk-enum.c:1271
 msgid "Getting list of repositories"
 msgstr "正在获取软件仓库列表"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1271
+#: ../src/gpk-enum.c:1275
 msgid "Enabling repository"
 msgstr "正在启用软件仓库"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1275
+#: ../src/gpk-enum.c:1279
+msgid "Removing repository"
+msgstr "正在删除软件仓库"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1283
 msgid "Setting repository data"
 msgstr "正在设置软件仓库数据"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1279
+#: ../src/gpk-enum.c:1287
 msgid "Resolving"
 msgstr "正在解析"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1283
+#: ../src/gpk-enum.c:1292
 msgid "Getting file list"
 msgstr "正在获取文件列表"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1287
+#: ../src/gpk-enum.c:1296
 msgid "Getting what provides"
 msgstr "正在获取提供信息"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1291
+#: ../src/gpk-enum.c:1300
 msgid "Installing signature"
 msgstr "正在安装签名"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1295
+#: ../src/gpk-enum.c:1304
 msgid "Getting package lists"
 msgstr "正在获取软件包列表"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1299
+#: ../src/gpk-enum.c:1308
 msgid "Accepting EULA"
 msgstr "正在接受最终用户许可协议"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1307
+#: ../src/gpk-enum.c:1316
 msgid "Getting distribution upgrade information"
 msgstr "正在获取发行版升级信息"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1311
+#: ../src/gpk-enum.c:1320
 msgid "Getting categories"
 msgstr "正在获取类别"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1315
+#: ../src/gpk-enum.c:1324
 msgid "Getting old transactions"
 msgstr "正在获取旧的处理过程信息"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1319
+#: ../src/gpk-enum.c:1328
 msgid "Repairing the system"
 msgstr "正在修复系统"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1343
+#: ../src/gpk-enum.c:1352
 msgid "Got dependencies"
 msgstr "获取依赖关系"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1347
+#: ../src/gpk-enum.c:1356
 msgid "Got update detail"
 msgstr "获取更新详细信息"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1351
+#: ../src/gpk-enum.c:1361
 msgid "Got details"
 msgstr "获取详细信息"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1355
+#: ../src/gpk-enum.c:1365
 msgid "Got requires"
 msgstr "获取需求"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1359
+#: ../src/gpk-enum.c:1369
 msgid "Got updates"
 msgstr "获取更新"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1363
+#: ../src/gpk-enum.c:1373
 msgid "Searched for package details"
 msgstr "搜索软件包详细信息"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1367
+#: ../src/gpk-enum.c:1377
 msgid "Searched for file"
 msgstr "搜索文件"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1371
+#: ../src/gpk-enum.c:1381
 msgid "Searched groups"
 msgstr "搜索组"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1375
+#: ../src/gpk-enum.c:1385
 msgid "Searched for package name"
 msgstr "搜索软件包名称"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1379
+#: ../src/gpk-enum.c:1389
 msgid "Removed packages"
-msgstr "删除软件包"
+msgstr "移除软件包"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1383
+#: ../src/gpk-enum.c:1393
 msgid "Installed packages"
 msgstr "安装软件包"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1387
+#: ../src/gpk-enum.c:1397
 msgid "Installed local files"
 msgstr "安装本地文件"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1391
+#: ../src/gpk-enum.c:1401
 msgid "Refreshed package cache"
 msgstr "刷新软件包缓存"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1395
+#: ../src/gpk-enum.c:1405
 msgid "Updated packages"
 msgstr "更新软件包"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1399
+#: ../src/gpk-enum.c:1409
 msgid "Canceled"
 msgstr "取消"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1403
+#: ../src/gpk-enum.c:1413
 msgid "Got list of repositories"
 msgstr "获取软件仓库列表"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1407
+#: ../src/gpk-enum.c:1417
 msgid "Enabled repository"
 msgstr "启用软件仓库"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1411
+#: ../src/gpk-enum.c:1421
+msgid "Removed repository"
+msgstr "已移除软件仓库"
+
+#. TRANSLATORS: The role of the transaction, in past tense
+#: ../src/gpk-enum.c:1425
 msgid "Set repository data"
 msgstr "设置软件仓库数据"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1415
+#: ../src/gpk-enum.c:1429
 msgid "Resolved"
 msgstr "解析"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1419
+#: ../src/gpk-enum.c:1434
 msgid "Got file list"
 msgstr "获取文件列表"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1423
+#: ../src/gpk-enum.c:1438
 msgid "Got what provides"
 msgstr "获取软件包提供信息"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1427
+#: ../src/gpk-enum.c:1442
 msgid "Installed signature"
 msgstr "安装签名"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1431
+#: ../src/gpk-enum.c:1446
 msgid "Got package lists"
 msgstr "获取软件包列表"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1435
+#: ../src/gpk-enum.c:1450
 msgid "Accepted EULA"
 msgstr "接受最终用户许可协议"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1439
+#: ../src/gpk-enum.c:1454
 msgid "Downloaded packages"
 msgstr "下载软件包"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1443
+#: ../src/gpk-enum.c:1458
 msgid "Got distribution upgrades"
 msgstr "获取发行版升级"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1447
+#: ../src/gpk-enum.c:1462
 msgid "Got categories"
 msgstr "获取类别"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1451
+#: ../src/gpk-enum.c:1466
 msgid "Got old transactions"
 msgstr "获取旧的处理过程"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1455
+#: ../src/gpk-enum.c:1470
 msgid "Repaired the system"
 msgstr "修复系统"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1473
+#: ../src/gpk-enum.c:1488
 msgid "Accessibility"
 msgstr "可用性"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1477
+#: ../src/gpk-enum.c:1492
 msgid "Accessories"
 msgstr "附件"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1481
+#: ../src/gpk-enum.c:1496
 msgid "Education"
 msgstr "教育"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1485
+#: ../src/gpk-enum.c:1500
 msgid "Games"
 msgstr "游戏"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1489
+#: ../src/gpk-enum.c:1504
 msgid "Graphics"
 msgstr "图形"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1493
+#: ../src/gpk-enum.c:1508
 msgid "Internet"
 msgstr "互联网"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1497
+#: ../src/gpk-enum.c:1512
 msgid "Office"
 msgstr "办公"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1501 ../src/gpk-task.c:434
+#: ../src/gpk-enum.c:1516 ../src/gpk-task.c:434
 msgid "Other"
 msgstr "其他"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1505
+#: ../src/gpk-enum.c:1520
 msgid "Programming"
 msgstr "编程"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1509
+#: ../src/gpk-enum.c:1524
 msgid "Multimedia"
 msgstr "多媒体"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1513
+#: ../src/gpk-enum.c:1528
 msgid "System"
 msgstr "系统"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1517
+#: ../src/gpk-enum.c:1532
 msgid "GNOME desktop"
 msgstr "GNOME 桌面"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1521
+#: ../src/gpk-enum.c:1536
 msgid "KDE desktop"
 msgstr "KDE 桌面"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1525
+#: ../src/gpk-enum.c:1540
 msgid "Xfce desktop"
 msgstr "Xfce 桌面"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1529
+#: ../src/gpk-enum.c:1544
 msgid "Other desktops"
 msgstr "其他桌面"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1533
+#: ../src/gpk-enum.c:1548
 msgid "Publishing"
 msgstr "出版"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1537
+#: ../src/gpk-enum.c:1552
 msgid "Servers"
 msgstr "服务器"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1541
+#: ../src/gpk-enum.c:1556
 msgid "Fonts"
 msgstr "字体"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1545
+#: ../src/gpk-enum.c:1560
 msgid "Admin tools"
 msgstr "管理工具"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1549
+#: ../src/gpk-enum.c:1564
 msgid "Legacy"
 msgstr "旧软件"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1553
+#: ../src/gpk-enum.c:1568
 msgid "Localization"
 msgstr "本地化"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1557
+#: ../src/gpk-enum.c:1572
 msgid "Virtualization"
 msgstr "虚拟化"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1561
+#: ../src/gpk-enum.c:1576
 msgid "Security"
 msgstr "安全"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1565
+#: ../src/gpk-enum.c:1580
 msgid "Power management"
 msgstr "电源管理"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1569
+#: ../src/gpk-enum.c:1584
 msgid "Communication"
 msgstr "通信"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1573
+#: ../src/gpk-enum.c:1588
 msgid "Network"
 msgstr "网络"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1577
+#: ../src/gpk-enum.c:1592
 msgid "Maps"
 msgstr "地图"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1581
-msgid "Software sources"
-msgstr "软件源"
+#: ../src/gpk-enum.c:1596
+msgid "Package sources"
+msgstr "软件包来源"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1585
+#: ../src/gpk-enum.c:1600
 msgid "Science"
 msgstr "科学"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1589
+#: ../src/gpk-enum.c:1604
 msgid "Documentation"
 msgstr "文档"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1593
+#: ../src/gpk-enum.c:1608
 msgid "Electronics"
 msgstr "电子"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1597
+#: ../src/gpk-enum.c:1612
 msgid "Package collections"
 msgstr "软件包集"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1601
+#: ../src/gpk-enum.c:1616
 msgid "Vendor"
 msgstr "提供商"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1605
+#: ../src/gpk-enum.c:1620
 msgid "Newest packages"
 msgstr "最新的软件包"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1609
+#: ../src/gpk-enum.c:1624
 msgid "Unknown group"
 msgstr "未知组"
 
@@ -2994,7 +3003,7 @@ msgstr "为了满足依赖关系，还需要安装以下软件"
 #. TRANSLATORS: additional message text for the deps dialog
 #: ../src/gpk-task.c:408 ../src/gpk-task.c:413
 msgid "The following software also needs to be removed"
-msgstr "为了满足依赖关系，还需要删除以下软件"
+msgstr "为了满足依赖关系，还需要移除以下软件"
 
 #. TRANSLATORS: additional message text for the deps dialog
 #: ../src/gpk-task.c:418
@@ -3045,14 +3054,14 @@ msgstr[0] "欲安装以下软件包，有其他软件需要被修改。"
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural ""
 "To remove these packages, additional software also has to be modified."
-msgstr[0] "欲删除以下软件包，有其他软件需要被修改。"
+msgstr[0] "要移除以下软件包还需要修改其他软件。"
 
 #. TRANSLATORS: message text of a dependency dialog
 #: ../src/gpk-task.c:512
 msgid "To update this package, additional software also has to be modified."
 msgid_plural ""
 "To update these packages, additional software also has to be modified."
-msgstr[0] "欲更新以下软件包，有其他软件需要被修改。"
+msgstr[0] "要更新以下软件包还需要修改其他软件。"
 
 #. TRANSLATORS: message text of a dependency dialog
 #: ../src/gpk-task.c:517
@@ -3181,7 +3190,7 @@ msgstr "日志查看器"
 msgid "Remaining time: %s"
 msgstr "估计剩余时间: %s"
 
-#. TRANSLATORS: for one reason or another, we could not enable or disable a software source
+#. TRANSLATORS: for one reason or another, we could not enable or disable a package source
 #: ../src/gpk-prefs.c:244
 msgid "Failed to change status"
 msgstr "无法改变状态"
@@ -3193,8 +3202,8 @@ msgstr "启用"
 
 #. TRANSLATORS: column for the source description
 #: ../src/gpk-prefs.c:323
-msgid "Software Source"
-msgstr "软件源"
+msgid "Package Source"
+msgstr "软件包来源"
 
 #. TRANSLATORS: for one reason or another, we could not get the list of sources
 #: ../src/gpk-prefs.c:385
@@ -3207,8 +3216,8 @@ msgid "Exiting as backend details could not be retrieved"
 msgstr "后端的详细信息无法取得。正在退出。"
 
 #: ../src/gpk-prefs.c:513
-msgid "Getting software source list not supported by backend"
-msgstr "后端程序不支持获取软件源列表"
+msgid "Getting package source list not supported by backend"
+msgstr "后端程序不支持获取软件包来源列表"
 
 #. TRANSLATORS: we don't have a lot to go on here
 #: ../src/gpk-update-viewer.c:183
@@ -3362,12 +3371,12 @@ msgstr[0] "安装更新(_I)"
 
 #. TRANSLATORS: title: nothing to do
 #: ../src/gpk-update-viewer.c:1459
-msgid "All software is up to date"
-msgstr "所有软件都是最新的"
+msgid "All packages are up to date"
+msgstr "所有软件包都是最新的"
 
 #. TRANSLATORS: tell the user the problem
 #: ../src/gpk-update-viewer.c:1461
-msgid "There are no software updates available for your computer at this time."
+msgid "There are no package updates available for your computer at this time."
 msgstr "现在没有针对您的计算机的可用更新。"
 
 #: ../src/gpk-update-viewer.c:1488
@@ -3566,13 +3575,8 @@ msgid ""
 msgstr "被保持而未进行的其他更新，有其他重要的系统软件包需要先更新。"
 
 #: ../src/gpk-update-viewer.c:3411
-msgid "Update Software"
-msgstr "更新软件"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-update-viewer.c:3428
-msgid "Software Update Viewer"
-msgstr "软件更新查看器"
+msgid "Update Packages"
+msgstr "更新软件包"
 
 #: ../src/gpk-dbus-service.c:126
 msgid "Do not exit after the request has been processed"
@@ -3594,6 +3598,37 @@ msgstr "调试选项"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "显示调试选项"
+
+#~ msgid "Software"
+#~ msgstr "软件"
+
+#~ msgid "Software Sources"
+#~ msgstr "软件源"
+
+#~ msgid "Software Settings"
+#~ msgstr "软件设置"
+
+#~ msgid ""
+#~ "Change software update preferences and enable or disable software sources"
+#~ msgstr "更改软件更新首选项并启用或禁用软件源"
+
+#~ msgid "Software Update Preferences"
+#~ msgstr "软件更新首选项"
+
+#~ msgid "Software Update"
+#~ msgstr "软件更新"
+
+#~ msgid "Software sources"
+#~ msgstr "软件源"
+
+#~ msgid "Software Source"
+#~ msgstr "软件源"
+
+#~ msgid "Update Software"
+#~ msgstr "更新软件"
+
+#~ msgid "Software Update Viewer"
+#~ msgstr "软件更新查看器"
 
 #~ msgid "No software"
 #~ msgstr "无软件"
