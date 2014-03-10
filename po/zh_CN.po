@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-04-15 09:54+0000\n"
-"PO-Revision-Date: 2013-04-08 16:53+0800\n"
+"POT-Creation-Date: 2014-03-10 08:08+0000\n"
+"PO-Revision-Date: 2014-03-10 20:11+0800\n"
 "Last-Translator: Wylmer Wang <wantinghard@gmail.com>\n"
 "Language-Team: Chinese (simplified) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -229,10 +229,9 @@ msgstr ""
 "库;仓库;首选项;偏好;安装;商店"
 
 #: ../data/gpk-application.ui.h:2
-#, fuzzy
 #| msgid "Applying changes"
 msgid "Apply Changes"
-msgstr "正在应用更改"
+msgstr "应用更改"
 
 #: ../data/gpk-application.ui.h:3
 msgid "Changes are not applied instantly, this button applies all changes"
@@ -240,11 +239,11 @@ msgstr "更改不是立即应用的；此按钮将应用全部更改"
 
 #: ../data/gpk-application.ui.h:4
 msgid "Clear"
-msgstr ""
+msgstr "清除"
 
 #: ../data/gpk-application.ui.h:5
 msgid "Clear current selection"
-msgstr "清除当前选定内容"
+msgstr "清除当前选择"
 
 #: ../data/gpk-application.ui.h:6
 msgid "Cancel search"
@@ -338,7 +337,7 @@ msgstr "接受许可协议(_A)"
 #. TRANSLATORS: program name: installs a package (or packages) by name
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
 #: ../data/gpk-dbus-service.desktop.in.h:1
-#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2617
+#: ../data/gpk-install-local-file.desktop.in.h:1 ../src/gpk-application.c:2601
 #: ../src/gpk-dbus-task.c:3392 ../src/gpk-install-local-file.c:65
 #: ../src/gpk-install-package-name.c:64 ../src/gpk-dbus-service.c:151
 #: ../src/gpk-dbus-service.c:154
@@ -589,190 +588,190 @@ msgid ""
 msgstr "您想要安装的软件需要附加的软件才能正常运行。"
 
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:356
+#: ../src/gpk-application.c:359
 msgid "Pending"
 msgstr "待处理"
 
 #. TRANSLATORS: title: how many files are installed by the application
-#: ../src/gpk-application.c:602
+#: ../src/gpk-application.c:605
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
 msgstr[0] "%i 个文件已由 %s 安装"
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:904 ../src/gpk-application.c:1028
+#: ../src/gpk-application.c:907 ../src/gpk-application.c:1034
 msgid "No software"
 msgstr "无软件"
 
 #. TRANSLATORS: this package is not required by any others
-#: ../src/gpk-application.c:906
+#: ../src/gpk-application.c:909
 msgid "No other software requires this."
 msgstr "没有其他软件需要此软件包。"
 
-#: ../src/gpk-application.c:912
+#: ../src/gpk-application.c:915
 #, c-format
 msgid "Software requires %s"
 msgstr "软件需要 %s"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:915
+#: ../src/gpk-application.c:918
 #, c-format
 msgid "The software listed below require %s to function correctly."
 msgid_plural "The software listed below require %s to function correctly."
 msgstr[0] "下列软件需要 %s 才能正常运行。"
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1030
+#: ../src/gpk-application.c:1036
 msgid "This software does not depend on any other"
 msgstr "此软件不依赖于其他软件包"
 
-#: ../src/gpk-application.c:1036
+#: ../src/gpk-application.c:1042
 #, c-format
 msgid "Additional software is required for %s"
 msgstr "%s 需要其他软件"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
-#: ../src/gpk-application.c:1039
+#: ../src/gpk-application.c:1045
 #, c-format
 msgid "%s requires the following additional software to function correctly."
 msgstr "%s 还需要以下软件才能正常运行。"
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1106
+#: ../src/gpk-application.c:1115
 msgid "Invalid"
 msgstr "非法"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1270
+#: ../src/gpk-application.c:1279
 msgid "No results were found."
 msgstr "结果未找到。"
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1278
+#: ../src/gpk-application.c:1287
 msgid "Try entering a name in the search bar."
 msgstr "请尝试在搜索栏中输入一个名称。"
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1281
+#: ../src/gpk-application.c:1290
 msgid "There is no software queued to be installed or removed."
 msgstr "队列中没有要被安装或删除的软件。"
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1286
+#: ../src/gpk-application.c:1295
 msgid ""
 "Try searching software descriptions by clicking the icon next to the search "
 "text."
 msgstr "请尝试单击搜索文本旁边的图标来搜索软件描述。"
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1289
+#: ../src/gpk-application.c:1298
 msgid "Try again with a different search term."
 msgstr "请尝试使用一个不同的搜索关键字。"
 
 #. TRANSLATORS: title: invalid text in the search bar
-#: ../src/gpk-application.c:1553
+#: ../src/gpk-application.c:1562
 msgid "Invalid search text"
 msgstr "非法搜索文本"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1555
+#: ../src/gpk-application.c:1564
 msgid "The search text contains invalid characters"
 msgstr "搜索文本包含不合法字符"
 
 #. TRANSLATORS: title: we failed to execute the method
-#: ../src/gpk-application.c:1596
+#: ../src/gpk-application.c:1605
 msgid "The search could not be completed"
 msgstr "搜索无法完成"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1598
+#: ../src/gpk-application.c:1607
 msgid "Running the transaction failed"
 msgstr "处理过程运行失败"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1727
+#: ../src/gpk-application.c:1736
 msgid "Changes not applied"
 msgstr "未应用更改"
 
-#: ../src/gpk-application.c:1728
+#: ../src/gpk-application.c:1737
 msgid "Close _Anyway"
 msgstr "确认关闭(_A)"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1732
+#: ../src/gpk-application.c:1741
 msgid "You have made changes that have not yet been applied."
 msgstr "有一些更改尚未应用。"
 
-#: ../src/gpk-application.c:1733
+#: ../src/gpk-application.c:1742
 msgid "These changes will be lost if you close this window."
 msgstr "如您关闭窗口，这些更改将会丢失。"
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2025 ../src/gpk-enum.c:1153 ../src/gpk-enum.c:1242
+#: ../src/gpk-application.c:2034 ../src/gpk-enum.c:1153 ../src/gpk-enum.c:1242
 msgid "Installed"
 msgstr "已安装"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2041 ../src/gpk-application.c:2063
+#: ../src/gpk-application.c:2050 ../src/gpk-application.c:2072
 #: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
 msgid "Name"
 msgstr "名称"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2229
+#: ../src/gpk-application.c:2239
 msgid "Size"
 msgstr "大小"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2232
+#: ../src/gpk-application.c:2242
 msgid "Installed size"
 msgstr "已安装大小"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2235
+#: ../src/gpk-application.c:2245
 msgid "Download size"
 msgstr "下载大小"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2448
+#: ../src/gpk-application.c:2433
 msgid "Searching by name"
 msgstr "正在按名称搜索"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2472
+#: ../src/gpk-application.c:2457
 msgid "Searching by description"
 msgstr "正在按描述搜索"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2496
+#: ../src/gpk-application.c:2481
 msgid "Searching by file"
 msgstr "正在按文件名搜索"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2518
+#: ../src/gpk-application.c:2503
 msgid "Search by name"
 msgstr "按名称搜索"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2529
+#: ../src/gpk-application.c:2514
 msgid "Search by description"
 msgstr "按描述搜索"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2540
+#: ../src/gpk-application.c:2525
 msgid "Search by file name"
 msgstr "按文件名搜索"
 
-#: ../src/gpk-application.c:2586
+#: ../src/gpk-application.c:2570
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "在 GNU General Public license Version 2 许可下发布"
 
-#: ../src/gpk-application.c:2587
+#: ../src/gpk-application.c:2571
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -782,7 +781,7 @@ msgstr ""
 "PackageKit 是自由软件；您可以按照由自由软件基金会发布的 GNU General Public "
 "License (第二版或更新的版本) 的规定下重新发布或修改本软件。"
 
-#: ../src/gpk-application.c:2591
+#: ../src/gpk-application.c:2575
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -792,7 +791,7 @@ msgstr ""
 "PackageKit 希望本软件能够起到一定用处，但没有任何保证；即使是默认的可销售性及"
 "适用于特定用途的保证。请参阅 GNU General Public License 来了解详细信息。"
 
-#: ../src/gpk-application.c:2595
+#: ../src/gpk-application.c:2579
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -802,7 +801,7 @@ msgstr ""
 "软件基金会：51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA。"
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2601
+#: ../src/gpk-application.c:2585
 msgid "translator-credits"
 msgstr ""
 "Wei Mingzhi <whistler@openoffice.org>, 2009\n"
@@ -812,52 +811,52 @@ msgstr ""
 "tuhaihe <wangdianjin@linuxdeepin.com>, 2012\n"
 "YunQiang Su <wzssyqa@gmail.com>, 2011"
 
-#: ../src/gpk-application.c:2622
+#: ../src/gpk-application.c:2606
 msgid "PackageKit Website"
 msgstr "PackageKit 网站"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2625
+#: ../src/gpk-application.c:2609
 msgid "Software management for GNOME"
 msgstr "GNOME 的软件管理工具"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2818
+#: ../src/gpk-application.c:2802
 msgid "Enter a search word or click a category to get started."
 msgstr "输入一个搜索词或点击一个分类以开始使用。"
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2821
+#: ../src/gpk-application.c:2805
 msgid "Enter a search word to get started."
 msgstr "输入一个搜索词来开始使用。"
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3060
+#: ../src/gpk-application.c:3044
 msgid "Exiting as properties could not be retrieved"
 msgstr "属性无法获取，将退出"
 
 #. TRANSLATORS: title: all of the packages on the system and availble in sources
-#: ../src/gpk-application.c:3103
+#: ../src/gpk-application.c:3087
 msgid "All packages"
 msgstr "所有软件包"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3105
+#: ../src/gpk-application.c:3089
 msgid "Show all packages"
 msgstr "显示全部软件包"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3536 ../src/gpk-update-viewer.c:3424
+#: ../src/gpk-application.c:3520 ../src/gpk-update-viewer.c:3424
 msgid "Show the program version and exit"
 msgstr "显示程序版本号并退出"
 
 #. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3550 ../src/gpk-log.c:498
+#: ../src/gpk-application.c:3534 ../src/gpk-log.c:498
 msgid "Install Software"
 msgstr "安装软件"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3566
+#: ../src/gpk-application.c:3550
 msgid "Package installer"
 msgstr "软件包安装程序"
 
