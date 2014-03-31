@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2014-03-31 14:03+0000\n"
-"PO-Revision-Date: 2014-03-31 21:16+0100\n"
+"PO-Revision-Date: 2014-03-31 21:26+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "Language: sl\n"
@@ -40,6 +40,8 @@ msgid ""
 "Packages uses PackageKit and can work on any distribution using the native "
 "package management framework."
 msgstr ""
+"Program uporablja sistem PackageKit in deluje na različnih distribucijah "
+"preko programov za upravljanje s paketi."
 
 #: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1
 msgid "GNOME Package Updater"
@@ -376,7 +378,6 @@ msgid "Package Install"
 msgstr "Namesti paket"
 
 #: ../data/gpk-install-local-file.desktop.in.h:2
-#, fuzzy
 msgid "Install selected packages on the system"
 msgstr "Namestitev izbrane programske opreme v sistem"
 
@@ -393,19 +394,16 @@ msgid "Filter"
 msgstr "Filter"
 
 #: ../data/gpk-prefs.desktop.in.h:2
-#, fuzzy
 msgid "Enable or disable package repositories"
-msgstr "Omogoči ali onemogoči sistemske omrežne povezave"
+msgstr "Omogoči ali onemogoči skladišča paketov"
 
 #: ../data/gpk-prefs.ui.h:2
-#, fuzzy
 msgid ""
 "A package source contains packages that can be installed on this computer."
 msgstr "Vir programske opreme vsebuje pakete, ki jih je mogoče namestiti."
 
 #. shows extra -source, -debuginfo, and -devel sources
 #: ../data/gpk-prefs.ui.h:4
-#, fuzzy
 msgid "_Show debug and development package sources"
 msgstr "_Pokaži vire razhroščevanja in razvoja programske opreme"
 
@@ -456,7 +454,6 @@ msgid "_Install Updates"
 msgstr "_Namesti posodobitve"
 
 #: ../data/gpk-update-viewer.ui.h:3
-#, fuzzy
 msgid ""
 "Package updates correct errors, eliminate security vulnerabilities, and "
 "provide new features."
@@ -495,7 +492,6 @@ msgstr "Ni paketov"
 
 #. TRANSLATORS: this package is not required by any others
 #: ../src/gpk-application.c:897
-#, fuzzy
 msgid "No other packages require this package"
 msgstr "Ni paketov, ki zahtevajo namestitev tega paketa."
 
@@ -523,7 +519,6 @@ msgstr[3] ""
 
 #. TRANSLATORS: this package does not depend on any others
 #: ../src/gpk-application.c:1026
-#, fuzzy
 msgid "This package does not depend on any others"
 msgstr "Paket ni odvisen od drugih paketov"
 
@@ -562,19 +557,16 @@ msgstr "Ni zadetkov iskanja."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
 #: ../src/gpk-application.c:1270
-#, fuzzy
 msgid "Try entering a package name in the search bar."
 msgstr "Vnesite ime paketa v iskalno vrstico."
 
 #. TRANSLATORS: nothing in the package queue
 #: ../src/gpk-application.c:1273
-#, fuzzy
 msgid "There are no packages queued to be installed or removed."
 msgstr "Ni pripravljenih paketov za nameščanje ali odstranjevanje."
 
 #. TRANSLATORS: tell the user to switch to details search mode
 #: ../src/gpk-application.c:1278
-#, fuzzy
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -1034,13 +1026,12 @@ msgstr "Neveljaven odgovor iskanja"
 
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
 #: ../src/gpk-dbus-task.c:1229
-#, fuzzy
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
 msgstr[0] "Zahtevani so dodatni paketi:"
-msgstr[1] "Zahtevana je dodatna programska oprema!"
-msgstr[2] "Zahtevana je dodatna programska oprema!"
-msgstr[3] "Zahtevana je dodatna programska oprema!"
+msgstr[1] "Zahtevan je dodatni paket:"
+msgstr[2] "Zahtevana sta dodatna paketa:"
+msgstr[3] "Zahtevani so dodatni paketi:"
 
 #. TRANSLATORS: ask the user if it's okay to search
 #: ../src/gpk-dbus-task.c:1232
@@ -1088,7 +1079,7 @@ msgstr "Datoteke ni mogoče najti v nobenem paketu"
 
 #. TRANSLATORS: we've already got a package that provides this file
 #: ../src/gpk-dbus-task.c:1368
-#, fuzzy, c-format
+#, c-format
 msgid "The %s package already provides this file"
 msgstr "Datoteka je del paketa %s"
 
@@ -1224,7 +1215,6 @@ msgstr "Napaka med iskanjem vstavkov"
 
 #. TRANSLATORS: no package sources have the wanted codec
 #: ../src/gpk-dbus-task.c:1635
-#, fuzzy
 msgid "Could not find plugin in any configured package source"
 msgstr "Vstavka ni mogoče najti med nastavljenimi programskimi viri"
 
@@ -1239,12 +1229,11 @@ msgstr[3] "Namesti navedene vstavke"
 #. TRANSLATORS: title: show a list of fonts
 #: ../src/gpk-dbus-task.c:1659 ../src/gpk-dbus-task.c:2128
 #: ../src/gpk-dbus-task.c:2469 ../src/gpk-dbus-task.c:2704
-#, fuzzy
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Ali želite takoj namestiti pakete?"
-msgstr[1] "Ali želite takoj namestiti pakete?"
-msgstr[2] "Ali želite takoj namestiti pakete?"
+msgstr[1] "Ali želite takoj namestiti paket?"
+msgstr[2] "Ali želite takoj namestiti paketa?"
 msgstr[3] "Ali želite takoj namestiti pakete?"
 
 #. TRANSLATORS: search for codec
@@ -1341,13 +1330,12 @@ msgstr[3] "Zahtevane so dodatne pisave za pravilen pregled dokumenta."
 
 #. TRANSLATORS: we need to download a new font package to display a document
 #: ../src/gpk-dbus-task.c:2295
-#, fuzzy
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "Ali želite takoj poiskati ustrezne pakete?"
-msgstr[1] "Ali želite takoj poiskati ustrezno pisavo?"
-msgstr[2] "Ali želite takoj poiskati ustrezni pisavi?"
-msgstr[3] "Ali želite takoj poiskati ustrezne pisave?"
+msgstr[1] "Ali želite takoj poiskati ustrezni paket?"
+msgstr[2] "Ali želite takoj poiskati ustrezna paketa?"
+msgstr[3] "Ali želite takoj poiskati ustrezne pakete?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-dbus-task.c:2305
@@ -1400,7 +1388,6 @@ msgstr "Iskanje storitve Plasma je spodletelo"
 
 #. TRANSLATORS: no package sources have the wanted Plasma service
 #: ../src/gpk-dbus-task.c:2445
-#, fuzzy
 msgid "Could not find service in any configured package source"
 msgstr "Storitve ni mogoče najti med nastavljenimi programskimi viri"
 
@@ -1622,9 +1609,8 @@ msgid "Packages are not compatible"
 msgstr "Paketi niso skladni"
 
 #: ../src/gpk-enum.c:364
-#, fuzzy
 msgid "Problem connecting to a package source"
-msgstr "Napaka med povezovanjem z virom programske opreme"
+msgstr "Napaka med povezovanjem z virom paketa"
 
 #: ../src/gpk-enum.c:367
 msgid "Failed to initialize"
@@ -1835,7 +1821,6 @@ msgstr ""
 "Pošljite poročilo o hrošču skupaj z natančnim opisom napake."
 
 #: ../src/gpk-enum.c:524
-#, fuzzy
 msgid ""
 "A security trust relationship could not be made with package source.\n"
 "Please check your security settings."
@@ -1850,13 +1835,12 @@ msgstr ""
 "Paket, ki je pripravljen za odstranitev ali posodobitev sploh še ni nameščen."
 
 #: ../src/gpk-enum.c:531
-#, fuzzy
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "package source."
 msgstr ""
-"Paketa, ki je pripravljen za spreminjanje, v sistemu in med viri programske "
-"opreme ni mogoče najti."
+"Paketa, ki je pripravljen za spreminjanje, ni mogoče najti v sistemu oziroma "
+"med viri programske opreme."
 
 #: ../src/gpk-enum.c:534
 msgid "The package that is trying to be installed is already installed."
@@ -1917,7 +1901,6 @@ msgstr ""
 "Več podrobnosti je na voljo v podrobnem poročilu."
 
 #: ../src/gpk-enum.c:565
-#, fuzzy
 msgid ""
 "The remote package source name was not found.\n"
 "You may need to enable an item in Package Sources."
@@ -1970,7 +1953,6 @@ msgstr ""
 "Za uporabo tega programa morate dovoljenje potrditi."
 
 #: ../src/gpk-enum.c:594
-#, fuzzy
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different sources."
@@ -1979,7 +1961,6 @@ msgstr ""
 "Napaka se pojavi, kadar so uporabljeni paketi različnih virov."
 
 #: ../src/gpk-enum.c:598
-#, fuzzy
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different sources."
@@ -1988,7 +1969,6 @@ msgstr ""
 "Napaka se pojavi, kadar so uporabljeni paketi različnih virov."
 
 #: ../src/gpk-enum.c:602
-#, fuzzy
 msgid ""
 "There was a (possibly temporary) problem connecting to a package source.\n"
 "Please check the detailed error for further details."
