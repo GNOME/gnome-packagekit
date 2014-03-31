@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2014-03-31 14:03+0000\n"
-"PO-Revision-Date: 2014-03-31 21:26+0100\n"
+"PO-Revision-Date: 2014-03-31 21:38+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "Language: sl\n"
@@ -34,6 +34,10 @@ msgid ""
 "possible and is an easy way to find software in your favorite desktop "
 "environment."
 msgstr ""
+"Program omogoča nameščanje in odstranjevanje paketov sistema. Pakete je "
+"mogoče iskati po imenu, podrobnosti, imenih datotek, odvisnostih in drugem. "
+"Podpira tudi iskanje po skupinah programov za enostavno nameščanje želenih v "
+"okolje namizja."
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:3
 msgid ""
@@ -157,14 +161,12 @@ msgstr ""
 "\"datoteke\"."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:21
-#, fuzzy
 msgid "Show all repositories in the package source viewer"
 msgstr "Pokaži vsa skladišča v pregledovalniku programskih virov"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:22
-#, fuzzy
 msgid "Show all repositories in the package source viewer."
-msgstr "Pokaži vsa skladišča v pregledovalniku programskih virov"
+msgstr "Pokaži vsa skladišča v pregledovalniku programskih virov."
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:23
 msgid "Only show the newest updates in the list"
@@ -373,7 +375,6 @@ msgid "Install selected software on the system"
 msgstr "Namestitev izbrane programske opreme v sistem"
 
 #: ../data/gpk-install-local-file.desktop.in.h:1
-#, fuzzy
 msgid "Package Install"
 msgstr "Namesti paket"
 
@@ -507,15 +508,13 @@ msgstr[3] "%i paketi so odvisni od namestitve paketa %s"
 
 #. TRANSLATORS: show a array of packages for the package
 #: ../src/gpk-application.c:909
-#, fuzzy, c-format
+#, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
-msgstr[0] "Navedeni paketi zahtevajo %s za pravilno delovanje"
-msgstr[1] "Paket naveden spodaj mora biti nameščen za pravilno delovanje %s."
-msgstr[2] ""
-"Paketa navedena spodaj morata biti nameščena za pravilno delovanje %s."
-msgstr[3] ""
-"Paketi navedeni spodaj morajo biti nameščeni za pravilno delovanje %s."
+msgstr[0] "Navedeni paketi zahtevajo %s za pravilno delovanje."
+msgstr[1] "Navedeni paketi zahtevajo %s za pravilno delovanje."
+msgstr[2] "Navedeni paketi zahtevajo %s za pravilno delovanje."
+msgstr[3] "Navedeni paketi zahtevajo %s za pravilno delovanje."
 
 #. TRANSLATORS: this package does not depend on any others
 #: ../src/gpk-application.c:1026
@@ -524,13 +523,13 @@ msgstr "Paket ni odvisen od drugih paketov"
 
 #. TRANSLATORS: title: show the number of other packages we depend on
 #: ../src/gpk-application.c:1033
-#, fuzzy, c-format
+#, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
-msgstr[0] "%i dodatnih paketov mora biti nameščenih hkrati z namestitvijo %s"
-msgstr[1] "Paket %s zahteva namestitev dodatnih programskih paketov."
-msgstr[2] "Paket %s zahteva namestitev dodatnih programskih paketov."
-msgstr[3] "Paket %s zahteva namestitev dodatnih programskih paketov."
+msgstr[0] "Paket %s zahteva namestitev %i dodatnih programskih paketov."
+msgstr[1] "Paket %s zahteva namestitev %i dodatnega programskega paketa."
+msgstr[2] "Paket %s zahteva namestitev %i dodatnih programskih paketov."
+msgstr[3] "Paket %s zahteva namestitev %i dodatnih programskih paketov."
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #: ../src/gpk-application.c:1038
@@ -1035,13 +1034,12 @@ msgstr[3] "Zahtevani so dodatni paketi:"
 
 #. TRANSLATORS: ask the user if it's okay to search
 #: ../src/gpk-dbus-task.c:1232
-#, fuzzy
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "Ali želite poiskati in namestiti te pakete?"
-msgstr[1] "Ali želite poiskati in namestiti dodatne programske pakete?"
-msgstr[2] "Ali želite poiskati in namestiti dodatne programske pakete?"
-msgstr[3] "Ali želite poiskati in namestiti dodatne programske pakete?"
+msgstr[1] "Ali želite poiskati in namestiti ta paket?"
+msgstr[2] "Ali želite poiskati in namestiti te pakete?"
+msgstr[3] "Ali želite poiskati in namestiti te pakete?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
 #: ../src/gpk-dbus-task.c:1238
