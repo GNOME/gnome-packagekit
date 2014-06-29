@@ -105,16 +105,6 @@ gpk_task_dialog_response_cb (GtkDialog *dialog, gint response_id, GpkTask *task)
 }
 
 /**
- * gpk_task_button_help_cb:
- **/
-static void
-gpk_task_button_help_cb (GtkWidget *widget, GpkTask *task)
-{
-	/* show the help */
-	gpk_gnome_help (task->priv->help_id);
-}
-
-/**
  * gpk_task_untrusted_question:
  **/
 static void
@@ -652,8 +642,6 @@ gpk_task_setup_dialog_signature (GpkTask *task)
 	/* connect up buttons */
 	widget = GTK_WIDGET (gtk_builder_get_object (task->priv->builder_signature, "button_yes"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_task_button_accept_cb), task);
-	widget = GTK_WIDGET (gtk_builder_get_object (task->priv->builder_signature, "button_help"));
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_task_button_help_cb), task);
 	widget = GTK_WIDGET (gtk_builder_get_object (task->priv->builder_signature, "button_no"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_task_button_decline_cb), task);
 }
@@ -687,8 +675,6 @@ gpk_task_setup_dialog_eula (GpkTask *task)
 	/* connect up buttons */
 	widget = GTK_WIDGET (gtk_builder_get_object (task->priv->builder_eula, "button_agree"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_task_button_accept_cb), task);
-	widget = GTK_WIDGET (gtk_builder_get_object (task->priv->builder_eula, "button_help"));
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_task_button_help_cb), task);
 	widget = GTK_WIDGET (gtk_builder_get_object (task->priv->builder_eula, "button_cancel"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_task_button_decline_cb), task);
 }

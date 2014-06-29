@@ -526,7 +526,6 @@ gpk_dbus_task_set_status (GpkDbusTask *dtask, PkStatusEnum status)
 		    status == PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO ||
 		    status == PK_STATUS_ENUM_REFRESH_CACHE) {
 			gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, 0);
-			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-progress");
 			gpk_modal_dialog_present_with_time (dtask->priv->dialog, 0);
 		}
 	}
@@ -695,7 +694,6 @@ gpk_dbus_task_install_package_files_verify (GpkDbusTask *dtask, GPtrArray *array
 	gpk_modal_dialog_set_message (dtask->priv->dialog, message);
 	/* TRANSLATORS: title: installing local files */
 	gpk_modal_dialog_set_action (dtask->priv->dialog, _("Install"));
-	gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-install-files");
 	gpk_modal_dialog_present_with_time (dtask->priv->dialog, dtask->priv->timestamp);
 	button = gpk_modal_dialog_run (dtask->priv->dialog);
 	g_free (message);
@@ -735,7 +733,6 @@ gpk_dbus_task_confirm_action (GpkDbusTask *dtask, const gchar *title, const gcha
 
 	gpk_modal_dialog_set_title (dtask->priv->dialog, title);
 	gpk_modal_dialog_set_message (dtask->priv->dialog, message);
-	gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-application-confirm");
 	gpk_modal_dialog_present_with_time (dtask->priv->dialog, dtask->priv->timestamp);
 	button = gpk_modal_dialog_run (dtask->priv->dialog);
 
@@ -1087,7 +1084,6 @@ gpk_dbus_task_install_package_names_resolve_cb (PkTask *task, GAsyncResult *res,
 			gpk_modal_dialog_set_title (dtask->priv->dialog, title);
 			/* TRANSLATORS: message: could not find */
 			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The packages could not be found in any package source"));
-			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: a link to the help file */
 			gpk_modal_dialog_set_action (dtask->priv->dialog, _("More information"));
 			gpk_modal_dialog_present (dtask->priv->dialog);
@@ -1257,7 +1253,6 @@ skip_checks:
 	/* TRANSLATORS: title, searching */
 	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Searching for packages"));
 	gpk_modal_dialog_set_image_status (dtask->priv->dialog, PK_STATUS_ENUM_WAIT);
-	gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-finding-packages");
 	if (dtask->priv->show_progress)
 		gpk_modal_dialog_present (dtask->priv->dialog);
 
@@ -1328,7 +1323,6 @@ gpk_dbus_task_install_provide_files_search_file_cb (PkClient *client, GAsyncResu
 			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to find package"));
 			/* TRANSLATORS: nothing found */
 			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The file could not be found in any packages"));
-			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
 			gpk_modal_dialog_set_action (dtask->priv->dialog, _("More information"));
 			gpk_modal_dialog_present (dtask->priv->dialog);
@@ -1633,7 +1627,6 @@ gpk_dbus_task_codec_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDb
 			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to search for plugin"));
 			/* TRANSLATORS: no package sources have the wanted codec */
 			gpk_modal_dialog_set_message (dtask->priv->dialog, _("Could not find plugin in any configured package source"));
-			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 
 			/* TRANSLATORS: button text */
 			gpk_modal_dialog_set_action (dtask->priv->dialog, _("More information"));
@@ -1750,7 +1743,6 @@ skip_checks:
 	/* TRANSLATORS: search for codec */
 	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Searching for plugins"));
 	gpk_modal_dialog_set_image_status (dtask->priv->dialog, PK_STATUS_ENUM_WAIT);
-	gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-finding-packages");
 
 	/* setup the UI */
 	if (dtask->priv->show_progress)
@@ -1844,7 +1836,6 @@ gpk_dbus_task_mime_what_provides_cb (PkClient *client, GAsyncResult *res, GpkDbu
 			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to find software"));
 			/* TRANSLATORS: nothing found in the package sources that helps */
 			gpk_modal_dialog_set_message (dtask->priv->dialog, _("No new applications can be found to handle this type of file"));
-			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
 			gpk_modal_dialog_set_action (dtask->priv->dialog, _("More information"));
 			gpk_modal_dialog_present (dtask->priv->dialog);
@@ -1945,7 +1936,6 @@ skip_checks:
 	/* TRANSLATORS: title: searching for mime type handlers */
 	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Searching for file handlers"));
 	gpk_modal_dialog_set_image_status (dtask->priv->dialog, PK_STATUS_ENUM_WAIT);
-	gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-finding-packages");
 
 	/* setup the UI */
 	if (dtask->priv->show_progress)
@@ -2103,7 +2093,6 @@ gpk_dbus_task_fontconfig_what_provides_cb (PkClient *client, GAsyncResult *res, 
 			gpk_modal_dialog_set_title (dtask->priv->dialog, title);
 			/* TRANSLATORS: message: tell the user we suck */
 			gpk_modal_dialog_set_message (dtask->priv->dialog, _("No new fonts can be found for this document"));
-			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
 			gpk_modal_dialog_set_action (dtask->priv->dialog, _("More information"));
 			gpk_modal_dialog_present (dtask->priv->dialog);
@@ -2325,7 +2314,6 @@ skip_checks:
 	gpk_modal_dialog_setup (dtask->priv->dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, 0);
 	gpk_modal_dialog_set_title (dtask->priv->dialog, title);
 	gpk_modal_dialog_set_image_status (dtask->priv->dialog, PK_STATUS_ENUM_WAIT);
-	gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-finding-packages");
 
 	/* setup the UI */
 	if (dtask->priv->show_progress)
@@ -2443,7 +2431,6 @@ gpk_dbus_task_plasma_service_what_provides_cb (PkClient *client, GAsyncResult *r
 			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to search for Plasma service"));
 			/* TRANSLATORS: no package sources have the wanted Plasma service */
 			gpk_modal_dialog_set_message (dtask->priv->dialog, _("Could not find service in any configured package source"));
-			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 
 			/* TRANSLATORS: button text */
 			gpk_modal_dialog_set_action (dtask->priv->dialog, _("More information"));
@@ -2550,7 +2537,6 @@ skip_checks:
 	/* TRANSLATORS: search for Plasma services */
 	gpk_modal_dialog_set_title (dtask->priv->dialog, _("Searching for services"));
 	gpk_modal_dialog_set_image_status (dtask->priv->dialog, PK_STATUS_ENUM_WAIT);
-	gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-finding-packages");
 
 	/* setup the UI */
 	if (dtask->priv->show_progress)
@@ -2772,8 +2758,6 @@ gpk_dbus_task_install_printer_drivers (GpkDbusTask *dtask, gchar **device_ids, G
 				    _("Searching for packages"));
 	gpk_modal_dialog_set_image_status (dtask->priv->dialog,
 					   PK_STATUS_ENUM_WAIT);
-	gpk_modal_dialog_set_help_id (dtask->priv->dialog,
-				      "dialog-finding-packages");
 
 	/* setup the UI */
 	if (dtask->priv->show_progress)
@@ -2912,7 +2896,6 @@ gpk_dbus_task_remove_package_by_file_search_file_cb (PkClient *client, GAsyncRes
 			gpk_modal_dialog_set_title (dtask->priv->dialog, _("Failed to find package for this file"));
 			/* TRANSLATORS: nothing found */
 			gpk_modal_dialog_set_message (dtask->priv->dialog, _("The file could not be found in any packages"));
-			gpk_modal_dialog_set_help_id (dtask->priv->dialog, "dialog-package-not-found");
 			/* TRANSLATORS: button: show the user a button to get more help finding stuff */
 			gpk_modal_dialog_present (dtask->priv->dialog);
 			gpk_modal_dialog_run (dtask->priv->dialog);

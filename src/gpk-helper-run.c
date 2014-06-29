@@ -119,16 +119,6 @@ gpk_helper_run_button_close_cb (GtkWidget *widget, GpkHelperRun *helper)
 }
 
 /**
- * gpk_helper_run_button_help_cb:
- **/
-static void
-gpk_helper_run_button_help_cb (GtkWidget *widget, GpkHelperRun *helper)
-{
-	/* show the help */
-	gpk_gnome_help ("run");
-}
-
-/**
  * gpk_helper_run_delete_event_cb:
  **/
 static gboolean
@@ -462,8 +452,6 @@ gpk_helper_run_init (GpkHelperRun *helper)
 	/* connect up buttons */
 	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "button_close"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_run_button_close_cb), helper);
-	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "button_help"));
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_run_button_help_cb), helper);
 
 	/* hide the filter box */
 	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "hbox_filter"));

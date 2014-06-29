@@ -27,7 +27,6 @@
 G_BEGIN_DECLS
 
 gboolean	 gpk_gnome_open				(const gchar	*url);
-gboolean	 gpk_gnome_help				(const gchar	*link_id);
 
 G_END_DECLS
 

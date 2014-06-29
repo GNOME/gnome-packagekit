@@ -55,7 +55,6 @@ typedef enum
  */
 typedef enum
 {
-	GPK_MODAL_DIALOG_WIDGET_BUTTON_HELP,
 	GPK_MODAL_DIALOG_WIDGET_BUTTON_CANCEL,
 	GPK_MODAL_DIALOG_WIDGET_BUTTON_CLOSE,
 	GPK_MODAL_DIALOG_WIDGET_BUTTON_ACTION,
@@ -115,8 +114,6 @@ gboolean	 gpk_modal_dialog_set_image_status	(GpkModalDialog		*dialog,
 							 PkStatusEnum		 status);
 gboolean	 gpk_modal_dialog_set_allow_cancel	(GpkModalDialog		*dialog,
 							 gboolean		 can_cancel);
-gboolean	 gpk_modal_dialog_set_help_id		(GpkModalDialog		*dialog,
-							 const gchar		*help_id);
 GtkWindow	*gpk_modal_dialog_get_window		(GpkModalDialog		*dialog);
 GtkResponseType	 gpk_modal_dialog_run			(GpkModalDialog		*dialog);
 gboolean	 gpk_modal_dialog_close			(GpkModalDialog		*dialog);

@@ -94,16 +94,6 @@ gpk_helper_chooser_button_response_cb (GtkDialog *dialog, GtkResponseType respon
 }
 
 /**
- * gpk_helper_chooser_button_help_cb:
- **/
-static void
-gpk_helper_chooser_button_help_cb (GtkWidget *widget, GpkHelperChooser *helper)
-{
-	/* show the help */
-	gpk_gnome_help ("mime-types");
-}
-
-/**
  * gpk_helper_chooser_treeview_clicked_cb:
  **/
 static void
@@ -289,8 +279,6 @@ gpk_helper_chooser_init (GpkHelperChooser *helper)
 	gpk_window_set_size_request (GTK_WINDOW (widget), 600, 300);
 
 	/* connect up buttons */
-	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "button_help"));
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_chooser_button_help_cb), helper);
 	widget = GTK_WIDGET (gtk_builder_get_object (helper->priv->builder, "button_close"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_helper_chooser_button_cancel_cb), helper);
 

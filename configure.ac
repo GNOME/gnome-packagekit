@@ -16,7 +16,6 @@ AM_PROG_CC_C_O
 IT_PROG_INTLTOOL([0.35.0])
 
 GNOME_COMPILE_WARNINGS
-YELP_HELP_INIT
 
 # set up gtk-doc
 GTK_DOC_CHECK(1.9)
@@ -178,18 +177,6 @@ AC_SUBST(BINDIR, $bindir)
 AC_SUBST(SBINDIR, $sbindir)
 
 dnl ---------------------------------------------------------------------------
-dnl - Where should we put documentation ?
-dnl ---------------------------------------------------------------------------
-AC_ARG_WITH(doc-dir,
-              [AS_HELP_STRING([--with-doc-dir=<dir>],[directory to install documentation])])
-if ! test -z "$with_doc_dir"; then
-	DOCDIR="$with_doc_dir/gnome-packagekit-$VERSION"
-else
-	DOCDIR="$DATADIR/doc/gnome-packagekit-$VERSION"
-fi
-AC_SUBST(DOCDIR)
-
-dnl ---------------------------------------------------------------------------
 dnl - Is docbook2man available?
 dnl ---------------------------------------------------------------------------
 AC_PATH_PROG(DOCBOOK2MAN, docbook2man, no)
@@ -214,7 +201,6 @@ dnl ---------------------------------------------------------------------------
 AC_CONFIG_FILES([
 Makefile
 src/Makefile
-help/Makefile
 man/Makefile
 po/Makefile.in
 data/Makefile

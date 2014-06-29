@@ -58,7 +58,6 @@ struct _GpkModalDialogPrivate
 	GMainLoop		*loop;
 	GtkResponseType		 response;
 	GtkListStore		*store;
-	gchar			*help_id;
 	gchar			*title;
 	gboolean		 set_image;
 	GpkModalDialogPage	 page;
@@ -70,7 +69,6 @@ enum {
 	GPK_MODAL_DIALOG_CLOSE,
 	GPK_MODAL_DIALOG_QUIT,
 	GPK_MODAL_DIALOG_ACTION,
-	GPK_MODAL_DIALOG_HELP,
 	GPK_MODAL_DIALOG_CANCEL,
 	LAST_SIGNAL
 };
@@ -109,8 +107,6 @@ gpk_modal_dialog_setup (GpkModalDialog *dialog, GpkModalDialogPage page, PkBitfi
 	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
 
 	/* reset state */
-	g_free (dialog->priv->help_id);
-	dialog->priv->help_id = NULL;
 	dialog->priv->set_image = FALSE;
 	dialog->priv->page = page;
 	dialog->priv->options = options;
@@ -154,7 +150,6 @@ gpk_modal_dialog_present_with_time (GpkModalDialog *dialog, guint32 timestamp)
 			gpk_modal_dialog_set_image (dialog, "dialog-question");
 		bitfield = pk_bitfield_from_enums (GPK_MODAL_DIALOG_WIDGET_BUTTON_CLOSE,
 						   GPK_MODAL_DIALOG_WIDGET_BUTTON_ACTION,
-						   GPK_MODAL_DIALOG_WIDGET_BUTTON_HELP,
 						   GPK_MODAL_DIALOG_WIDGET_MESSAGE,
 						   -1);
 	} else if (dialog->priv->page == GPK_MODAL_DIALOG_PAGE_WARNING) {
@@ -175,7 +170,6 @@ gpk_modal_dialog_present_with_time (GpkModalDialog *dialog, guint32 timestamp)
 	/* we can specify extras */
 	bitfield += dialog->priv->options;
 
-	gpk_modal_dialog_show_widget (dialog, "button_help", pk_bitfield_contain (bitfield, GPK_MODAL_DIALOG_WIDGET_BUTTON_HELP));
 	gpk_modal_dialog_show_widget (dialog, "button_cancel", pk_bitfield_contain (bitfield, GPK_MODAL_DIALOG_WIDGET_BUTTON_CANCEL));
 	gpk_modal_dialog_show_widget (dialog, "button_close", pk_bitfield_contain (bitfield, GPK_MODAL_DIALOG_WIDGET_BUTTON_CLOSE));
 	gpk_modal_dialog_show_widget (dialog, "button_action", pk_bitfield_contain (bitfield, GPK_MODAL_DIALOG_WIDGET_BUTTON_ACTION));
@@ -584,28 +578,6 @@ gpk_modal_dialog_button_close_cb (GtkWidget *widget_button, GpkModalDialog *dial
 }
 
 /**
- * gpk_modal_dialog_set_help_id:
- **/
-gboolean
-gpk_modal_dialog_set_help_id (GpkModalDialog *dialog, const gchar *help_id)
-{
-	g_return_val_if_fail (GPK_IS_CLIENT_DIALOG (dialog), FALSE);
-	g_return_val_if_fail (dialog->priv->help_id == NULL, FALSE);
-	dialog->priv->help_id = g_strdup (help_id);
-	return TRUE;
-}
-
-/**
- * gpk_modal_dialog_button_help_cb:
- **/
-static void
-gpk_modal_dialog_button_help_cb (GtkWidget *widget_button, GpkModalDialog *dialog)
-{
-	gpk_gnome_help (dialog->priv->help_id);
-	g_signal_emit (dialog, signals [GPK_MODAL_DIALOG_HELP], 0);
-}
-
-/**
  * gpk_modal_dialog_button_action_cb:
  **/
 static void
@@ -780,13 +752,6 @@ gpk_modal_dialog_class_init (GpkModalDialogClass *klass)
 			      0, NULL, NULL,
 			      g_cclosure_marshal_VOID__VOID,
 			      G_TYPE_NONE, 0);
-	signals [GPK_MODAL_DIALOG_HELP] =
-		g_signal_new ("help",
-			      G_TYPE_FROM_CLASS (object_class),
-			      G_SIGNAL_RUN_LAST,
-			      0, NULL, NULL,
-			      g_cclosure_marshal_VOID__VOID,
-			      G_TYPE_NONE, 0);
 }
 
 /**
@@ -812,7 +777,6 @@ gpk_modal_dialog_init (GpkModalDialog *dialog)
 	dialog->priv->set_image = FALSE;
 	dialog->priv->page = GPK_MODAL_DIALOG_PAGE_UNKNOWN;
 	dialog->priv->options = 0;
-	dialog->priv->help_id = NULL;
 	dialog->priv->title = NULL;
 
 	dialog->priv->store = gtk_list_store_new (GPK_MODAL_DIALOG_STORE_LAST,
@@ -843,8 +807,6 @@ gpk_modal_dialog_init (GpkModalDialog *dialog)
 	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_modal_dialog_window_delete_cb), dialog);
 	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "button_close"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_modal_dialog_button_close_cb), dialog);
-	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "button_help"));
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_modal_dialog_button_help_cb), dialog);
 	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "button_action"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_modal_dialog_button_action_cb), dialog);
 	widget = GTK_WIDGET (gtk_builder_get_object (dialog->priv->builder, "button_cancel"));
@@ -890,7 +852,6 @@ gpk_modal_dialog_finalize (GObject *object)
 	g_object_unref (dialog->priv->store);
 	g_object_unref (dialog->priv->builder);
 	g_main_loop_unref (dialog->priv->loop);
-	g_free (dialog->priv->help_id);
 	g_free (dialog->priv->title);
 
 	G_OBJECT_CLASS (gpk_modal_dialog_parent_class)->finalize (object);

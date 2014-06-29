@@ -2517,17 +2517,6 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 }
 
 /**
- * gpk_application_activate_help_cb:
- **/
-static void
-gpk_application_activate_help_cb (GSimpleAction *action,
-				  GVariant *parameter,
-				  gpointer user_data)
-{
-	gpk_gnome_help ("add-remove");
-}
-
-/**
  * gpk_application_activate_about_cb:
  **/
 static void
@@ -2538,9 +2527,6 @@ gpk_application_activate_about_cb (GSimpleAction *action,
 	GpkApplicationPrivate *priv = user_data;
 	GtkWidget *main_window;
 	const char *authors[] = {
-		"Richard Hughes <richard@hughsie.com>",
-		NULL};
-	const char *documenters[] = {
 		"Richard Hughes <richard@hughsie.com>",
 		NULL};
 	const char *artists[] = {
@@ -2588,7 +2574,6 @@ gpk_application_activate_about_cb (GSimpleAction *action,
 				/* TRANSLATORS: description of NULL, gpk-application that is */
 			       "comments", _("Package Manager for GNOME"),
 			       "authors", authors,
-			       "documenters", documenters,
 			       "artists", artists,
 			       "translator-credits", translators,
 			       "logo-icon-name", GPK_ICON_SOFTWARE_INSTALLER,
@@ -3472,7 +3457,6 @@ static GActionEntry gpk_menu_app_entries[] = {
 	{ "refresh",		gpk_application_activate_refresh_cb, NULL, NULL, NULL },
 	{ "log",		gpk_application_activate_log_cb, NULL, NULL, NULL },
 	{ "quit",		gpk_application_activate_quit_cb, NULL, NULL, NULL },
-	{ "help",		gpk_application_activate_help_cb, NULL, NULL, NULL },
 	{ "about",		gpk_application_activate_about_cb, NULL, NULL, NULL },
 };
 

@@ -58,15 +58,6 @@ enum {
 };
 
 /**
- * gpk_prefs_help_cb:
- **/
-static void
-gpk_prefs_help_cb (GtkWidget *widget, GpkPrefsPrivate *priv)
-{
-	gpk_gnome_help ("prefs");
-}
-
-/**
  * gpk_prefs_find_iter_model_cb:
  **/
 static gboolean
@@ -567,9 +558,6 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_close"));
 	g_signal_connect (widget, "clicked",
 			  G_CALLBACK (gpk_prefs_close_cb), priv);
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_help"));
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_prefs_help_cb), priv);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_detail"));
 	g_settings_bind (priv->settings_gpk,

@@ -142,15 +142,6 @@ gpk_log_model_get_iter (GtkTreeModel *model, GtkTreeIter *iter, const gchar *id)
 }
 
 /**
- * gpk_log_button_help_cb:
- **/
-static void
-gpk_log_button_help_cb (GtkWidget *widget, gpointer data)
-{
-	gpk_gnome_help ("software-log");
-}
-
-/**
  * gpk_log_get_localised_date:
  **/
 static gchar *
@@ -724,8 +715,6 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 			  G_CALLBACK (gpk_log_button_close_cb), application);
 	gtk_widget_grab_default (widget);
 
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_help"));
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_help_cb), NULL);
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_refresh"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_refresh_cb), NULL);
 	gtk_widget_hide (widget);

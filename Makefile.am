@@ -3,8 +3,7 @@ SUBDIRS =						\
 	man						\
 	src						\
 	po						\
-	data						\
-	help
+	data
 
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
