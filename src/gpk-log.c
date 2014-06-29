@@ -481,24 +481,27 @@ gpk_log_add_item (PkTransactionPast *item)
 	}
 
 	/* get nice name for tool name */
-	if (g_strcmp0 (cmdline, "pkcon") == 0)
-		/* TRANSLATORS: short name for pkcon */
+	if (strstr (cmdline, "pkcon") != NULL)
+		/* TRANSLATORS: user-friendly name for pkcon */
 		tool = _("Command line client");
-	else if (g_strcmp0 (cmdline, "gpk-application") == 0)
-		/* TRANSLATORS: short name for gpk-update-viewer */
-		tool = _("Install Software");
-	else if (g_strcmp0 (cmdline, "gpk-update-viewer") == 0)
-		/* TRANSLATORS: short name for gpk-update-viewer */
-		tool = _("Update System");
-	else if (g_strcmp0 (cmdline, "gpk-update-icon") == 0)
-		/* TRANSLATORS: short name for gpk-update-icon */
+	else if (strstr (cmdline, "gpk-application") != NULL)
+		/* TRANSLATORS: user-friendly name for gpk-update-viewer */
+		tool = _("GNOME Packages");
+	else if (strstr (cmdline, "gpk-update-viewer") != NULL)
+		/* TRANSLATORS: user-friendly name for gpk-update-viewer */
+		tool = _("GNOME Package Updater");
+	else if (strstr (cmdline, "gpk-update-icon") != NULL)
+		/* TRANSLATORS: user-friendly name for gpk-update-icon, which used to exist */
 		tool = _("Update Icon");
-	else if (g_strcmp0 (cmdline, "/usr/libexec/pk-command-not-found") == 0)
-		/* TRANSLATORS: short name for the command not found plugin */
-		tool = _("Bash - Command Not Found");
-	else if (g_strcmp0 (cmdline, "/usr/libexec/gnome-settings-daemon") == 0)
-		/* TRANSLATORS: user friendly name for gnome-settings-daemon */
+	else if (strstr (cmdline, "pk-command-not-found") != NULL)
+		/* TRANSLATORS: user-friendly name for the command not found plugin */
+		tool = _("Bash – Command Not Found");
+	else if (strstr (cmdline, "gnome-settings-daemon") != NULL)
+		/* TRANSLATORS: user-friendly name for gnome-settings-daemon, which used to handle updates */
 		tool = _("GNOME Session");
+	else if (strstr (cmdline, "gnome-software") != NULL)
+		/* TRANSLATORS: user-friendly name for gnome-software */
+		tool = _("GNOME Software");
 	else
 		tool = cmdline;
 
