@@ -62,8 +62,8 @@ fi
 dnl ---------------------------------------------------------------------------
 dnl - Debugging switches (uncomment this if you want to use gdb)
 dnl ---------------------------------------------------------------------------
-CPPFLAGS="$CPPFLAGS -g"
-CPPFLAGS="$CPPFLAGS -fexceptions"
+#CPPFLAGS="$CPPFLAGS -g"
+#CPPFLAGS="$CPPFLAGS -fexceptions"
 
 dnl ---------------------------------------------------------------------------
 dnl - xsltproc
