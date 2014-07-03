@@ -12,8 +12,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit.master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-06-30 07:06+0000\n"
-"PO-Revision-Date: 2014-06-30 12:43+0200\n"
+"POT-Creation-Date: 2014-07-03 07:08+0000\n"
+"PO-Revision-Date: 2014-07-03 12:53+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: \n"
@@ -23,7 +23,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 2.91.6\n"
 
-#: ../data/appdata/gpk-application.appdata.xml.in.h:1
+#. TRANSLATORS: user-friendly name for gpk-update-viewer
+#: ../data/appdata/gpk-application.appdata.xml.in.h:1 ../src/gpk-log.c:489
 msgid "GNOME Packages"
 msgstr "Paquetes de GNOME"
 
@@ -49,7 +50,8 @@ msgstr ""
 "Paquetes usa PackageKit y puede usarse en cualquier distribución junto con "
 "el gestor de paquetes nativo."
 
-#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1
+#. TRANSLATORS: user-friendly name for gpk-update-viewer
+#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1 ../src/gpk-log.c:492
 msgid "GNOME Package Updater"
 msgstr "Actualizador de paquetes de GNOME"
 
@@ -346,7 +348,6 @@ msgstr "Actualizar las listas de paquetes"
 
 #: ../data/gpk-application.ui.h:19 ../data/gpk-log.desktop.in.h:1
 #: ../data/gpk-log.ui.h:1
-#| msgid "Package"
 msgid "Package Log"
 msgstr "Registro del paquete"
 
@@ -770,8 +771,7 @@ msgstr "Mostrar todos los paquetes"
 msgid "Show the program version and exit"
 msgstr "Mostrar la versión del programa y salir"
 
-#. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3492 ../src/gpk-log.c:489
+#: ../src/gpk-application.c:3492
 msgid "Install Software"
 msgstr "Instalar software"
 
@@ -3288,47 +3288,49 @@ msgstr "Nombre del usuario"
 msgid "Application"
 msgstr "Aplicación"
 
-#. TRANSLATORS: short name for pkcon
+#. TRANSLATORS: user-friendly name for pkcon
 #: ../src/gpk-log.c:486
 msgid "Command line client"
 msgstr "Cliente de línea de comandos"
 
-#. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-log.c:492
-msgid "Update System"
-msgstr "Actualizar el sistema"
-
-#. TRANSLATORS: short name for gpk-update-icon
+#. TRANSLATORS: user-friendly name for gpk-update-icon, which used to exist
 #: ../src/gpk-log.c:495
 msgid "Update Icon"
 msgstr "Actualizar icono"
 
-#. TRANSLATORS: short name for the command not found plugin
+#. TRANSLATORS: user-friendly name for the command not found plugin
 #: ../src/gpk-log.c:498
-msgid "Bash - Command Not Found"
+#| msgid "Bash - Command Not Found"
+msgid "Bash – Command Not Found"
 msgstr "Bash: comando no encontrado"
 
-#. TRANSLATORS: user friendly name for gnome-settings-daemon
+#. TRANSLATORS: user-friendly name for gnome-settings-daemon, which used to handle updates
 #: ../src/gpk-log.c:501
 msgid "GNOME Session"
 msgstr "Sesión de GNOME"
 
+#. TRANSLATORS: user-friendly name for gnome-software
+#: ../src/gpk-log.c:504
+#| msgid "Software"
+msgid "GNOME Software"
+msgstr "Software de GNOME"
+
 #. TRANSLATORS: preset the GtktextBox with this filter text
-#: ../src/gpk-log.c:799
+#: ../src/gpk-log.c:802
 msgid "Set the filter to this value"
 msgstr "Establecer el filtro a este valor"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:802 ../src/gpk-prefs.c:613
+#: ../src/gpk-log.c:805 ../src/gpk-prefs.c:613
 msgid "Set the parent window to make this modal"
 msgstr "Establecer la ventana padre para hacer esta modal"
 
-#: ../src/gpk-log.c:815
+#: ../src/gpk-log.c:818
 msgid "Software Log Viewer"
 msgstr "Visor de registros de software"
 
 #. are we running privileged
-#: ../src/gpk-log.c:823
+#: ../src/gpk-log.c:826
 msgid "Log viewer"
 msgstr "Visor de sucesos"
 
@@ -3797,14 +3799,14 @@ msgstr "Opciones de depuración"
 msgid "Show debugging options"
 msgstr "Mostrar las opciones de depuración"
 
+#~ msgid "Update System"
+#~ msgstr "Actualizar el sistema"
+
 #~ msgid "Software Log"
 #~ msgstr "Registro de software"
 
 #~ msgid "Help"
 #~ msgstr "Ayuda"
-
-#~ msgid "Software"
-#~ msgstr "Software"
 
 #~ msgid "Software Sources"
 #~ msgstr "Repositorios de software"
