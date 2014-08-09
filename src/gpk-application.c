@@ -3470,6 +3470,7 @@ main (int argc, char *argv[])
 	GOptionContext *context;
 	gboolean ret;
 	gint status = 0;
+	gchar *filename;
 	GpkApplicationPrivate *priv;
 
 	const GOptionEntry options[] = {
@@ -3521,6 +3522,13 @@ main (int argc, char *argv[])
 					 gpk_menu_app_entries,
 					 G_N_ELEMENTS (gpk_menu_app_entries),
 					 priv);
+
+	filename = g_build_filename (BINDIR, "gpk-update-viewer", NULL);
+	if (!g_file_test (filename, G_FILE_TEST_IS_EXECUTABLE)) {
+		GAction *action = g_action_map_lookup_action (G_ACTION_MAP (priv->application), "updates");
+		g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
+	}
+	g_free (filename);
 
 	/* run */
 	status = g_application_run (G_APPLICATION (priv->application), argc, argv);
