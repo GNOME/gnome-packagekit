@@ -3,23 +3,24 @@
 # This file is distributed under the same license as the gnome-packagekit package.
 # Jordi Serratosa <jordis@softcatala.cat>, 2012.
 # Robert Antoni Buj Gelonch <robert.buj@gmail.com>, 2012.
-# Gil Forcada <gilforcada@guifi.net>, 2007, 2008, 2009, 2010, 2011, 2012, 2013.
+# Gil Forcada <gilforcada@guifi.net>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-05-09 00:14+0200\n"
-"PO-Revision-Date: 2014-03-23 19:51+0100\n"
-"Last-Translator: Pau Iranzo <paugnu@gmail.com>\n"
+"POT-Creation-Date: 2014-08-17 01:35+0200\n"
+"PO-Revision-Date: 2014-08-17 01:35+0200\n"
+"Last-Translator: Gil Forcada <gilforcada@guifi.net>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca-XV\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: 8bits\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: ../data/appdata/gpk-application.appdata.xml.in.h:1
+#. TRANSLATORS: user-friendly name for gpk-update-viewer
+#: ../data/appdata/gpk-application.appdata.xml.in.h:1 ../src/gpk-log.c:489
 msgid "GNOME Packages"
 msgstr "Paquets GNOME"
 
@@ -45,7 +46,8 @@ msgstr ""
 "El Paquets utilitza el PackageKit i pot treballar en qualsevol distribució "
 "utilitzant l'entorn de treball nadiu de gestió de paquets."
 
-#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1
+#. TRANSLATORS: user-friendly name for gpk-update-viewer
+#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1 ../src/gpk-log.c:492
 msgid "GNOME Package Updater"
 msgstr "Actualitzador de paquets del GNOME"
 
@@ -258,7 +260,7 @@ msgstr ""
 "força l'ús d'estes opcions."
 
 #: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
-#: ../src/gpk-application.c:2580
+#: ../src/gpk-application.c:2567
 msgid "Packages"
 msgstr "Paquets"
 
@@ -334,7 +336,7 @@ msgstr "Comprova si hi ha actualitzacions"
 
 #. TRANSLATORS: program name, an application to add and remove software repositories
 #: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
-#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:622
 msgid "Package Sources"
 msgstr "Fonts de paquets"
 
@@ -342,9 +344,10 @@ msgstr "Fonts de paquets"
 msgid "Refresh Package Lists"
 msgstr "Actualitza les llistes de paquets"
 
-#: ../data/gpk-application.ui.h:19
-msgid "Software Log"
-msgstr "Registre de programari"
+#: ../data/gpk-application.ui.h:19 ../data/gpk-log.desktop.in.h:1
+#: ../data/gpk-log.ui.h:1
+msgid "Package Log"
+msgstr "Canvis del paquet"
 
 #: ../data/gpk-application.ui.h:20
 msgid "Only Newest Versions"
@@ -355,14 +358,10 @@ msgid "Only Native Packages"
 msgstr "Només els paquets nadius"
 
 #: ../data/gpk-application.ui.h:22
-msgid "Help"
-msgstr "Ajuda"
-
-#: ../data/gpk-application.ui.h:23
 msgid "About"
 msgstr "Quant a"
 
-#: ../data/gpk-application.ui.h:24
+#: ../data/gpk-application.ui.h:23
 msgid "_Quit"
 msgstr "I_x"
 
@@ -380,7 +379,7 @@ msgstr "_Accepta l'acord"
 
 #. TRANSLATORS: program name: application to install a package to provide a file
 #. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../data/gpk-dbus-service.desktop.in.h:1 ../src/gpk-dbus-task.c:3215
+#: ../data/gpk-dbus-service.desktop.in.h:1 ../src/gpk-dbus-task.c:3198
 #: ../src/gpk-install-local-file.c:67 ../src/gpk-dbus-service.c:137
 #: ../src/gpk-dbus-service.c:140
 msgid "Software Install"
@@ -397,10 +396,6 @@ msgstr "Instal·lació de paquets"
 #: ../data/gpk-install-local-file.desktop.in.h:2
 msgid "Install selected packages on the system"
 msgstr "Instal·la els paquets seleccionats en el sistema"
-
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:826
-msgid "Software Log Viewer"
-msgstr "Visualitzador del registre de programari"
 
 #: ../data/gpk-log.desktop.in.h:2
 msgid "View past package management tasks"
@@ -484,7 +479,7 @@ msgid "_Upgrade"
 msgstr "_Actualitza"
 
 #. TRANSLATORS: column for what packages were upgraded
-#: ../data/gpk-update-viewer.ui.h:5 ../src/gpk-log.c:322
+#: ../data/gpk-update-viewer.ui.h:5 ../src/gpk-log.c:313
 msgid "Details"
 msgstr "Detalls"
 
@@ -623,68 +618,68 @@ msgstr "Es perdran els canvis si tanqueu esta finestra."
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2017 ../src/gpk-enum.c:1075 ../src/gpk-enum.c:1164
+#: ../src/gpk-application.c:2018 ../src/gpk-enum.c:1075 ../src/gpk-enum.c:1164
 msgid "Installed"
 msgstr "Instal·lat"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2033 ../src/gpk-application.c:2055
-#: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
+#: ../src/gpk-application.c:2034 ../src/gpk-application.c:2056
+#: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:703
 msgid "Name"
 msgstr "Nom"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2222
+#: ../src/gpk-application.c:2223
 msgid "Size"
 msgstr "Mida"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2225
+#: ../src/gpk-application.c:2226
 msgid "Installed size"
 msgstr "Mida instal·lada"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2228
+#: ../src/gpk-application.c:2229
 msgid "Download size"
 msgstr "Mida baixada"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2416
+#: ../src/gpk-application.c:2417
 msgid "Searching by name"
 msgstr "S'està cercant pel nom"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2442
+#: ../src/gpk-application.c:2443
 msgid "Searching by description"
 msgstr "S'està cercant per la descripció"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2468
+#: ../src/gpk-application.c:2469
 msgid "Searching by file"
 msgstr "S'està cercant pel fitxer"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2491
+#: ../src/gpk-application.c:2492
 msgid "Search by name"
 msgstr "Cerca pel nom"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2499
+#: ../src/gpk-application.c:2500
 msgid "Search by description"
 msgstr "Cerca per la descripció"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2507
+#: ../src/gpk-application.c:2508
 msgid "Search by file name"
 msgstr "Cerca pel nom de fitxer"
 
-#: ../src/gpk-application.c:2549
+#: ../src/gpk-application.c:2536
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Publicat sota la Llicència Pública General GNU versió 2"
 
-#: ../src/gpk-application.c:2550
+#: ../src/gpk-application.c:2537
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -696,7 +691,7 @@ msgstr ""
 "publicada per la Free Software Foundation; ja siga la versió 2 de la "
 "Llicència o bé (si ho preferiu) qualsevol altra versió posterior."
 
-#: ../src/gpk-application.c:2554
+#: ../src/gpk-application.c:2541
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -708,7 +703,7 @@ msgstr ""
 "PER UN PROPÒSIT PARTICULAR. Vegeu la Llicència Pública General GNU per "
 "obtindre'n més detalls."
 
-#: ../src/gpk-application.c:2558
+#: ../src/gpk-application.c:2545
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -719,58 +714,57 @@ msgstr ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2564
+#: ../src/gpk-application.c:2551
 msgid "translator-credits"
 msgstr "Gil Forcada <gilforcada@guifi.net>"
 
-#: ../src/gpk-application.c:2585
+#: ../src/gpk-application.c:2572
 msgid "PackageKit Website"
 msgstr "Lloc web del PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2588
+#: ../src/gpk-application.c:2575
 msgid "Package Manager for GNOME"
 msgstr "Gestor de paquets pel GNOME"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2781
+#: ../src/gpk-application.c:2767
 msgid "Enter a search word or click a category to get started."
 msgstr ""
 "Per començar, introduïu una paraula de cerca, o bé, feu clic en una "
 "categoria."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2784
+#: ../src/gpk-application.c:2770
 msgid "Enter a search word to get started."
 msgstr "Per començar introduïu una paraula de cerca."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3023
+#: ../src/gpk-application.c:3009
 msgid "Exiting as properties could not be retrieved"
 msgstr "Se ix perquè no s'han pogut obtindre les propietats"
 
 #. TRANSLATORS: title: all of the packages on the system and available in sources
-#: ../src/gpk-application.c:3066
+#: ../src/gpk-application.c:3052
 msgid "All packages"
 msgstr "Tots els paquets"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3068
+#: ../src/gpk-application.c:3054
 msgid "Show all packages"
 msgstr "Mostra tots els paquets"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3493 ../src/gpk-update-viewer.c:3397
+#: ../src/gpk-application.c:3479 ../src/gpk-update-viewer.c:3397
 msgid "Show the program version and exit"
 msgstr "Mostra la versió del programa i ix"
 
-#. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3507 ../src/gpk-log.c:498
+#: ../src/gpk-application.c:3493
 msgid "Install Software"
 msgstr "Instal·la programari"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3523
+#: ../src/gpk-application.c:3509
 msgid "Package installer"
 msgstr "Instal·lador de paquets"
 
@@ -935,14 +929,14 @@ msgid "Installing packages"
 msgstr "S'està instal·lant paquets"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:599 ../src/gpk-dbus-task.c:1371
+#: ../src/gpk-dbus-task.c:598 ../src/gpk-dbus-task.c:1365
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "No s'ha pogut instal·lar el fitxer"
 msgstr[1] "No s'han pogut instal·lar els fitxers"
 
 #. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:688
+#: ../src/gpk-dbus-task.c:687
 msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
 msgstr[0] "Voleu instal·lar este fitxer?"
@@ -954,28 +948,28 @@ msgstr[1] "Voleu instal·lar estos fitxers?"
 #. TRANSLATORS: button: install a font
 #. TRANSLATORS: button: install Plasma services
 #. TRANSLATORS: button: install printer drivers
-#: ../src/gpk-dbus-task.c:697 ../src/gpk-dbus-task.c:1245
-#: ../src/gpk-dbus-task.c:1464 ../src/gpk-dbus-task.c:1667
-#: ../src/gpk-dbus-task.c:2135 ../src/gpk-dbus-task.c:2477
-#: ../src/gpk-dbus-task.c:2712 ../src/gpk-task.c:404
+#: ../src/gpk-dbus-task.c:696 ../src/gpk-dbus-task.c:1241
+#: ../src/gpk-dbus-task.c:1458 ../src/gpk-dbus-task.c:1660
+#: ../src/gpk-dbus-task.c:2124 ../src/gpk-dbus-task.c:2464
+#: ../src/gpk-dbus-task.c:2698 ../src/gpk-task.c:394
 msgid "Install"
 msgstr "Instal·la"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1020
+#: ../src/gpk-dbus-task.c:1017
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "Instal·la un fitxer local"
 msgstr[1] "Instal·la fitxers locals"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1080
+#: ../src/gpk-dbus-task.c:1077
 #, c-format
 msgid "Could not find packages"
 msgstr "No s'ha pogut trobar el paquet"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1089
+#: ../src/gpk-dbus-task.c:1086
 msgid "The packages could not be found in any package source"
 msgstr "No s'han pogut trobar els paquets a cap dipòsit"
 
@@ -984,49 +978,49 @@ msgstr "No s'han pogut trobar els paquets a cap dipòsit"
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
-#: ../src/gpk-dbus-task.c:1092 ../src/gpk-dbus-task.c:1333
-#: ../src/gpk-dbus-task.c:1639 ../src/gpk-dbus-task.c:1849
-#: ../src/gpk-dbus-task.c:2108 ../src/gpk-dbus-task.c:2449
+#: ../src/gpk-dbus-task.c:1088 ../src/gpk-dbus-task.c:1327
+#: ../src/gpk-dbus-task.c:1632 ../src/gpk-dbus-task.c:1840
+#: ../src/gpk-dbus-task.c:2097 ../src/gpk-dbus-task.c:2436
 msgid "More information"
 msgstr "Més informació"
 
-#: ../src/gpk-dbus-task.c:1129 ../src/gpk-enum.c:310
+#: ../src/gpk-dbus-task.c:1125 ../src/gpk-enum.c:310
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "El paquet ja està instal·lat"
 msgstr[1] "Els paquets ja estan instal·lats"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1133
+#: ../src/gpk-dbus-task.c:1129
 msgid "Nothing to do."
 msgstr "No s'ha de fer res."
 
 #. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:1148
+#: ../src/gpk-dbus-task.c:1144
 msgid "Failed to install package"
 msgstr "No s'ha pogut instal·lar el paquet"
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1150
+#: ../src/gpk-dbus-task.c:1146
 msgid "Incorrect response from search"
 msgstr "Resposta incorrecta de la cerca"
 
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1229
+#: ../src/gpk-dbus-task.c:1225
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
 msgstr[0] "Es necessita un paquet addicional:"
 msgstr[1] "Es necessiten paquets addicionals:"
 
 #. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1232
+#: ../src/gpk-dbus-task.c:1228
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "Voleu cercar i instal·lar este paquet ara?"
 msgstr[1] "Voleu cercar i instal·lar estos paquets ara?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1238
+#: ../src/gpk-dbus-task.c:1234
 #, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
@@ -1034,49 +1028,49 @@ msgstr[0] "El %s vol instal·lar un paquet"
 msgstr[1] "El %s vol instal·lar uns paquets"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1241
+#: ../src/gpk-dbus-task.c:1237
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
 msgstr[0] "Un programa vol instal·lar un paquet"
 msgstr[1] "Un programa vol instal·lar uns paquets"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1258 ../src/gpk-dbus-task.c:2772
+#: ../src/gpk-dbus-task.c:1254 ../src/gpk-dbus-task.c:2758
 msgid "Searching for packages"
 msgstr "Cerca de paquets"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1328
+#: ../src/gpk-dbus-task.c:1323
 msgid "Failed to find package"
 msgstr "No s'ha pogut trobar el paquet"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1330 ../src/gpk-dbus-task.c:2914
+#: ../src/gpk-dbus-task.c:1325 ../src/gpk-dbus-task.c:2898
 msgid "The file could not be found in any packages"
 msgstr "No s'ha pogut trobar el fitxer a cap paquet"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1368
+#: ../src/gpk-dbus-task.c:1362
 #, c-format
 msgid "The %s package already provides this file"
 msgstr "El paquet %s ja proporciona este fitxer"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1449
+#: ../src/gpk-dbus-task.c:1443
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "Es necessita el fitxer següent:"
 msgstr[1] "Es necessiten els fitxers següents:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1452
+#: ../src/gpk-dbus-task.c:1446
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "Voleu cercar este fitxer?"
 msgstr[1] "Voleu cercar estos fitxers?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1457
+#: ../src/gpk-dbus-task.c:1451
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1084,7 +1078,7 @@ msgstr[0] "El %s vol instal·lar un fitxer"
 msgstr[1] "El %s vol instal·lar uns fitxers"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1460
+#: ../src/gpk-dbus-task.c:1454
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "Un programa vol instal·lar un fitxer"
@@ -1092,27 +1086,27 @@ msgstr[1] "Un programa vol instal·lar uns fitxers"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1476 ../src/gpk-dbus-task.c:3017
+#: ../src/gpk-dbus-task.c:1470 ../src/gpk-dbus-task.c:3000
 #: ../src/gpk-enum.c:1235
 msgid "Searching for file"
 msgstr "Cerca de fitxers"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1519
+#: ../src/gpk-dbus-task.c:1513
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "Es necessita el connector següent:"
 msgstr[1] "Es necessiten els connectors següents:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1537 ../src/gpk-dbus-task.c:2377
+#: ../src/gpk-dbus-task.c:1531 ../src/gpk-dbus-task.c:2365
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Voleu cercar-lo ara?"
 msgstr[1] "Voleu cercar-los ara?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1550
+#: ../src/gpk-dbus-task.c:1544
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1122,7 +1116,7 @@ msgstr[1] ""
 "El %s requereix uns connectors addicionals per descodificar este fitxer"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1554
+#: ../src/gpk-dbus-task.c:1548
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1131,7 +1125,7 @@ msgstr[1] ""
 "El %s requereix uns connectors addicionals per codificar este fitxer"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1558
+#: ../src/gpk-dbus-task.c:1552
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1139,7 +1133,7 @@ msgstr[0] "El %s requereix un connector addicional per esta operació"
 msgstr[1] "El %s requereix uns connectors addicionals per esta operació"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1564
+#: ../src/gpk-dbus-task.c:1558
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] ""
@@ -1148,7 +1142,7 @@ msgstr[1] ""
 "Un programa requereix uns connectors addicionals per descodificar este fitxer"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1568
+#: ../src/gpk-dbus-task.c:1562
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] ""
@@ -1157,79 +1151,79 @@ msgstr[1] ""
 "Un programa requereix uns connectors addicionals per codificar este fitxer"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1572
+#: ../src/gpk-dbus-task.c:1566
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "Un programa requereix un connector addicional per esta operació"
 msgstr[1] "Un programa requereix uns connectors addicionals per esta operació"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1578 ../src/gpk-dbus-task.c:1935
-#: ../src/gpk-dbus-task.c:2312 ../src/gpk-dbus-task.c:2389
+#: ../src/gpk-dbus-task.c:1572 ../src/gpk-dbus-task.c:1926
+#: ../src/gpk-dbus-task.c:2301 ../src/gpk-dbus-task.c:2377
 msgid "Search"
 msgstr "Cerca"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1633
+#: ../src/gpk-dbus-task.c:1627
 msgid "Failed to search for plugin"
 msgstr "No s'ha pogut cercar el connector"
 
 #. TRANSLATORS: no package sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1635
+#: ../src/gpk-dbus-task.c:1629
 msgid "Could not find plugin in any configured package source"
 msgstr "No s'ha pogut trobar el connector a cap font de paquets"
 
-#: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2468
+#: ../src/gpk-dbus-task.c:1651 ../src/gpk-dbus-task.c:2455
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "Instal·la el connector següent"
 msgstr[1] "Instal·la els connectors següents"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1659 ../src/gpk-dbus-task.c:2128
-#: ../src/gpk-dbus-task.c:2469 ../src/gpk-dbus-task.c:2704
+#: ../src/gpk-dbus-task.c:1652 ../src/gpk-dbus-task.c:2117
+#: ../src/gpk-dbus-task.c:2456 ../src/gpk-dbus-task.c:2690
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Voleu instal·lar este paquet ara?"
 msgstr[1] "Voleu instal·lar este paquet ara?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1751
+#: ../src/gpk-dbus-task.c:1744
 msgid "Searching for plugins"
 msgstr "Cerca de connectors"
 
-#: ../src/gpk-dbus-task.c:1772
+#: ../src/gpk-dbus-task.c:1764
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "S'està cercant el connector: %s"
 
-#: ../src/gpk-dbus-task.c:1815
+#: ../src/gpk-dbus-task.c:1807
 msgid "Failed to search for provides"
 msgstr "No s'han pogut cercar proveïdors"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1844
+#: ../src/gpk-dbus-task.c:1836
 msgid "Failed to find software"
 msgstr "No s'ha pogut trobar cap programari"
 
 #. TRANSLATORS: nothing found in the package sources that helps
-#: ../src/gpk-dbus-task.c:1846
+#: ../src/gpk-dbus-task.c:1838
 msgid "No new applications can be found to handle this type of file"
 msgstr ""
 "No s'ha pogut trobar cap aplicació que puga gestionar este tipus de fitxer"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1917
+#: ../src/gpk-dbus-task.c:1908
 msgid "An additional program is required to open this type of file:"
 msgstr "Es necessita un altre programa per obrir este tipus de fitxer:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1920
+#: ../src/gpk-dbus-task.c:1911
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "Voleu cercar ara un programa que puga obrir estos tipus de fitxers?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1928
+#: ../src/gpk-dbus-task.c:1919
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1237,41 +1231,41 @@ msgstr[0] "El %s requereix un tipus MIME nou"
 msgstr[1] "El %s requereix uns tipus MIME nous"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1931
+#: ../src/gpk-dbus-task.c:1922
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "Un programa requereix un tipus MIME nou"
 msgstr[1] "Un programa requereix uns tipus MIME nous"
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1946
+#: ../src/gpk-dbus-task.c:1937
 msgid "Searching for file handlers"
 msgstr "Cerca de gestors de fitxers"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2029
+#: ../src/gpk-dbus-task.c:2019
 msgid "Language tag not parsed"
 msgstr "No s'ha pogut analitzar l'etiqueta d'idioma"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2037
+#: ../src/gpk-dbus-task.c:2027
 msgid "Language code not matched"
 msgstr "No s'ha trobat cap concordança amb el codi d'idioma"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2097
+#: ../src/gpk-dbus-task.c:2087
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "No s'ha pogut trobar el tipus de lletra"
 msgstr[1] "No s'han pogut trobar els tipus de lletra"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2105
+#: ../src/gpk-dbus-task.c:2095
 msgid "No new fonts can be found for this document"
 msgstr "No s'ha pogut trobar cap tipus de lletra nova per este document"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2291
+#: ../src/gpk-dbus-task.c:2280
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] ""
@@ -1280,14 +1274,14 @@ msgstr[1] ""
 "Es necessiten alguns tipus de lletra per veure correctament este document."
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2295
+#: ../src/gpk-dbus-task.c:2284
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "Voleu cercar el paquet adequat ara?"
 msgstr[1] "Voleu cercar els paquets adequats ara?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2305
+#: ../src/gpk-dbus-task.c:2294
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1295,56 +1289,56 @@ msgstr[0] "El %s vol instal·lar un tipus de lletra"
 msgstr[1] "El %s vol instal·lar uns tipus de lletres"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2308
+#: ../src/gpk-dbus-task.c:2297
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "Un programa vol instal·lar un tipus de lletra"
 msgstr[1] "Un programa vol instal·lar uns tipus de lletres"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2324
+#: ../src/gpk-dbus-task.c:2313
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "S'està cercant un tipus de lletra"
 msgstr[1] "S'estan cercant uns tipus de lletra"
 
 #. TRANSLATORS: we are listing the services in a box
-#: ../src/gpk-dbus-task.c:2365
+#: ../src/gpk-dbus-task.c:2353
 msgid "The following service is required:"
 msgid_plural "The following services are required:"
 msgstr[0] "Es necessita el servei següent:"
 msgstr[1] "Es necessiten els serveis següents:"
 
-#: ../src/gpk-dbus-task.c:2385
+#: ../src/gpk-dbus-task.c:2373
 msgid "Plasma requires an additional service for this operation"
 msgid_plural "Plasma requires additional services for this operation"
 msgstr[0] "El Plasma requereix un servei addicional per esta operació"
 msgstr[1] "El Plasma requereix serveis addicionals per esta operació"
 
-#: ../src/gpk-dbus-task.c:2443
+#: ../src/gpk-dbus-task.c:2431
 msgid "Failed to search for Plasma service"
 msgstr "No s'ha pogut trobar el servei pel Plasma"
 
 #. TRANSLATORS: no package sources have the wanted Plasma service
-#: ../src/gpk-dbus-task.c:2445
+#: ../src/gpk-dbus-task.c:2433
 msgid "Could not find service in any configured package source"
 msgstr "No s'ha pogut trobar el servei a cap font de paquets activa"
 
 #. TRANSLATORS: search for Plasma services
-#: ../src/gpk-dbus-task.c:2551
+#: ../src/gpk-dbus-task.c:2538
 msgid "Searching for services"
 msgstr "Cerca de serveis"
 
-#: ../src/gpk-dbus-task.c:2570
+#: ../src/gpk-dbus-task.c:2556
 #, c-format
 msgid "Searching for service: %s"
 msgstr "S'està cercant el servei: %s"
 
-#: ../src/gpk-dbus-task.c:2627
+#: ../src/gpk-dbus-task.c:2613
 msgid "Failed to remove package"
 msgstr "No s'ha pogut suprimir el paquet"
 
-#: ../src/gpk-dbus-task.c:2703
+#: ../src/gpk-dbus-task.c:2689
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "Instal·la el controlador següent"
@@ -1352,31 +1346,31 @@ msgstr[1] "Instal·la els controladors següents"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2858 ../src/gpk-enum.c:870
+#: ../src/gpk-dbus-task.c:2842 ../src/gpk-enum.c:870
 msgid "Removing packages"
 msgstr "S'estan suprimint els paquets"
 
 #. TRANSLATORS: failed to find the package for the file
-#: ../src/gpk-dbus-task.c:2912
+#: ../src/gpk-dbus-task.c:2896
 msgid "Failed to find package for this file"
 msgstr "No s'ha pogut trobar el paquet per este fitxer"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2990
+#: ../src/gpk-dbus-task.c:2973
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "Es suprimirà el fitxer següent:"
 msgstr[1] "Es suprimiran els fitxers següents:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2993
+#: ../src/gpk-dbus-task.c:2976
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Voleu suprimir este fitxer?"
 msgstr[1] "Voleu suprimir estos fitxers?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2998
+#: ../src/gpk-dbus-task.c:2981
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1384,14 +1378,14 @@ msgstr[0] "El %s vol suprimir un fitxer"
 msgstr[1] "El %s vol suprimir uns fitxers"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:3001
+#: ../src/gpk-dbus-task.c:2984
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Un programa vol suprimir un fitxer"
 msgstr[1] "Un programa vol suprimir uns fitxers"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:3005 ../src/gpk-task.c:409
+#: ../src/gpk-dbus-task.c:2988 ../src/gpk-task.c:399
 msgid "Remove"
 msgstr "Suprimeix"
 
@@ -1614,7 +1608,7 @@ msgid "No space is left on the disk"
 msgstr "No hi ha espai al disc"
 
 #. TRANSLATORS: this is the window title when a new CD or DVD is required
-#: ../src/gpk-enum.c:421 ../src/gpk-task.c:356
+#: ../src/gpk-enum.c:421 ../src/gpk-task.c:346
 msgid "A media change is required"
 msgstr "Es necessita un altre suport"
 
@@ -2570,7 +2564,7 @@ msgid "Cleaned up"
 msgstr "S'ha netejat"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1176 ../src/gpk-task.c:414
+#: ../src/gpk-enum.c:1176 ../src/gpk-task.c:404
 msgid "Obsoleted"
 msgstr "Obsolet"
 
@@ -2906,7 +2900,7 @@ msgid "Office"
 msgstr "Oficina"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1516 ../src/gpk-task.c:434
+#: ../src/gpk-enum.c:1516 ../src/gpk-task.c:424
 msgid "Other"
 msgstr "Altres"
 
@@ -3047,63 +3041,63 @@ msgid "Unknown group"
 msgstr "Grup desconegut"
 
 #. TRANSLATORS: column for the application icon
-#: ../src/gpk-helper-chooser.c:140 ../src/gpk-helper-run.c:203
+#: ../src/gpk-helper-chooser.c:130 ../src/gpk-helper-run.c:193
 msgid "Icon"
 msgstr "Icona"
 
 #. TRANSLATORS: column for the application name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-helper-chooser.c:147 ../src/gpk-helper-run.c:210
+#: ../src/gpk-helper-chooser.c:137 ../src/gpk-helper-run.c:200
 msgid "Package"
 msgstr "Paquet"
 
-#: ../src/gpk-helper-chooser.c:286
+#: ../src/gpk-helper-chooser.c:276
 msgid "Applications that can open this type of file"
 msgstr "Aplicacions que poden obrir este tipus de fitxer"
 
 #. TRANSLATORS: button label, install
-#: ../src/gpk-helper-chooser.c:298
+#: ../src/gpk-helper-chooser.c:286
 msgid "_Install"
 msgstr "_Instal·la"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-helper-chooser.c:302
+#: ../src/gpk-helper-chooser.c:290
 msgid "Install package"
 msgstr "Instal·la el paquet"
 
 #. TRANSLATORS: is not GPG signed
-#: ../src/gpk-task.c:140 ../src/gpk-task.c:150 ../src/gpk-task.c:170
+#: ../src/gpk-task.c:130 ../src/gpk-task.c:140 ../src/gpk-task.c:160
 msgid "The software is not signed by a trusted provider."
 msgstr "El programari no està signat per cap proveïdor de confiança."
 
 #. TRANSLATORS: user has to trust provider -- I know, this sucks
-#: ../src/gpk-task.c:142
+#: ../src/gpk-task.c:132
 msgid "Do not update this package unless you are sure it is safe to do so."
 msgstr "No actualitzeu este paquet si no sabeu que és segur fer-ho."
 
 #. TRANSLATORS: warn the user that all bets are off
-#: ../src/gpk-task.c:144 ../src/gpk-task.c:154
+#: ../src/gpk-task.c:134 ../src/gpk-task.c:144
 msgid "Malicious software can damage your computer or cause other harm."
 msgstr ""
 "El programari maliciós pot malmetre l'ordinador o provocar altres fallades."
 
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
-#: ../src/gpk-task.c:146
+#: ../src/gpk-task.c:136
 msgid "Are you <b>sure</b> you want to update this package?"
 msgstr "<b>Segur</b> que voleu actualitzar este paquet?"
 
 #. TRANSLATORS: user has to trust provider -- I know, this sucks
-#: ../src/gpk-task.c:152
+#: ../src/gpk-task.c:142
 msgid "Do not install this package unless you are sure it is safe to do so."
 msgstr "No instal·leu este paquet si no sabeu que és segur fer-ho."
 
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
-#: ../src/gpk-task.c:156
+#: ../src/gpk-task.c:146
 msgid "Are you <b>sure</b> you want to install this package?"
 msgstr "<b>Segur</b> que voleu instal·lar este paquet?"
 
 #. TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc
-#: ../src/gpk-task.c:351
+#: ../src/gpk-task.c:341
 #, c-format
 msgid ""
 "Additional media is required. Please insert the %s labeled '%s' to continue."
@@ -3111,59 +3105,59 @@ msgstr ""
 "Es requereixen altres suports. Inseriu el %s etiquetat «%s» per continuar."
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-task.c:360 ../src/gpk-task.c:563
+#: ../src/gpk-task.c:350 ../src/gpk-task.c:553
 msgid "Continue"
 msgstr "Continua"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:403
+#: ../src/gpk-task.c:393
 msgid "The following software also needs to be installed"
 msgstr "També s'ha d'instal·lar el programari següent"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:408 ../src/gpk-task.c:413
+#: ../src/gpk-task.c:398 ../src/gpk-task.c:403
 msgid "The following software also needs to be removed"
 msgstr "També s'ha de suprimir el programari següent"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:418
+#: ../src/gpk-task.c:408
 msgid "The following software also needs to be updated"
 msgstr "També s'ha d'actualitzar el programari següent"
 
-#: ../src/gpk-task.c:419
+#: ../src/gpk-task.c:409
 msgid "Update"
 msgstr "Actualització"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:423
+#: ../src/gpk-task.c:413
 msgid "The following software also needs to be re-installed"
 msgstr "També s'ha de reinstal·lar el programari següent"
 
-#: ../src/gpk-task.c:424
+#: ../src/gpk-task.c:414
 msgid "Reinstall"
 msgstr "Reinstal·lació"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:428
+#: ../src/gpk-task.c:418
 msgid "The following software also needs to be downgraded"
 msgstr "També s'ha de desactualitzar el programari següent"
 
-#: ../src/gpk-task.c:429
+#: ../src/gpk-task.c:419
 msgid "Downgrade"
 msgstr "Desactualització"
 
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:433
+#: ../src/gpk-task.c:423
 msgid "The following software also needs to be processed"
 msgstr "També s'ha de processar el programari següent"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:496
+#: ../src/gpk-task.c:486
 msgid "Additional confirmation required"
 msgstr "Es requereix una confirmació addicional"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:502
+#: ../src/gpk-task.c:492
 msgid "To install this package, additional software also has to be modified."
 msgid_plural ""
 "To install these packages, additional software also has to be modified."
@@ -3171,7 +3165,7 @@ msgstr[0] "Per instal·lar este paquet s'han de modificar altres programaris."
 msgstr[1] "Per instal·lar estos paquets s'han de modificar altres programaris."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:507
+#: ../src/gpk-task.c:497
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural ""
 "To remove these packages, additional software also has to be modified."
@@ -3179,7 +3173,7 @@ msgstr[0] "Per suprimir este paquet s'han de modificar altres programaris."
 msgstr[1] "Per suprimir estos paquets s'han de modificar altres programaris."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:512
+#: ../src/gpk-task.c:502
 msgid "To update this package, additional software also has to be modified."
 msgid_plural ""
 "To update these packages, additional software also has to be modified."
@@ -3188,7 +3182,7 @@ msgstr[1] ""
 "Per actualitzar estos paquets s'han de modificar altres programaris."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:517
+#: ../src/gpk-task.c:507
 msgid "To install this file, additional software also has to be modified."
 msgid_plural ""
 "To install these files, additional software also has to be modified."
@@ -3196,28 +3190,28 @@ msgstr[0] "Per instal·lar este fitxer s'ha de modificar un altre programari."
 msgstr[1] "Per instal·lar estos fitxers s'han de modificar altres programaris."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:522
+#: ../src/gpk-task.c:512
 msgid ""
 "To process this transaction, additional software also has to be modified."
 msgstr "Per processar esta transacció s'han de modificar altres programaris."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:613
+#: ../src/gpk-task.c:603
 msgid "_Force install"
 msgstr "_Força la instal·lació"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:617
+#: ../src/gpk-task.c:607
 msgid "Force installing package"
 msgstr "Força la instal·lació del paquet"
 
 #. TRANSLATORS: window title: do we want to execute a program we just installed?
-#: ../src/gpk-helper-run.c:480
+#: ../src/gpk-helper-run.c:468
 msgid "Run new application?"
 msgstr "Voleu executar la nova aplicació?"
 
 #. add run button
-#: ../src/gpk-helper-run.c:483
+#: ../src/gpk-helper-run.c:471
 msgid "_Run"
 msgstr "_Executa"
 
@@ -3246,101 +3240,105 @@ msgid "You need to specify a file to install"
 msgstr "Heu d'especificar un fitxer per instal·lar"
 
 #. TRANSLATORS: strftime formatted please
-#: ../src/gpk-log.c:171
+#: ../src/gpk-log.c:162
 msgid "%d %B %Y"
 msgstr "%d de %B de %Y"
 
 #. TRANSLATORS: column for the date
-#: ../src/gpk-log.c:286
+#: ../src/gpk-log.c:277
 msgid "Date"
 msgstr "Data"
 
 #. TRANSLATORS: column for what was done, e.g. update-system
-#: ../src/gpk-log.c:295
+#: ../src/gpk-log.c:286
 msgid "Action"
 msgstr "Acció"
 
 #. TRANSLATORS: column for the user name, e.g. Richard Hughes
-#: ../src/gpk-log.c:328
+#: ../src/gpk-log.c:319
 msgid "User name"
 msgstr "Nom d'usuari"
 
 #. TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs
-#: ../src/gpk-log.c:335
+#: ../src/gpk-log.c:326
 msgid "Application"
 msgstr "Aplicació"
 
-#. TRANSLATORS: short name for pkcon
-#: ../src/gpk-log.c:495
+#. TRANSLATORS: user-friendly name for pkcon
+#: ../src/gpk-log.c:486
 msgid "Command line client"
 msgstr "Client de la línia d'ordes"
 
-#. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-log.c:501
-msgid "Update System"
-msgstr "Actualitza el sistema"
-
-#. TRANSLATORS: short name for gpk-update-icon
-#: ../src/gpk-log.c:504
+#. TRANSLATORS: user-friendly name for gpk-update-icon, which used to exist
+#: ../src/gpk-log.c:495
 msgid "Update Icon"
 msgstr "Icona d'actualització"
 
-#. TRANSLATORS: short name for the command not found plugin
-#: ../src/gpk-log.c:507
-msgid "Bash - Command Not Found"
-msgstr "Bash - no s'ha trobat l'orde"
+#. TRANSLATORS: user-friendly name for the command not found plugin
+#: ../src/gpk-log.c:498
+msgid "Bash – Command Not Found"
+msgstr "Bash – no s'ha trobat l'orde"
 
-#. TRANSLATORS: user friendly name for gnome-settings-daemon
-#: ../src/gpk-log.c:510
+#. TRANSLATORS: user-friendly name for gnome-settings-daemon, which used to handle updates
+#: ../src/gpk-log.c:501
 msgid "GNOME Session"
 msgstr "Sessió del GNOME"
 
+#. TRANSLATORS: user-friendly name for gnome-software
+#: ../src/gpk-log.c:504
+msgid "GNOME Software"
+msgstr "Programari GNOME"
+
 #. TRANSLATORS: preset the GtktextBox with this filter text
-#: ../src/gpk-log.c:810
+#: ../src/gpk-log.c:802
 msgid "Set the filter to this value"
 msgstr "Estableix este valor pel filtre"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:813 ../src/gpk-prefs.c:625
+#: ../src/gpk-log.c:805 ../src/gpk-prefs.c:613
 msgid "Set the parent window to make this modal"
 msgstr "Estableix la finestra pare de manera que esta siga modal"
 
+#: ../src/gpk-log.c:818
+msgid "Software Log Viewer"
+msgstr "Visualitzador del registre de programari"
+
 #. are we running privileged
-#: ../src/gpk-log.c:834
+#: ../src/gpk-log.c:826
 msgid "Log viewer"
 msgstr "Visualitzador del registre"
 
-#: ../src/gpk-modal-dialog.c:441
+#: ../src/gpk-modal-dialog.c:435
 #, c-format
 msgid "Remaining time: %s"
 msgstr "Temps restant: %s"
 
 #. TRANSLATORS: for one reason or another, we could not enable or disable a package source
-#: ../src/gpk-prefs.c:244
+#: ../src/gpk-prefs.c:235
 msgid "Failed to change status"
 msgstr "No s'ha pogut canviar l'estat"
 
 #. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-prefs.c:314
+#: ../src/gpk-prefs.c:305
 msgid "Enabled"
 msgstr "Habilitat"
 
 #. TRANSLATORS: column for the source description
-#: ../src/gpk-prefs.c:323
+#: ../src/gpk-prefs.c:314
 msgid "Package Source"
 msgstr "Font de paquet"
 
 #. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-prefs.c:385
+#: ../src/gpk-prefs.c:376
 msgid "Failed to get the list of sources"
 msgstr "No s'ha pogut obtindre la llista de fonts"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:492 ../src/gpk-update-viewer.c:3155
+#: ../src/gpk-prefs.c:483 ../src/gpk-update-viewer.c:3155
 msgid "Exiting as backend details could not be retrieved"
 msgstr "Se ix perquè no es poden obtindre els detalls del rerefons"
 
-#: ../src/gpk-prefs.c:513
+#: ../src/gpk-prefs.c:504
 msgid "Getting package source list not supported by backend"
 msgstr "El rerefons no permet obtindre la llista de fonts de paquets"
 
@@ -3770,546 +3768,3 @@ msgstr "Opcions de depuració"
 #: ../src/gpk-debug.c:189
 msgid "Show debugging options"
 msgstr "Mostra les opcions de depuració"
-
-#~ msgid "Ask the user if files should be copied to a non-private directory"
-#~ msgstr ""
-#~ "Pregunta a l'usuari si s'haurien de copiar els fitxers a un directori "
-#~ "públic"
-
-#~ msgid ""
-#~ "Ask the user if files should be copied to a non-private directory when "
-#~ "installing from a FUSE mount."
-#~ msgstr ""
-#~ "Pregunta a l'usuari si s'haurien de copiar els fitxers a un directori "
-#~ "públic quan s'instal·li des d'un punt de muntatge FUSE."
-
-#~ msgid ""
-#~ "Notify the user before a large update is done on a mobile broadband "
-#~ "connection"
-#~ msgstr ""
-#~ "Notifica a l'usuari abans de fer una actualització gran a través d'una "
-#~ "connexió de banda ampla mòbil"
-
-#~ msgid ""
-#~ "Notify the user before a large update is done on a mobile broadband "
-#~ "connection."
-#~ msgstr ""
-#~ "Notifica a l'usuari abans de fer una actualització gran a través d'una "
-#~ "connexió de banda ampla mòbil."
-
-#~ msgid "Software"
-#~ msgstr "Programari"
-
-#~ msgid "Software Sources"
-#~ msgstr "Fonts de programari"
-
-#~ msgid "About Software Install"
-#~ msgstr "Quant a l'instal·la programari"
-
-#~ msgid "Catalog Installer"
-#~ msgstr "Instal·lador de catàlegs"
-
-#~ msgid "Install a catalog of software on the system"
-#~ msgstr "Instal·la un catàleg de programari en el sistema"
-
-#~ msgid "Software Settings"
-#~ msgstr "Preferències de programari"
-
-#~ msgid ""
-#~ "Change software update preferences and enable or disable software sources"
-#~ msgstr ""
-#~ "Canvieu les preferències de les actualitzacions de programari i habiliteu "
-#~ "o inhabiliteu fonts de programari"
-
-#~ msgid "Software Update Preferences"
-#~ msgstr "Preferències de l'actualització del programari"
-
-#~ msgid "_Check Now"
-#~ msgstr "_Comprova-ho ara"
-
-#~ msgid "C_heck for updates:"
-#~ msgstr "_Comprova si hi ha actualitzacions:"
-
-#~ msgid "Check for major _upgrades:"
-#~ msgstr "_Comprova si hi ha actualitzacions majors:"
-
-#~ msgid "Check for updates when using mobile broadband"
-#~ msgstr ""
-#~ "Comprova si hi ha actualitzacions quan s'utilitzi la banda ampla mòbil"
-
-#~ msgid "Check for updates on battery power"
-#~ msgstr "Comprova si hi ha actualitzacions quan s'utilitzi la bateria"
-
-#~ msgid "Currently using mobile broadband"
-#~ msgstr "S'està utilitzant una connexió d'ampla de banda mòbil"
-
-#~ msgid "Update Settings"
-#~ msgstr "Paràmetres d'actualització"
-
-#~ msgid "Service Pack Creator"
-#~ msgstr "Creador de paquets de servei"
-
-#~ msgid "Create a copy of this computer's package list"
-#~ msgstr "Crea una còpia de la llista de paquets de l'ordinador"
-
-#~ msgid "Create an archive of all the pending updates"
-#~ msgstr "Crea un arxiu de totes les actualitzacions pendents"
-
-#~ msgid "Create an archive of a specific package"
-#~ msgstr "Crea un arxiu d'un paquet específic"
-
-#~ msgid "Multiple packages can be specified using a comma delimited list"
-#~ msgstr ""
-#~ "Es poden especificar diversos paquets alhora si es separen per comes"
-
-#~ msgid "Output directory:"
-#~ msgstr "Directori de sortida:"
-
-#~ msgid "Destination package list:"
-#~ msgstr "Llista de paquets de destinació:"
-
-#~ msgid "Select a Package List File"
-#~ msgstr "Seleccioneu un fitxer de llista de paquets"
-
-#~ msgid "Save New Service Pack"
-#~ msgstr "Desa el paquet de servei nou"
-
-#~ msgid "Progress"
-#~ msgstr "Progrés"
-
-#~ msgid "Create"
-#~ msgstr "Crea"
-
-#~ msgid "Software Update"
-#~ msgstr "Actualització de programari"
-
-#~ msgid "Operating System Upgrade"
-#~ msgstr "Actualització del sistema operatiu"
-
-#~ msgid "Upgrade the operating system to a new version"
-#~ msgstr "Actualitza el sistema operatiu a una versió nova"
-
-#~ msgid "_Details"
-#~ msgstr "_Detalls"
-
-#~ msgid "_Remove"
-#~ msgstr "_Suprimeix"
-
-#~ msgid "Remove %i additional package?"
-#~ msgid_plural "Remove %i additional packages?"
-#~ msgstr[0] "Voleu suprimir %i paquet més?"
-#~ msgstr[1] "Voleu suprimir %i paquets més?"
-
-#~ msgid ""
-#~ "The software which you want to remove is required to run other software, "
-#~ "which will be removed too."
-#~ msgstr ""
-#~ "El programari que voleu suprimir es necessari per algun altre programari. "
-#~ "Aquest altre també se suprimirà."
-
-#~ msgid "Install %i additional package?"
-#~ msgid_plural "Install %i additional packages?"
-#~ msgstr[0] "Instal·la %i paquet més?"
-#~ msgstr[1] "Instal·la %i paquets més?"
-
-#~ msgid ""
-#~ "The software that you want to install requires additional software to run "
-#~ "correctly."
-#~ msgstr ""
-#~ "El programari que voleu instal·lar requereix altres programaris per "
-#~ "funcionar correctament."
-
-#~ msgid "No software"
-#~ msgstr "Cap programari"
-
-#~ msgid "Software requires %s"
-#~ msgstr "El programari requereix %s"
-
-#~ msgid "%s requires the following additional software to function correctly."
-#~ msgstr ""
-#~ "El programari %s requereix els programaris següents per funcionar "
-#~ "correctament."
-
-#~ msgid "You don't have the necessary privileges to perform this action."
-#~ msgstr "No teniu el permís necessari per poder fer aquesta acció."
-
-#~ msgid "The software service could not be started."
-#~ msgstr "No s'ha pogut iniciar el servei de programari."
-
-#~ msgid "The query is not valid."
-#~ msgstr "La consulta no és vàlida."
-
-#~ msgid "The file is not valid."
-#~ msgstr "El fitxer no és vàlid."
-
-#~ msgid "Installing software"
-#~ msgstr "Instal·lació de programari"
-
-#~ msgid "Could not find software"
-#~ msgstr "No s'ha pogut trobar cap programari"
-
-#~ msgid "The software could not be found in any software source"
-#~ msgstr "No s'ha pogut trobar el programari a cap font de programari"
-
-#~ msgid "The software is already installed"
-#~ msgstr "El programari ja està instal·lat"
-
-#~ msgid "%s requires additional software"
-#~ msgstr "El %s requereix programari addicional"
-
-#~ msgid "An application requires additional software"
-#~ msgstr "Una aplicació requereix programari addicional"
-
-#~ msgid "Could not process catalog"
-#~ msgstr "No s'ha pogut processar el catàleg"
-
-#~ msgid "No packages need to be installed"
-#~ msgstr "No s'ha d'instal·lar cap paquet"
-
-#~ msgid "Install packages in catalog?"
-#~ msgstr "Voleu instal·lar els paquets al catàleg?"
-
-#~ msgid "The following packages are marked to be installed from the catalog:"
-#~ msgstr "El catàleg ha marcat per instal·lar els paquets següents:"
-
-#~ msgid "Do you want to install this driver now?"
-#~ msgid_plural "Do you want to install these drivers now?"
-#~ msgstr[0] "Voleu instal·lar aquest controlador?"
-#~ msgstr[1] "Voleu instal·lar aquests controladors?"
-
-#~ msgid "Failed to find any software"
-#~ msgstr "No s'ha pogut trobar cap programari"
-
-#~ msgid "The file could not be found in any available software"
-#~ msgstr "No s'ha pogut trobar el fitxer a cap programari disponible"
-
-#~ msgid "Do you want to install this catalog?"
-#~ msgid_plural "Do you want to install these catalogs?"
-#~ msgstr[0] "Voleu instal·lar aquest catàleg?"
-#~ msgstr[1] "Voleu instal·lar aquests catàlegs?"
-
-#~ msgid "Install catalogs"
-#~ msgstr "Instal·la catàlegs"
-
-#~ msgid "Could not upgrade the system"
-#~ msgstr "No s'ha pogut actualitzar el sistema"
-
-#~ msgid "The upgrade completed successfully"
-#~ msgstr "S'ha completat l'actualització correctament"
-
-#~ msgid ""
-#~ "Your system now has the required software needed to complete the "
-#~ "operating system upgrade."
-#~ msgstr ""
-#~ "El sistema ja té el programari necessari per completar l'actualització "
-#~ "del sistema operatiu."
-
-#~ msgid ""
-#~ "When you are ready, you can restart your system and continue the upgrade "
-#~ "process."
-#~ msgstr ""
-#~ "Quan estigueu a punt, podeu reiniciar l'ordinador per continuar el procés "
-#~ "d'actualització."
-
-#~ msgid "Make sure you have saved any unsaved work before restarting."
-#~ msgstr "Assegureu-vos d'haver desat tots els fitxers abans de reiniciar."
-
-#~ msgid "Restart Now"
-#~ msgstr "Reinicia ara"
-
-#~ msgid "Could not get distribution upgrades"
-#~ msgstr "No s'ha pogut obtenir la llista d'actualitzacions de distribució"
-
-#~ msgid "No releases available for upgrade"
-#~ msgstr "No hi ha cap versió nova a la que actualitzar"
-
-#~ msgid "Upgrade your system (%d of %d)"
-#~ msgstr "Actualització del sistema (%d de %d)"
-
-#~ msgid ""
-#~ "This assistant will guide you through upgrading your currently installed "
-#~ "operating system to a newer release."
-#~ msgstr ""
-#~ "Aquest auxiliar us ajudarà en el procés d'actualització del sistema "
-#~ "operatiu instal·lat actualment a una versió més nova."
-
-#~ msgid ""
-#~ "This process may take several hours to complete, depending on the speed "
-#~ "of your internet connection and the options selected."
-#~ msgstr ""
-#~ "Aquest procés pot durar diverses hores a finalitzar, segons la velocitat "
-#~ "de la connexió a Internet i de les opcions que seleccioneu."
-
-#~ msgid ""
-#~ "You will be able to continue using your system while this assistant "
-#~ "downloads the packages needed to upgrade your system."
-#~ msgstr ""
-#~ "Podreu continuar utilitzant el sistema mentre l'auxiliar baixa els "
-#~ "paquets necessaris per actualitzar el sistema."
-
-#~ msgid ""
-#~ "When the download has completed, you will be prompted to restart your "
-#~ "system in order to complete the upgrade process."
-#~ msgstr ""
-#~ "Quan s'hagi completat la baixada, se us demanarà que reinicieu el sistema "
-#~ "per finalitzar el procés d'actualització."
-
-#~ msgid "Upgrade your system"
-#~ msgstr "Actualització del sistema"
-
-#~ msgid "Available operating system _releases:"
-#~ msgstr "_Versions del sistema operatiu disponibles:"
-
-#~ msgid "Loading list of upgrades"
-#~ msgstr "S'està carregant la llista d'actualitzacions"
-
-#~ msgid "Choose desired operating system version"
-#~ msgstr "Seleccioneu la versió del sistema operatiu que voleu"
-
-#~ msgid "The upgrade tool can operate with three different modes:"
-#~ msgstr "L'eina d'actualització pot funcionar de tres maneres diferents:"
-
-#~ msgid ""
-#~ "The selected option will require the installer to download additional "
-#~ "data."
-#~ msgstr ""
-#~ "L'opció que heu seleccionat farà que l'instal·lador baixi dades "
-#~ "addicionals."
-
-#~ msgid ""
-#~ "Do not continue with this option if the network will not be available at "
-#~ "upgrade time."
-#~ msgstr ""
-#~ "No continueu amb aquesta opció si no disposareu de connexió a Internet "
-#~ "quan s'estigui realitzant la instal·lació."
-
-#~ msgid "Choose desired download options"
-#~ msgstr "Seleccioneu les opcions de baixada que desitgeu"
-
-#~ msgid ""
-#~ "The operating system upgrade tool will now perform the following actions:"
-#~ msgstr ""
-#~ "L'eina d'actualització del sistema operatiu realitzarà les accions "
-#~ "següents:"
-
-#~ msgid "Request authentication from a privileged user"
-#~ msgstr "Es demanarà l'autenticació d'un usuari amb privilegis"
-
-#~ msgid "Download installer images"
-#~ msgstr "Es baixaran les imatges d'instal·lació"
-
-#~ msgid "Download packages"
-#~ msgstr "Es baixaran els paquets"
-
-#~ msgid "Prepare and test the upgrade"
-#~ msgstr "Es prepararà i es provarà l'actualització"
-
-#~ msgid "You will have to restart your computer at the end of the upgrade."
-#~ msgstr "S'haurà de reiniciar l'ordinador per finalitzar l'actualització."
-
-#~ msgid "Press 'Apply' to apply changes."
-#~ msgstr "Premeu «Aplica» per aplicar els canvis."
-
-#~ msgid "Confirmation"
-#~ msgstr "Confirmació"
-
-#~ msgid "Applying changes"
-#~ msgstr "S'estan aplicant els canvis"
-
-#~ msgid "Cannot perform operating system upgrade"
-#~ msgstr "No es pot realitzar l'actualització del sistema operatiu"
-
-#~ msgid "Upgrading the operating system is not supported."
-#~ msgstr "L'actualització del sistema operatiu no està implementada."
-
-#~ msgid "Cannot get operating system upgrade information."
-#~ msgstr ""
-#~ "No s'ha pogut obtenir la informació sobre l'actualització del sistema "
-#~ "operatiu."
-
-#~ msgid "Distribution Upgrade Tool"
-#~ msgstr "Eina d'actualització de la distribució"
-
-#~ msgid "A mirror is possibly broken"
-#~ msgstr "Un mirall deu estar mal configurat"
-
-#~ msgid "The connection was refused"
-#~ msgstr "S'ha rebutjat la connexió"
-
-#~ msgid "The parameter was invalid"
-#~ msgstr "El paràmetre no és vàlid"
-
-#~ msgid "The priority was invalid"
-#~ msgstr "La prioritat no és vàlida"
-
-#~ msgid "Backend warning"
-#~ msgstr "Avís del rerefons"
-
-#~ msgid "Daemon warning"
-#~ msgstr "Avís del dimoni"
-
-#~ msgid "The package list cache is being rebuilt"
-#~ msgstr "S'està tornant a construir la memòria cau de la llista de paquets"
-
-#~ msgid "A newer package exists"
-#~ msgstr "Existeix un paquet més nou"
-
-#~ msgid "Configuration files were changed"
-#~ msgstr "Hi ha hagut canvis en els fitxers de configuració"
-
-#~ msgid "Package is already installed"
-#~ msgstr "El paquet ja està instal·lat"
-
-#~ msgid "Automatic cleanup is being ignored"
-#~ msgstr "S'està ignorant la neteja automàtica"
-
-#~ msgid "Software source download failed"
-#~ msgstr "Ha fallat la baixada de la font de programari"
-
-#~ msgid "This software source is for developers only"
-#~ msgstr "Aquesta font de programari només és per desenvolupadors"
-
-#~ msgid "Other updates have been held back"
-#~ msgstr "S'han retingut temporalment altres actualitzacions"
-
-#~ msgid "Upgrading system"
-#~ msgstr "S'està actualitzant el sistema"
-
-#~ msgid "Upgraded system"
-#~ msgstr "S'ha actualitzat el sistema"
-
-#~ msgid "Software sources"
-#~ msgstr "Fonts de programari"
-
-#~ msgid "Catalogs files to install"
-#~ msgstr "Fitxers de catàlegs a instal·lar"
-
-#~ msgid "Catalog installer"
-#~ msgstr "Instal·lador de catàlegs"
-
-#~ msgid "Failed to install catalog"
-#~ msgstr "No s'ha pogut instal·lar el catàleg"
-
-#~ msgid "You need to specify a file name to install"
-#~ msgstr "Heu d'especificar un nom de fitxer per instal·lar"
-
-#~ msgid "Mime types to install"
-#~ msgstr "Tipus MIME per instal·lar"
-
-#~ msgid "Mime Type Installer"
-#~ msgstr "Instal·lador de tipus MIME"
-
-#~ msgid "Mime type installer"
-#~ msgstr "Instal·lador de tipus MIME"
-
-#~ msgid "Failed to install a program to handle this file type"
-#~ msgstr ""
-#~ "No s'ha pogut instal·lar un paquet per gestionar aquests tipus de fitxers"
-
-#~ msgid "You need to specify a mime type to install"
-#~ msgstr "Heu d'especificar un tipus MIME a instal·lar"
-
-#~ msgid "Packages to install"
-#~ msgstr "Paquets per instal·lar"
-
-#~ msgid "Package Name Installer"
-#~ msgstr "Instal·lador de paquets per nom"
-
-#~ msgid "Failed to install software by name"
-#~ msgstr "No s'ha pogut instal·lar el programari per nom"
-
-#~ msgid "You need to specify the name of the software to install"
-#~ msgstr "Heu d'especificar el nom del programari que voleu instal·lar"
-
-#~ msgid "Local files to install"
-#~ msgstr "Fitxers locals per instal·lar"
-
-#~ msgid "Single File Installer"
-#~ msgstr "Instal·lador de fitxers"
-
-#~ msgid "Hourly"
-#~ msgstr "Cada dia"
-
-#~ msgid "Daily"
-#~ msgstr "Cada dia"
-
-#~ msgid "Weekly"
-#~ msgstr "Cada setmana"
-
-#~ msgid "Never"
-#~ msgstr "Mai"
-
-#~ msgid "All updates"
-#~ msgstr "Totes les actualitzacions"
-
-#~ msgid "Only security updates"
-#~ msgstr "Només les actualitzacions de seguretat"
-
-#~ msgid "Nothing"
-#~ msgstr "Res"
-
-#~ msgid "Software Source"
-#~ msgstr "Fonts de programari"
-
-#~ msgid "Could not find any packages named '%s'"
-#~ msgstr "No s'ha pogut trobar cap paquet amb el nom «%s»"
-
-#~ msgid "Could not find any valid package names"
-#~ msgstr "No s'ha pogut trobar cap nom de paquet vàlid"
-
-#~ msgid "Could not get array of installed packages: %s"
-#~ msgstr "No s'ha pogut obtenir la llista de paquets instal·lats: %s"
-
-#~ msgid "Could not save to file: %s"
-#~ msgstr "No s'ha pogut desar al fitxer: %s"
-
-#~ msgid "Create error"
-#~ msgstr "Error en crear"
-
-#~ msgid "Cannot create service pack"
-#~ msgstr "No es pot crear el paquet de servei"
-
-#~ msgid "Cannot copy system package array"
-#~ msgstr "No es pot copiar la llista de paquets del sistema"
-
-#~ msgid "No package name selected"
-#~ msgstr "No s'ha seleccionat cap nom de paquet"
-
-#~ msgid "Refreshing system package array"
-#~ msgstr "S'està actualitzant la llista de paquets del sistema"
-
-#~ msgid "Refresh error"
-#~ msgstr "Error d'actualització"
-
-#~ msgid "Could not refresh package array"
-#~ msgstr "No s'ha pogut actualitzar la llista de paquets"
-
-#~ msgid "Cannot read destination package array"
-#~ msgstr "No es pot llegir la llista de paquets de destinació"
-
-#~ msgid "Package array files"
-#~ msgstr "Fitxers de la llista de paquets"
-
-#~ msgid "Service pack files"
-#~ msgstr "Fitxers del paquet de servei"
-
-#~ msgid ""
-#~ "Set the option, allowable values are 'array', 'updates' and 'package'"
-#~ msgstr ""
-#~ "Establiu l'opció entre els valors possibles: «array» (matriu), "
-#~ "«updates» (actualitzacions) i «package» (paquets)"
-
-#~ msgid "Add the package name to the text entry box"
-#~ msgstr "Afegeix el nom del paquet al quadre de text"
-
-#~ msgid "Set the remote package array file name"
-#~ msgstr "Establiu el nom de fitxer per a la llista de paquets remota"
-
-#~ msgid "Set the default output directory"
-#~ msgstr "Selecciona el directori de sortida predeterminat"
-
-#~ msgid "Update Software"
-#~ msgstr "Actualitza el programari"
-
-#~ msgid "Software Update Viewer"
-#~ msgstr "Visualitzador de les actualitzacions de programari"
