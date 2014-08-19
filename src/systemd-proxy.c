@@ -44,7 +44,7 @@ systemd_proxy_new (void)
         proxy = g_new0 (SystemdProxy, 1);
 
         proxy->authority = polkit_authority_get_sync (NULL, NULL);
-        proxy->subject = polkit_unix_session_new_for_process_sync (getpid(), NULL, NULL);
+        proxy->subject = polkit_unix_process_new_for_owner(getpid(), 0, -1);
 
         return proxy;
 }
@@ -71,7 +71,7 @@ systemd_proxy_can_restart (SystemdProxy  *proxy,
                                                          proxy->subject,
                                                          SYSTEMD_REBOOT_ACTION,
                                                          NULL,
-                                                         POLKIT_CHECK_AUTHORIZATION_FLAGS_NONE,
+                                                         POLKIT_CHECK_AUTHORIZATION_FLAGS_ALLOW_USER_INTERACTION,
                                                          NULL,
                                                          &local_error);
         if (res == NULL) {
@@ -94,13 +94,13 @@ systemd_proxy_restart (SystemdProxy  *proxy,
         GDBusConnection *bus;
 
         bus = g_bus_get_sync (G_BUS_TYPE_SYSTEM, NULL, NULL);
-        g_dbus_connection_call (bus,
-                                SYSTEMD_DBUS_NAME,
-                                SYSTEMD_DBUS_PATH,
-                                SYSTEMD_DBUS_INTERFACE,
-                                "Reboot",
-                                g_variant_new ("(b)", TRUE),
-                                NULL, 0, G_MAXINT, NULL, NULL, NULL);
+        g_dbus_connection_call_sync (bus,
+                                    SYSTEMD_DBUS_NAME,
+                                    SYSTEMD_DBUS_PATH,
+                                    SYSTEMD_DBUS_INTERFACE,
+                                    "Reboot",
+                                    g_variant_new ("(b)", TRUE),
+                                    NULL, 0, G_MAXINT, NULL, NULL);
         g_object_unref (bus);
 
         return TRUE;
