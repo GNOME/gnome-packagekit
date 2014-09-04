@@ -63,14 +63,6 @@ GType		 gpk_session_get_type			(void);
 GpkSession	*gpk_session_new			(void);
 
 gboolean	 gpk_session_logout			(GpkSession	*session);
-gboolean	 gpk_session_get_idle			(GpkSession	*session);
-gboolean	 gpk_session_get_inhibited		(GpkSession	*session);
-gboolean	 gpk_session_register_client		(GpkSession	*session,
-							 const gchar	*app_id,
-							 const gchar	*client_startup_id);
-gboolean	 gpk_session_end_session_response	(GpkSession	*session,
-							 gboolean	 is_okay,
-							 const gchar	*reason);
 
 G_END_DECLS
 

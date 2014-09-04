@@ -34,9 +34,6 @@ gboolean	 gpk_dialog_embed_file_list_widget	(GtkDialog	*dialog,
 							 GPtrArray	*files);
 gboolean	 gpk_dialog_embed_do_not_show_widget	(GtkDialog	*dialog,
 							 const gchar	*key);
-gboolean	 gpk_dialog_embed_download_size_widget	(GtkDialog	*dialog,
-							 const gchar	*title,
-							 guint64	 size);
 gchar		*gpk_dialog_package_id_name_join_locale	(gchar		**package_ids);
 gboolean	 gpk_dialog_embed_tabbed_widget		(GtkDialog      *dialog,
 							 GtkNotebook	*tabbed_widget);

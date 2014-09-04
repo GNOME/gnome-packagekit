@@ -24,7 +24,6 @@
 
 #include <glib.h>
 
-gboolean	 gpk_debug_is_verbose		(void);
 GOptionGroup	*gpk_debug_get_option_group	(void);
 void		 gpk_debug_add_log_domain	(const gchar	*log_domain);
 

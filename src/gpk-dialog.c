@@ -314,50 +314,6 @@ gpk_dialog_embed_do_not_show_widget (GtkDialog *dialog, const gchar *key)
 }
 
 /**
- * gpk_dialog_embed_download_size_widget:
- **/
-gboolean
-gpk_dialog_embed_download_size_widget (GtkDialog *dialog, const gchar *title, guint64 size)
-{
-	GtkWidget *label;
-	GtkWidget *hbox;
-	GtkWidget *widget;
-	gchar *text = NULL;
-	gchar *size_str = NULL;
-
-	/* size is zero, don't show "0 bytes" */
-	if (size == 0) {
-		label = gtk_label_new (title);
-		widget = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
-		gtk_container_add_with_properties (GTK_CONTAINER (widget), label,
-						   "expand", FALSE,
-						   "fill", FALSE,
-						   NULL);
-		goto out;
-	}
-
-	/* add a hbox with the size for deps screen */
-	size_str = g_format_size (size);
-	text = g_strdup_printf ("%s: %s", title, size_str);
-	hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 6);
-	widget = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
-	gtk_container_add_with_properties (GTK_CONTAINER (widget), hbox,
-					   "expand", FALSE,
-					   "fill", FALSE,
-					   NULL);
-
-	/* add a label */
-	label = gtk_label_new (text);
-	gtk_box_pack_start (GTK_BOX(hbox), label, FALSE, FALSE, 0);
-	gtk_widget_show (hbox);
-out:
-	gtk_widget_show (label);
-	g_free (text);
-	g_free (size_str);
-	return TRUE;
-}
-
-/**
  * gpk_dialog_embed_tabbed_widget
  **/
 gboolean

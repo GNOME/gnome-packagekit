@@ -31,16 +31,6 @@ guint		 egg_strlen				(const gchar	*text,
 							 G_GNUC_WARN_UNUSED_RESULT;
 gboolean	 egg_strzero				(const gchar	*text)
 							 G_GNUC_WARN_UNUSED_RESULT;
-gboolean	 egg_strvequal				(gchar		**id1,
-							 gchar		**id2)
-							 G_GNUC_WARN_UNUSED_RESULT;
-gboolean	 egg_strtoint				(const gchar	*text,
-							 gint		*value);
-gboolean	 egg_strtouint				(const gchar	*text,
-							 guint		*value);
-gchar		*egg_strreplace				(const gchar	*text,
-							 const gchar	*find,
-							 const gchar	*replace);
 
 G_END_DECLS
 

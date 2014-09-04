@@ -31,24 +31,6 @@ static gboolean _verbose = FALSE;
 static gboolean _console = FALSE;
 
 /**
- * gpk_debug_is_verbose:
- *
- * Returns: TRUE if we have debugging enabled
- **/
-gboolean
-gpk_debug_is_verbose (void)
-{
-	/* local first */
-	if (_verbose)
-		 return TRUE;
-
-	/* fall back to env variable */
-	if (g_getenv ("VERBOSE") != NULL)
-		 return TRUE;
-	return FALSE;
-}
-
-/**
  * gpk_debug_ignore_cb:
  **/
 static void
