@@ -43,7 +43,6 @@
 #include "gpk-common.h"
 #include "gpk-gnome.h"
 #include "gpk-enum.h"
-#include "gpk-desktop.h"
 
 static void     gpk_modal_dialog_finalize	(GObject		*object);
 
@@ -612,8 +611,7 @@ gpk_modal_dialog_set_package_list (GpkModalDialog *dialog, const GPtrArray *list
 {
 	GtkTreeIter iter;
 	PkPackage *item;
-	PkDesktop *desktop;
-	gchar *icon;
+	const gchar *icon;
 	gchar *text;
 	guint i;
 	GtkWidget *widget;
@@ -629,8 +627,6 @@ gpk_modal_dialog_set_package_list (GpkModalDialog *dialog, const GPtrArray *list
 		gtk_widget_set_size_request (widget, -1, 300);
 	else if (list->len > 1)
 		gtk_widget_set_size_request (widget, -1, 150);
-
-	desktop = pk_desktop_new ();
 
 	/* add each well */
 	for (i=0; i<list->len; i++) {
@@ -654,10 +650,7 @@ gpk_modal_dialog_set_package_list (GpkModalDialog *dialog, const GPtrArray *list
 
 		/* get the icon */
 		split = pk_package_id_split (package_id);
-		icon = gpk_desktop_guess_icon_name (desktop, split[0]);
-		if (icon == NULL)
-			icon = g_strdup (gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLED));
-
+		icon = gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLED);
 		gtk_list_store_append (dialog->priv->store, &iter);
 		gtk_list_store_set (dialog->priv->store, &iter,
 				    GPK_MODAL_DIALOG_STORE_IMAGE, icon,
@@ -667,11 +660,8 @@ gpk_modal_dialog_set_package_list (GpkModalDialog *dialog, const GPtrArray *list
 		g_strfreev (split);
 		g_free (package_id);
 		g_free (summary);
-		g_free (icon);
 		g_free (text);
 	}
-
-	g_object_unref (desktop);
 
 	return TRUE;
 }

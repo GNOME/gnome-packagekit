@@ -30,7 +30,6 @@
 #include "gpk-marshal.h"
 #include "gpk-gnome.h"
 #include "gpk-common.h"
-#include "gpk-desktop.h"
 #include "gpk-enum.h"
 
 static void     gpk_helper_run_finalize	(GObject	  *object);
@@ -205,150 +204,12 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 }
 
 /**
- * gpk_helper_run_add_desktop_file:
- **/
-static gboolean
-gpk_helper_run_add_desktop_file (GpkHelperRun *helper, const gchar *package_id, const gchar *filename)
-{
-	gboolean ret = FALSE;
-	gchar *icon = NULL;
-	gchar *text = NULL;
-	gchar *fulltext = NULL;
-	gchar *name = NULL;
-	gchar *exec = NULL;
-	gchar *summary = NULL;
-	gchar *joint = NULL;
-	GtkTreeIter iter;
-	GKeyFile *file = NULL;
-	gint weight;
-	gboolean hidden;
-
-	/* get weight */
-	weight = gpk_desktop_get_file_weight (filename);
-	if (weight < 0) {
-		g_debug ("ignoring %s", filename);
-		goto out;
-	}
-
-	/* get some data from the desktop file */
-	file = g_key_file_new ();
-	ret = g_key_file_load_from_file (file, filename, G_KEY_FILE_NONE, NULL);
-	if (!ret) {
-		g_debug ("failed to load %s", filename);
-		goto out;
-	}
-
-	/* get hidden */
-	hidden = g_key_file_get_boolean (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_HIDDEN, NULL);
-	if (hidden) {
-		g_debug ("hidden, so ignoring %s", filename);
-		ret = FALSE;
-		goto out;
-	}
-
-	/* is WM? */
-	ret = !g_key_file_has_group (file, "Window Manager");
-	if (!ret) {
-		g_debug ("ignoring Window Manager");
-		goto out;
-	}
-
-	/* get exec */
-	exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_TRY_EXEC, NULL);
-	if (exec == NULL)
-		exec = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, "Exec", NULL);
-
-	/* abandon attempt */
-	if (exec == NULL) {
-		ret = FALSE;
-		goto out;
-	}
-
-	/* get name */
-	text = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_NAME, NULL, NULL);
-	if (text != NULL)
-		name = g_markup_escape_text (text, -1);
-
-	/* get icon */
-	icon = g_key_file_get_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_ICON, NULL);
-	if (icon == NULL || !gpk_desktop_check_icon_valid (icon)) {
-		g_free (icon);
-		icon = g_strdup (gpk_info_enum_to_icon_name (PK_INFO_ENUM_AVAILABLE));
-	}
-
-	/* get summary */
-	summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, G_KEY_FILE_DESKTOP_KEY_COMMENT, NULL, NULL);
-	if (summary == NULL)
-		summary = g_key_file_get_locale_string (file, G_KEY_FILE_DESKTOP_GROUP, "GenericName", NULL, NULL);
-
-	/* put formatted text into treeview */
-	gtk_list_store_append (helper->priv->list_store, &iter);
-	joint = g_strdup_printf ("%s - %s", name, summary);
-	fulltext = gpk_package_id_format_twoline (NULL, package_id, joint);
-
-	gtk_list_store_set (helper->priv->list_store, &iter,
-			    GPK_CHOOSER_COLUMN_TEXT, fulltext,
-			    GPK_CHOOSER_COLUMN_FILENAME, filename,
-			    GPK_CHOOSER_COLUMN_ICON, icon, -1);
-out:
-	if (file != NULL)
-		g_key_file_free (file);
-	g_free (exec);
-	g_free (icon);
-	g_free (name);
-	g_free (text);
-	g_free (joint);
-	g_free (summary);
-
-	return ret;
-}
-
-/**
  * gpk_helper_run_add_package_ids:
  **/
 static guint
 gpk_helper_run_add_package_ids (GpkHelperRun *helper, gchar **package_ids)
 {
-	guint i, j;
-	guint length;
-	guint added = 0;
-	const gchar *filename;
-	GPtrArray *array;
-	gchar **parts;
-	gboolean ret;
-	PkDesktop *desktop;
-	GError *error = NULL;
-
-	/* open database */
-	desktop = pk_desktop_new ();
-	ret = pk_desktop_open_database (desktop, NULL);
-	if (!ret) {
-		g_debug ("failed to open desktop DB");
-		goto out;
-	}
-
-	/* add each package */
-	length = g_strv_length (package_ids);
-	for (i=0; i<length; i++) {
-		parts = g_strsplit (package_ids[i], ";", 0);
-		array = pk_desktop_get_files_for_package (desktop, parts[0], &error);
-		if (array != NULL) {
-			for (j=0; j<array->len; j++) {
-				filename = g_ptr_array_index (array, j);
-				ret = gpk_helper_run_add_desktop_file (helper, package_ids[i], filename);
-				if (ret)
-					added++;
-			}
-			g_ptr_array_unref (array);
-		} else {
-			g_warning ("failed to get files for %s: %s", parts[0], error->message);
-			g_clear_error (&error);
-		}
-		g_strfreev (parts);
-	}
-	g_object_unref (desktop);
-out:
-	return added;
+	return 0;
 }
 
 /**

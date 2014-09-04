@@ -39,7 +39,6 @@
 #include "gpk-common.h"
 #include "gpk-dbus.h"
 #include "gpk-dbus-task.h"
-#include "gpk-desktop.h"
 #include "gpk-dialog.h"
 #include "gpk-enum.h"
 #include "gpk-error.h"
@@ -68,7 +67,6 @@ struct _GpkDbusTaskPrivate
 	GdkWindow		*parent_window;
 	GSettings		*settings;
 	PkTask			*task;
-	PkDesktop		*desktop;
 	PkControl		*control;
 	PkExitEnum		 exit;
 	PkBitfield		 roles;
@@ -3124,17 +3122,8 @@ gpk_dbus_task_set_exec (GpkDbusTask *dtask, const gchar *exec)
 	/* get from installed database */
 	package = gpk_dbus_task_get_package_for_exec (dtask, exec);
 	g_debug ("got package %s", package);
-
-	/* try to get from PkDesktop */
-	if (package != NULL) {
-		dtask->priv->parent_title = gpk_desktop_guess_localised_name (dtask->priv->desktop, package);
-		dtask->priv->parent_icon_name = gpk_desktop_guess_icon_name (dtask->priv->desktop, package);
-		/* fallback to package name */
-		if (dtask->priv->parent_title == NULL) {
-			g_debug ("did not get localized description for %s", package);
-			dtask->priv->parent_title = g_strdup (package);
-		}
-	}
+	if (package != NULL)
+		dtask->priv->parent_title = g_strdup (package);
 
 	/* fallback to exec - eugh... */
 	if (dtask->priv->parent_title == NULL) {
@@ -3166,7 +3155,6 @@ gpk_dbus_task_class_init (GpkDbusTaskClass *klass)
 static void
 gpk_dbus_task_init (GpkDbusTask *dtask)
 {
-	gboolean ret;
 	GtkWindow *main_window;
 
 	dtask->priv = GPK_DBUS_TASK_GET_PRIVATE (dtask);
@@ -3225,12 +3213,6 @@ gpk_dbus_task_init (GpkDbusTask *dtask)
 	dtask->priv->control = pk_control_new ();
 	dtask->priv->task = PK_TASK(gpk_task_new ());
 	dtask->priv->roles = pk_control_get_properties (dtask->priv->control, NULL, NULL);
-
-	/* used for icons and translations */
-	dtask->priv->desktop = pk_desktop_new ();
-	ret = pk_desktop_open_database (dtask->priv->desktop, NULL);
-	if (!ret)
-		g_warning ("failed to open desktop database");
 }
 
 /**
@@ -3264,7 +3246,6 @@ gpk_dbus_task_finalize (GObject *object)
 	g_strfreev (dtask->priv->package_ids);
 	g_object_unref (PK_CLIENT(dtask->priv->task));
 	g_object_unref (dtask->priv->control);
-	g_object_unref (dtask->priv->desktop);
 	g_object_unref (dtask->priv->settings);
 	g_object_unref (dtask->priv->dialog);
 	g_object_unref (dtask->priv->vendor);
