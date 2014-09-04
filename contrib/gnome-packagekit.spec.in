@@ -9,14 +9,13 @@ Group:     Applications/System
 URL:       http://www.packagekit.org
 Source0:   http://download.gnome.org/sources/gnome-packagekit/3.11/%{name}-%{version}.tar.xz
 
-Requires:  gnome-icon-theme
-Requires:  dbus-x11 >= 1.1.2
-Requires:  PackageKit >= 0.5.0
+Requires:  adwaita-icon-theme
+Requires:  dbus-x11%{?_isa} >= 1.1.2
+Requires:  PackageKit%{?_isa} >= 0.5.0
 Requires:  PackageKit-libs >= 0.5.0
-Requires:  PackageKit-device-rebind >= 0.5.0
 Requires:  shared-mime-info
 Requires:  iso-codes
-Requires:  libcanberra >= 0.10
+Requires:  libcanberra%{?_isa} >= 0.10
 
 # required because KPackageKit provides exactly the same interface
 Provides: PackageKit-session-service
@@ -43,10 +42,6 @@ BuildRequires: docbook-utils
 BuildRequires: systemd-devel
 BuildRequires: polkit-devel
 BuildRequires: itstool
-
-# obsolete sub-package
-Obsoletes: gnome-packagekit-extra <= 2.91.1
-Provides: gnome-packagekit-extra
 
 %description
 gnome-packagekit provides session applications for the PackageKit API.
@@ -81,12 +76,6 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 # nuke the ChangeLog file, it's huge
 rm -f $RPM_BUILD_ROOT%{_datadir}/doc/gnome-packagekit-*/ChangeLog
-
-for i in gpk-application gpk-update-viewer gpk-install-local-file gpk-log gpk-prefs ; do
-  desktop-file-install --delete-original                                \
-    --dir=$RPM_BUILD_ROOT%{_datadir}/applications/                      \
-    $RPM_BUILD_ROOT%{_datadir}/applications/$i.desktop
-done
 
 %find_lang %name --with-gnome
 
