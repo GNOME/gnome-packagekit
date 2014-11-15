@@ -8,9 +8,9 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-03-14 20:06+0000\n"
-"PO-Revision-Date: 2014-03-15 01:30-0100\n"
-"Last-Translator: António Lima <amrlima@gmail.com>\n"
+"POT-Creation-Date: 2014-10-06 19:16+0000\n"
+"PO-Revision-Date: 2014-10-07 07:20+0100\n"
+"Last-Translator: Pedro Albuquerque <palbuquerque73@gmail.com>\n"
 "Language-Team: Portuguese <gnome_pt@yahoogroups.com>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,8 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 "X-Project-Style: gnome\n"
 
-#: ../data/appdata/gpk-application.appdata.xml.in.h:1
+#. TRANSLATORS: user-friendly name for gpk-update-viewer
+#: ../data/appdata/gpk-application.appdata.xml.in.h:1 ../src/gpk-log.c:489
 msgid "GNOME Packages"
 msgstr "Pacotes GNOME"
 
@@ -32,11 +33,11 @@ msgid ""
 "possible and is an easy way to find software in your favorite desktop "
 "environment."
 msgstr ""
-"Pacotes permite-lhe instalar e remover pacotes no seu sistema. Pode visualizar "
-"e procurar pacotes por nome, detalhes ou mesmo nome do ficheiro. Também pode "
-"visualizar as dependências de um pacote relativamente a outro. É possível "
-"procurar por grupos e é uma forma simples de encontrar aplicações para o "
-"seu ambiente de trabalho favorito."
+"Pacotes permite-lhe instalar e remover pacotes no seu sistema. Pode "
+"visualizar e procurar pacotes por nome, detalhes ou mesmo nome do ficheiro. "
+"Também pode visualizar as dependências de um pacote relativamente a outro. É "
+"possível procurar por grupos e é uma forma simples de encontrar aplicações "
+"para o seu ambiente de trabalho favorito."
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:3
 msgid ""
@@ -46,9 +47,10 @@ msgstr ""
 "Pacotes utiliza o PackageKit e pode funcionar em qualquer distribuição "
 "utilizando a arquitetura nativa de gestão de pacotes."
 
-#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1
+#. TRANSLATORS: user-friendly name for gpk-update-viewer
+#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1 ../src/gpk-log.c:492
 msgid "GNOME Package Updater"
-msgstr "Atualizador de Pacotes GNOME"
+msgstr "Atualizador de pacotes GNOME"
 
 #: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:2
 msgid ""
@@ -56,7 +58,7 @@ msgid ""
 "rebooting. You can view details about each update and choose which updates "
 "to apply."
 msgstr ""
-"Atualizador de Pacotes permite-lhe atualizar pacotes no seu sistema sem ter "
+"Atualizador de pacotes permite-lhe atualizar pacotes no seu sistema sem ter "
 "de o reiniciar. Pode visualizar detalhes sobre cada atualização e selecionar "
 "quais aplicar."
 
@@ -65,8 +67,234 @@ msgid ""
 "Package Updater uses PackageKit and can work on any distribution using the "
 "native package management framework."
 msgstr ""
-"Atualizador de Pacotes utiliza o PackageKit e pode funcionar em qualquer "
-"distribuição utilizando a arquitetura nativa de gestão de pacotes."
+"Atualizador de pacotes utiliza o PackageKit e pode funcionar em qualquer "
+"distribuição utilizando a arquitectura nativa de gestão de pacotes."
+
+#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
+#: ../src/gpk-application.c:2567
+msgid "Packages"
+msgstr "Pacotes"
+
+#: ../data/gpk-application.desktop.in.h:2
+msgid "Add or remove software installed on the system"
+msgstr "Adicionar ou remover software instalado no sistema"
+
+#: ../data/gpk-application.desktop.in.h:3
+msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
+msgstr "Atualizações;Atualizar;Fontes;Repositórios;Preferências;Instalar;Loja;"
+
+#: ../data/gpk-application.ui.h:2
+msgid "Apply Changes"
+msgstr "Aplicar alterações"
+
+#: ../data/gpk-application.ui.h:3
+msgid "Changes are not applied instantly, this button applies all changes"
+msgstr ""
+"As alterações não são aplicadas instantaneamente, este botão aplica todas as "
+"alterações"
+
+#: ../data/gpk-application.ui.h:4
+msgid "Clear"
+msgstr "Limpar"
+
+#: ../data/gpk-application.ui.h:5
+msgid "Clear current selection"
+msgstr "Limpar a seleção atual"
+
+#: ../data/gpk-application.ui.h:6
+msgid "Cancel search"
+msgstr "Cancelar procura"
+
+#: ../data/gpk-application.ui.h:7
+msgid "License"
+msgstr "Licença"
+
+#: ../data/gpk-application.ui.h:8
+msgid "Source"
+msgstr "Fonte"
+
+#: ../data/gpk-application.ui.h:9 ../data/gpk-client.ui.h:1
+msgid "Install Package"
+msgstr "Instalar pacote"
+
+#: ../data/gpk-application.ui.h:10
+msgid "Remove Package"
+msgstr "Remover pacote"
+
+#: ../data/gpk-application.ui.h:11
+msgid "Visit home page for selected package"
+msgstr "Visitar a página do web do pacote selecionado"
+
+#: ../data/gpk-application.ui.h:12
+msgid "Visit Project Website"
+msgstr "Visitar a página do projeto"
+
+#: ../data/gpk-application.ui.h:13
+msgid "Files"
+msgstr "Ficheiros"
+
+#: ../data/gpk-application.ui.h:14
+msgid "Required Packages"
+msgstr "Pacotes necessários"
+
+#: ../data/gpk-application.ui.h:15
+msgid "Dependent Packages"
+msgstr "Pacotes dependentes"
+
+#: ../data/gpk-application.ui.h:16
+msgid "Check for Updates"
+msgstr "Procurar atualizações"
+
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:622
+msgid "Package Sources"
+msgstr "Fontes de pacotes"
+
+#: ../data/gpk-application.ui.h:18
+msgid "Refresh Package Lists"
+msgstr "Atualizar listas de pacotes"
+
+#: ../data/gpk-application.ui.h:19 ../data/gpk-log.desktop.in.h:1
+#: ../data/gpk-log.ui.h:1
+#| msgid "Package"
+msgid "Package Log"
+msgstr "Diário do pacote"
+
+#: ../data/gpk-application.ui.h:20
+msgid "Only Newest Versions"
+msgstr "Apenas versões mais recentes"
+
+#: ../data/gpk-application.ui.h:21
+msgid "Only Native Packages"
+msgstr "Apenas pacotes nativos"
+
+#: ../data/gpk-application.ui.h:22
+msgid "About"
+msgstr "Sobre"
+
+#: ../data/gpk-application.ui.h:23
+msgid "_Quit"
+msgstr "_Sair"
+
+#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
+#. TRANSLATORS: program name: application to install a package to provide a file
+#: ../data/gpk-dbus-service.desktop.in.h:1 ../src/gpk-dbus-service.c:137
+#: ../src/gpk-dbus-service.c:140 ../src/gpk-dbus-task.c:3186
+#: ../src/gpk-install-local-file.c:67
+msgid "Software Install"
+msgstr "Instalar aplicações"
+
+#: ../data/gpk-dbus-service.desktop.in.h:2
+msgid "Install selected software on the system"
+msgstr "Instalar aplicações selecionadas no sistema"
+
+#: ../data/gpk-error.ui.h:1
+msgid "More details"
+msgstr "Mais detalhes"
+
+#: ../data/gpk-eula.ui.h:1
+msgid "License Agreement Required"
+msgstr "É necessário um Acordo de Licença"
+
+#: ../data/gpk-eula.ui.h:2
+msgid "_Accept Agreement"
+msgstr "_Aceitar Acordo"
+
+#: ../data/gpk-install-local-file.desktop.in.h:1
+msgid "Package Install"
+msgstr "Instalador de pacotes"
+
+#: ../data/gpk-install-local-file.desktop.in.h:2
+msgid "Install selected packages on the system"
+msgstr "Instalar pacotes selecionados no sistema"
+
+#: ../data/gpk-log.desktop.in.h:2
+msgid "View past package management tasks"
+msgstr "Visualizar tarefas antigas de gestão de pacotes"
+
+#: ../data/gpk-log.ui.h:2
+msgid "Filter"
+msgstr "Filtro"
+
+#: ../data/gpk-prefs.desktop.in.h:2
+msgid "Enable or disable package repositories"
+msgstr "Ativar ou desativar repositórios de pacotes"
+
+#: ../data/gpk-prefs.ui.h:2
+msgid ""
+"A package source contains packages that can be installed on this computer."
+msgstr ""
+"Uma fonte de pacotes contém pacotes que podem ser instalados neste "
+"computador."
+
+#. shows extra -source, -debuginfo, and -devel sources
+#: ../data/gpk-prefs.ui.h:4
+msgid "_Show debug and development package sources"
+msgstr "_Apresentar fontes de pacotes de depuração e desenvolvimento"
+
+#: ../data/gpk-signature.ui.h:1
+msgid "Software signature is required"
+msgstr "É necessário uma assinatura da aplicação"
+
+#: ../data/gpk-signature.ui.h:2
+msgid "Do you trust the source of the packages?"
+msgstr "Confia na fonte dos pacotes?"
+
+#: ../data/gpk-signature.ui.h:3
+msgid "Repository name:"
+msgstr "Nome do repositório:"
+
+#: ../data/gpk-signature.ui.h:4
+msgid "Signature URL:"
+msgstr "URL da assinatura:"
+
+#: ../data/gpk-signature.ui.h:5
+msgid "Signature user identifier:"
+msgstr "Identificação do utilizador da assinatura:"
+
+#: ../data/gpk-signature.ui.h:6
+msgid "Signature identifier:"
+msgstr "Identificação da assinatura:"
+
+#: ../data/gpk-signature.ui.h:7
+msgid "Package:"
+msgstr "Pacote:"
+
+#: ../data/gpk-signature.ui.h:8
+msgid "Do you recognize the user and trust this key?"
+msgstr "Reconhece o utilizador e confia na sua chave?"
+
+#. TRANSLATORS: title to pass to the user if there are not enough privs
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
+#: ../src/gpk-update-viewer.c:3428
+msgid "Package Updater"
+msgstr "Atualizador de pacotes"
+
+#: ../data/gpk-update-viewer.desktop.in.h:2
+msgid "Update software installed on the system"
+msgstr "Atualizar aplicações instaladas no sistema"
+
+#: ../data/gpk-update-viewer.ui.h:2
+msgid "_Install Updates"
+msgstr "_Instalar atualizações"
+
+#: ../data/gpk-update-viewer.ui.h:3
+msgid ""
+"Package updates correct errors, eliminate security vulnerabilities, and "
+"provide new features."
+msgstr ""
+"Atualizações de pacotes corrigem erros, eliminam vulnerabilidades de "
+"segurança e disponibilizam novas funcionalidades."
+
+#: ../data/gpk-update-viewer.ui.h:4
+msgid "_Upgrade"
+msgstr "Act_ualizar"
+
+#. TRANSLATORS: column for what packages were upgraded
+#: ../data/gpk-update-viewer.ui.h:5 ../src/gpk-log.c:313
+msgid "Details"
+msgstr "Detalhes"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:1
 msgid "Automatically remove unused dependencies"
@@ -254,238 +482,6 @@ msgstr ""
 "Ao apresentar UI de um pedido de sessão de DBus, forçar a que estas opções "
 "estejam ligadas."
 
-#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
-#: ../src/gpk-application.c:2580
-msgid "Packages"
-msgstr "Pacotes"
-
-#: ../data/gpk-application.desktop.in.h:2
-msgid "Add or remove software installed on the system"
-msgstr "Adicionar ou remover software instalado no sistema"
-
-#: ../data/gpk-application.desktop.in.h:3
-msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
-msgstr "Atualizações;Atualizar;Fontes;Repositórios;Preferências;Instalar;Loja;"
-
-#: ../data/gpk-application.ui.h:2
-msgid "Apply Changes"
-msgstr "Aplicar Alterações"
-
-#: ../data/gpk-application.ui.h:3
-msgid "Changes are not applied instantly, this button applies all changes"
-msgstr ""
-"As alterações não são aplicadas instantaneamente, este botão aplica todas as "
-"alterações"
-
-#: ../data/gpk-application.ui.h:4
-msgid "Clear"
-msgstr "Limpar"
-
-#: ../data/gpk-application.ui.h:5
-msgid "Clear current selection"
-msgstr "Limpar a seleção atual"
-
-#: ../data/gpk-application.ui.h:6
-msgid "Cancel search"
-msgstr "Cancelar procura"
-
-#: ../data/gpk-application.ui.h:7
-msgid "License"
-msgstr "Licença"
-
-#: ../data/gpk-application.ui.h:8
-msgid "Source"
-msgstr "Fonte"
-
-#: ../data/gpk-application.ui.h:9 ../data/gpk-client.ui.h:1
-msgid "Install Package"
-msgstr "Instalar Pacote"
-
-#: ../data/gpk-application.ui.h:10
-msgid "Remove Package"
-msgstr "Remover Pacote"
-
-#: ../data/gpk-application.ui.h:11
-msgid "Visit home page for selected package"
-msgstr "Visitar a página do web do pacote selecionado"
-
-#: ../data/gpk-application.ui.h:12
-msgid "Visit Project Website"
-msgstr "Visitar a Página do Projeto"
-
-#: ../data/gpk-application.ui.h:13
-msgid "Files"
-msgstr "Ficheiros"
-
-#: ../data/gpk-application.ui.h:14
-msgid "Required Packages"
-msgstr "Pacotes Necessários"
-
-#: ../data/gpk-application.ui.h:15
-msgid "Dependent Packages"
-msgstr "Pacotes Dependentes"
-
-#: ../data/gpk-application.ui.h:16
-msgid "Check for Updates"
-msgstr "Verificar por Atualizações"
-
-#. TRANSLATORS: program name, an application to add and remove software repositories
-#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
-#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
-msgid "Package Sources"
-msgstr "Fontes de Pacotes"
-
-#: ../data/gpk-application.ui.h:18
-msgid "Refresh Package Lists"
-msgstr "Atualizar Listas de Pacotes"
-
-#: ../data/gpk-application.ui.h:19
-msgid "Software Log"
-msgstr "Relatório da Aplicação"
-
-#: ../data/gpk-application.ui.h:20
-msgid "Only Newest Versions"
-msgstr "Apenas Versões mais Recentes"
-
-#: ../data/gpk-application.ui.h:21
-msgid "Only Native Packages"
-msgstr "Apenas Pacotes Nativos"
-
-#: ../data/gpk-application.ui.h:22
-msgid "Help"
-msgstr "Ajuda"
-
-#: ../data/gpk-application.ui.h:23
-msgid "About"
-msgstr "Sobre"
-
-#: ../data/gpk-application.ui.h:24
-msgid "_Quit"
-msgstr "_Sair"
-
-#: ../data/gpk-error.ui.h:1
-msgid "More details"
-msgstr "Mais detalhes"
-
-#: ../data/gpk-eula.ui.h:1
-msgid "License Agreement Required"
-msgstr "É necessário um Acordo de Licença"
-
-#: ../data/gpk-eula.ui.h:2
-msgid "_Accept Agreement"
-msgstr "_Aceitar Acordo"
-
-#. TRANSLATORS: program name: application to install a package to provide a file
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../data/gpk-dbus-service.desktop.in.h:1 ../src/gpk-dbus-task.c:3215
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-dbus-service.c:137
-#: ../src/gpk-dbus-service.c:140
-msgid "Software Install"
-msgstr "Instalar Aplicações"
-
-#: ../data/gpk-dbus-service.desktop.in.h:2
-msgid "Install selected software on the system"
-msgstr "Instalar aplicações selecionadas no sistema"
-
-#: ../data/gpk-install-local-file.desktop.in.h:1
-msgid "Package Install"
-msgstr "Instalador de Pacotes"
-
-#: ../data/gpk-install-local-file.desktop.in.h:2
-msgid "Install selected packages on the system"
-msgstr "Instalar pacotes selecionados no sistema"
-
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:826
-msgid "Software Log Viewer"
-msgstr "Visualizador de Registo de Aplicações"
-
-#: ../data/gpk-log.desktop.in.h:2
-msgid "View past package management tasks"
-msgstr "Visualizar tarefas antigas de gestão de pacotes"
-
-#: ../data/gpk-log.ui.h:2
-msgid "Filter"
-msgstr "Filtro"
-
-#: ../data/gpk-prefs.desktop.in.h:2
-msgid "Enable or disable package repositories"
-msgstr "Ativar ou desativar repositórios de pacotes"
-
-#: ../data/gpk-prefs.ui.h:2
-msgid ""
-"A package source contains packages that can be installed on this computer."
-msgstr ""
-"Uma fonte de pacotes contém pacotes que podem ser instalados neste "
-"computador."
-
-#. shows extra -source, -debuginfo, and -devel sources
-#: ../data/gpk-prefs.ui.h:4
-msgid "_Show debug and development package sources"
-msgstr "_Apresentar fontes de pacotes de depuração e desenvolvimento"
-
-#: ../data/gpk-signature.ui.h:1
-msgid "Software signature is required"
-msgstr "É necessário uma assinatura da aplicação"
-
-#: ../data/gpk-signature.ui.h:2
-msgid "Do you trust the source of the packages?"
-msgstr "Confia na fonte dos pacotes?"
-
-#: ../data/gpk-signature.ui.h:3
-msgid "Repository name:"
-msgstr "Nome do repositório:"
-
-#: ../data/gpk-signature.ui.h:4
-msgid "Signature URL:"
-msgstr "URL da assinatura:"
-
-#: ../data/gpk-signature.ui.h:5
-msgid "Signature user identifier:"
-msgstr "Identificação do utilizador da assinatura:"
-
-#: ../data/gpk-signature.ui.h:6
-msgid "Signature identifier:"
-msgstr "Identificação da assinatura:"
-
-#: ../data/gpk-signature.ui.h:7
-msgid "Package:"
-msgstr "Pacote:"
-
-#: ../data/gpk-signature.ui.h:8
-msgid "Do you recognize the user and trust this key?"
-msgstr "Reconhece o utilizador e confia na sua chave?"
-
-#. TRANSLATORS: title to pass to the user if there are not enough privs
-#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
-#: ../src/gpk-update-viewer.c:3428
-msgid "Package Updater"
-msgstr "Atualizador de Pacotes"
-
-#: ../data/gpk-update-viewer.desktop.in.h:2
-msgid "Update software installed on the system"
-msgstr "Atualizar aplicações instaladas no sistema"
-
-#: ../data/gpk-update-viewer.ui.h:2
-msgid "_Install Updates"
-msgstr "_Instalar Atualizações"
-
-#: ../data/gpk-update-viewer.ui.h:3
-msgid ""
-"Package updates correct errors, eliminate security vulnerabilities, and "
-"provide new features."
-msgstr ""
-"Atualizações de pacotes corrigem erros, eliminam vulnerabilidades de "
-"segurança e disponibilizam novas funcionalidades."
-
-#: ../data/gpk-update-viewer.ui.h:4
-msgid "_Upgrade"
-msgstr "Act_ualizar"
-
-#. TRANSLATORS: column for what packages were upgraded
-#: ../data/gpk-update-viewer.ui.h:5 ../src/gpk-log.c:322
-msgid "Details"
-msgstr "Detalhes"
-
 #. TRANSLATORS: this is a menu group of packages in the queue
 #: ../src/gpk-application.c:347
 msgid "Pending"
@@ -623,68 +619,68 @@ msgstr "Estas alterações serão perdidas se fechar esta janela."
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2017 ../src/gpk-enum.c:1075 ../src/gpk-enum.c:1164
+#: ../src/gpk-application.c:2018 ../src/gpk-enum.c:1075 ../src/gpk-enum.c:1164
 msgid "Installed"
 msgstr "Instalado"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2033 ../src/gpk-application.c:2055
-#: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
+#: ../src/gpk-application.c:2034 ../src/gpk-application.c:2056
+#: ../src/gpk-dialog.c:145 ../src/gpk-modal-dialog.c:693
 msgid "Name"
 msgstr "Nome"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2222
+#: ../src/gpk-application.c:2223
 msgid "Size"
 msgstr "Tamanho"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2225
+#: ../src/gpk-application.c:2226
 msgid "Installed size"
 msgstr "Tamanho instalado"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2228
+#: ../src/gpk-application.c:2229
 msgid "Download size"
 msgstr "Tamanho da transferência"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2416
+#: ../src/gpk-application.c:2417
 msgid "Searching by name"
 msgstr "A procurar por nome"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2442
+#: ../src/gpk-application.c:2443
 msgid "Searching by description"
 msgstr "A procurar por descrição"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2468
+#: ../src/gpk-application.c:2469
 msgid "Searching by file"
 msgstr "A procurar por ficheiro"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2491
+#: ../src/gpk-application.c:2492
 msgid "Search by name"
 msgstr "Procurar por nome"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2499
+#: ../src/gpk-application.c:2500
 msgid "Search by description"
 msgstr "Procurar por descrição"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2507
+#: ../src/gpk-application.c:2508
 msgid "Search by file name"
 msgstr "Procurar por nome de ficheiro"
 
-#: ../src/gpk-application.c:2549
+#: ../src/gpk-application.c:2536
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Licenciado sob a Licença Pública Geral GNU Versão 2"
 
-#: ../src/gpk-application.c:2550
+#: ../src/gpk-application.c:2537
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -696,7 +692,7 @@ msgstr ""
 "Software Foundation; ou a versão 2 da Licença, ou (à sua discrição) qualquer "
 "versão posterior."
 
-#: ../src/gpk-application.c:2554
+#: ../src/gpk-application.c:2541
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -708,7 +704,7 @@ msgstr ""
 "ADEQUAÇÃO A UM FIM ESPECÍFICO.  Consulte a Licença Pública Genérica GNU para "
 "mais detalhes."
 
-#: ../src/gpk-application.c:2558
+#: ../src/gpk-application.c:2545
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -719,56 +715,55 @@ msgstr ""
 "Street, Fifth Floor, Boston, MA 02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2564
+#: ../src/gpk-application.c:2551
 msgid "translator-credits"
 msgstr "António Lima <amrlima@gmail.com>"
 
-#: ../src/gpk-application.c:2585
+#: ../src/gpk-application.c:2572
 msgid "PackageKit Website"
 msgstr "Página Web do Packagekit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2588
+#: ../src/gpk-application.c:2575
 msgid "Package Manager for GNOME"
-msgstr "Gestor de Pacotes para o GNOME"
+msgstr "Gestor de pacotes para o GNOME"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2781
+#: ../src/gpk-application.c:2767
 msgid "Enter a search word or click a category to get started."
 msgstr "Digite uma palavra de pesquisa ou clique numa categoria para iniciar."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2784
+#: ../src/gpk-application.c:2770
 msgid "Enter a search word to get started."
 msgstr "Digite uma palavra de pesquisa para iniciar."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3023
+#: ../src/gpk-application.c:3009
 msgid "Exiting as properties could not be retrieved"
 msgstr "A sair: não foi possível obter as propriedades"
 
 #. TRANSLATORS: title: all of the packages on the system and available in sources
-#: ../src/gpk-application.c:3066
+#: ../src/gpk-application.c:3052
 msgid "All packages"
 msgstr "Todos os pacotes"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3068
+#: ../src/gpk-application.c:3054
 msgid "Show all packages"
 msgstr "Apresentar todos os pacotes"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3493 ../src/gpk-update-viewer.c:3397
+#: ../src/gpk-application.c:3479 ../src/gpk-update-viewer.c:3397
 msgid "Show the program version and exit"
 msgstr "Apresentar a versão da aplicação e sair"
 
-#. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3507 ../src/gpk-log.c:498
+#: ../src/gpk-application.c:3493
 msgid "Install Software"
-msgstr "Instalar Software"
+msgstr "Instalar programa"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3523
+#: ../src/gpk-application.c:3509
 msgid "Package installer"
 msgstr "Instalador de pacotes"
 
@@ -811,7 +806,7 @@ msgstr ""
 #. TRANSLATORS: button: allow the user to run this, even when insecure
 #: ../src/gpk-common.c:441
 msgid "Continue _Anyway"
-msgstr "_Ainda Assim Continuar"
+msgstr "_Ainda assim continuar"
 
 #. TRANSLATORS: The actions has just literally happened
 #: ../src/gpk-common.c:511 ../src/gpk-common.c:561
@@ -894,27 +889,35 @@ msgstr "%s, %s, %s e %s"
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s e %s"
 
+#: ../src/gpk-dbus-service.c:126
+msgid "Do not exit after the request has been processed"
+msgstr "Não sair após o pedido ter sido processado"
+
+#: ../src/gpk-dbus-service.c:142
+msgid "Session D-Bus service for PackageKit"
+msgstr "Serviço de D-Bus de sessão para o PackageKit"
+
 #. TRANSLATORS: we failed to install
-#: ../src/gpk-dbus-task.c:243 ../src/gpk-dbus-task.c:460
+#: ../src/gpk-dbus-task.c:241 ../src/gpk-dbus-task.c:458
 msgid "Failed to install software"
 msgstr "Falha ao instalar software"
 
 #. TRANSLATORS: we didn't select any applications that were returned
-#: ../src/gpk-dbus-task.c:245
+#: ../src/gpk-dbus-task.c:243
 msgid "No applications were chosen to be installed"
 msgstr "Não foi selecionada nenhuma aplicação a ser instalada"
 
 #. TRANSLATORS: detailed text about the error
-#: ../src/gpk-dbus-task.c:277
+#: ../src/gpk-dbus-task.c:275
 msgid "Error details"
 msgstr "Detalhes do erro"
 
-#: ../src/gpk-dbus-task.c:277
+#: ../src/gpk-dbus-task.c:275
 msgid "Package Manager error details"
 msgstr "Detalhes do erro do gestor de pacotes"
 
 #. TRANSLATORS: default fallback error -- this should never happen
-#: ../src/gpk-dbus-task.c:292
+#: ../src/gpk-dbus-task.c:290
 msgid ""
 "Unknown error. Please refer to the detailed report and report in your "
 "distribution bug tracker."
@@ -923,25 +926,25 @@ msgstr ""
 "relatório de erro no sistema de registo de erros da sua distribuição."
 
 #. TRANSLATORS: button: show details about the error
-#: ../src/gpk-dbus-task.c:365
+#: ../src/gpk-dbus-task.c:363
 msgid "Show details"
 msgstr "Apresentar detalhes"
 
 #. TRANSLATORS: title: installing packages
 #. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:497 ../src/gpk-enum.c:878
+#: ../src/gpk-dbus-task.c:495 ../src/gpk-enum.c:878
 msgid "Installing packages"
 msgstr "A instalar pacotes"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:599 ../src/gpk-dbus-task.c:1371
+#: ../src/gpk-dbus-task.c:596 ../src/gpk-dbus-task.c:1363
 msgid "Failed to install file"
 msgid_plural "Failed to install files"
 msgstr[0] "Falha ao instalar ficheiro"
 msgstr[1] "Falha ao instalar ficheiros"
 
 #. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:688
+#: ../src/gpk-dbus-task.c:685
 msgid "Do you want to install this file?"
 msgid_plural "Do you want to install these files?"
 msgstr[0] "Deseja instalar este ficheiro"
@@ -953,28 +956,28 @@ msgstr[1] "Deseja instalar estes ficheiros"
 #. TRANSLATORS: button: install a font
 #. TRANSLATORS: button: install Plasma services
 #. TRANSLATORS: button: install printer drivers
-#: ../src/gpk-dbus-task.c:697 ../src/gpk-dbus-task.c:1245
-#: ../src/gpk-dbus-task.c:1464 ../src/gpk-dbus-task.c:1667
-#: ../src/gpk-dbus-task.c:2135 ../src/gpk-dbus-task.c:2477
-#: ../src/gpk-dbus-task.c:2712 ../src/gpk-task.c:404
+#: ../src/gpk-dbus-task.c:694 ../src/gpk-dbus-task.c:1239
+#: ../src/gpk-dbus-task.c:1456 ../src/gpk-dbus-task.c:1658
+#: ../src/gpk-dbus-task.c:2122 ../src/gpk-dbus-task.c:2462
+#: ../src/gpk-dbus-task.c:2696 ../src/gpk-task.c:394
 msgid "Install"
 msgstr "Instalar"
 
 #. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1020
+#: ../src/gpk-dbus-task.c:1015
 msgid "Install local file"
 msgid_plural "Install local files"
 msgstr[0] "Instalar ficheiro local"
 msgstr[1] "Instalar ficheiros locais"
 
 #. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1080
+#: ../src/gpk-dbus-task.c:1075
 #, c-format
 msgid "Could not find packages"
 msgstr "Não foi possível encontrar pacotes"
 
 #. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1089
+#: ../src/gpk-dbus-task.c:1084
 msgid "The packages could not be found in any package source"
 msgstr "Não foi possível encontrar os pacotes em qualquer fonte de pacotes"
 
@@ -983,49 +986,49 @@ msgstr "Não foi possível encontrar os pacotes em qualquer fonte de pacotes"
 #. TRANSLATORS: button text
 #. TRANSLATORS: button: show the user a button to get more help finding stuff
 #. TRANSLATORS: button text
-#: ../src/gpk-dbus-task.c:1092 ../src/gpk-dbus-task.c:1333
-#: ../src/gpk-dbus-task.c:1639 ../src/gpk-dbus-task.c:1849
-#: ../src/gpk-dbus-task.c:2108 ../src/gpk-dbus-task.c:2449
+#: ../src/gpk-dbus-task.c:1086 ../src/gpk-dbus-task.c:1325
+#: ../src/gpk-dbus-task.c:1630 ../src/gpk-dbus-task.c:1838
+#: ../src/gpk-dbus-task.c:2095 ../src/gpk-dbus-task.c:2434
 msgid "More information"
 msgstr "Mais informações"
 
-#: ../src/gpk-dbus-task.c:1129 ../src/gpk-enum.c:310
+#: ../src/gpk-dbus-task.c:1123 ../src/gpk-enum.c:310
 msgid "The package is already installed"
 msgid_plural "The packages are already installed"
 msgstr[0] "O pacote já está instalado"
 msgstr[1] "Os pacotes já estão instalados"
 
 #. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1133
+#: ../src/gpk-dbus-task.c:1127
 msgid "Nothing to do."
 msgstr "Nada para ser feito."
 
 #. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:1148
+#: ../src/gpk-dbus-task.c:1142
 msgid "Failed to install package"
 msgstr "Falha na instalação do pacote"
 
 #. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1150
+#: ../src/gpk-dbus-task.c:1144
 msgid "Incorrect response from search"
 msgstr "Resposta da procura incorreta"
 
 #. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1229
+#: ../src/gpk-dbus-task.c:1223
 msgid "An additional package is required:"
 msgid_plural "Additional packages are required:"
 msgstr[0] "É necessário um pacote adicional:"
 msgstr[1] "São necessários pacotes adicionais:"
 
 #. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1232
+#: ../src/gpk-dbus-task.c:1226
 msgid "Do you want to search for and install this package now?"
 msgid_plural "Do you want to search for and install these packages now?"
 msgstr[0] "Deseja procurar e instalar este pacote agora?"
 msgstr[1] "Deseja procurar e instalar estes pacotes agora?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1238
+#: ../src/gpk-dbus-task.c:1232
 #, c-format
 msgid "%s wants to install a package"
 msgid_plural "%s wants to install packages"
@@ -1033,49 +1036,49 @@ msgstr[0] "%s quer instalar um pacote"
 msgstr[1] "%s quer instalar pacotes"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1241
+#: ../src/gpk-dbus-task.c:1235
 msgid "A program wants to install a package"
 msgid_plural "A program wants to install packages"
 msgstr[0] "Uma aplicação quer instalar um pacote"
 msgstr[1] "Uma aplicação quer instalar pacotes"
 
 #. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1258 ../src/gpk-dbus-task.c:2772
+#: ../src/gpk-dbus-task.c:1252 ../src/gpk-dbus-task.c:2756
 msgid "Searching for packages"
 msgstr "A procurar pacotes"
 
 #. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1328
+#: ../src/gpk-dbus-task.c:1321
 msgid "Failed to find package"
 msgstr "Incapaz de encontrar o pacote"
 
 #. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1330 ../src/gpk-dbus-task.c:2914
+#: ../src/gpk-dbus-task.c:1323 ../src/gpk-dbus-task.c:2896
 msgid "The file could not be found in any packages"
 msgstr "Não foi possível encontrar o ficheiro em nenhum pacote"
 
 #. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1368
+#: ../src/gpk-dbus-task.c:1360
 #, c-format
 msgid "The %s package already provides this file"
 msgstr "O pacote %s já disponibiliza este ficheiro"
 
 #. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1449
+#: ../src/gpk-dbus-task.c:1441
 msgid "The following file is required:"
 msgid_plural "The following files are required:"
 msgstr[0] "O seguinte ficheiro é necessário:"
 msgstr[1] "Os seguintes ficheiros são necessários:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1452
+#: ../src/gpk-dbus-task.c:1444
 msgid "Do you want to search for this file now?"
 msgid_plural "Do you want to search for these files now?"
 msgstr[0] "Deseja procurar este ficheiro agora?"
 msgstr[1] "Deseja procurar estes ficheiros agora?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1457
+#: ../src/gpk-dbus-task.c:1449
 #, c-format
 msgid "%s wants to install a file"
 msgid_plural "%s wants to install files"
@@ -1083,7 +1086,7 @@ msgstr[0] "%s quer instalar um ficheiro"
 msgstr[1] "%s quer instalar ficheiros"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1460
+#: ../src/gpk-dbus-task.c:1452
 msgid "A program wants to install a file"
 msgid_plural "A program wants to install files"
 msgstr[0] "Uma aplicação quer instalar um ficheiro"
@@ -1091,27 +1094,27 @@ msgstr[1] "Uma aplicação quer instalar ficheiros"
 
 #. TRANSLATORS: searching for the package that provides the file
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1476 ../src/gpk-dbus-task.c:3017
+#: ../src/gpk-dbus-task.c:1468 ../src/gpk-dbus-task.c:2998
 #: ../src/gpk-enum.c:1235
 msgid "Searching for file"
 msgstr "A procurar ficheiro"
 
 #. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1519
+#: ../src/gpk-dbus-task.c:1511
 msgid "The following plugin is required:"
 msgid_plural "The following plugins are required:"
 msgstr[0] "É necessário o seguinte plugin:"
 msgstr[1] "São necessários os seguintes plugins:"
 
 #. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1537 ../src/gpk-dbus-task.c:2377
+#: ../src/gpk-dbus-task.c:1529 ../src/gpk-dbus-task.c:2363
 msgid "Do you want to search for this now?"
 msgid_plural "Do you want to search for these now?"
 msgstr[0] "Deseja procurar este agora?"
 msgstr[1] "Deseja procurar estes agora?"
 
 #. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1550
+#: ../src/gpk-dbus-task.c:1542
 #, c-format
 msgid "%s requires an additional plugin to decode this file"
 msgid_plural "%s requires additional plugins to decode this file"
@@ -1119,7 +1122,7 @@ msgstr[0] "%s necessita de um plugin adicional para descodificar este ficheiro"
 msgstr[1] "%s necessita de plugins adicionais para descodificar este ficheiro"
 
 #. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1554
+#: ../src/gpk-dbus-task.c:1546
 #, c-format
 msgid "%s requires an additional plugin to encode this file"
 msgid_plural "%s requires additional plugins to encode this file"
@@ -1127,7 +1130,7 @@ msgstr[0] "%s necessita de um plugin adicional para codificar este ficheiro"
 msgstr[1] "%s necessita de plugins adicionais para codificar este ficheiro"
 
 #. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1558
+#: ../src/gpk-dbus-task.c:1550
 #, c-format
 msgid "%s requires an additional plugin for this operation"
 msgid_plural "%s requires additional plugins for this operation"
@@ -1135,7 +1138,7 @@ msgstr[0] "%s necessita de um plugin adicional para esta operação"
 msgstr[1] "%s necessita de plugins adicionais para esta operação"
 
 #. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1564
+#: ../src/gpk-dbus-task.c:1556
 msgid "A program requires an additional plugin to decode this file"
 msgid_plural "A program requires additional plugins to decode this file"
 msgstr[0] ""
@@ -1145,7 +1148,7 @@ msgstr[1] ""
 "Uma aplicação necessita de plugins adicionais para descodificar este ficheiro"
 
 #. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1568
+#: ../src/gpk-dbus-task.c:1560
 msgid "A program requires an additional plugin to encode this file"
 msgid_plural "A program requires additional plugins to encode this file"
 msgstr[0] ""
@@ -1154,80 +1157,80 @@ msgstr[1] ""
 "Uma aplicação necessita de plugins adicionais para codificar este ficheiro"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1572
+#: ../src/gpk-dbus-task.c:1564
 msgid "A program requires an additional plugin for this operation"
 msgid_plural "A program requires additional plugins for this operation"
 msgstr[0] "Uma aplicação necessita de um plugin adicional para esta operação"
 msgstr[1] "Uma aplicação necessita de plugins adicionais para esta operação"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1578 ../src/gpk-dbus-task.c:1935
-#: ../src/gpk-dbus-task.c:2312 ../src/gpk-dbus-task.c:2389
+#: ../src/gpk-dbus-task.c:1570 ../src/gpk-dbus-task.c:1924
+#: ../src/gpk-dbus-task.c:2299 ../src/gpk-dbus-task.c:2375
 msgid "Search"
 msgstr "Procurar"
 
 #. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1633
+#: ../src/gpk-dbus-task.c:1625
 msgid "Failed to search for plugin"
 msgstr "Falha ao procurar o plugin"
 
 #. TRANSLATORS: no package sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1635
+#: ../src/gpk-dbus-task.c:1627
 msgid "Could not find plugin in any configured package source"
 msgstr "Incapaz de encontrar o plugin em nenhuma fonte de pacotes configurada"
 
-#: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2468
+#: ../src/gpk-dbus-task.c:1649 ../src/gpk-dbus-task.c:2453
 msgid "Install the following plugin"
 msgid_plural "Install the following plugins"
 msgstr[0] "Instalar o seguinte plugin"
 msgstr[1] "Instalar os seguintes plugins"
 
 #. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1659 ../src/gpk-dbus-task.c:2128
-#: ../src/gpk-dbus-task.c:2469 ../src/gpk-dbus-task.c:2704
+#: ../src/gpk-dbus-task.c:1650 ../src/gpk-dbus-task.c:2115
+#: ../src/gpk-dbus-task.c:2454 ../src/gpk-dbus-task.c:2688
 msgid "Do you want to install this package now?"
 msgid_plural "Do you want to install these packages now?"
 msgstr[0] "Deseja instalar este pacote agora?"
 msgstr[1] "Deseja instalar estes pacotes agora?"
 
 #. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1751
+#: ../src/gpk-dbus-task.c:1742
 msgid "Searching for plugins"
 msgstr "A procurar plugins"
 
-#: ../src/gpk-dbus-task.c:1772
+#: ../src/gpk-dbus-task.c:1762
 #, c-format
 msgid "Searching for plugin: %s"
 msgstr "A procurar o plugin: %s"
 
-#: ../src/gpk-dbus-task.c:1815
+#: ../src/gpk-dbus-task.c:1805
 msgid "Failed to search for provides"
 msgstr "Falha ao procurar por fornecedores"
 
 #. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1844
+#: ../src/gpk-dbus-task.c:1834
 msgid "Failed to find software"
 msgstr "Falha ao localizar software"
 
 #. TRANSLATORS: nothing found in the package sources that helps
-#: ../src/gpk-dbus-task.c:1846
+#: ../src/gpk-dbus-task.c:1836
 msgid "No new applications can be found to handle this type of file"
 msgstr ""
 "Não é possível encontrar nenhuma nova aplicação para manipular este tipo de "
 "ficheiro"
 
 #. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1917
+#: ../src/gpk-dbus-task.c:1906
 msgid "An additional program is required to open this type of file:"
 msgstr "É necessário um programa adicional para abrir este tipo de ficheiro:"
 
 #. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1920
+#: ../src/gpk-dbus-task.c:1909
 msgid "Do you want to search for a program to open this file type now?"
 msgstr "Deseja procurar um programa para abrir este tipo de ficheiro agora?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1928
+#: ../src/gpk-dbus-task.c:1917
 #, c-format
 msgid "%s requires a new mime type"
 msgid_plural "%s requires new mime types"
@@ -1235,41 +1238,41 @@ msgstr[0] "%s requer um novo tipo mime"
 msgstr[1] "%s requer novos tipos mime"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1931
+#: ../src/gpk-dbus-task.c:1920
 msgid "A program requires a new mime type"
 msgid_plural "A program requires new mime types"
 msgstr[0] "Uma aplicação requer um novo tipo mime"
 msgstr[1] "Uma aplicação requer novos tipos mime"
 
 #. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1946
+#: ../src/gpk-dbus-task.c:1935
 msgid "Searching for file handlers"
 msgstr "A procurar manipuladores de ficheiro"
 
 #. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2029
+#: ../src/gpk-dbus-task.c:2017
 msgid "Language tag not parsed"
 msgstr "Etiqueta de idioma não processada"
 
 #. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2037
+#: ../src/gpk-dbus-task.c:2025
 msgid "Language code not matched"
 msgstr "Código de idioma não coincidente"
 
 #. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2097
+#: ../src/gpk-dbus-task.c:2085
 msgid "Failed to find font"
 msgid_plural "Failed to find fonts"
 msgstr[0] "Incapaz de localizar a fonte"
 msgstr[1] "Incapaz de localizar as fontes"
 
 #. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2105
+#: ../src/gpk-dbus-task.c:2093
 msgid "No new fonts can be found for this document"
 msgstr "Não foi possível encontrar novas fontes para este documento"
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2291
+#: ../src/gpk-dbus-task.c:2278
 msgid "An additional font is required to view this document correctly."
 msgid_plural "Additional fonts are required to view this document correctly."
 msgstr[0] ""
@@ -1279,14 +1282,14 @@ msgstr[1] ""
 "documento."
 
 #. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2295
+#: ../src/gpk-dbus-task.c:2282
 msgid "Do you want to search for a suitable package now?"
 msgid_plural "Do you want to search for suitable packages now?"
 msgstr[0] "Deseja procurar por um pacote adequado agora?"
 msgstr[1] "Deseja procurar por pacotes adequados agora?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2305
+#: ../src/gpk-dbus-task.c:2292
 #, c-format
 msgid "%s wants to install a font"
 msgid_plural "%s wants to install fonts"
@@ -1294,56 +1297,56 @@ msgstr[0] "%s quer instalar uma fonte"
 msgstr[1] "%s quer instalar fontes"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2308
+#: ../src/gpk-dbus-task.c:2295
 msgid "A program wants to install a font"
 msgid_plural "A program wants to install fonts"
 msgstr[0] "Uma aplicação quer instalar uma fonte"
 msgstr[1] "Uma aplicação quer instalar fontes"
 
 #. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2324
+#: ../src/gpk-dbus-task.c:2311
 msgid "Searching for font"
 msgid_plural "Searching for fonts"
 msgstr[0] "A procurar fonte"
 msgstr[1] "A procurar fontes"
 
 #. TRANSLATORS: we are listing the services in a box
-#: ../src/gpk-dbus-task.c:2365
+#: ../src/gpk-dbus-task.c:2351
 msgid "The following service is required:"
 msgid_plural "The following services are required:"
 msgstr[0] "É necessário o seguinte serviço:"
 msgstr[1] "São necessários os seguintes serviços:"
 
-#: ../src/gpk-dbus-task.c:2385
+#: ../src/gpk-dbus-task.c:2371
 msgid "Plasma requires an additional service for this operation"
 msgid_plural "Plasma requires additional services for this operation"
 msgstr[0] "O Plasma necessita de um serviço adicional para esta operação"
 msgstr[1] "O Plasma necessita de serviços adicionais para esta operação"
 
-#: ../src/gpk-dbus-task.c:2443
+#: ../src/gpk-dbus-task.c:2429
 msgid "Failed to search for Plasma service"
 msgstr "Falha ao procurar por serviço de Plasma"
 
 #. TRANSLATORS: no package sources have the wanted Plasma service
-#: ../src/gpk-dbus-task.c:2445
+#: ../src/gpk-dbus-task.c:2431
 msgid "Could not find service in any configured package source"
 msgstr "Incapaz de encontrar o serviço em nenhuma fonte de pacotes configurada"
 
 #. TRANSLATORS: search for Plasma services
-#: ../src/gpk-dbus-task.c:2551
+#: ../src/gpk-dbus-task.c:2536
 msgid "Searching for services"
 msgstr "A procurar serviços"
 
-#: ../src/gpk-dbus-task.c:2570
+#: ../src/gpk-dbus-task.c:2554
 #, c-format
 msgid "Searching for service: %s"
 msgstr "A procurar o serviço: %s"
 
-#: ../src/gpk-dbus-task.c:2627
+#: ../src/gpk-dbus-task.c:2611
 msgid "Failed to remove package"
 msgstr "Falha ao remover o pacote"
 
-#: ../src/gpk-dbus-task.c:2703
+#: ../src/gpk-dbus-task.c:2687
 msgid "Install the following driver"
 msgid_plural "Install the following drivers"
 msgstr[0] "Instalar o seguinte controlador"
@@ -1351,31 +1354,31 @@ msgstr[1] "Instalar os seguintes controladores"
 
 #. TRANSLATORS: title: removing packages
 #. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2858 ../src/gpk-enum.c:870
+#: ../src/gpk-dbus-task.c:2840 ../src/gpk-enum.c:870
 msgid "Removing packages"
 msgstr "A remover pacotes"
 
 #. TRANSLATORS: failed to find the package for the file
-#: ../src/gpk-dbus-task.c:2912
+#: ../src/gpk-dbus-task.c:2894
 msgid "Failed to find package for this file"
 msgstr "Incapaz de encontrar o pacote para este ficheiro"
 
 #. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2990
+#: ../src/gpk-dbus-task.c:2971
 msgid "The following file will be removed:"
 msgid_plural "The following files will be removed:"
 msgstr[0] "O seguinte ficheiro irá ser removido:"
 msgstr[1] "Os seguintes ficheiros irão ser removidos:"
 
 #. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2993
+#: ../src/gpk-dbus-task.c:2974
 msgid "Do you want to remove this file now?"
 msgid_plural "Do you want to remove these files now?"
 msgstr[0] "Deseja remover este ficheiro agora?"
 msgstr[1] "Deseja remover estes ficheiros agora?"
 
 #. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2998
+#: ../src/gpk-dbus-task.c:2979
 #, c-format
 msgid "%s wants to remove a file"
 msgid_plural "%s wants to remove files"
@@ -1383,28 +1386,41 @@ msgstr[0] "%s quer remover um ficheiro"
 msgstr[1] "%s quer remover ficheiros"
 
 #. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:3001
+#: ../src/gpk-dbus-task.c:2982
 msgid "A program wants to remove a file"
 msgid_plural "A program wants to remove files"
 msgstr[0] "Uma aplicação quer remover um ficheiro"
 msgstr[1] "Uma aplicação quer remover ficheiros"
 
 #. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:3005 ../src/gpk-task.c:409
+#: ../src/gpk-dbus-task.c:2986 ../src/gpk-task.c:399
 msgid "Remove"
 msgstr "Remover"
 
+#. TRANSLATORS: turn on all debugging
+#: ../src/gpk-debug.c:113
+msgid "Show debugging information for all files"
+msgstr "Apresentar informação de depuração para todos os ficheiros"
+
+#: ../src/gpk-debug.c:171
+msgid "Debugging Options"
+msgstr "Opções de depuração"
+
+#: ../src/gpk-debug.c:171
+msgid "Show debugging options"
+msgstr "Apresentar opções de depuração"
+
 #. TRANSLATORS: This is when we have over 5 items, and we're not interested in detail
-#: ../src/gpk-dialog.c:72
+#: ../src/gpk-dialog.c:71
 msgid "many packages"
 msgstr "muitos pacotes"
 
-#: ../src/gpk-dialog.c:241
+#: ../src/gpk-dialog.c:235
 msgid "No files"
 msgstr "Nenhum ficheiro"
 
 #. add a checkbutton for deps screen
-#: ../src/gpk-dialog.c:304
+#: ../src/gpk-dialog.c:298
 msgid "Do not show this again"
 msgstr "Não apresentar esta mensagem novamente"
 
@@ -1613,7 +1629,7 @@ msgid "No space is left on the disk"
 msgstr "Não existe espaço livre no disco"
 
 #. TRANSLATORS: this is the window title when a new CD or DVD is required
-#: ../src/gpk-enum.c:421 ../src/gpk-task.c:356
+#: ../src/gpk-enum.c:421 ../src/gpk-task.c:346
 msgid "A media change is required"
 msgstr "É necessário uma mudança de media"
 
@@ -1738,8 +1754,8 @@ msgid ""
 "happened."
 msgstr ""
 "A ação não é suportada por este motor.\n"
-"Reporte um erro no sistema de registo de erros da sua distribuição "
-"dado que isto não devia ter acontecido."
+"Reporte um erro no sistema de registo de erros da sua distribuição dado que "
+"isto não devia ter acontecido."
 
 #: ../src/gpk-enum.c:520
 msgid ""
@@ -1748,8 +1764,8 @@ msgid ""
 "description."
 msgstr ""
 "Ocorreu um problema inesperado.\n"
-"Reporte este erro no sistema de registo de erros da sua "
-"distribuição com a descrição do erro."
+"Reporte este erro no sistema de registo de erros da sua distribuição com a "
+"descrição do erro."
 
 #: ../src/gpk-enum.c:524
 msgid ""
@@ -2011,7 +2027,8 @@ msgid ""
 "Required data could not be found on any of the configured package sources.\n"
 "There were no more download mirrors that could be tried."
 msgstr ""
-"Incapaz de encontrar os dados necessários em qualquer uma das fontes de pacotes configuradas.\n"
+"Incapaz de encontrar os dados necessários em qualquer uma das fontes de "
+"pacotes configuradas.\n"
 "Não existiam mais réplicas de servidores de transferência para tentar."
 
 #: ../src/gpk-enum.c:659
@@ -2020,8 +2037,8 @@ msgid ""
 "sources.\n"
 "The list of distribution upgrades will be unavailable."
 msgstr ""
-"Incapaz de encontrar os dados de atualização necessários em qualquer uma "
-"das fontes de pacotes configuradas.\n"
+"Incapaz de encontrar os dados de atualização necessários em qualquer uma das "
+"fontes de pacotes configuradas.\n"
 "A lista de atualizações da distribuição irá estar indisponível."
 
 #: ../src/gpk-enum.c:663
@@ -2506,7 +2523,7 @@ msgstr "Fiável"
 #. TRANSLATORS: The type of package
 #: ../src/gpk-enum.c:1088
 msgid "Untrusted"
-msgstr "Não Fiável"
+msgstr "Não fiável"
 
 #. TRANSLATORS: The action of the package, in present tense
 #: ../src/gpk-enum.c:1106
@@ -2576,7 +2593,7 @@ msgid "Cleaned up"
 msgstr "Limpo"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1176 ../src/gpk-task.c:414
+#: ../src/gpk-enum.c:1176 ../src/gpk-task.c:404
 msgid "Obsoleted"
 msgstr "Tornado obsoleto"
 
@@ -2912,7 +2929,7 @@ msgid "Office"
 msgstr "Escritório"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1516 ../src/gpk-task.c:434
+#: ../src/gpk-enum.c:1516 ../src/gpk-task.c:424
 msgid "Other"
 msgstr "Outro"
 
@@ -3052,191 +3069,37 @@ msgid "Unknown group"
 msgstr "Grupo desconhecido"
 
 #. TRANSLATORS: column for the application icon
-#: ../src/gpk-helper-chooser.c:140 ../src/gpk-helper-run.c:203
+#: ../src/gpk-helper-chooser.c:128 ../src/gpk-helper-run.c:192
 msgid "Icon"
 msgstr "Ícone"
 
 #. TRANSLATORS: column for the application name
 #. TRANSLATORS: column for the package name
-#: ../src/gpk-helper-chooser.c:147 ../src/gpk-helper-run.c:210
+#: ../src/gpk-helper-chooser.c:135 ../src/gpk-helper-run.c:199
 msgid "Package"
 msgstr "Pacote"
 
-#: ../src/gpk-helper-chooser.c:286
+#: ../src/gpk-helper-chooser.c:266
 msgid "Applications that can open this type of file"
 msgstr "Aplicações que podem abrir este tipo de ficheiro"
 
 #. TRANSLATORS: button label, install
-#: ../src/gpk-helper-chooser.c:298
+#: ../src/gpk-helper-chooser.c:276
 msgid "_Install"
 msgstr "_Instalar"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-helper-chooser.c:302
+#: ../src/gpk-helper-chooser.c:280
 msgid "Install package"
 msgstr "Instalar pacote"
 
-#. TRANSLATORS: is not GPG signed
-#: ../src/gpk-task.c:140 ../src/gpk-task.c:150 ../src/gpk-task.c:170
-msgid "The software is not signed by a trusted provider."
-msgstr "O software não se encontra assinada por um fornecedor credível."
-
-#. TRANSLATORS: user has to trust provider -- I know, this sucks
-#: ../src/gpk-task.c:142
-msgid "Do not update this package unless you are sure it is safe to do so."
-msgstr "Não atualize este pacote se não tiver a certeza que é seguro fazê-lo."
-
-#. TRANSLATORS: warn the user that all bets are off
-#: ../src/gpk-task.c:144 ../src/gpk-task.c:154
-msgid "Malicious software can damage your computer or cause other harm."
-msgstr ""
-"Software malicioso pode danificar o seu computador ou causar outros "
-"problemas."
-
-#. TRANSLATORS: ask if they are absolutely sure they want to do this
-#: ../src/gpk-task.c:146
-msgid "Are you <b>sure</b> you want to update this package?"
-msgstr "Tem a <b>certeza</b> que deseja atualizar este pacote?"
-
-#. TRANSLATORS: user has to trust provider -- I know, this sucks
-#: ../src/gpk-task.c:152
-msgid "Do not install this package unless you are sure it is safe to do so."
-msgstr "Não instale este pacote se não tiver a certeza que é seguro fazê-lo."
-
-#. TRANSLATORS: ask if they are absolutely sure they want to do this
-#: ../src/gpk-task.c:156
-msgid "Are you <b>sure</b> you want to install this package?"
-msgstr "Tem a <b>certeza</b> que deseja instalar este pacote?"
-
-#. TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc
-#: ../src/gpk-task.c:351
-#, c-format
-msgid ""
-"Additional media is required. Please insert the %s labeled '%s' to continue."
-msgstr ""
-"É necessário media adicional. Por favor insira o %s etiquetado como '%s' "
-"para continuar."
-
-#. TRANSLATORS: this is button text
-#: ../src/gpk-task.c:360 ../src/gpk-task.c:563
-msgid "Continue"
-msgstr "Continuar"
-
-#. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:403
-msgid "The following software also needs to be installed"
-msgstr "Também é necessário instalar o seguinte software"
-
-#. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:408 ../src/gpk-task.c:413
-msgid "The following software also needs to be removed"
-msgstr "Também é necessário remover o seguinte software"
-
-#. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:418
-msgid "The following software also needs to be updated"
-msgstr "Também é necessário atualizar o seguinte software"
-
-#: ../src/gpk-task.c:419
-msgid "Update"
-msgstr "Atualizar"
-
-#. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:423
-msgid "The following software also needs to be re-installed"
-msgstr "Também é necessário reinstalar o seguinte software"
-
-#: ../src/gpk-task.c:424
-msgid "Reinstall"
-msgstr "Reinstalar"
-
-#. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:428
-msgid "The following software also needs to be downgraded"
-msgstr "Também é necessário desatualizar o seguinte software"
-
-#: ../src/gpk-task.c:429
-msgid "Downgrade"
-msgstr "Recuar a Versão"
-
-#. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:433
-msgid "The following software also needs to be processed"
-msgstr "Também é necessário processar o seguinte software"
-
-#. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:496
-msgid "Additional confirmation required"
-msgstr "Confirmação adicional necessária"
-
-#. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:502
-msgid "To install this package, additional software also has to be modified."
-msgid_plural ""
-"To install these packages, additional software also has to be modified."
-msgstr[0] ""
-"Para instalar este pacote, também é necessário modificar software adicional."
-msgstr[1] ""
-"Para instalar estes pacotes, também é necessário modificar software "
-"adicional."
-
-#. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:507
-msgid "To remove this package, additional software also has to be modified."
-msgid_plural ""
-"To remove these packages, additional software also has to be modified."
-msgstr[0] ""
-"Para remover este pacote, também é necessário modificar software adicional."
-msgstr[1] ""
-"Para remover estes pacotes, também é necessário modificar software adicional."
-
-#. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:512
-msgid "To update this package, additional software also has to be modified."
-msgid_plural ""
-"To update these packages, additional software also has to be modified."
-msgstr[0] ""
-"Para atualizar este pacote, também é necessário modificar software adicional."
-msgstr[1] ""
-"Para atualizar estes pacotes, também é necessário modificar software "
-"adicional."
-
-#. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:517
-msgid "To install this file, additional software also has to be modified."
-msgid_plural ""
-"To install these files, additional software also has to be modified."
-msgstr[0] ""
-"Para instalar este ficheiro também é necessário modificar software adicional."
-msgstr[1] ""
-"Para instalar estes ficheiros também é necessário modificar software "
-"adicional."
-
-#. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:522
-msgid ""
-"To process this transaction, additional software also has to be modified."
-msgstr ""
-"Para processar esta transação, também é necessário modificar software "
-"adicional."
-
-#. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:613
-msgid "_Force install"
-msgstr "_Forçar instalação"
-
-#. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:617
-msgid "Force installing package"
-msgstr "Forçar a instalação do pacote"
-
 #. TRANSLATORS: window title: do we want to execute a program we just installed?
-#: ../src/gpk-helper-run.c:480
+#: ../src/gpk-helper-run.c:329
 msgid "Run new application?"
 msgstr "Executar a nova aplicação?"
 
 #. add run button
-#: ../src/gpk-helper-run.c:483
+#: ../src/gpk-helper-run.c:332
 msgid "_Run"
 msgstr "_Executar"
 
@@ -3247,7 +3110,7 @@ msgstr "Ficheiros a instalar"
 
 #: ../src/gpk-install-local-file.c:69
 msgid "PackageKit File Installer"
-msgstr "Instalador de Ficheiros do PackageKit"
+msgstr "Instalador de ficheiros do PackageKit"
 
 #. TRANSLATORS: title to pass to to the user if there are not enough privs
 #: ../src/gpk-install-local-file.c:77
@@ -3265,103 +3128,263 @@ msgid "You need to specify a file to install"
 msgstr "É necessário especificar um ficheiro a instalar"
 
 #. TRANSLATORS: strftime formatted please
-#: ../src/gpk-log.c:171
+#: ../src/gpk-log.c:162
 msgid "%d %B %Y"
 msgstr "%d %B %Y"
 
 #. TRANSLATORS: column for the date
-#: ../src/gpk-log.c:286
+#: ../src/gpk-log.c:277
 msgid "Date"
 msgstr "Data"
 
 #. TRANSLATORS: column for what was done, e.g. update-system
-#: ../src/gpk-log.c:295
+#: ../src/gpk-log.c:286
 msgid "Action"
 msgstr "Ação"
 
 #. TRANSLATORS: column for the user name, e.g. Richard Hughes
-#: ../src/gpk-log.c:328
+#: ../src/gpk-log.c:319
 msgid "User name"
 msgstr "Nome de utilizador"
 
 #. TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs
-#: ../src/gpk-log.c:335
+#: ../src/gpk-log.c:326
 msgid "Application"
 msgstr "Aplicação"
 
-#. TRANSLATORS: short name for pkcon
-#: ../src/gpk-log.c:495
+#. TRANSLATORS: user-friendly name for pkcon
+#: ../src/gpk-log.c:486
 msgid "Command line client"
 msgstr "Cliente de linha de comandos"
 
-#. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-log.c:501
-msgid "Update System"
-msgstr "Atualizar o Sistema"
-
-#. TRANSLATORS: short name for gpk-update-icon
-#: ../src/gpk-log.c:504
+#. TRANSLATORS: user-friendly name for gpk-update-icon, which used to exist
+#: ../src/gpk-log.c:495
 msgid "Update Icon"
 msgstr "Ícone de atualização"
 
-#. TRANSLATORS: short name for the command not found plugin
-#: ../src/gpk-log.c:507
-msgid "Bash - Command Not Found"
-msgstr "Bash - Comando Não Encontrado"
+#. TRANSLATORS: user-friendly name for the command not found plugin
+#: ../src/gpk-log.c:498
+#| msgid "Bash - Command Not Found"
+msgid "Bash – Command Not Found"
+msgstr "Bash - comando não encontrado"
 
-#. TRANSLATORS: user friendly name for gnome-settings-daemon
-#: ../src/gpk-log.c:510
+#. TRANSLATORS: user-friendly name for gnome-settings-daemon, which used to handle updates
+#: ../src/gpk-log.c:501
 msgid "GNOME Session"
 msgstr "Sessão do GNOME"
 
+#. TRANSLATORS: user-friendly name for gnome-software
+#: ../src/gpk-log.c:504
+#| msgid "Software"
+msgid "GNOME Software"
+msgstr "Programas GNOME"
+
 #. TRANSLATORS: preset the GtktextBox with this filter text
-#: ../src/gpk-log.c:810
+#: ../src/gpk-log.c:802
 msgid "Set the filter to this value"
 msgstr "Definir o filtro para este valor"
 
 #. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:813 ../src/gpk-prefs.c:625
+#: ../src/gpk-log.c:805 ../src/gpk-prefs.c:613
 msgid "Set the parent window to make this modal"
 msgstr "Definir a janela pai para tornar isto modal"
 
+#: ../src/gpk-log.c:818
+msgid "Software Log Viewer"
+msgstr "Visualizador de registo de aplicações"
+
 #. are we running privileged
-#: ../src/gpk-log.c:834
+#: ../src/gpk-log.c:826
 msgid "Log viewer"
 msgstr "Visualizador de registo"
 
-#: ../src/gpk-modal-dialog.c:441
+#: ../src/gpk-modal-dialog.c:434
 #, c-format
 msgid "Remaining time: %s"
 msgstr "Tempo remanescente: %s"
 
 #. TRANSLATORS: for one reason or another, we could not enable or disable a package source
-#: ../src/gpk-prefs.c:244
+#: ../src/gpk-prefs.c:235
 msgid "Failed to change status"
 msgstr "Falha na mudança de estado"
 
 #. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-prefs.c:314
+#: ../src/gpk-prefs.c:305
 msgid "Enabled"
 msgstr "Ativado"
 
 #. TRANSLATORS: column for the source description
-#: ../src/gpk-prefs.c:323
+#: ../src/gpk-prefs.c:314
 msgid "Package Source"
 msgstr "Fonte de Pacotes"
 
 #. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-prefs.c:385
+#: ../src/gpk-prefs.c:376
 msgid "Failed to get the list of sources"
 msgstr "Falha ao obter a lista de fontes"
 
 #. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:492 ../src/gpk-update-viewer.c:3155
+#: ../src/gpk-prefs.c:483 ../src/gpk-update-viewer.c:3155
 msgid "Exiting as backend details could not be retrieved"
 msgstr "A sair, não foi possível encontrar detalhes do motor"
 
-#: ../src/gpk-prefs.c:513
+#: ../src/gpk-prefs.c:504
 msgid "Getting package source list not supported by backend"
 msgstr "Obtenção da lista de fontes de pacotes não é suportada pelo motor"
+
+#. TRANSLATORS: is not GPG signed
+#: ../src/gpk-task.c:130 ../src/gpk-task.c:140 ../src/gpk-task.c:160
+msgid "The software is not signed by a trusted provider."
+msgstr "O software não se encontra assinada por um fornecedor credível."
+
+#. TRANSLATORS: user has to trust provider -- I know, this sucks
+#: ../src/gpk-task.c:132
+msgid "Do not update this package unless you are sure it is safe to do so."
+msgstr "Não atualize este pacote se não tiver a certeza que é seguro fazê-lo."
+
+#. TRANSLATORS: warn the user that all bets are off
+#: ../src/gpk-task.c:134 ../src/gpk-task.c:144
+msgid "Malicious software can damage your computer or cause other harm."
+msgstr ""
+"Software malicioso pode danificar o seu computador ou causar outros "
+"problemas."
+
+#. TRANSLATORS: ask if they are absolutely sure they want to do this
+#: ../src/gpk-task.c:136
+msgid "Are you <b>sure</b> you want to update this package?"
+msgstr "Tem a <b>certeza</b> que deseja atualizar este pacote?"
+
+#. TRANSLATORS: user has to trust provider -- I know, this sucks
+#: ../src/gpk-task.c:142
+msgid "Do not install this package unless you are sure it is safe to do so."
+msgstr "Não instale este pacote se não tiver a certeza que é seguro fazê-lo."
+
+#. TRANSLATORS: ask if they are absolutely sure they want to do this
+#: ../src/gpk-task.c:146
+msgid "Are you <b>sure</b> you want to install this package?"
+msgstr "Tem a <b>certeza</b> que deseja instalar este pacote?"
+
+#. TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc
+#: ../src/gpk-task.c:341
+#, c-format
+msgid ""
+"Additional media is required. Please insert the %s labeled '%s' to continue."
+msgstr ""
+"É necessário media adicional. Por favor insira o %s etiquetado como '%s' "
+"para continuar."
+
+#. TRANSLATORS: this is button text
+#: ../src/gpk-task.c:350 ../src/gpk-task.c:553
+msgid "Continue"
+msgstr "Continuar"
+
+#. TRANSLATORS: additional message text for the deps dialog
+#: ../src/gpk-task.c:393
+msgid "The following software also needs to be installed"
+msgstr "Também é necessário instalar o seguinte software"
+
+#. TRANSLATORS: additional message text for the deps dialog
+#: ../src/gpk-task.c:398 ../src/gpk-task.c:403
+msgid "The following software also needs to be removed"
+msgstr "Também é necessário remover o seguinte software"
+
+#. TRANSLATORS: additional message text for the deps dialog
+#: ../src/gpk-task.c:408
+msgid "The following software also needs to be updated"
+msgstr "Também é necessário atualizar o seguinte software"
+
+#: ../src/gpk-task.c:409
+msgid "Update"
+msgstr "Atualizar"
+
+#. TRANSLATORS: additional message text for the deps dialog
+#: ../src/gpk-task.c:413
+msgid "The following software also needs to be re-installed"
+msgstr "Também é necessário reinstalar o seguinte software"
+
+#: ../src/gpk-task.c:414
+msgid "Reinstall"
+msgstr "Reinstalar"
+
+#. TRANSLATORS: additional message text for the deps dialog
+#: ../src/gpk-task.c:418
+msgid "The following software also needs to be downgraded"
+msgstr "Também é necessário desatualizar o seguinte software"
+
+#: ../src/gpk-task.c:419
+msgid "Downgrade"
+msgstr "Recuar a Versão"
+
+#. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
+#: ../src/gpk-task.c:423
+msgid "The following software also needs to be processed"
+msgstr "Também é necessário processar o seguinte software"
+
+#. TRANSLATORS: title of a dependency dialog
+#: ../src/gpk-task.c:486
+msgid "Additional confirmation required"
+msgstr "Confirmação adicional necessária"
+
+#. TRANSLATORS: message text of a dependency dialog
+#: ../src/gpk-task.c:492
+msgid "To install this package, additional software also has to be modified."
+msgid_plural ""
+"To install these packages, additional software also has to be modified."
+msgstr[0] ""
+"Para instalar este pacote, também é necessário modificar software adicional."
+msgstr[1] ""
+"Para instalar estes pacotes, também é necessário modificar software "
+"adicional."
+
+#. TRANSLATORS: message text of a dependency dialog
+#: ../src/gpk-task.c:497
+msgid "To remove this package, additional software also has to be modified."
+msgid_plural ""
+"To remove these packages, additional software also has to be modified."
+msgstr[0] ""
+"Para remover este pacote, também é necessário modificar software adicional."
+msgstr[1] ""
+"Para remover estes pacotes, também é necessário modificar software adicional."
+
+#. TRANSLATORS: message text of a dependency dialog
+#: ../src/gpk-task.c:502
+msgid "To update this package, additional software also has to be modified."
+msgid_plural ""
+"To update these packages, additional software also has to be modified."
+msgstr[0] ""
+"Para atualizar este pacote, também é necessário modificar software adicional."
+msgstr[1] ""
+"Para atualizar estes pacotes, também é necessário modificar software "
+"adicional."
+
+#. TRANSLATORS: message text of a dependency dialog
+#: ../src/gpk-task.c:507
+msgid "To install this file, additional software also has to be modified."
+msgid_plural ""
+"To install these files, additional software also has to be modified."
+msgstr[0] ""
+"Para instalar este ficheiro também é necessário modificar software adicional."
+msgstr[1] ""
+"Para instalar estes ficheiros também é necessário modificar software "
+"adicional."
+
+#. TRANSLATORS: message text of a dependency dialog
+#: ../src/gpk-task.c:512
+msgid ""
+"To process this transaction, additional software also has to be modified."
+msgstr ""
+"Para processar esta transação, também é necessário modificar software "
+"adicional."
+
+#. TRANSLATORS: button label, force the install, even though it's untrusted
+#: ../src/gpk-task.c:603
+msgid "_Force install"
+msgstr "_Forçar instalação"
+
+#. TRANSLATORS: button tooltip
+#: ../src/gpk-task.c:607
+msgid "Force installing package"
+msgstr "Forçar a instalação do pacote"
 
 #. TRANSLATORS: we don't have a lot to go on here
 #: ../src/gpk-update-viewer.c:183
@@ -3380,7 +3403,7 @@ msgstr ""
 #. TRANSLATORS: the button text for the restart
 #: ../src/gpk-update-viewer.c:213 ../src/gpk-update-viewer.c:219
 msgid "Restart Computer"
-msgstr "Reiniciar Computador"
+msgstr "Reiniciar o computador"
 
 #. TRANSLATORS: the message text for the restart
 #: ../src/gpk-update-viewer.c:217
@@ -3403,7 +3426,7 @@ msgstr ""
 #. TRANSLATORS: the button text for the log out
 #: ../src/gpk-update-viewer.c:225 ../src/gpk-update-viewer.c:231
 msgid "Log Out"
-msgstr "Terminar Sessão"
+msgstr "Terminar sessão"
 
 #. TRANSLATORS: the message text for the log out
 #: ../src/gpk-update-viewer.c:229
@@ -3524,7 +3547,7 @@ msgstr "Nenhuma ligação de rede detetada."
 #: ../src/gpk-update-viewer.c:1450
 msgid "_Install Update"
 msgid_plural "_Install Updates"
-msgstr[0] "_Instalar Atualização"
+msgstr[0] "_Instalar atualização"
 msgstr[1] "_Instalar Atualizações"
 
 #. TRANSLATORS: title: nothing to do
@@ -3723,7 +3746,7 @@ msgstr "Selecionar todas"
 #. TRANSLATORS: right click menu, unselect all the updates
 #: ../src/gpk-update-viewer.c:2549
 msgid "Unselect all"
-msgstr "Deseleccionar todas"
+msgstr "Remover todas as seleções"
 
 #. TRANSLATORS: right click menu, select only security updates
 #: ../src/gpk-update-viewer.c:2556
@@ -3770,26 +3793,14 @@ msgstr ""
 msgid "Update Packages"
 msgstr "Atualizar Pacotes"
 
-#: ../src/gpk-dbus-service.c:126
-msgid "Do not exit after the request has been processed"
-msgstr "Não sair após o pedido ter sido processado"
+#~ msgid "Software Log"
+#~ msgstr "Relatório da Aplicação"
 
-#: ../src/gpk-dbus-service.c:142
-msgid "Session D-Bus service for PackageKit"
-msgstr "Serviço de D-Bus de sessão para o PackageKit"
+#~ msgid "Help"
+#~ msgstr "Ajuda"
 
-#. TRANSLATORS: turn on all debugging
-#: ../src/gpk-debug.c:131
-msgid "Show debugging information for all files"
-msgstr "Apresentar informação de depuração para todos os ficheiros"
-
-#: ../src/gpk-debug.c:189
-msgid "Debugging Options"
-msgstr "Opções de Depuração"
-
-#: ../src/gpk-debug.c:189
-msgid "Show debugging options"
-msgstr "Apresentar opções de depuração"
+#~ msgid "Update System"
+#~ msgstr "Atualizar o Sistema"
 
 #~ msgid "Ask the user if files should be copied to a non-private directory"
 #~ msgstr ""
@@ -3816,9 +3827,6 @@ msgstr "Apresentar opções de depuração"
 #~ msgstr ""
 #~ "Notificar o utilizador antes de uma grande atualização ser realizada numa "
 #~ "ligação de banda larga móvel."
-
-#~ msgid "Software"
-#~ msgstr "Software"
 
 #~ msgid "Software Sources"
 #~ msgstr "Fontes de Software"
