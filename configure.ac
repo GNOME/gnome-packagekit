@@ -97,7 +97,7 @@ PKG_CHECK_MODULES(DBUS, \
  dbus-1 >= 1.1.2 \
  gthread-2.0)
 PKG_CHECK_MODULES(GTK, \
- gtk+-3.0 >= 2.91.0 gdk-3.0 fontconfig)
+ gtk+-3.0 >= 3.15.2 gdk-3.0 fontconfig)
 PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk3 >= 0.10)
 PKG_CHECK_MODULES(X11, x11)
 
