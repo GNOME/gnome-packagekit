@@ -2012,7 +2012,7 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 		/* convert the bullets */
 		line = egg_markdown_parse (markdown, update_text);
 		if (!egg_strzero (line)) {
-			gtk_text_buffer_insert_markup (text_buffer, &iter, line);
+			_gtk_text_buffer_insert_markup (text_buffer, &iter, line);
 			gtk_text_buffer_insert (text_buffer, &iter, "\n\n", -1);
 			has_update_text = TRUE;
 		}
@@ -2097,7 +2097,7 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 		if (!egg_strzero (line)) {
 			/* TRANSLATORS: this is a ChangeLog */
 			line2 = g_strdup_printf ("%s\n%s\n", _("The developer logs will be shown as no description is available for this update:"), line);
-			gtk_text_buffer_insert_markup (text_buffer, &iter, line2);
+			_gtk_text_buffer_insert_markup (text_buffer, &iter, line2);
 			g_free (line2);
 		}
 		g_free (line);

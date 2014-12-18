@@ -61,7 +61,7 @@ G_BEGIN_DECLS
 /* any status that is slower than this will not be shown in the UI */
 #define GPK_UI_STATUS_SHOW_DELAY		750 /* ms */
 
-void		 gtk_text_buffer_insert_markup		(GtkTextBuffer	*buffer,
+void		 _gtk_text_buffer_insert_markup		(GtkTextBuffer	*buffer,
 							 GtkTextIter	*iter,
 							 const gchar	*markup);
 gchar		*gpk_package_id_format_twoline		(GtkStyleContext *style,
