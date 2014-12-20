@@ -3,15 +3,14 @@
 # This file is distributed under the same license as the gnome-packagekit package.
 #
 # Gabor Kelemen <kelemeng at gnome dot hu>, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014.
-# Balázs Úr <urbalazs at gmail dot com>, 2012, 2013.
-# Balázs Úr <urbalazs@gmail.com>, 2014.
+# Balázs Úr <urbalazs at gmail dot com>, 2012, 2013, 2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-09 19:09+0000\n"
-"PO-Revision-Date: 2014-09-10 00:00+0200\n"
+"POT-Creation-Date: 2014-12-20 08:08+0000\n"
+"PO-Revision-Date: 2014-12-20 13:39+0100\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -81,9 +80,9 @@ msgid "Add or remove software installed on the system"
 msgstr "Szoftverek rendszerre telepítése vagy eltávolítása"
 
 #: ../data/gpk-application.desktop.in.h:3
-msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
-msgstr ""
-"Frissítések;Frissítés;Források;Tárolók;Tulajdonságok;Telepítés;Szoftverbolt;"
+#| msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
+msgid "Sources;Repositories;Preferences;Install;Store;"
+msgstr "Források;Tárolók;Beállítások;Telepítés;Szoftverbolt;"
 
 #: ../data/gpk-application.ui.h:2
 msgid "Apply Changes"
@@ -157,7 +156,6 @@ msgstr "Csomaglisták frissítése"
 
 #: ../data/gpk-application.ui.h:19 ../data/gpk-log.desktop.in.h:1
 #: ../data/gpk-log.ui.h:1
-#| msgid "Package"
 msgid "Package Log"
 msgstr "Csomagnapló"
 
@@ -272,6 +270,11 @@ msgstr "Csomagfrissítő"
 #: ../data/gpk-update-viewer.desktop.in.h:2
 msgid "Update software installed on the system"
 msgstr "A rendszerre telepített szoftverek frissítése"
+
+#: ../data/gpk-update-viewer.desktop.in.h:3
+#| msgid "Updated"
+msgid "Updates;Upgrade;"
+msgstr "Frissítések;Frissítés;"
 
 #: ../data/gpk-update-viewer.ui.h:2
 msgid "_Install Updates"
@@ -761,33 +764,33 @@ msgid "Package installer"
 msgstr "Csomagtelepítő"
 
 #. TRANSLATORS: a 32 bit package
-#: ../src/gpk-common.c:295
+#: ../src/gpk-common.c:172
 msgid "32-bit"
 msgstr "32 bites"
 
 #. TRANSLATORS: a 64 bit package
-#: ../src/gpk-common.c:302
+#: ../src/gpk-common.c:179
 msgid "64-bit"
 msgstr "64 bites"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
-#: ../src/gpk-common.c:427
+#: ../src/gpk-common.c:304
 msgid "This application is running as a privileged user"
 msgstr "Ez az alkalmazás rendszergazdaként fut"
 
 #. TRANSLATORS: cannot run as root user, and we display the application name
-#: ../src/gpk-common.c:430
+#: ../src/gpk-common.c:307
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "%s rendszergazdaként fut"
 
 #. TRANSLATORS: tell the user off
-#: ../src/gpk-common.c:433
+#: ../src/gpk-common.c:310
 msgid "Package management applications are security sensitive."
 msgstr "A csomagkezelő alkalmazások biztonsági szempontból érzékenyek."
 
 #. TRANSLATORS: and explain why
-#: ../src/gpk-common.c:435
+#: ../src/gpk-common.c:312
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
@@ -796,18 +799,18 @@ msgstr ""
 "kerülendő."
 
 #. TRANSLATORS: button: allow the user to run this, even when insecure
-#: ../src/gpk-common.c:441
+#: ../src/gpk-common.c:318
 msgid "Continue _Anyway"
 msgstr "_Folytatás mindenképp"
 
 #. TRANSLATORS: The actions has just literally happened
-#: ../src/gpk-common.c:511 ../src/gpk-common.c:561
+#: ../src/gpk-common.c:388 ../src/gpk-common.c:438
 #, c-format
 msgid "Now"
 msgstr "Most"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:521 ../src/gpk-common.c:571
+#: ../src/gpk-common.c:398 ../src/gpk-common.c:448
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
@@ -815,7 +818,7 @@ msgstr[0] "%i másodperc"
 msgstr[1] "%i másodperc"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:531 ../src/gpk-common.c:584
+#: ../src/gpk-common.c:408 ../src/gpk-common.c:461
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -823,7 +826,7 @@ msgstr[0] "%i perc"
 msgstr[1] "%i perc"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:537 ../src/gpk-common.c:603
+#: ../src/gpk-common.c:414 ../src/gpk-common.c:480
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
@@ -834,49 +837,49 @@ msgstr[1] "%i óra"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/gpk-common.c:590 ../src/gpk-common.c:609
+#: ../src/gpk-common.c:467 ../src/gpk-common.c:486
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s, %i %s"
 
-#: ../src/gpk-common.c:591 ../src/gpk-common.c:611
+#: ../src/gpk-common.c:468 ../src/gpk-common.c:488
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "perc"
 msgstr[1] "perc"
 
-#: ../src/gpk-common.c:592
+#: ../src/gpk-common.c:469
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "másodperc"
 msgstr[1] "másodperc"
 
-#: ../src/gpk-common.c:610
+#: ../src/gpk-common.c:487
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "óra"
 msgstr[1] "óra"
 
 #. Translators: a list of two things
-#: ../src/gpk-common.c:638
+#: ../src/gpk-common.c:515
 #, c-format
 msgid "%s and %s"
 msgstr "%s és %s"
 
 #. Translators: a list of three things
-#: ../src/gpk-common.c:642
+#: ../src/gpk-common.c:519
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s és %s"
 
 #. Translators: a list of four things
-#: ../src/gpk-common.c:646
+#: ../src/gpk-common.c:523
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s és %s"
 
 #. Translators: a list of five things
-#: ../src/gpk-common.c:651
+#: ../src/gpk-common.c:528
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s és %s"
@@ -3126,7 +3129,6 @@ msgstr "Frissítési ikon"
 
 #. TRANSLATORS: user-friendly name for the command not found plugin
 #: ../src/gpk-log.c:498
-#| msgid "Bash - Command Not Found"
 msgid "Bash – Command Not Found"
 msgstr "Bash – Parancs nem található"
 
@@ -3137,7 +3139,6 @@ msgstr "GNOME asztali környezet"
 
 #. TRANSLATORS: user-friendly name for gnome-software
 #: ../src/gpk-log.c:504
-#| msgid "Software"
 msgid "GNOME Software"
 msgstr "GNOME szoftver"
 
