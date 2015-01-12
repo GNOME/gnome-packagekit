@@ -12,15 +12,15 @@
 # Yuri Myasoedov <omerta13@yandex.ru>, 2012, 2013, 2014.
 # Alexsey Nadtochey <irbis4lan@yandex.com>, 2012, 2013.
 # SourceLocalizer <mail@sourcelocalizer.ru>, 2014.
-# Stas Solovey <whats_up@tut.by>, 2013, 2014.
+# Stas Solovey <whats_up@tut.by>, 2013, 2014, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: ru\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-10-06 19:16+0000\n"
-"PO-Revision-Date: 2014-10-07 17:44+0300\n"
+"POT-Creation-Date: 2015-01-12 08:07+0000\n"
+"PO-Revision-Date: 2015-01-12 14:43+0300\n"
 "Last-Translator: Stas Solovey <whats_up@tut.by>\n"
 "Language-Team: Русский <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -93,8 +93,9 @@ msgid "Add or remove software installed on the system"
 msgstr "Установка и удаление программ, установленных в системе"
 
 #: ../data/gpk-application.desktop.in.h:3
-msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
-msgstr "Обновления;Источники;Репозитории;Параметры;Установка;Хранилище;"
+#| msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
+msgid "Sources;Repositories;Preferences;Install;Store;"
+msgstr "Источники;Репозитории;Параметры;Установка;Магазин;"
 
 #: ../data/gpk-application.ui.h:2
 msgid "Apply Changes"
@@ -285,6 +286,11 @@ msgstr "Обновление пакетов"
 #: ../data/gpk-update-viewer.desktop.in.h:2
 msgid "Update software installed on the system"
 msgstr "Обновление программ, установленных в системе"
+
+#: ../data/gpk-update-viewer.desktop.in.h:3
+#| msgid "Updated"
+msgid "Updates;Upgrade;"
+msgstr "Обновления;Обновление;"
 
 #: ../data/gpk-update-viewer.ui.h:2
 msgid "_Install Updates"
@@ -740,7 +746,7 @@ msgstr ""
 "Yuri Kozlov <yuray@komyakino.ru>, 2012.\n"
 "Yuri Myasoedov <omerta13@yandex.ru>, 2012—2014.\n"
 "Alexsey Nadtochey <irbis4lan@yandex.com>, 2012—2013.\n"
-"Stas Solovey <whats_up@tut.by>, 2013—2014."
+"Stas Solovey <whats_up@tut.by>, 2013—2015."
 
 #: ../src/gpk-application.c:2572
 msgid "PackageKit Website"
@@ -791,33 +797,33 @@ msgid "Package installer"
 msgstr "Установка пакетов"
 
 #. TRANSLATORS: a 32 bit package
-#: ../src/gpk-common.c:295
+#: ../src/gpk-common.c:172
 msgid "32-bit"
 msgstr "32-битный"
 
 #. TRANSLATORS: a 64 bit package
-#: ../src/gpk-common.c:302
+#: ../src/gpk-common.c:179
 msgid "64-bit"
 msgstr "64-битный"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
-#: ../src/gpk-common.c:427
+#: ../src/gpk-common.c:304
 msgid "This application is running as a privileged user"
 msgstr "Это приложение запущено с правами администратора"
 
 #. TRANSLATORS: cannot run as root user, and we display the application name
-#: ../src/gpk-common.c:430
+#: ../src/gpk-common.c:307
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "Приложение %s запущено с правами администратора"
 
 #. TRANSLATORS: tell the user off
-#: ../src/gpk-common.c:433
+#: ../src/gpk-common.c:310
 msgid "Package management applications are security sensitive."
 msgstr "Приложения для управления пакетами чувствительны к проблемам защиты."
 
 #. TRANSLATORS: and explain why
-#: ../src/gpk-common.c:435
+#: ../src/gpk-common.c:312
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
@@ -826,18 +832,18 @@ msgstr ""
 "правами администратора."
 
 #. TRANSLATORS: button: allow the user to run this, even when insecure
-#: ../src/gpk-common.c:441
+#: ../src/gpk-common.c:318
 msgid "Continue _Anyway"
 msgstr "_Всё равно продолжить"
 
 #. TRANSLATORS: The actions has just literally happened
-#: ../src/gpk-common.c:511 ../src/gpk-common.c:561
+#: ../src/gpk-common.c:388 ../src/gpk-common.c:438
 #, c-format
 msgid "Now"
 msgstr "Сейчас"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:521 ../src/gpk-common.c:571
+#: ../src/gpk-common.c:398 ../src/gpk-common.c:448
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
@@ -846,7 +852,7 @@ msgstr[1] "%i секунды"
 msgstr[2] "%i секунд"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:531 ../src/gpk-common.c:584
+#: ../src/gpk-common.c:408 ../src/gpk-common.c:461
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -855,7 +861,7 @@ msgstr[1] " %i минуты"
 msgstr[2] " %i минут"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:537 ../src/gpk-common.c:603
+#: ../src/gpk-common.c:414 ../src/gpk-common.c:480
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
@@ -867,26 +873,26 @@ msgstr[2] "%i часов"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/gpk-common.c:590 ../src/gpk-common.c:609
+#: ../src/gpk-common.c:467 ../src/gpk-common.c:486
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s %i %s"
 
-#: ../src/gpk-common.c:591 ../src/gpk-common.c:611
+#: ../src/gpk-common.c:468 ../src/gpk-common.c:488
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "минута"
 msgstr[1] "минуты"
 msgstr[2] "минут"
 
-#: ../src/gpk-common.c:592
+#: ../src/gpk-common.c:469
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "секунда"
 msgstr[1] "секунды"
 msgstr[2] "секунд"
 
-#: ../src/gpk-common.c:610
+#: ../src/gpk-common.c:487
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "час"
@@ -894,25 +900,25 @@ msgstr[1] "часа"
 msgstr[2] "часов"
 
 #. Translators: a list of two things
-#: ../src/gpk-common.c:638
+#: ../src/gpk-common.c:515
 #, c-format
 msgid "%s and %s"
 msgstr "%s и %s"
 
 #. Translators: a list of three things
-#: ../src/gpk-common.c:642
+#: ../src/gpk-common.c:519
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s и %s"
 
 #. Translators: a list of four things
-#: ../src/gpk-common.c:646
+#: ../src/gpk-common.c:523
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s и %s"
 
 #. Translators: a list of five things
-#: ../src/gpk-common.c:651
+#: ../src/gpk-common.c:528
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s и %s"
