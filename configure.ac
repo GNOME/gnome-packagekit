@@ -100,6 +100,7 @@ PKG_CHECK_MODULES(GTK, \
  gtk+-3.0 >= 3.15.3 gdk-3.0 fontconfig)
 PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk3 >= 0.10)
 PKG_CHECK_MODULES(X11, x11)
+AC_PATH_PROG(APPSTREAM_UTIL, [appstream-util], [unfound])
 
 dnl **** Check for libnotify ****
 PKG_CHECK_MODULES(NOTIFY, libnotify >= 0.7.0)
