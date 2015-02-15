@@ -2,15 +2,15 @@
 # Copyright (C) 2009 gnome-packagekit's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-packagekit package.
 #
-# Matej Urbančič <mateju@svn.gnome.org>, 2009-2014.
+# Matej Urbančič <mateju@svn.gnome.org>, 2009-2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-09-14 07:12+0000\n"
-"PO-Revision-Date: 2014-09-14 19:37+0100\n"
+"POT-Creation-Date: 2015-02-15 08:12+0000\n"
+"PO-Revision-Date: 2015-02-15 21:06+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian <gnome-si@googlegroups.com>\n"
 "Language: sl\n"
@@ -81,7 +81,7 @@ msgid "Add or remove software installed on the system"
 msgstr "Nameščanje in odstranjevanje programske opreme sistema"
 
 #: ../data/gpk-application.desktop.in.h:3
-msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
+msgid "Sources;Repositories;Preferences;Install;Store;"
 msgstr "posodobitve;nadgradnja;viri;skladišča;možnosti;namestitev;nakupovanje;"
 
 #: ../data/gpk-application.ui.h:2
@@ -271,6 +271,10 @@ msgstr "Posodabljalnik paketa"
 #: ../data/gpk-update-viewer.desktop.in.h:2
 msgid "Update software installed on the system"
 msgstr "Posodobitev programske opreme nameščene na sistemu"
+
+#: ../data/gpk-update-viewer.desktop.in.h:3
+msgid "Updates;Upgrade;"
+msgstr "Nadgradnja;Posodobitev;"
 
 #: ../data/gpk-update-viewer.ui.h:2
 msgid "_Install Updates"
@@ -766,33 +770,33 @@ msgid "Package installer"
 msgstr "Namestilnik paketov"
 
 #. TRANSLATORS: a 32 bit package
-#: ../src/gpk-common.c:295
+#: ../src/gpk-common.c:172
 msgid "32-bit"
 msgstr "Nameščanje in odstranjevanje programske opreme sistema"
 
 #. TRANSLATORS: a 64 bit package
-#: ../src/gpk-common.c:302
+#: ../src/gpk-common.c:179
 msgid "64-bit"
 msgstr "64 bitni"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
-#: ../src/gpk-common.c:427
+#: ../src/gpk-common.c:304
 msgid "This application is running as a privileged user"
 msgstr "Program je zagnan s skrbniškimi dovoljenji"
 
 #. TRANSLATORS: cannot run as root user, and we display the application name
-#: ../src/gpk-common.c:430
+#: ../src/gpk-common.c:307
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "%s je zagnan s skrbniškimi dovoljenji"
 
 #. TRANSLATORS: tell the user off
-#: ../src/gpk-common.c:433
+#: ../src/gpk-common.c:310
 msgid "Package management applications are security sensitive."
 msgstr "Programi za upravljanje s paketi so varnostno občutljivi."
 
 #. TRANSLATORS: and explain why
-#: ../src/gpk-common.c:435
+#: ../src/gpk-common.c:312
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
@@ -801,18 +805,18 @@ msgstr ""
 "varnostnih razlogov."
 
 #. TRANSLATORS: button: allow the user to run this, even when insecure
-#: ../src/gpk-common.c:441
+#: ../src/gpk-common.c:318
 msgid "Continue _Anyway"
 msgstr "Vseeno _nadaljuj"
 
 #. TRANSLATORS: The actions has just literally happened
-#: ../src/gpk-common.c:511 ../src/gpk-common.c:561
+#: ../src/gpk-common.c:388 ../src/gpk-common.c:438
 #, c-format
 msgid "Now"
 msgstr "Zdaj"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:521 ../src/gpk-common.c:571
+#: ../src/gpk-common.c:398 ../src/gpk-common.c:448
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
@@ -822,7 +826,7 @@ msgstr[2] "%i sekundi"
 msgstr[3] "%i sekunde"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:531 ../src/gpk-common.c:584
+#: ../src/gpk-common.c:408 ../src/gpk-common.c:461
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -832,7 +836,7 @@ msgstr[2] "%i minuti"
 msgstr[3] "%i minute"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:537 ../src/gpk-common.c:603
+#: ../src/gpk-common.c:414 ../src/gpk-common.c:480
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
@@ -845,12 +849,12 @@ msgstr[3] "%i ure"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/gpk-common.c:590 ../src/gpk-common.c:609
+#: ../src/gpk-common.c:467 ../src/gpk-common.c:486
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s %i %s"
 
-#: ../src/gpk-common.c:591 ../src/gpk-common.c:611
+#: ../src/gpk-common.c:468 ../src/gpk-common.c:488
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minut"
@@ -858,7 +862,7 @@ msgstr[1] "minuta"
 msgstr[2] "minuti"
 msgstr[3] "minute"
 
-#: ../src/gpk-common.c:592
+#: ../src/gpk-common.c:469
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "sekund"
@@ -866,7 +870,7 @@ msgstr[1] "sekunda"
 msgstr[2] "sekundi"
 msgstr[3] "sekunde"
 
-#: ../src/gpk-common.c:610
+#: ../src/gpk-common.c:487
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "ur"
@@ -875,25 +879,25 @@ msgstr[2] "uri"
 msgstr[3] "ure"
 
 #. Translators: a list of two things
-#: ../src/gpk-common.c:638
+#: ../src/gpk-common.c:515
 #, c-format
 msgid "%s and %s"
 msgstr "%s in %s"
 
 #. Translators: a list of three things
-#: ../src/gpk-common.c:642
+#: ../src/gpk-common.c:519
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s in %s"
 
 #. Translators: a list of four things
-#: ../src/gpk-common.c:646
+#: ../src/gpk-common.c:523
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s in %s"
 
 #. Translators: a list of five things
-#: ../src/gpk-common.c:651
+#: ../src/gpk-common.c:528
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s in %s"
