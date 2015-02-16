@@ -42,7 +42,6 @@
 #include "gpk-dialog.h"
 #include "gpk-enum.h"
 #include "gpk-error.h"
-#include "gpk-gnome.h"
 #include "gpk-helper-run.h"
 #include "gpk-task.h"
 #include "gpk-debug.h"
@@ -508,7 +507,7 @@ out:
 static void
 gpk_application_menu_homepage_cb (GtkAction *action, GpkApplicationPrivate *priv)
 {
-	gpk_gnome_open (priv->homepage_url);
+	gtk_show_uri (NULL, priv->homepage_url, GDK_CURRENT_TIME, NULL);
 }
 
 /**

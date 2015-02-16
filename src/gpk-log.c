@@ -32,7 +32,6 @@
 #include <packagekit-glib2/packagekit.h>
 
 #include "gpk-common.h"
-#include "gpk-gnome.h"
 #include "gpk-debug.h"
 
 static GtkBuilder *builder = NULL;

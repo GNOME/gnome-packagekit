@@ -27,8 +27,6 @@
 #include "gpk-common.h"
 #include "gpk-enum.h"
 #include "gpk-error.h"
-#include "gpk-language.h"
-#include "gpk-modal-dialog.h"
 #include "gpk-task.h"
 
 
@@ -104,15 +102,6 @@ gpk_test_enum_func (void)
 		string = gpk_role_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
 			g_warning ("failed to get %s", pk_role_enum_to_string (i));
-			break;
-		}
-	}
-
-	/* check we convert all the status animation enums */
-	for (i = PK_STATUS_ENUM_UNKNOWN+1; i < PK_STATUS_ENUM_UNKNOWN; i++) {
-		string = gpk_status_enum_to_animation (i);
-		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
-			g_warning ("failed to get %s", pk_status_enum_to_string (i));
 			break;
 		}
 	}
@@ -207,131 +196,6 @@ gpk_test_enum_func (void)
 		}
 	}
 
-}
-
-static void
-gpk_test_modal_dialog_func (void)
-{
-	GtkResponseType button;
-	GpkModalDialog *dialog = NULL;
-	GPtrArray *array;
-	PkPackage *item;
-	gboolean ret;
-
-	/* get GpkModalDialog object */
-	dialog = gpk_modal_dialog_new ();
-	g_assert (dialog);
-
-	/* set some packages */
-	array = g_ptr_array_new_with_free_func ((GDestroyNotify) g_object_unref);
-	item = pk_package_new ();
-	ret = pk_package_set_id (item, "totem;001;i386;fedora", NULL);
-	g_assert (ret);
-	g_object_set (item,
-		      "info", PK_INFO_ENUM_INSTALLED,
-		      "summary", "Totem is a music player for GNOME",
-		      NULL);
-	g_ptr_array_add (array, item);
-	item = pk_package_new ();
-	ret = pk_package_set_id (item, "totem;001;i386;fedora", NULL);
-	g_assert (ret);
-	g_object_set (item,
-		      "info", PK_INFO_ENUM_AVAILABLE,
-		      "summary", "Amarok is a music player for KDE",
-		      NULL);
-	g_ptr_array_add (array, item);
-	gpk_modal_dialog_set_package_list (dialog, array);
-	g_ptr_array_unref (array);
-
-	/* help button */
-	gpk_modal_dialog_setup (dialog, GPK_MODAL_DIALOG_PAGE_WARNING, 0);
-	gpk_modal_dialog_set_title (dialog, "Button press test");
-	gpk_modal_dialog_set_message (dialog, "Please press close");
-	gpk_modal_dialog_set_image (dialog, "dialog-warning");
-	gpk_modal_dialog_present (dialog);
-	button = gpk_modal_dialog_run (dialog);
-	g_assert_cmpint (button, ==, GTK_RESPONSE_CLOSE);
-
-	/* confirm button */
-	gpk_modal_dialog_setup (dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, 0);
-	gpk_modal_dialog_set_title (dialog, "Button press test with a really really long title");
-	gpk_modal_dialog_set_message (dialog, "Please press Uninstall\n\nThis is a really really, really,\nreally long title <i>with formatting</i>");
-	gpk_modal_dialog_set_image (dialog, "dialog-information");
-	gpk_modal_dialog_set_action (dialog, "Uninstall");
-	gpk_modal_dialog_present (dialog);
-	button = gpk_modal_dialog_run (dialog);
-	g_assert_cmpint (button, ==, GTK_RESPONSE_OK);
-
-	/* no message */
-	gpk_modal_dialog_setup (dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, 0);
-	gpk_modal_dialog_set_title (dialog, "Refresh cache");
-	gpk_modal_dialog_set_image_status (dialog, PK_STATUS_ENUM_REFRESH_CACHE);
-	gpk_modal_dialog_set_percentage (dialog, -1);
-	gpk_modal_dialog_present (dialog);
-	gpk_modal_dialog_run (dialog);
-
-	/* progress */
-	gpk_modal_dialog_setup (dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, GPK_MODAL_DIALOG_PACKAGE_PADDING);
-	gpk_modal_dialog_set_title (dialog, "Button press test");
-	gpk_modal_dialog_set_message (dialog, "Please press cancel");
-	gpk_modal_dialog_set_image_status (dialog, PK_STATUS_ENUM_RUNNING);
-	gpk_modal_dialog_set_percentage (dialog, 50);
-	gpk_modal_dialog_present (dialog);
-	button = gpk_modal_dialog_run (dialog);
-	g_assert_cmpint (button, ==, GTK_RESPONSE_CANCEL);
-
-	/* progress */
-	gpk_modal_dialog_setup (dialog, GPK_MODAL_DIALOG_PAGE_PROGRESS, pk_bitfield_from_enums (GPK_MODAL_DIALOG_WIDGET_MESSAGE, -1));
-	gpk_modal_dialog_set_title (dialog, "Button press test");
-	gpk_modal_dialog_set_message (dialog, "Please press close");
-	gpk_modal_dialog_set_image_status (dialog, PK_STATUS_ENUM_INSTALL);
-	gpk_modal_dialog_set_percentage (dialog, -1);
-	gpk_modal_dialog_present (dialog);
-	button = gpk_modal_dialog_run (dialog);
-	g_assert_cmpint (button, ==, GTK_RESPONSE_CLOSE);
-
-	/* confirm install button */
-	gpk_modal_dialog_setup (dialog, GPK_MODAL_DIALOG_PAGE_CONFIRM, GPK_MODAL_DIALOG_PACKAGE_LIST);
-	gpk_modal_dialog_set_title (dialog, "Button press test");
-	gpk_modal_dialog_set_message (dialog, "Please press Install if you can see the package list");
-	gpk_modal_dialog_set_image (dialog, "dialog-information");
-	gpk_modal_dialog_set_action (dialog, "Install");
-	gpk_modal_dialog_present (dialog);
-	button = gpk_modal_dialog_run (dialog);
-	g_assert_cmpint (button, ==, GTK_RESPONSE_OK);
-
-	gpk_modal_dialog_close (dialog);
-
-	g_object_unref (dialog);
-}
-
-static void
-gpk_test_language_func (void)
-{
-	gboolean ret;
-	gchar *lang;
-	GError *error = NULL;
-	GpkLanguage *language = NULL;
-
-	/* get GpkLanguage object */
-	language = gpk_language_new ();
-	g_assert (language != NULL);
-
-	/* populate */
-	ret = gpk_language_populate (language, &error);
-	g_assert_no_error (error);
-	g_assert (ret);
-
-	/* get data (present) */
-	lang = gpk_language_iso639_to_language (language, "en");
-	g_assert_cmpstr (lang, ==, "English");
-	g_free (lang);
-
-	/* get data (missing) */
-	lang = gpk_language_iso639_to_language (language, "notgoingtoexist");
-	g_assert_cmpstr (lang, ==, NULL);
-
-	g_object_unref (language);
 }
 
 static void
@@ -690,10 +554,8 @@ main (int argc, char **argv)
 
 	g_test_add_func ("/gnome-packagekit/enum", gpk_test_enum_func);
 	g_test_add_func ("/gnome-packagekit/common", gpk_test_common_func);
-	g_test_add_func ("/gnome-packagekit/language", gpk_test_language_func);
 	g_test_add_func ("/gnome-packagekit/markdown", gpk_test_markdown_func);
 	if (g_test_thorough ()) {
-		g_test_add_func ("/gnome-packagekit/modal-dialog", gpk_test_modal_dialog_func);
 		g_test_add_func ("/gnome-packagekit/error", gpk_test_error_func);
 		g_test_add_func ("/gnome-packagekit/task", gpk_test_task_func);
 	}

@@ -25,7 +25,6 @@
 #include <packagekit-glib2/packagekit.h>
 
 #include "gpk-task.h"
-#include "gpk-gnome.h"
 #include "gpk-common.h"
 #include "gpk-enum.h"
 #include "gpk-dialog.h"

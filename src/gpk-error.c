@@ -58,7 +58,7 @@ gpk_error_dialog_expanded_cb (GObject *object, GParamSpec *param_spec, GtkBuilde
  *
  * Shows a modal error, and blocks until the user clicks close
  **/
-gboolean
+static gboolean
 gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const gchar *message, const gchar *details, guint timestamp)
 {
 	GtkWidget *widget;

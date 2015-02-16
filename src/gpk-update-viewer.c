@@ -42,7 +42,6 @@
 #include "gpk-dialog.h"
 #include "gpk-enum.h"
 #include "gpk-error.h"
-#include "gpk-gnome.h"
 #include "gpk-task.h"
 #include "gpk-debug.h"
 
@@ -2833,7 +2832,7 @@ gpk_update_viewer_textview_follow_link (GtkWidget *text_view, GtkTextIter *iter)
 		GtkTextTag *tag = tagp->data;
 		const gchar *href = (const gchar *) (g_object_get_data (G_OBJECT (tag), "href"));
 		if (href != NULL)
-			gpk_gnome_open (href);
+			gtk_show_uri (NULL, href, GDK_CURRENT_TIME, NULL);
 	}
 
 	if (tags != NULL)

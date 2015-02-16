@@ -100,46 +100,6 @@ static const PkEnumMatch enum_status_icon_name[] = {
 	{0, NULL}
 };
 
-static const PkEnumMatch enum_status_animation[] = {
-	{PK_STATUS_ENUM_UNKNOWN,		"help-browser"},
-	{PK_STATUS_ENUM_CANCEL,			"pk-action-cleanup"},
-	{PK_STATUS_ENUM_CLEANUP,		"pk-action-cleanup"},
-	{PK_STATUS_ENUM_COMMIT,			"pk-setup"},
-	{PK_STATUS_ENUM_DEP_RESOLVE,		"pk-action-testing"},
-	{PK_STATUS_ENUM_DOWNLOAD_CHANGELOG,	"pk-action-refresh-cache"},
-	{PK_STATUS_ENUM_DOWNLOAD_FILELIST,	"pk-action-refresh-cache"},
-	{PK_STATUS_ENUM_DOWNLOAD_GROUP,		"pk-action-refresh-cache"},
-	{PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST,	"pk-action-refresh-cache"},
-	{PK_STATUS_ENUM_DOWNLOAD,		"pk-action-download"},
-	{PK_STATUS_ENUM_DOWNLOAD_REPOSITORY,	"pk-action-refresh-cache"},
-	{PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO,	"pk-action-refresh-cache"},
-	{PK_STATUS_ENUM_FINISHED,		"pk-package-cleanup"},
-	{PK_STATUS_ENUM_GENERATE_PACKAGE_LIST,	"pk-action-searching"},
-	{PK_STATUS_ENUM_WAITING_FOR_LOCK,	"pk-action-waiting"},
-	{PK_STATUS_ENUM_WAITING_FOR_AUTH,	"pk-action-waiting"},
-	{PK_STATUS_ENUM_INFO,			"process-working"},
-	{PK_STATUS_ENUM_INSTALL,		"pk-action-installing"},
-	{PK_STATUS_ENUM_LOADING_CACHE,		"pk-action-refresh-cache"},
-	{PK_STATUS_ENUM_OBSOLETE,		"pk-package-cleanup"},
-	{PK_STATUS_ENUM_QUERY,			"pk-action-searching"},
-	{PK_STATUS_ENUM_REFRESH_CACHE,		"pk-action-refresh-cache"},
-	{PK_STATUS_ENUM_REMOVE,			"pk-action-removing"},
-	{PK_STATUS_ENUM_REPACKAGING,		"pk-package-info"},
-	{PK_STATUS_ENUM_REQUEST,		"process-working"},
-	{PK_STATUS_ENUM_RUNNING,		"pk-setup"},
-	{PK_STATUS_ENUM_SCAN_APPLICATIONS,	"pk-action-searching"},
-	{PK_STATUS_ENUM_SETUP,			"pk-package-info"},
-	{PK_STATUS_ENUM_SIG_CHECK,		"pk-package-info"},
-	{PK_STATUS_ENUM_TEST_COMMIT,		"pk-action-testing"},
-	{PK_STATUS_ENUM_UPDATE,			"pk-action-installing"},
-	{PK_STATUS_ENUM_WAIT,			"pk-action-waiting"},
-	{PK_STATUS_ENUM_SCAN_PROCESS_LIST,	"pk-package-info"},
-	{PK_STATUS_ENUM_CHECK_EXECUTABLE_FILES,	"pk-package-info"},
-	{PK_STATUS_ENUM_CHECK_LIBRARIES,	"pk-package-info"},
-	{PK_STATUS_ENUM_COPY_FILES,		"pk-package-info"},
-	{0, NULL}
-};
-
 static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
 	{PK_ROLE_ENUM_ACCEPT_EULA,		"pk-package-info"},
@@ -224,17 +184,6 @@ static const PkEnumMatch enum_restart_icon_name[] = {
 	{PK_RESTART_ENUM_APPLICATION,		"emblem-symbolic-link"},
 	{PK_RESTART_ENUM_SECURITY_SYSTEM,	"system-shutdown"},
 	{PK_RESTART_ENUM_SECURITY_SESSION,	"system-log-out"},
-	{0, NULL}
-};
-
-static const PkEnumMatch enum_restart_dialog_icon_name[] = {
-	{PK_RESTART_ENUM_UNKNOWN,		"help-browser"},	/* fall though value */
-	{PK_RESTART_ENUM_NONE,			"dialog-information"},
-	{PK_RESTART_ENUM_SYSTEM,		"dialog-error"},
-	{PK_RESTART_ENUM_SESSION,		"dialog-warning"},
-	{PK_RESTART_ENUM_APPLICATION,		"dialog-warning"},
-	{PK_RESTART_ENUM_SECURITY_SYSTEM,	"dialog-error"},
-	{PK_RESTART_ENUM_SECURITY_SESSION,	"dialog-error"},
 	{0, NULL}
 };
 
@@ -808,32 +757,6 @@ gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 }
 
 /**
- * gpk_update_state_enum_to_localised_text:
- **/
-const gchar *
-gpk_update_state_enum_to_localised_text (PkUpdateStateEnum state)
-{
-	const gchar *text = NULL;
-	switch (state) {
-	case PK_UPDATE_STATE_ENUM_STABLE:
-		/* TRANSLATORS: A distribution stability level */
-		text = _("Stable");
-		break;
-	case PK_UPDATE_STATE_ENUM_UNSTABLE:
-		/* TRANSLATORS: A distribution stability level */
-		text = _("Unstable");
-		break;
-	case PK_UPDATE_STATE_ENUM_TESTING:
-		/* TRANSLATORS: A distribution stability level */
-		text = _("Testing");
-		break;
-	default:
-		g_warning ("state unrecognized: %i", state);
-	}
-	return text;
-}
-
-/**
  * gpk_status_enum_to_localised_text:
  **/
 const gchar *
@@ -992,48 +915,6 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 }
 
 /**
- * gpk_update_enum_to_localised_text:
- **/
-gchar *
-gpk_update_enum_to_localised_text (PkInfoEnum info, guint number)
-{
-	gchar *text = NULL;
-	switch (info) {
-	case PK_INFO_ENUM_LOW:
-		/* TRANSLATORS: type of update */
-		text = g_strdup_printf (ngettext ("%i trivial update", "%i trivial updates", number), number);
-		break;
-	case PK_INFO_ENUM_NORMAL:
-		/* TRANSLATORS: type of update in the case that we don't have any data */
-		text = g_strdup_printf (ngettext ("%i update", "%i updates", number), number);
-		break;
-	case PK_INFO_ENUM_IMPORTANT:
-		/* TRANSLATORS: type of update */
-		text = g_strdup_printf (ngettext ("%i important update", "%i important updates", number), number);
-		break;
-	case PK_INFO_ENUM_SECURITY:
-		/* TRANSLATORS: type of update */
-		text = g_strdup_printf (ngettext ("%i security update", "%i security updates", number), number);
-		break;
-	case PK_INFO_ENUM_BUGFIX:
-		/* TRANSLATORS: type of update */
-		text = g_strdup_printf (ngettext ("%i bug fix update", "%i bug fix updates", number), number);
-		break;
-	case PK_INFO_ENUM_ENHANCEMENT:
-		/* TRANSLATORS: type of update */
-		text = g_strdup_printf (ngettext ("%i enhancement update", "%i enhancement updates", number), number);
-		break;
-	case PK_INFO_ENUM_BLOCKED:
-		/* TRANSLATORS: number of updates that cannot be installed due to deps */
-		text = g_strdup_printf (ngettext ("%i blocked update", "%i blocked updates", number), number);
-		break;
-	default:
-		g_warning ("update info unrecognized: %s", pk_info_enum_to_string (info));
-	}
-	return text;
-}
-
-/**
  * gpk_info_enum_to_localised_text:
  **/
 const gchar *
@@ -1096,7 +977,7 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 /**
  * gpk_info_enum_to_localised_present:
  **/
-const gchar *
+static const gchar *
 gpk_info_enum_to_localised_present (PkInfoEnum info)
 {
 	const gchar *text = NULL;
@@ -1648,15 +1529,6 @@ gpk_status_enum_to_icon_name (PkStatusEnum status)
 }
 
 /**
- * gpk_status_enum_to_animation:
- **/
-const gchar *
-gpk_status_enum_to_animation (PkStatusEnum status)
-{
-	return pk_enum_find_string (enum_status_animation, status);
-}
-
-/**
  * gpk_role_enum_to_icon_name:
  **/
 const gchar *
@@ -1685,15 +1557,6 @@ gpk_restart_enum_to_icon_name (PkRestartEnum restart)
 	if (tmp[0] == '\0')
 		tmp = NULL;
 	return tmp;
-}
-
-/**
- * gpk_restart_enum_to_dialog_icon_name:
- **/
-const gchar *
-gpk_restart_enum_to_dialog_icon_name (PkRestartEnum restart)
-{
-	return pk_enum_find_string (enum_restart_dialog_icon_name, restart);
 }
 
 /**

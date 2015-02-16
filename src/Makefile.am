@@ -44,24 +44,10 @@ libgpkshared_a_SOURCES =				\
 	gpk-debug.h					\
 	gpk-enum.c					\
 	gpk-enum.h					\
-	gpk-marshal.c					\
-	gpk-marshal.h					\
-	gpk-animated-icon.c				\
-	gpk-animated-icon.h				\
 	gpk-dialog.c					\
 	gpk-dialog.h					\
-	gpk-vendor.c					\
-	gpk-vendor.h					\
-	gpk-language.c					\
-	gpk-language.h					\
-	gpk-modal-dialog.c				\
-	gpk-modal-dialog.h				\
 	gpk-helper-run.c				\
 	gpk-helper-run.h				\
-	gpk-helper-chooser.c				\
-	gpk-helper-chooser.h				\
-	gpk-gnome.c					\
-	gpk-gnome.h					\
 	gpk-common.c					\
 	gpk-common.h					\
 	gpk-task.c					\
@@ -100,8 +86,6 @@ gpk_application_LDADD =					\
 gpk_prefs_SOURCES =					\
 	gpk-debug.h					\
 	gpk-debug.c					\
-	gpk-animated-icon.c				\
-	gpk-animated-icon.h				\
 	gpk-enum.c					\
 	gpk-enum.h					\
 	gpk-common.c					\
@@ -140,18 +124,6 @@ gpk_log_LDADD =						\
 	$(shared_LIBS)					\
 	$(NULL)
 
-BUILT_SOURCES = 					\
-	gpk-marshal.c					\
-	gpk-marshal.h					\
-	$(NULL)
-
-gpk-marshal.c: gpk-marshal.list
-	echo "#include \"gpk-marshal.h\"" > $@ && \
-	glib-genmarshal $< --prefix=gpk_marshal --body >> $@
-
-gpk-marshal.h: gpk-marshal.list
-	glib-genmarshal $< --prefix=gpk_marshal --header > $@
-
 if EGG_BUILD_TESTS
 
 check_PROGRAMS =					\
@@ -174,24 +146,10 @@ gpk_self_test_SOURCES =					\
 	gpk-common.h					\
 	gpk-error.c					\
 	gpk-error.h					\
-	gpk-language.c					\
-	gpk-language.h					\
-	gpk-modal-dialog.c				\
-	gpk-modal-dialog.h				\
-	gpk-animated-icon.c				\
-	gpk-animated-icon.h				\
-	gpk-gnome.c					\
-	gpk-gnome.h					\
-	gpk-vendor.c					\
-	gpk-vendor.h					\
 	gpk-task.c					\
 	gpk-task.h					\
 	gpk-helper-run.c				\
 	gpk-helper-run.h				\
-	gpk-helper-chooser.c				\
-	gpk-helper-chooser.h				\
-	gpk-marshal.c					\
-	gpk-marshal.h					\
 	gpk-dialog.c					\
 	gpk-dialog.h					\
 	$(NULL)
@@ -206,13 +164,8 @@ gpk_self_test_CFLAGS = $(AM_CFLAGS)
 TESTS = gpk-self-test
 endif
 
-EXTRA_DIST =						\
-	gpk-marshal.list				\
-	$(NULL)
-
 clean-local:
 	rm -f *~
-	rm -f gpk-marshal.c gpk-marshal.h
 	rm -f *.out
 	rm -f *.gcda
 	rm -f *.gcno

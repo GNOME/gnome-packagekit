@@ -27,8 +27,6 @@
 #include <gio/gdesktopappinfo.h>
 
 #include "gpk-helper-run.h"
-#include "gpk-marshal.h"
-#include "gpk-gnome.h"
 #include "gpk-common.h"
 #include "gpk-enum.h"
 

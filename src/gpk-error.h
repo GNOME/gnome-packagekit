@@ -33,11 +33,6 @@ gboolean	 gpk_error_dialog_modal			(GtkWindow	*window,
 							 const gchar	*title,
 							 const gchar	*message,
 							 const gchar	*details);
-gboolean	 gpk_error_dialog_modal_with_time	(GtkWindow	*window,
-							 const gchar	*title,
-							 const gchar	*message,
-							 const gchar	*details,
-							 guint		 timestamp);
 
 G_END_DECLS
 

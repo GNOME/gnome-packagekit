@@ -32,7 +32,6 @@
 #include "gpk-debug.h"
 #include "gpk-enum.h"
 #include "gpk-error.h"
-#include "gpk-gnome.h"
 
 typedef struct {
 	const gchar		*id_tmp;
