@@ -10,7 +10,6 @@ URL:       http://www.packagekit.org
 Source0:   http://download.gnome.org/sources/gnome-packagekit/3.11/%{name}-%{version}.tar.xz
 
 Requires:  adwaita-icon-theme
-Requires:  dbus-x11%{?_isa} >= 1.1.2
 Requires:  PackageKit%{?_isa} >= 0.5.0
 Requires:  PackageKit-libs >= 0.5.0
 Requires:  shared-mime-info
@@ -22,8 +21,6 @@ Provides: PackageKit-session-service
 
 BuildRequires: glib2-devel >= 2.25.8
 BuildRequires: gtk3-devel
-BuildRequires: dbus-devel
-BuildRequires: dbus-glib-devel
 BuildRequires: libnotify-devel >= 0.7.0
 BuildRequires: desktop-file-utils
 BuildRequires: gettext
@@ -100,8 +97,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files -f %{name}.lang
 %doc AUTHORS COPYING NEWS README
-%{_bindir}/gpk-dbus-service
-%{_bindir}/gpk-install-local-file
 %{_bindir}/gpk-log
 %{_bindir}/gpk-prefs
 %dir %{_datadir}/gnome-packagekit
@@ -119,15 +114,10 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gnome-packagekit/icons/hicolor/scalable/*/*.svg*
 %{_datadir}/icons/hicolor/*/*/*.png
 %{_datadir}/icons/hicolor/scalable/*/*.svg*
-%{_datadir}/man/man1/gpk-dbus-service.1.gz
-%{_datadir}/man/man1/gpk-install-local-file.1.gz
 %{_datadir}/man/man1/gpk-log.1.gz
 %{_datadir}/man/man1/gpk-prefs.1.gz
-%{_datadir}/applications/gpk-dbus-service.desktop
-%{_datadir}/applications/gpk-install-local-file.desktop
 %{_datadir}/applications/gpk-log.desktop
 %{_datadir}/applications/gpk-prefs.desktop
-%{_datadir}/dbus-1/services/org.freedesktop.PackageKit.service
 %{_datadir}/glib-2.0/schemas/org.gnome.packagekit.gschema.xml
 %{_datadir}/GConf/gsettings/org.gnome.packagekit.gschema.migrate
 

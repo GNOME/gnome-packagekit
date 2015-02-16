@@ -21,7 +21,6 @@
 
 #include "config.h"
 
-#include <dbus/dbus-glib.h>
 #include <gdk/gdkkeysyms.h>
 #include <glib/gi18n.h>
 #include <glib/gi18n.h>
@@ -44,7 +43,6 @@
 #include "gpk-enum.h"
 #include "gpk-error.h"
 #include "gpk-gnome.h"
-#include "gpk-session.h"
 #include "gpk-task.h"
 #include "gpk-debug.h"
 
@@ -276,12 +274,6 @@ gpk_update_viewer_check_restart (void)
 			g_error_free (error);
 		}
 #endif
-	} else if (restart_update == PK_RESTART_ENUM_SESSION) {
-		GpkSession *session;
-		session = gpk_session_new ();
-		/* use gnome-session to log out */
-		gpk_session_logout (session);
-		g_object_unref (session);
 	}
 out:
 	return ret;
@@ -3404,7 +3396,6 @@ main (int argc, char *argv[])
 	bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
 	textdomain (GETTEXT_PACKAGE);
 
-	dbus_g_thread_init ();
 	gtk_init (&argc, &argv);
 
 	context = g_option_context_new (NULL);

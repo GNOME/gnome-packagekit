@@ -92,10 +92,6 @@ PKG_CHECK_MODULES(GLIB, \
  gobject-2.0
  gio-2.0 >= 2.25.9
  gio-unix-2.0)
-PKG_CHECK_MODULES(DBUS, \
- dbus-glib-1 >= 0.73 \
- dbus-1 >= 1.1.2 \
- gthread-2.0)
 PKG_CHECK_MODULES(GTK, \
  gtk+-3.0 >= 3.15.3 gdk-3.0 fontconfig)
 PKG_CHECK_MODULES(CANBERRA, libcanberra-gtk3 >= 0.10)
@@ -207,7 +203,6 @@ po/Makefile.in
 data/Makefile
 data/appdata/Makefile
 docs/Makefile
-docs/dbus/Makefile
 data/icons/Makefile
 data/icons/16x16/Makefile
 data/icons/22x22/Makefile

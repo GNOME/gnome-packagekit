@@ -9,7 +9,6 @@ dist_migration_DATA = org.gnome.packagekit.gschema.migrate
 desktopdir = $(datadir)/applications
 desktop_in_files =					\
 	gpk-install-local-file.desktop.in		\
-	gpk-dbus-service.desktop.in			\
 	gpk-prefs.desktop.in				\
 	gpk-application.desktop.in			\
 	gpk-update-viewer.desktop.in			\
@@ -31,13 +30,6 @@ pkgdata_DATA =						\
 	gpk-client.ui					\
 	$(NULL)
 
-servicedir = $(datadir)/dbus-1/services
-service_in_files = org.freedesktop.PackageKit.service.in
-service_DATA = $(service_in_files:.service.in=.service)
-
-$(service_DATA): $(service_in_files) Makefile
-	@sed -e "s|\@servicedir\@|$(bindir)|" $< > $@
-
 @GSETTINGS_RULES@
 gsettings_SCHEMAS = org.gnome.packagekit.gschema.xml
 
@@ -56,7 +48,6 @@ DISTCLEANFILES =					\
 	gpk-prefs.desktop				\
 	gpk-update-viewer.desktop			\
 	gpk-install-local-file.desktop			\
-	gpk-dbus-service.desktop			\
 	gpk-log.desktop					\
 	gpk-application.desktop				\
 	org.freedesktop.PackageKit.service		\

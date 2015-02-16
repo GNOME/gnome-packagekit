@@ -25,8 +25,6 @@
 #include "egg-markdown.h"
 
 #include "gpk-common.h"
-#include "gpk-dbus.h"
-#include "gpk-dbus-task.h"
 #include "gpk-enum.h"
 #include "gpk-error.h"
 #include "gpk-language.h"
@@ -337,71 +335,6 @@ gpk_test_language_func (void)
 }
 
 static void
-gpk_test_dbus_task_func (void)
-{
-	GpkDbusTask *dtask;
-	gchar *lang;
-	gchar *language;
-	gchar *package;
-	gboolean ret;
-//	const gchar *fonts[] = { ":lang=mn", NULL };
-//	GError *error;
-
-	/* get GpkDbusTask object */
-	dtask = gpk_dbus_task_new ();
-	g_assert (dtask);
-
-	/* convert tag to lang */
-	lang = gpk_dbus_task_font_tag_to_lang (":lang=mn");
-	g_assert_cmpstr (lang, ==, "mn");
-	g_free (lang);
-
-	/* convert tag to language */
-	language = gpk_dbus_task_font_tag_to_localised_name (dtask, ":lang=mn");
-	g_assert_cmpstr (language, ==, "Mongolian");
-	g_free (language);
-
-	/* test trusted path */
-//	ret = gpk_dbus_task_path_is_trusted ("/usr/libexec/gst-install-plugins-helper");
-//	g_assert (ret);
-
-	/* test trusted path */
-	ret = gpk_dbus_task_path_is_trusted ("/usr/bin/totem");
-	g_assert (!ret);
-
-	/* get package for exec */
-	package = gpk_dbus_task_get_package_for_exec (dtask, "/usr/bin/totem");
-	g_assert_cmpstr (package, ==, "totem");
-	g_free (package);
-
-	/* set exec */
-	ret = gpk_dbus_task_set_exec (dtask, "/usr/bin/totem");
-	g_assert (ret);
-#if 0
-	/* install fonts (no UI) */
-	error = NULL;
-	gpk_dbus_task_set_interaction (dtask, GPK_CLIENT_INTERACT_NEVER);
-	ret = gpk_dbus_task_install_fontconfig_resources (dtask, (gchar**)fonts, NULL, &error);
-	g_assert_no_error (error);
-	g_assert (ret);
-
-	/* install fonts (if found) */
-	error = NULL;
-	gpk_dbus_task_set_interaction (dtask, pk_bitfield_from_enums (GPK_CLIENT_INTERACT_CONFIRM_SEARCH, GPK_CLIENT_INTERACT_FINISHED, -1));
-	ret = gpk_dbus_task_install_fontconfig_resources (dtask, (gchar**)fonts, NULL, &error);
-	g_assert_no_error (error);
-	g_assert (ret);
-
-	/* install fonts (always) */
-	error = NULL;
-	gpk_dbus_task_set_interaction (dtask, GPK_CLIENT_INTERACT_ALWAYS);
-	ret = gpk_dbus_task_install_fontconfig_resources (dtask, (gchar**)fonts, NULL, &error);
-	g_assert_no_error (error);
-	g_assert (ret);
-#endif
-}
-
-static void
 gpk_test_error_func (void)
 {
 	gboolean ret;
@@ -412,17 +345,6 @@ gpk_test_error_func (void)
 				"Free some space on the system disk to perform this operation.",
 				"[Errno 28] No space left on device");
 	g_assert (ret);
-}
-
-static void
-gpk_test_dbus_func (void)
-{
-	GpkDbus *dbus = NULL;
-
-	/* get GpkDbus object */
-	dbus = gpk_dbus_new ();
-	g_assert (dbus);
-	g_object_unref (dbus);
 }
 
 static void
@@ -770,8 +692,6 @@ main (int argc, char **argv)
 	g_test_add_func ("/gnome-packagekit/common", gpk_test_common_func);
 	g_test_add_func ("/gnome-packagekit/language", gpk_test_language_func);
 	g_test_add_func ("/gnome-packagekit/markdown", gpk_test_markdown_func);
-	g_test_add_func ("/gnome-packagekit/dbus", gpk_test_dbus_func);
-	g_test_add_func ("/gnome-packagekit/dbus-task", gpk_test_dbus_task_func);
 	if (g_test_thorough ()) {
 		g_test_add_func ("/gnome-packagekit/modal-dialog", gpk_test_modal_dialog_func);
 		g_test_add_func ("/gnome-packagekit/error", gpk_test_error_func);

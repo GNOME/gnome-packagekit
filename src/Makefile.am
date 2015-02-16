@@ -7,7 +7,6 @@ AM_CPPFLAGS =						\
 	$(GLIB_CFLAGS)					\
 	$(GIO_CFLAGS)					\
 	$(GTK_CFLAGS)					\
-	$(DBUS_CFLAGS)					\
 	$(NOTIFY_CFLAGS)				\
 	$(PACKAGEKIT_CFLAGS)				\
 	$(GUDEV_CFLAGS)					\
@@ -31,10 +30,8 @@ AM_CPPFLAGS =						\
 bin_PROGRAMS =						\
 	gpk-application					\
 	gpk-prefs					\
-	gpk-install-local-file				\
 	gpk-update-viewer				\
 	gpk-log						\
-	gpk-dbus-service				\
 	$(NULL)
 
 noinst_LIBRARIES = libgpkshared.a
@@ -47,12 +44,8 @@ libgpkshared_a_SOURCES =				\
 	gpk-debug.h					\
 	gpk-enum.c					\
 	gpk-enum.h					\
-	gpk-x11.c					\
-	gpk-x11.h					\
 	gpk-marshal.c					\
 	gpk-marshal.h					\
-	gpk-session.c					\
-	gpk-session.h					\
 	gpk-animated-icon.c				\
 	gpk-animated-icon.h				\
 	gpk-dialog.c					\
@@ -86,7 +79,6 @@ endif
 shared_LIBS =						\
 	$(GLIB_LIBS)					\
 	$(GIO_LIBS)					\
-	$(DBUS_LIBS)					\
 	$(GTK_LIBS)					\
 	$(GUDEV_LIBS)					\
 	$(NOTIFY_LIBS)					\
@@ -94,29 +86,6 @@ shared_LIBS =						\
 	$(PACKAGEKIT_LIBS)				\
 	$(GNOME_MENUS_LIBS)				\
 	$(CANBERRA_LIBS)				\
-	$(X11_LIBS)					\
-	$(NULL)
-
-gpk_install_local_file_SOURCES =			\
-	gpk-install-local-file.c			\
-	$(NULL)
-
-gpk_install_local_file_LDADD =				\
-	libgpkshared.a					\
-	$(shared_LIBS)					\
-	$(NULL)
-
-gpk_dbus_service_SOURCES =				\
-	gpk-dbus-service.c				\
-	gpk-dbus.c					\
-	gpk-dbus.h					\
-	gpk-dbus-task.c					\
-	gpk-dbus-task.h					\
-	$(NULL)
-
-gpk_dbus_service_LDADD =				\
-	libgpkshared.a					\
-	$(shared_LIBS)					\
 	$(NULL)
 
 gpk_application_SOURCES =				\
@@ -174,7 +143,6 @@ gpk_log_LDADD =						\
 BUILT_SOURCES = 					\
 	gpk-marshal.c					\
 	gpk-marshal.h					\
-	org.freedesktop.PackageKit.h			\
 	$(NULL)
 
 gpk-marshal.c: gpk-marshal.list
@@ -183,13 +151,6 @@ gpk-marshal.c: gpk-marshal.list
 
 gpk-marshal.h: gpk-marshal.list
 	glib-genmarshal $< --prefix=gpk_marshal --header > $@
-
-org.freedesktop.PackageKit.h: org.freedesktop.PackageKit.xml
-	$(LIBTOOL) --mode=execute dbus-binding-tool	\
-		--prefix=gpk_dbus			\
-		--mode=glib-server			\
-		--output=org.freedesktop.PackageKit.h	\
-		$(srcdir)/org.freedesktop.PackageKit.xml
 
 if EGG_BUILD_TESTS
 
@@ -217,16 +178,10 @@ gpk_self_test_SOURCES =					\
 	gpk-language.h					\
 	gpk-modal-dialog.c				\
 	gpk-modal-dialog.h				\
-	gpk-dbus.c					\
-	gpk-dbus.h					\
-	gpk-dbus-task.c					\
-	gpk-dbus-task.h					\
 	gpk-animated-icon.c				\
 	gpk-animated-icon.h				\
 	gpk-gnome.c					\
 	gpk-gnome.h					\
-	gpk-x11.c					\
-	gpk-x11.h					\
 	gpk-vendor.c					\
 	gpk-vendor.h					\
 	gpk-task.c					\
@@ -253,7 +208,6 @@ endif
 
 EXTRA_DIST =						\
 	gpk-marshal.list				\
-	org.freedesktop.PackageKit.xml			\
 	$(NULL)
 
 clean-local:

@@ -1,7 +1,5 @@
 EXTRA_DIST =						\
 	gpk-application.sgml				\
-	gpk-dbus-service.sgml				\
-	gpk-install-local-file.sgml			\
 	gpk-log.sgml					\
 	gpk-prefs.sgml					\
 	gpk-update-viewer.sgml
@@ -9,8 +7,6 @@ EXTRA_DIST =						\
 if HAVE_DOCBOOK2MAN
 man_MANS =						\
 	gpk-application.1				\
-	gpk-dbus-service.1				\
-	gpk-install-local-file.1			\
 	gpk-log.1					\
 	gpk-prefs.1					\
 	gpk-update-viewer.1
