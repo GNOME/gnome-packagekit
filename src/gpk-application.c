@@ -42,7 +42,6 @@
 #include "gpk-dialog.h"
 #include "gpk-enum.h"
 #include "gpk-error.h"
-#include "gpk-helper-run.h"
 #include "gpk-task.h"
 #include "gpk-debug.h"
 
@@ -83,7 +82,6 @@ typedef struct {
 	gchar			*search_text;
 	GHashTable		*repos;
 	GpkActionMode		 action;
-	GpkHelperRun		*helper_run;
 	GpkSearchMode		 search_mode;
 	GpkSearchType		 search_type;
 	GtkApplication		*application;
@@ -1349,50 +1347,6 @@ gpk_application_select_exact_match (GpkApplicationPrivate *priv, const gchar *te
 	}
 }
 
-/**
- * gpk_application_run_installed:
- **/
-static void
-gpk_application_run_installed (GpkApplicationPrivate *priv, PkResults *results)
-{
-	guint i;
-	GPtrArray *array;
-	PkPackage *item;
-	GPtrArray *package_ids_array;
-	gchar **package_ids = NULL;
-	PkInfoEnum info;
-	gchar *package_id = NULL;
-
-	/* get the package array and filter on INSTALLED */
-	package_ids_array = g_ptr_array_new_with_free_func (g_free);
-	array = pk_results_get_package_array (results);
-	for (i=0; i<array->len; i++) {
-		item = g_ptr_array_index (array, i);
-		g_object_get (item,
-			      "info", &info,
-			      "package-id", &package_id,
-			      NULL);
-		if (info == PK_INFO_ENUM_INSTALLING)
-			g_ptr_array_add (package_ids_array, g_strdup (package_id));
-		g_free (package_id);
-	}
-
-	/* nothing to show */
-	if (package_ids_array->len == 0) {
-		g_debug ("nothing to do");
-		goto out;
-	}
-
-	/* this is async */
-	package_ids = pk_ptr_array_to_strv (package_ids_array);
-	gpk_helper_run_show (priv->helper_run, package_ids);
-
-out:
-	g_strfreev (package_ids);
-	g_ptr_array_unref (package_ids_array);
-	g_ptr_array_unref (array);
-}
-
 #if 0
 /**
  * gpk_application_finished_cb:
@@ -1884,9 +1838,6 @@ gpk_application_install_packages_cb (PkTask *task, GAsyncResult *res, GpkApplica
 	/* idle add in the background */
 	idle_id = g_idle_add ((GSourceFunc) gpk_application_perform_search_idle_cb, priv);
 	g_source_set_name_by_id (idle_id, "[GpkApplication] search");
-
-	/* find applications that were installed, and offer to run them */
-	gpk_application_run_installed (priv, results);
 
 	/* clear if success */
 	pk_package_sack_clear (priv->package_sack);
@@ -3273,10 +3224,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	action = g_settings_create_action (priv->settings, "filter-arch");
 	g_action_map_add_action (G_ACTION_MAP (priv->application), action);
 
-	/* helpers */
-	priv->helper_run = gpk_helper_run_new ();
-	gpk_helper_run_set_parent (priv->helper_run, GTK_WINDOW (main_window));
-
 	/* Hide window first so that the dialogue resizes itself without redrawing */
 	gtk_widget_hide (main_window);
 	gtk_window_set_icon_name (GTK_WINDOW (main_window), GPK_ICON_SOFTWARE_INSTALLER);
@@ -3546,8 +3493,6 @@ main (int argc, char *argv[])
 		g_object_unref (priv->markdown);
 	if (priv->builder != NULL)
 		g_object_unref (priv->builder);
-	if (priv->helper_run != NULL)
-		g_object_unref (priv->helper_run);
 	if (priv->cancellable != NULL)
 		g_object_unref (priv->cancellable);
 	if (priv->package_sack != NULL)

@@ -46,8 +46,6 @@ libgpkshared_a_SOURCES =				\
 	gpk-enum.h					\
 	gpk-dialog.c					\
 	gpk-dialog.h					\
-	gpk-helper-run.c				\
-	gpk-helper-run.h				\
 	gpk-common.c					\
 	gpk-common.h					\
 	gpk-task.c					\
@@ -148,8 +146,6 @@ gpk_self_test_SOURCES =					\
 	gpk-error.h					\
 	gpk-task.c					\
 	gpk-task.h					\
-	gpk-helper-run.c				\
-	gpk-helper-run.h				\
 	gpk-dialog.c					\
 	gpk-dialog.h					\
 	$(NULL)
