@@ -1,15 +1,15 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Victor Ibragimov <victor.ibragimov@gmail.com>, 2013.
+# Victor Ibragimov <victor.ibragimov@gmail.com>, 2013, 2014, 2015
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Tajik Gnome\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-04-08 19:30+0000\n"
-"PO-Revision-Date: 2014-04-09 11:46+0500\n"
+"POT-Creation-Date: 2015-03-16 20:08+0000\n"
+"PO-Revision-Date: 2015-03-17 10:29+0500\n"
 "Last-Translator: Victor Ibragimov <victor.ibragimov@gmail.com>\n"
 "Language-Team: \n"
 "Language: tg\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.6.4\n"
+"X-Generator: Poedit 1.6.5\n"
 
-#: ../data/appdata/gpk-application.appdata.xml.in.h:1
+#. TRANSLATORS: user-friendly name for gpk-update-viewer
+#: ../data/appdata/gpk-application.appdata.xml.in.h:1 ../src/gpk-log.c:488
 msgid "GNOME Packages"
 msgstr "Бастаҳои GNOME"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:2
-#| msgid ""
-#| "Packages allows you to install and remove packages on your system. You "
-#| "can view search packages by name, details or even file name and also see "
-#| "dependencies of one package on other packages. Searching by groups is "
-#| "possible and is an easy way to find software in your favorite desktop "
-#| "environment."
+#: ../data/gpk-application.desktop.in.h:2
+msgid "Add or remove software installed on the system"
+msgstr "Илова ва тоза кадани нармафзори насбшуда дар система"
+
+#: ../data/appdata/gpk-application.appdata.xml.in.h:3
 msgid ""
 "Packages allows you to install and remove packages on your system. You can "
 "view and search packages by name, details or even file name and also see "
@@ -43,7 +43,7 @@ msgstr ""
 "бинед. Шумо инчунин метавонед аз ҷустуҷӯи гурӯҳӣ истифода баред, то ки "
 "тавонед нармафзорро дар муҳити мизи кории дӯстдоштаи худ пайдо намоед."
 
-#: ../data/appdata/gpk-application.appdata.xml.in.h:3
+#: ../data/appdata/gpk-application.appdata.xml.in.h:4
 msgid ""
 "Packages uses PackageKit and can work on any distribution using the native "
 "package management framework."
@@ -51,11 +51,17 @@ msgstr ""
 "Насби бастаҳо абзори маҷмӯи бастаҳоро истифода мебарад ва метавонад дар "
 "ҳамаи дистрибутивҳо тавассути платформаи идоракунии бастаҳои аслӣ кор кунад."
 
-#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1
+#. TRANSLATORS: user-friendly name for gpk-update-viewer
+#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1 ../src/gpk-log.c:491
 msgid "GNOME Package Updater"
 msgstr "Навсозикунандаи қуттиҳои GNOME"
 
 #: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:2
+#: ../data/gpk-update-viewer.desktop.in.h:2
+msgid "Update software installed on the system"
+msgstr "Навсозии нармафзори насбшуда дар система"
+
+#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:3
 msgid ""
 "Package Updater allows you to update packages on your system without "
 "rebooting. You can view details about each update and choose which updates "
@@ -65,13 +71,223 @@ msgstr ""
 "худро бе бозоғозӣ навсозӣ кунед. Шумо метавонед дар бораи ҳар як навсозӣ "
 "тафсилот гиред ва навсозии лозимиро интихоб карда татбиқ намоед."
 
-#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:3
+#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:4
 msgid ""
 "Package Updater uses PackageKit and can work on any distribution using the "
 "native package management framework."
 msgstr ""
 "Навсозикунандаи қуттиҳо маҷмӯи қуттиҳоро истифода мебарад ва метавонад дар "
 "ҳамаи дистрибутивҳо тавассути платформаи идоракунии қуттиҳои аслӣ кор кунад."
+
+#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
+#: ../src/gpk-application.c:2516
+msgid "Packages"
+msgstr "Бастаҳо"
+
+#: ../data/gpk-application.desktop.in.h:3
+#| msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
+msgid "Sources;Repositories;Preferences;Install;Store;"
+msgstr "Манбаъҳо;Анборҳои нармафзор;Хусусиятҳо;Насб;Дукон;"
+
+#: ../data/gpk-application.ui.h:2
+msgid "Apply Changes"
+msgstr "Татбиқ кардани тағйирот"
+
+#: ../data/gpk-application.ui.h:3
+msgid "Changes are not applied instantly, this button applies all changes"
+msgstr ""
+"Тағйирот зуд татбиқ намешаванд, ин тугма ҳамаи тағйиротро амалӣ менамояд"
+
+#: ../data/gpk-application.ui.h:4
+msgid "Clear"
+msgstr "Пок кардан"
+
+#: ../data/gpk-application.ui.h:5
+msgid "Clear current selection"
+msgstr "Тоза кардани интихоби ҷорӣ"
+
+#: ../data/gpk-application.ui.h:6
+msgid "Cancel search"
+msgstr "Бекор кардани ҷустуҷӯ"
+
+#: ../data/gpk-application.ui.h:7
+msgid "License"
+msgstr "Иҷозатнома"
+
+#: ../data/gpk-application.ui.h:8
+msgid "Source"
+msgstr "Манбаъ"
+
+#: ../data/gpk-application.ui.h:9 ../data/gpk-client.ui.h:1
+msgid "Install Package"
+msgstr "Насб кардани баста"
+
+#: ../data/gpk-application.ui.h:10
+msgid "Remove Package"
+msgstr "Тоза кардани баста"
+
+#: ../data/gpk-application.ui.h:11
+msgid "Visit home page for selected package"
+msgstr "Боздиди саҳифаи хонагӣ барои бастаи интихобшуда"
+
+#: ../data/gpk-application.ui.h:12
+msgid "Visit Project Website"
+msgstr "Боздиди вебсайти лоиҳа"
+
+#: ../data/gpk-application.ui.h:13
+msgid "Files"
+msgstr "Файлҳо"
+
+#: ../data/gpk-application.ui.h:14
+msgid "Required Packages"
+msgstr "Бастаҳои дархостшуда"
+
+#: ../data/gpk-application.ui.h:15
+msgid "Dependent Packages"
+msgstr "Бастаҳои вобаста"
+
+#: ../data/gpk-application.ui.h:16
+msgid "Check for Updates"
+msgstr "Тафтиши навсозиҳо"
+
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:621
+msgid "Package Sources"
+msgstr "Манбаҳои бастаҳо"
+
+#: ../data/gpk-application.ui.h:18
+msgid "Refresh Package Lists"
+msgstr "Навсозии рӯйхатҳои баста"
+
+#: ../data/gpk-application.ui.h:19 ../data/gpk-log.desktop.in.h:1
+#: ../data/gpk-log.ui.h:1
+#| msgid "Package"
+msgid "Package Log"
+msgstr "Сабти рӯйдоди баста"
+
+#: ../data/gpk-application.ui.h:20
+msgid "Only Newest Versions"
+msgstr "Танҳо версияҳои нав"
+
+#: ../data/gpk-application.ui.h:21
+msgid "Only Native Packages"
+msgstr "Танҳо бастаҳои маҳаллӣ"
+
+#: ../data/gpk-application.ui.h:22
+msgid "About"
+msgstr "Дар бораи барнома"
+
+#: ../data/gpk-application.ui.h:23
+msgid "_Quit"
+msgstr "_Хуруҷ"
+
+#: ../data/gpk-error.ui.h:1
+msgid "More details"
+msgstr "Тафсилоти бештар"
+
+#: ../data/gpk-eula.ui.h:1
+msgid "License Agreement Required"
+msgstr "Қарордоди иҷозатнома лозим аст"
+
+#: ../data/gpk-eula.ui.h:2
+msgid "_Accept Agreement"
+msgstr "Қабули қарордод"
+
+#: ../data/gpk-install-local-file.desktop.in.h:1
+msgid "Package Install"
+msgstr "Насби бастаҳо"
+
+#: ../data/gpk-install-local-file.desktop.in.h:2
+msgid "Install selected packages on the system"
+msgstr "Насб кардани бастаҳои интихобшуда дар система"
+
+#: ../data/gpk-log.desktop.in.h:2
+msgid "View past package management tasks"
+msgstr "Тамошои вазифаҳои мудирияти бастаи охирин"
+
+#: ../data/gpk-log.ui.h:2
+msgid "Filter"
+msgstr "Филтр"
+
+#: ../data/gpk-prefs.desktop.in.h:2
+msgid "Enable or disable package repositories"
+msgstr "Фаъол ё ғайрифаъол кардани анбори бастаҳои нармафзор"
+
+#: ../data/gpk-prefs.ui.h:2
+msgid ""
+"A package source contains packages that can be installed on this computer."
+msgstr ""
+"Манбаи бастаҳо бастаҳое дорад, ки дар ин компютер насб шуда метавонанд."
+
+#. shows extra -source, -debuginfo, and -devel sources
+#: ../data/gpk-prefs.ui.h:4
+msgid "_Show debug and development package sources"
+msgstr "_Намоиши манбаҳои бастаҳои ислоҳи хатоҳо ва рушд"
+
+#: ../data/gpk-signature.ui.h:1
+msgid "Software signature is required"
+msgstr "Имзои нармафзор лозим аст"
+
+#: ../data/gpk-signature.ui.h:2
+msgid "Do you trust the source of the packages?"
+msgstr "Оё шумо ба манбаи бастаҳо бовар мекунед?"
+
+#: ../data/gpk-signature.ui.h:3
+msgid "Repository name:"
+msgstr "Номи анбори додаҳо:"
+
+#: ../data/gpk-signature.ui.h:4
+msgid "Signature URL:"
+msgstr "Имзои URL:"
+
+#: ../data/gpk-signature.ui.h:5
+msgid "Signature user identifier:"
+msgstr "Имзои идентификатори корбар:"
+
+#: ../data/gpk-signature.ui.h:6
+msgid "Signature identifier:"
+msgstr "Идентификатори имзо:"
+
+#: ../data/gpk-signature.ui.h:7
+msgid "Package:"
+msgstr "Баста:"
+
+#: ../data/gpk-signature.ui.h:8
+msgid "Do you recognize the user and trust this key?"
+msgstr "Оё шумо корбарро бозшиносӣ ва ба ин тугма бовар кардед?"
+
+#. TRANSLATORS: title to pass to the user if there are not enough privs
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
+#: ../src/gpk-update-viewer.c:3418
+msgid "Package Updater"
+msgstr "Навсозии бастаҳо"
+
+#: ../data/gpk-update-viewer.desktop.in.h:3
+#| msgid "Updated"
+msgid "Updates;Upgrade;"
+msgstr "Навсозиҳо;Такмил;"
+
+#: ../data/gpk-update-viewer.ui.h:2
+msgid "_Install Updates"
+msgstr "_Насб кардани навсозиҳо"
+
+#: ../data/gpk-update-viewer.ui.h:3
+msgid ""
+"Package updates correct errors, eliminate security vulnerabilities, and "
+"provide new features."
+msgstr ""
+"Навсозиҳои бастаҳо хатоҳоро ислоҳ мекунанд, амнияти системаро беҳтар мекунад "
+"ва хусусиятҳои навро таъмин менамояд."
+
+#: ../data/gpk-update-viewer.ui.h:4
+msgid "_Upgrade"
+msgstr "_Такмил додан"
+
+#. TRANSLATORS: column for what packages were upgraded
+#: ../data/gpk-update-viewer.ui.h:5 ../src/gpk-log.c:312
+msgid "Details"
+msgstr "Тафсилот"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:1
 msgid "Automatically remove unused dependencies"
@@ -261,244 +477,13 @@ msgstr ""
 "Ҳангоми намоиши UI аз сессияи дархости D-Bus, ин имконотро барои фаъол шудан "
 "маҷбур намоед."
 
-#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
-#: ../src/gpk-application.c:2580
-msgid "Packages"
-msgstr "Бастаҳо"
-
-#: ../data/gpk-application.desktop.in.h:2
-msgid "Add or remove software installed on the system"
-msgstr "Илова ва тоза кадани нармафзори насбшуда дар система"
-
-#: ../data/gpk-application.desktop.in.h:3
-msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
-msgstr ""
-"Навсозиҳо;Такмил;Манбаъҳо;Захирагоҳҳо;Хусусиятҳо;Насб кардан;Ҳифз кардан;"
-
-#: ../data/gpk-application.ui.h:2
-msgid "Apply Changes"
-msgstr "Татбиқ кардани тағйирот"
-
-#: ../data/gpk-application.ui.h:3
-msgid "Changes are not applied instantly, this button applies all changes"
-msgstr ""
-"Тағйирот зуд татбиқ намешаванд, ин тугма ҳамаи тағйиротро амалӣ менамояд"
-
-#: ../data/gpk-application.ui.h:4
-msgid "Clear"
-msgstr "Пок кардан"
-
-#: ../data/gpk-application.ui.h:5
-msgid "Clear current selection"
-msgstr "Тоза кардани интихоби ҷорӣ"
-
-#: ../data/gpk-application.ui.h:6
-msgid "Cancel search"
-msgstr "Бекор кардани ҷустуҷӯ"
-
-#: ../data/gpk-application.ui.h:7
-msgid "License"
-msgstr "Иҷозатнома"
-
-#: ../data/gpk-application.ui.h:8
-msgid "Source"
-msgstr "Манбаъ"
-
-#: ../data/gpk-application.ui.h:9 ../data/gpk-client.ui.h:1
-msgid "Install Package"
-msgstr "Насб кардани баста"
-
-#: ../data/gpk-application.ui.h:10
-msgid "Remove Package"
-msgstr "Тоза кардани баста"
-
-#: ../data/gpk-application.ui.h:11
-msgid "Visit home page for selected package"
-msgstr "Боздиди саҳифаи хонагӣ барои бастаи интихобшуда"
-
-#: ../data/gpk-application.ui.h:12
-msgid "Visit Project Website"
-msgstr "Боздиди вебсайти лоиҳа"
-
-#: ../data/gpk-application.ui.h:13
-msgid "Files"
-msgstr "Файлҳо"
-
-#: ../data/gpk-application.ui.h:14
-msgid "Required Packages"
-msgstr "Бастаҳои дархостшуда"
-
-#: ../data/gpk-application.ui.h:15
-msgid "Dependent Packages"
-msgstr "Бастаҳои вобаста"
-
-#: ../data/gpk-application.ui.h:16
-msgid "Check for Updates"
-msgstr "Тафтиши навсозиҳо"
-
-#. TRANSLATORS: program name, an application to add and remove software repositories
-#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
-#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:634
-msgid "Package Sources"
-msgstr "Манбаҳои бастаҳо"
-
-#: ../data/gpk-application.ui.h:18
-msgid "Refresh Package Lists"
-msgstr "Навсозии рӯйхатҳои баста"
-
-#: ../data/gpk-application.ui.h:19
-msgid "Software Log"
-msgstr "Сабти рӯйдодҳои нармафзор"
-
-#: ../data/gpk-application.ui.h:20
-msgid "Only Newest Versions"
-msgstr "Танҳо версияҳои нав"
-
-#: ../data/gpk-application.ui.h:21
-msgid "Only Native Packages"
-msgstr "Танҳо бастаҳои маҳаллӣ"
-
-#: ../data/gpk-application.ui.h:22
-msgid "Help"
-msgstr "Кӯмак"
-
-#: ../data/gpk-application.ui.h:23
-msgid "About"
-msgstr "Дар бораи барнома"
-
-#: ../data/gpk-application.ui.h:24
-msgid "_Quit"
-msgstr "_Хуруҷ"
-
-#: ../data/gpk-error.ui.h:1
-msgid "More details"
-msgstr "Тафсилоти бештар"
-
-#: ../data/gpk-eula.ui.h:1
-msgid "License Agreement Required"
-msgstr "Қарордоди иҷозатнома лозим аст"
-
-#: ../data/gpk-eula.ui.h:2
-msgid "_Accept Agreement"
-msgstr "Қабули қарордод"
-
-#. TRANSLATORS: program name: application to install a package to provide a file
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../data/gpk-dbus-service.desktop.in.h:1 ../src/gpk-dbus-task.c:3215
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-dbus-service.c:137
-#: ../src/gpk-dbus-service.c:140
-msgid "Software Install"
-msgstr "Насбкунии нармафзор"
-
-#: ../data/gpk-dbus-service.desktop.in.h:2
-msgid "Install selected software on the system"
-msgstr "Насб кардани нармафзори интихобшуда дар система"
-
-#: ../data/gpk-install-local-file.desktop.in.h:1
-msgid "Package Install"
-msgstr "Насби бастаҳо"
-
-#: ../data/gpk-install-local-file.desktop.in.h:2
-msgid "Install selected packages on the system"
-msgstr "Насб кардани бастаҳои интихобшуда дар система"
-
-#: ../data/gpk-log.desktop.in.h:1 ../data/gpk-log.ui.h:1 ../src/gpk-log.c:826
-msgid "Software Log Viewer"
-msgstr "Тамошобини сабти рӯйдодҳои нармафзор"
-
-#: ../data/gpk-log.desktop.in.h:2
-msgid "View past package management tasks"
-msgstr "Тамошои вазифаҳои мудирияти бастаи охирин"
-
-#: ../data/gpk-log.ui.h:2
-msgid "Filter"
-msgstr "Филтр"
-
-#: ../data/gpk-prefs.desktop.in.h:2
-msgid "Enable or disable package repositories"
-msgstr "Фаъол ё ғайрифаъол кардани анбори бастаҳои нармафзор"
-
-#: ../data/gpk-prefs.ui.h:2
-msgid ""
-"A package source contains packages that can be installed on this computer."
-msgstr ""
-"Манбаи бастаҳо бастаҳое дорад, ки дар ин компютер насб шуда метавонанд."
-
-#. shows extra -source, -debuginfo, and -devel sources
-#: ../data/gpk-prefs.ui.h:4
-msgid "_Show debug and development package sources"
-msgstr "_Намоиши манбаҳои бастаҳои ислоҳи хатоҳо ва рушд"
-
-#: ../data/gpk-signature.ui.h:1
-msgid "Software signature is required"
-msgstr "Имзои нармафзор лозим аст"
-
-#: ../data/gpk-signature.ui.h:2
-msgid "Do you trust the source of the packages?"
-msgstr "Оё шумо ба манбаи бастаҳо бовар мекунед?"
-
-#: ../data/gpk-signature.ui.h:3
-msgid "Repository name:"
-msgstr "Номи анбори додаҳо:"
-
-#: ../data/gpk-signature.ui.h:4
-msgid "Signature URL:"
-msgstr "Имзои URL:"
-
-#: ../data/gpk-signature.ui.h:5
-msgid "Signature user identifier:"
-msgstr "Имзои идентификатори корбар:"
-
-#: ../data/gpk-signature.ui.h:6
-msgid "Signature identifier:"
-msgstr "Идентификатори имзо:"
-
-#: ../data/gpk-signature.ui.h:7
-msgid "Package:"
-msgstr "Баста:"
-
-#: ../data/gpk-signature.ui.h:8
-msgid "Do you recognize the user and trust this key?"
-msgstr "Оё шумо корбарро бозшиносӣ ва ба ин тугма бовар кардед?"
-
-#. TRANSLATORS: title to pass to the user if there are not enough privs
-#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
-#: ../src/gpk-update-viewer.c:3428
-msgid "Package Updater"
-msgstr "Навсозии бастаҳо"
-
-#: ../data/gpk-update-viewer.desktop.in.h:2
-msgid "Update software installed on the system"
-msgstr "Навсозии нармафзори насбшуда дар система"
-
-#: ../data/gpk-update-viewer.ui.h:2
-msgid "_Install Updates"
-msgstr "_Насб кардани навсозиҳо"
-
-#: ../data/gpk-update-viewer.ui.h:3
-msgid ""
-"Package updates correct errors, eliminate security vulnerabilities, and "
-"provide new features."
-msgstr ""
-"Навсозиҳои бастаҳо хатоҳоро ислоҳ мекунанд, амнияти системаро беҳтар мекунад "
-"ва хусусиятҳои навро таъмин менамояд."
-
-#: ../data/gpk-update-viewer.ui.h:4
-msgid "_Upgrade"
-msgstr "_Такмил додан"
-
-#. TRANSLATORS: column for what packages were upgraded
-#: ../data/gpk-update-viewer.ui.h:5 ../src/gpk-log.c:322
-msgid "Details"
-msgstr "Тафсилот"
-
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:347
+#: ../src/gpk-application.c:343
 msgid "Pending"
 msgstr "Мунтазир"
 
 #. TRANSLATORS: title: how many files are installed by the application
-#: ../src/gpk-application.c:593
+#: ../src/gpk-application.c:589
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
@@ -506,17 +491,17 @@ msgstr[0] "%i файли насбшуда бо %s"
 msgstr[1] "%i файли насбшуда бо %s"
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:895 ../src/gpk-application.c:1024
+#: ../src/gpk-application.c:891 ../src/gpk-application.c:1020
 msgid "No packages"
 msgstr "Ягон баста нест"
 
 #. TRANSLATORS: this package is not required by any others
-#: ../src/gpk-application.c:897
+#: ../src/gpk-application.c:893
 msgid "No other packages require this package"
 msgstr "Ягон бастаи дигар ин бастаро талаб намекунад."
 
 #. TRANSLATORS: title: how many packages require this package
-#: ../src/gpk-application.c:904
+#: ../src/gpk-application.c:900
 #, c-format
 msgid "%i package requires %s"
 msgid_plural "%i packages require %s"
@@ -524,7 +509,7 @@ msgstr[0] "Барои %i баста %s лозим аст"
 msgstr[1] "Барои %i баста %s лозим аст"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:909
+#: ../src/gpk-application.c:905
 #, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
@@ -534,12 +519,12 @@ msgstr[1] ""
 "Бастаҳои дар рӯйхати поён буда барои фаъолияти дуруст ба %s ниёз дорад."
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1026
+#: ../src/gpk-application.c:1022
 msgid "This package does not depend on any others"
 msgstr "Ин баста ба дигараш вобаста нест"
 
 #. TRANSLATORS: title: show the number of other packages we depend on
-#: ../src/gpk-application.c:1033
+#: ../src/gpk-application.c:1029
 #, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
@@ -547,7 +532,7 @@ msgstr[0] "%i бастаи иловагӣ барои %s лозим аст"
 msgstr[1] "%i бастаи иловагӣ барои %s лозим аст"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
-#: ../src/gpk-application.c:1038
+#: ../src/gpk-application.c:1034
 #, c-format
 msgid "Packages listed below are required for %s to function correctly."
 msgid_plural "Packages listed below are required for %s to function correctly."
@@ -557,27 +542,27 @@ msgstr[1] ""
 "бастаҳои дар рӯйхати поён буда барои фаъолияти дуруст ба %s ниёз дорад."
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1109
+#: ../src/gpk-application.c:1105
 msgid "Invalid"
 msgstr "Беэътибор"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1262
+#: ../src/gpk-application.c:1258
 msgid "No results were found."
 msgstr "Ягон натиҷа ёфт нашуд."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1270
+#: ../src/gpk-application.c:1266
 msgid "Try entering a package name in the search bar."
 msgstr "Кӯшиш кунед, ки номи бастаеро ба навори ҷустуҷӯ ворид намоед."
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1273
+#: ../src/gpk-application.c:1269
 msgid "There are no packages queued to be installed or removed."
 msgstr "Ягон баста барои насб ё тоза кардан дар навбат наистодааст."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1278
+#: ../src/gpk-application.c:1274
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -586,113 +571,112 @@ msgstr ""
 "тавсифи баста намоед."
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1281
+#: ../src/gpk-application.c:1277
 msgid "Try again with a different search term."
 msgstr "Бо вожаи дигар аз нав ҷустуҷӯ кунед."
 
 #. TRANSLATORS: title: invalid text in the search bar
-#: ../src/gpk-application.c:1545
+#: ../src/gpk-application.c:1497
 msgid "Invalid search text"
 msgstr "Матни ҷустуҷӯи нодуруст"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1547
+#: ../src/gpk-application.c:1499
 msgid "The search text contains invalid characters"
 msgstr "Матни ҷустуҷӯ аломатҳои нодуруст дорад"
 
 #. TRANSLATORS: title: we failed to execute the method
-#: ../src/gpk-application.c:1588
+#: ../src/gpk-application.c:1540
 msgid "The search could not be completed"
 msgstr "Ҷустуҷӯ ба охир расида натавонист"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1590
+#: ../src/gpk-application.c:1542
 msgid "Running the transaction failed"
 msgstr "Иҷроиши муомила барҳам хӯрд"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1719
+#: ../src/gpk-application.c:1671
 msgid "Changes not applied"
 msgstr "Тағйирот амалӣ нашуданд"
 
-#: ../src/gpk-application.c:1720
+#: ../src/gpk-application.c:1672
 msgid "Close _Anyway"
 msgstr "Бастани _маҷбурӣ"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1724
+#: ../src/gpk-application.c:1676
 msgid "You have made changes that have not yet been applied."
 msgstr "Шумо шояд тағйироте анҷом дода бошед, ки ҳоло амалӣ нашудаанд."
 
-#: ../src/gpk-application.c:1725
+#: ../src/gpk-application.c:1677
 msgid "These changes will be lost if you close this window."
 msgstr "Агар шумо ин равзанаро пӯшонед тағйирот нест мешавад."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2017 ../src/gpk-enum.c:1075 ../src/gpk-enum.c:1164
+#: ../src/gpk-application.c:1967 ../src/gpk-enum.c:956 ../src/gpk-enum.c:1045
 msgid "Installed"
 msgstr "Насбшуда"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
-#. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2033 ../src/gpk-application.c:2055
-#: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:731
+#: ../src/gpk-application.c:1983 ../src/gpk-application.c:2005
+#: ../src/gpk-dialog.c:145
 msgid "Name"
 msgstr "Ном"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2222
+#: ../src/gpk-application.c:2172
 msgid "Size"
 msgstr "Андоза"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2225
+#: ../src/gpk-application.c:2175
 msgid "Installed size"
 msgstr "Андозаи насбшуда"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2228
+#: ../src/gpk-application.c:2178
 msgid "Download size"
 msgstr "Андозаи боргирӣ"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2416
+#: ../src/gpk-application.c:2366
 msgid "Searching by name"
 msgstr "Ҷустуҷӯ аз рӯи ном"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2442
+#: ../src/gpk-application.c:2392
 msgid "Searching by description"
 msgstr "Ҷустуҷӯ аз рӯи тафсилот"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2468
+#: ../src/gpk-application.c:2418
 msgid "Searching by file"
 msgstr "Ҷустуҷӯ аз рӯи файл"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2491
+#: ../src/gpk-application.c:2441
 msgid "Search by name"
 msgstr "Ҷустуҷӯ аз рӯи ном"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2499
+#: ../src/gpk-application.c:2449
 msgid "Search by description"
 msgstr "Ҷустуҷӯ аз рӯи тафсилот"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2507
+#: ../src/gpk-application.c:2457
 msgid "Search by file name"
 msgstr "Ҷустуҷӯ аз рӯи номи файл"
 
-#: ../src/gpk-application.c:2549
+#: ../src/gpk-application.c:2485
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Иҷозатномаи умумии ҷамъиятии Версияи 2 GNU дарёфт намудааст"
 
-#: ../src/gpk-application.c:2550
+#: ../src/gpk-application.c:2486
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -704,7 +688,7 @@ msgstr ""
 "озод нашр шудааст ё ҳатто версияи 2 Иҷозатнома ё ҳар версияи навбатӣ (дар "
 "имконоти шумо), дубора паҳн намоед ва/ё тағйир диҳед."
 
-#: ../src/gpk-application.c:2554
+#: ../src/gpk-application.c:2490
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -716,7 +700,7 @@ msgstr ""
 "МАҚСАДҲОИ ХУСУСӢ. Барои тафсилоти бештар нигаред ба: Иҷозатномаи умумии "
 "ҷамъиятии  GNU."
 
-#: ../src/gpk-application.c:2558
+#: ../src/gpk-application.c:2494
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -727,88 +711,87 @@ msgstr ""
 "Франклин, ошёнаи 5-ум, Бостон, MA 02110-1301, ИМА нависед. "
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2564
+#: ../src/gpk-application.c:2500
 msgid "translator-credits"
 msgstr "Victor Ibragimov"
 
-#: ../src/gpk-application.c:2585
+#: ../src/gpk-application.c:2521
 msgid "PackageKit Website"
 msgstr "Вебсайти PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2588
+#: ../src/gpk-application.c:2524
 msgid "Package Manager for GNOME"
 msgstr "Мудири бастаҳо барои GNOME"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2781
+#: ../src/gpk-application.c:2716
 msgid "Enter a search word or click a category to get started."
 msgstr ""
 "Барои оғоз кардан калимаи ҷустуҷӯро ворид кунед ё категорияро зер кунед."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2784
+#: ../src/gpk-application.c:2719
 msgid "Enter a search word to get started."
 msgstr "Барои оғоз кардан калимаи ҷустуҷӯро ворид кунед."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3023
+#: ../src/gpk-application.c:2958
 msgid "Exiting as properties could not be retrieved"
 msgstr "Хусусиятҳои мавҷудбуда бозёбӣ карда намешаванд"
 
 #. TRANSLATORS: title: all of the packages on the system and available in sources
-#: ../src/gpk-application.c:3066
+#: ../src/gpk-application.c:3001
 msgid "All packages"
 msgstr "Ҳамаи бастаҳо"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3068
+#: ../src/gpk-application.c:3003
 msgid "Show all packages"
 msgstr "Намоиш додани ҳамаи бастаҳо"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3493 ../src/gpk-update-viewer.c:3397
+#: ../src/gpk-application.c:3424 ../src/gpk-update-viewer.c:3388
 msgid "Show the program version and exit"
 msgstr "Намоиш додани версияи барнома ва хориҷ шудан"
 
-#. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-application.c:3507 ../src/gpk-log.c:498
+#: ../src/gpk-application.c:3437
 msgid "Install Software"
 msgstr "Насбкунии нармафзор"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3523
+#: ../src/gpk-application.c:3453
 msgid "Package installer"
 msgstr "Дастгоҳи насби баста"
 
 #. TRANSLATORS: a 32 bit package
-#: ../src/gpk-common.c:295
+#: ../src/gpk-common.c:157
 msgid "32-bit"
 msgstr "32 бит"
 
 #. TRANSLATORS: a 64 bit package
-#: ../src/gpk-common.c:302
+#: ../src/gpk-common.c:164
 msgid "64-bit"
 msgstr "64 бит"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
-#: ../src/gpk-common.c:427
+#: ../src/gpk-common.c:289
 msgid "This application is running as a privileged user"
 msgstr "Ин барнома ҳамчун корбари имтиёздор иҷро мешавад"
 
 #. TRANSLATORS: cannot run as root user, and we display the application name
-#: ../src/gpk-common.c:430
+#: ../src/gpk-common.c:292
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "%s ҳамчун корбари имтиёздор иҷро мешавад"
 
 #. TRANSLATORS: tell the user off
-#: ../src/gpk-common.c:433
+#: ../src/gpk-common.c:295
 msgid "Package management applications are security sensitive."
 msgstr "Барномаҳои идоракунии баста аз лиҳози амният ҳассос ҳастанд."
 
 #. TRANSLATORS: and explain why
-#: ../src/gpk-common.c:435
+#: ../src/gpk-common.c:297
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
@@ -817,18 +800,18 @@ msgstr ""
 "рад карда шавад. "
 
 #. TRANSLATORS: button: allow the user to run this, even when insecure
-#: ../src/gpk-common.c:441
+#: ../src/gpk-common.c:303
 msgid "Continue _Anyway"
 msgstr "Идомаи _маҷбурӣ"
 
 #. TRANSLATORS: The actions has just literally happened
-#: ../src/gpk-common.c:511 ../src/gpk-common.c:561
+#: ../src/gpk-common.c:341 ../src/gpk-common.c:391
 #, c-format
 msgid "Now"
 msgstr "Ҳозир"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:521 ../src/gpk-common.c:571
+#: ../src/gpk-common.c:351 ../src/gpk-common.c:401
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
@@ -836,7 +819,7 @@ msgstr[0] "%i сония"
 msgstr[1] "%i сония"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:531 ../src/gpk-common.c:584
+#: ../src/gpk-common.c:361 ../src/gpk-common.c:414
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -844,7 +827,7 @@ msgstr[0] "%i дақиқа"
 msgstr[1] "%i дақиқа"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:537 ../src/gpk-common.c:603
+#: ../src/gpk-common.c:367 ../src/gpk-common.c:433
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
@@ -855,853 +838,380 @@ msgstr[1] "%i соат"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/gpk-common.c:590 ../src/gpk-common.c:609
+#: ../src/gpk-common.c:420 ../src/gpk-common.c:439
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s %i %s"
 
-#: ../src/gpk-common.c:591 ../src/gpk-common.c:611
+#: ../src/gpk-common.c:421 ../src/gpk-common.c:441
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "дақиқа"
 msgstr[1] "дақиқа"
 
-#: ../src/gpk-common.c:592
+#: ../src/gpk-common.c:422
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "сония"
 msgstr[1] "сония"
 
-#: ../src/gpk-common.c:610
+#: ../src/gpk-common.c:440
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "соат"
 msgstr[1] "соат"
 
 #. Translators: a list of two things
-#: ../src/gpk-common.c:638
+#: ../src/gpk-common.c:468
 #, c-format
 msgid "%s and %s"
 msgstr "%s ва %s"
 
 #. Translators: a list of three things
-#: ../src/gpk-common.c:642
+#: ../src/gpk-common.c:472
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s ва %s"
 
 #. Translators: a list of four things
-#: ../src/gpk-common.c:646
+#: ../src/gpk-common.c:476
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s ва %s"
 
 #. Translators: a list of five things
-#: ../src/gpk-common.c:651
+#: ../src/gpk-common.c:481
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s ва %s"
 
-#. TRANSLATORS: we failed to install
-#: ../src/gpk-dbus-task.c:243 ../src/gpk-dbus-task.c:460
-msgid "Failed to install software"
-msgstr "Насби нармафзор барҳам хӯрд"
-
-#. TRANSLATORS: we didn't select any applications that were returned
-#: ../src/gpk-dbus-task.c:245
-msgid "No applications were chosen to be installed"
-msgstr "Ҳеҷ барномае барои насб интихоб нашудааст"
-
-#. TRANSLATORS: detailed text about the error
-#: ../src/gpk-dbus-task.c:277
-msgid "Error details"
-msgstr "Тафсилоти хато"
-
-#: ../src/gpk-dbus-task.c:277
-msgid "Package Manager error details"
-msgstr "Тафсилоти хатои мудири бастаҳо"
-
-#. TRANSLATORS: default fallback error -- this should never happen
-#: ../src/gpk-dbus-task.c:292
-msgid ""
-"Unknown error. Please refer to the detailed report and report in your "
-"distribution bug tracker."
-msgstr ""
-"Хатои номаълум. Лутфан ба гузориши муфассал ва гузориш дар нусхаи нармафзор "
-"муроҷиат намоед."
-
-#. TRANSLATORS: button: show details about the error
-#: ../src/gpk-dbus-task.c:365
-msgid "Show details"
-msgstr "Намоиш додани тафсилот"
-
-#. TRANSLATORS: title: installing packages
-#. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:497 ../src/gpk-enum.c:878
-msgid "Installing packages"
-msgstr "Насбкунии бастаҳо"
-
-#. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:599 ../src/gpk-dbus-task.c:1371
-msgid "Failed to install file"
-msgid_plural "Failed to install files"
-msgstr[0] "Насби файл қатъ карда шуд"
-msgstr[1] "Насби файлҳо қатъ карда шуд"
-
-#. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:688
-msgid "Do you want to install this file?"
-msgid_plural "Do you want to install these files?"
-msgstr[0] "Оё шумо ин файлро насб кардан мехоҳед?"
-msgstr[1] "Оё шумо ин файлҳоро насб кардан мехоҳед?"
-
-#. TRANSLATORS: title: installing local files
-#. TRANSLATORS: button: confirm to search for packages
-#. TRANSLATORS: button: install codecs
-#. TRANSLATORS: button: install a font
-#. TRANSLATORS: button: install Plasma services
-#. TRANSLATORS: button: install printer drivers
-#: ../src/gpk-dbus-task.c:697 ../src/gpk-dbus-task.c:1245
-#: ../src/gpk-dbus-task.c:1464 ../src/gpk-dbus-task.c:1667
-#: ../src/gpk-dbus-task.c:2135 ../src/gpk-dbus-task.c:2477
-#: ../src/gpk-dbus-task.c:2712 ../src/gpk-task.c:404
-msgid "Install"
-msgstr "Насб кардан"
-
-#. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1020
-msgid "Install local file"
-msgid_plural "Install local files"
-msgstr[0] "Насб кардани файли маҳаллӣ"
-msgstr[1] "Насб кардани файлҳои маҳаллӣ"
-
-#. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1080
-#, c-format
-msgid "Could not find packages"
-msgstr "Бастаҳо ёфт нашуданд"
-
-#. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1089
-msgid "The packages could not be found in any package source"
-msgstr "Бастаҳо дар ягон манбаи бастаҳо ёфт нашуданд"
-
-#. TRANSLATORS: button: a link to the help file
-#. TRANSLATORS: button: show the user a button to get more help finding stuff
-#. TRANSLATORS: button text
-#. TRANSLATORS: button: show the user a button to get more help finding stuff
-#. TRANSLATORS: button text
-#: ../src/gpk-dbus-task.c:1092 ../src/gpk-dbus-task.c:1333
-#: ../src/gpk-dbus-task.c:1639 ../src/gpk-dbus-task.c:1849
-#: ../src/gpk-dbus-task.c:2108 ../src/gpk-dbus-task.c:2449
-msgid "More information"
-msgstr "Маълумоти бештар"
-
-#: ../src/gpk-dbus-task.c:1129 ../src/gpk-enum.c:310
-msgid "The package is already installed"
-msgid_plural "The packages are already installed"
-msgstr[0] "Баста аллакай насб шудааст"
-msgstr[1] "Бастаҳо аллакай насб шудаанд"
-
-#. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1133
-msgid "Nothing to do."
-msgstr "Ҳеҷ кор карда намешавад."
-
-#. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:1148
-msgid "Failed to install package"
-msgstr "Насби баста қатъ шудааст"
-
-#. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1150
-msgid "Incorrect response from search"
-msgstr "Натиҷаи нодурусти ҷустуҷӯ"
-
-#. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1229
-msgid "An additional package is required:"
-msgid_plural "Additional packages are required:"
-msgstr[0] "Бастаи иловагӣ лозимест"
-msgstr[1] "Бастаҳои иловагӣ лозиманд"
-
-#. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1232
-msgid "Do you want to search for and install this package now?"
-msgid_plural "Do you want to search for and install these packages now?"
-msgstr[0] "Шумо ин бастаро ҳозир ҷустуҷӯ ва насб кардан мехоҳед?"
-msgstr[1] "Шумо ин бастаҳоро ҳозир ҷустуҷӯ ва насб кардан мехоҳед?"
-
-#. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1238
-#, c-format
-msgid "%s wants to install a package"
-msgid_plural "%s wants to install packages"
-msgstr[0] "%s мехоҳад, ки бастаеро насб кунад"
-msgstr[1] "%s мехоҳад, ки бастаҳоеро насб кунад"
-
-#. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1241
-msgid "A program wants to install a package"
-msgid_plural "A program wants to install packages"
-msgstr[0] "Барнома мехоҳад, ки бастаеро насб кунад"
-msgstr[1] "Барнома мехоҳад, ки бастаҳоеро насб кунад"
-
-#. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1258 ../src/gpk-dbus-task.c:2772
-msgid "Searching for packages"
-msgstr "Ҷустуҷӯи бастаҳо"
-
-#. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1328
-msgid "Failed to find package"
-msgstr "Ёфтани баста қатъ карда шуд"
-
-#. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1330 ../src/gpk-dbus-task.c:2914
-msgid "The file could not be found in any packages"
-msgstr "Файл дар ҳеҷ кадоми бастаҳо ёфт нашуд"
-
-#. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1368
-#, c-format
-msgid "The %s package already provides this file"
-msgstr "Бастаи %s аллакай ин файлро таъмин менамояд"
-
-#. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1449
-msgid "The following file is required:"
-msgid_plural "The following files are required:"
-msgstr[0] "Файли зерин лозим аст:"
-msgstr[1] "Файлҳои зерин лозиманд:"
-
-#. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1452
-msgid "Do you want to search for this file now?"
-msgid_plural "Do you want to search for these files now?"
-msgstr[0] "Шумо ин файлро ҳозир ҷустуҷӯ кардан мехоҳед?"
-msgstr[1] "Шумо ин файлҳоро ҳозир ҷустуҷӯ кардан мехоҳед?"
-
-#. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1457
-#, c-format
-msgid "%s wants to install a file"
-msgid_plural "%s wants to install files"
-msgstr[0] "%s мехоҳад, ки файлеро насб кунад"
-msgstr[1] "%s мехоҳад, ки файлҳоеро насб кунад"
-
-#. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1460
-msgid "A program wants to install a file"
-msgid_plural "A program wants to install files"
-msgstr[0] "Барнома мехоҳад, ки файлеро насб кунад"
-msgstr[1] "Барнома мехоҳад, ки файлҳоеро насб кунад"
-
-#. TRANSLATORS: searching for the package that provides the file
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1476 ../src/gpk-dbus-task.c:3017
-#: ../src/gpk-enum.c:1235
-msgid "Searching for file"
-msgstr "Ҷустуҷӯи файл"
-
-#. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1519
-msgid "The following plugin is required:"
-msgid_plural "The following plugins are required:"
-msgstr[0] "Плагини зерин лозим аст:"
-msgstr[1] "Плагинҳои зерин лозиманд:"
-
-#. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1537 ../src/gpk-dbus-task.c:2377
-msgid "Do you want to search for this now?"
-msgid_plural "Do you want to search for these now?"
-msgstr[0] "Шумо инро ҳозир ҷустуҷӯ кардан мехоҳед?"
-msgstr[1] "Шумо инҳоро ҳозир ҷустуҷӯ кардан мехоҳед?"
-
-#. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1550
-#, c-format
-msgid "%s requires an additional plugin to decode this file"
-msgid_plural "%s requires additional plugins to decode this file"
-msgstr[0] "%s плагини иловагиро барои рамзкушоии ин файл талаб мекунад"
-msgstr[1] "%s плагинҳои иловагиро барои рамзкушоии ин файл талаб мекунад"
-
-#. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1554
-#, c-format
-msgid "%s requires an additional plugin to encode this file"
-msgid_plural "%s requires additional plugins to encode this file"
-msgstr[0] "%s плагини иловагиро барои рамзӣ кардани ин файл талаб мекунад"
-msgstr[1] "%s плагинҳои иловагиро барои рамзӣ кардани ин файл талаб мекунад"
-
-#. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1558
-#, c-format
-msgid "%s requires an additional plugin for this operation"
-msgid_plural "%s requires additional plugins for this operation"
-msgstr[0] "%s плагини иловагиро барои ин амалиёт талаб мекунад"
-msgstr[1] "%s плагинҳои иловагиро барои ин амалиёт талаб мекунад"
-
-#. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1564
-msgid "A program requires an additional plugin to decode this file"
-msgid_plural "A program requires additional plugins to decode this file"
-msgstr[0] "Барнома барои рамзкушоии ин файл плагини иловагиро талаб мекунад"
-msgstr[1] "Барнома барои рамзкушоии ин файл плагинҳои иловагиро талаб мекунад"
-
-#. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1568
-msgid "A program requires an additional plugin to encode this file"
-msgid_plural "A program requires additional plugins to encode this file"
-msgstr[0] "Барнома барои рамзгузории ин файл плагини иловагиро талаб мекунад"
-msgstr[1] "Барнома барои рамзгузории ин файл плагинҳои иловагиро талаб мекунад"
-
-#. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1572
-msgid "A program requires an additional plugin for this operation"
-msgid_plural "A program requires additional plugins for this operation"
-msgstr[0] "Барнома барои ин амал плагини иловагиро талаб мекунад"
-msgstr[1] "Барнома барои ин амал плагинҳои иловагиро талаб мекунад"
-
-#. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1578 ../src/gpk-dbus-task.c:1935
-#: ../src/gpk-dbus-task.c:2312 ../src/gpk-dbus-task.c:2389
-msgid "Search"
-msgstr "Ҷустуҷӯ"
-
-#. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1633
-msgid "Failed to search for plugin"
-msgstr "Ҷустуҷӯи плагин қатъ карда шуд"
-
-#. TRANSLATORS: no package sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1635
-msgid "Could not find plugin in any configured package source"
-msgstr "Плагин дар ҳеҷ кадоме аз манбаҳои бастаҳои танзимшуда ёфт нашуд"
-
-#: ../src/gpk-dbus-task.c:1658 ../src/gpk-dbus-task.c:2468
-msgid "Install the following plugin"
-msgid_plural "Install the following plugins"
-msgstr[0] "Насб кардани плагини зерин"
-msgstr[1] "Насб кардани плагинҳои зерин"
-
-#. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1659 ../src/gpk-dbus-task.c:2128
-#: ../src/gpk-dbus-task.c:2469 ../src/gpk-dbus-task.c:2704
-msgid "Do you want to install this package now?"
-msgid_plural "Do you want to install these packages now?"
-msgstr[0] "Шумо ин бастаро ҳозир насб кардан мехоҳед?"
-msgstr[1] "Шумо ин бастаҳоро ҳозир насб кардан мехоҳед?"
-
-#. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1751
-msgid "Searching for plugins"
-msgstr "Ҷустуҷӯи плагинҳо"
-
-#: ../src/gpk-dbus-task.c:1772
-#, c-format
-msgid "Searching for plugin: %s"
-msgstr "Ҷустуҷӯи плагин: %s"
-
-#: ../src/gpk-dbus-task.c:1815
-msgid "Failed to search for provides"
-msgstr "Ҷустуҷӯи таъминҳо қатъ карда шуд"
-
-#. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1844
-msgid "Failed to find software"
-msgstr "Ёфтани нармафзор қатъ карда шуд"
-
-#. TRANSLATORS: nothing found in the package sources that helps
-#: ../src/gpk-dbus-task.c:1846
-msgid "No new applications can be found to handle this type of file"
-msgstr "Барои коркарди ин навъи файл ягон барномаи нав ёфт намешавад"
-
-#. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1917
-msgid "An additional program is required to open this type of file:"
-msgstr "Барои кушодани ин навъи файл барномаи иловагӣ талаб карда мешавад:"
-
-#. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1920
-msgid "Do you want to search for a program to open this file type now?"
-msgstr ""
-"Барои ҳозир кушодани ин намуди файл шумо барномаи наверо ҷустуҷӯ кардан "
-"мехоҳед?"
-
-#. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1928
-#, c-format
-msgid "%s requires a new mime type"
-msgid_plural "%s requires new mime types"
-msgstr[0] "%s навъи нави MIME-ро талаб мекунад"
-msgstr[1] "%s навъҳои нави MIME-ҳоро талаб мекунад"
-
-#. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1931
-msgid "A program requires a new mime type"
-msgid_plural "A program requires new mime types"
-msgstr[0] "Барнома намуди MIME-и навро талаб мекунад"
-msgstr[1] "Барнома намудҳои MIME-ҳои навро талаб мекунад"
-
-#. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1946
-msgid "Searching for file handlers"
-msgstr "Ҷустуҷӯи дастгузори файлҳо"
-
-#. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2029
-msgid "Language tag not parsed"
-msgstr "Барчаспи забон таҷзия нашудааст"
-
-#. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2037
-msgid "Language code not matched"
-msgstr "Рамзи забон мутобиқ нест"
-
-#. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2097
-msgid "Failed to find font"
-msgid_plural "Failed to find fonts"
-msgstr[0] "Ёфтани шрифт қатъ карда шуд"
-msgstr[1] "Ёфтани шрифтҳо қатъ карда шуд"
-
-#. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2105
-msgid "No new fonts can be found for this document"
-msgstr "Ҳеҷгуна шрифти нав барои ин ҳуҷҷат ёфт нашуд"
-
-#. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2291
-msgid "An additional font is required to view this document correctly."
-msgid_plural "Additional fonts are required to view this document correctly."
-msgstr[0] "Барои тамошои дурусти ин ҳуҷҷат шрифти иловагӣ лозим аст."
-msgstr[1] "Барои тамошои дурусти ин ҳуҷҷат шрифтҳои иловагӣ лозиманд."
-
-#. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2295
-msgid "Do you want to search for a suitable package now?"
-msgid_plural "Do you want to search for suitable packages now?"
-msgstr[0] "Шумо ҳозир бастаи мувофиқро ҷустуҷӯ кардан мехоҳед?"
-msgstr[1] "Шумо ҳозир бастаҳои мувофиқро ҷустуҷӯ кардан мехоҳед?"
-
-#. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2305
-#, c-format
-msgid "%s wants to install a font"
-msgid_plural "%s wants to install fonts"
-msgstr[0] "%s мехоҳад, ки шрифтеро насб кунад"
-msgstr[1] "%s мехоҳад, ки шрифтҳоеро насб кунад"
-
-#. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2308
-msgid "A program wants to install a font"
-msgid_plural "A program wants to install fonts"
-msgstr[0] "Барнома мехоҳад, ки шрифтеро насб кунад"
-msgstr[1] "Барнома мехоҳад, ки шрифтҳоеро насб кунад"
-
-#. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2324
-msgid "Searching for font"
-msgid_plural "Searching for fonts"
-msgstr[0] "Ҷустуҷӯи шрифт"
-msgstr[1] "Ҷустуҷӯи шрифтҳо"
-
-#. TRANSLATORS: we are listing the services in a box
-#: ../src/gpk-dbus-task.c:2365
-msgid "The following service is required:"
-msgid_plural "The following services are required:"
-msgstr[0] "Хидмати зерин лозим аст:"
-msgstr[1] "Хидматҳои зерин лозиманд:"
-
-#: ../src/gpk-dbus-task.c:2385
-msgid "Plasma requires an additional service for this operation"
-msgid_plural "Plasma requires additional services for this operation"
-msgstr[0] "Барои ин кор Plasma ба хидмати иловагӣ ниёз дорад"
-msgstr[1] "Барои ин кор Plasma ба хидматҳои иловагӣ ниёз дорад"
-
-#: ../src/gpk-dbus-task.c:2443
-msgid "Failed to search for Plasma service"
-msgstr "Ҷустуҷӯи хидмати Plasma қатъ карда шуд"
-
-#. TRANSLATORS: no package sources have the wanted Plasma service
-#: ../src/gpk-dbus-task.c:2445
-msgid "Could not find service in any configured package source"
-msgstr "Хидматро дар ягон манбаи бастаҳои танзимшуда ёфта наметавонад"
-
-#. TRANSLATORS: search for Plasma services
-#: ../src/gpk-dbus-task.c:2551
-msgid "Searching for services"
-msgstr "Ҷустуҷӯи хидматҳо"
-
-#: ../src/gpk-dbus-task.c:2570
-#, c-format
-msgid "Searching for service: %s"
-msgstr "Ҷустуҷӯи хидмат: %s"
-
-#: ../src/gpk-dbus-task.c:2627
-msgid "Failed to remove package"
-msgstr "Тоза кардани баста қатъ карда шуд"
-
-#: ../src/gpk-dbus-task.c:2703
-msgid "Install the following driver"
-msgid_plural "Install the following drivers"
-msgstr[0] "Насб кардани драйвери зерин"
-msgstr[1] "Насб кардани драйверҳои зерин"
-
-#. TRANSLATORS: title: removing packages
-#. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2858 ../src/gpk-enum.c:870
-msgid "Removing packages"
-msgstr "Бастаҳо тоза шуда истодаанд"
-
-#. TRANSLATORS: failed to find the package for the file
-#: ../src/gpk-dbus-task.c:2912
-msgid "Failed to find package for this file"
-msgstr "Ёфтани баста барои ин файл қатъ шудааст"
-
-#. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2990
-msgid "The following file will be removed:"
-msgid_plural "The following files will be removed:"
-msgstr[0] "Файли зерин тоза карда мешавад:"
-msgstr[1] "Файлҳои зерин тоза карда мешаванд:"
-
-#. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2993
-msgid "Do you want to remove this file now?"
-msgid_plural "Do you want to remove these files now?"
-msgstr[0] "Шумо ин файлро ҳозир тоза кардан мехоҳед?"
-msgstr[1] "Шумо ин файлҳоро ҳозир тоза кардан мехоҳед?"
-
-#. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2998
-#, c-format
-msgid "%s wants to remove a file"
-msgid_plural "%s wants to remove files"
-msgstr[0] "%s мехоҳад, ки файлеро тоза кунад"
-msgstr[1] "%s мехоҳад, ки файлҳоеро тоза кунад"
-
-#. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:3001
-msgid "A program wants to remove a file"
-msgid_plural "A program wants to remove files"
-msgstr[0] "Барнома мехоҳад, ки файлеро тоза кунад"
-msgstr[1] "Барнома мехоҳад, ки файлҳоеро тоза кунад"
-
-#. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:3005 ../src/gpk-task.c:409
-msgid "Remove"
-msgstr "Тоза кардан"
+#. TRANSLATORS: turn on all debugging
+#: ../src/gpk-debug.c:113
+msgid "Show debugging information for all files"
+msgstr "Иттилооти ислоҳи нуқсонҳо барои ҳамаи файлҳо намоиш диҳед"
+
+#: ../src/gpk-debug.c:171
+msgid "Debugging Options"
+msgstr "Имконоти ислоҳи нуқсонҳо"
+
+#: ../src/gpk-debug.c:171
+msgid "Show debugging options"
+msgstr "Намоиш додани имконоти ислоҳи нуқсонҳо"
 
 #. TRANSLATORS: This is when we have over 5 items, and we're not interested in detail
-#: ../src/gpk-dialog.c:72
+#: ../src/gpk-dialog.c:71
 msgid "many packages"
 msgstr "Якчанд бастаҳо"
 
-#: ../src/gpk-dialog.c:241
+#: ../src/gpk-dialog.c:235
 msgid "No files"
 msgstr "Файлҳо нестанд"
 
 #. add a checkbutton for deps screen
-#: ../src/gpk-dialog.c:304
+#: ../src/gpk-dialog.c:298
 msgid "Do not show this again"
 msgstr "Инро дубора нишон надиҳед"
 
 #. TRANSLATORS: this is compact disk (CD) media
-#: ../src/gpk-enum.c:251
+#: ../src/gpk-enum.c:200
 msgid "CD"
 msgstr "CD"
 
 #. TRANSLATORS: this is digital versatile disk (DVD) media
-#: ../src/gpk-enum.c:255
+#: ../src/gpk-enum.c:204
 msgid "DVD"
 msgstr "DVD"
 
 #. TRANSLATORS: this is either CD or DVD media
-#: ../src/gpk-enum.c:259
+#: ../src/gpk-enum.c:208
 msgid "disc"
 msgstr "диск"
 
 #. TRANSLATORS: this is generic media of unknown type that we will install from
-#: ../src/gpk-enum.c:263
+#: ../src/gpk-enum.c:212
 msgid "media"
 msgstr "медиа"
 
-#: ../src/gpk-enum.c:280
+#: ../src/gpk-enum.c:229
 msgid "Failed with unknown error code"
 msgstr "Бо коди хатои номаълум қатъ карда шуд"
 
-#: ../src/gpk-enum.c:283
+#: ../src/gpk-enum.c:232
 msgid "No network connection available"
 msgstr "Ягон пайвасти шабака дастрас нест"
 
-#: ../src/gpk-enum.c:286
+#: ../src/gpk-enum.c:235
 msgid "No package cache is available."
 msgstr "Ягон зерҳофизаи баста дастрас нест."
 
-#: ../src/gpk-enum.c:289
+#: ../src/gpk-enum.c:238
 msgid "Out of memory"
 msgstr "Ҳофизаи кофӣ нест"
 
-#: ../src/gpk-enum.c:292
+#: ../src/gpk-enum.c:241
 msgid "Failed to create a thread"
 msgstr "Эҷоди ришта қатъ карда шуд"
 
-#: ../src/gpk-enum.c:295
+#: ../src/gpk-enum.c:244
 msgid "Not supported by this backend"
 msgstr "Бо ин қисмати охирин дастгирӣ намешвад"
 
-#: ../src/gpk-enum.c:298
+#: ../src/gpk-enum.c:247
 msgid "An internal system error has occurred"
 msgstr "Хатои системаи дохилӣ рух дод"
 
-#: ../src/gpk-enum.c:301
+#: ../src/gpk-enum.c:250
 msgid "A security signature is not present"
 msgstr "Имзои амният вуҷуд надорад"
 
-#: ../src/gpk-enum.c:304
+#: ../src/gpk-enum.c:253
 msgid "The package is not installed"
 msgstr "Баста насб нашудааст"
 
-#: ../src/gpk-enum.c:307
+#: ../src/gpk-enum.c:256
 msgid "The package was not found"
 msgstr "Баста ёфт нашуд"
 
-#: ../src/gpk-enum.c:313
+#: ../src/gpk-enum.c:259
+#| msgid "The package is already installed"
+#| msgid_plural "The packages are already installed"
+msgid "The package is already installed"
+msgstr "Баста аллакай насб шудааст"
+
+#: ../src/gpk-enum.c:262
 msgid "The package download failed"
 msgstr "Боргирии баста қатъ карда шуд"
 
-#: ../src/gpk-enum.c:316
+#: ../src/gpk-enum.c:265
 msgid "The group was not found"
 msgstr "Гурӯҳ ёфт нашуд"
 
-#: ../src/gpk-enum.c:319
+#: ../src/gpk-enum.c:268
 msgid "The group list was invalid"
 msgstr "Рӯйхати гурӯҳ беэътибор буд"
 
-#: ../src/gpk-enum.c:322
+#: ../src/gpk-enum.c:271
 msgid "Dependency resolution failed"
 msgstr "Возеҳии вобастагӣ қатъ кард шуд"
 
-#: ../src/gpk-enum.c:325
+#: ../src/gpk-enum.c:274
 msgid "Search filter was invalid"
 msgstr "Филтри ҷустуҷӯ беэътибор аст"
 
-#: ../src/gpk-enum.c:328
+#: ../src/gpk-enum.c:277
 msgid "The package identifier was not well formed"
 msgstr "Идентификатори баста хуб ташкил наёфт"
 
-#: ../src/gpk-enum.c:331
+#: ../src/gpk-enum.c:280
 msgid "Transaction error"
 msgstr "Хатои муомила"
 
-#: ../src/gpk-enum.c:334
+#: ../src/gpk-enum.c:283
 msgid "Repository name was not found"
 msgstr "Номи анбори додаҳо ёфт нашуд"
 
-#: ../src/gpk-enum.c:337
+#: ../src/gpk-enum.c:286
 msgid "Could not remove a protected system package"
 msgstr "Бастаи системаи ҳифзшударо тоза карда натавонист"
 
-#: ../src/gpk-enum.c:340
+#: ../src/gpk-enum.c:289
 msgid "The action was canceled"
 msgstr "Амал бекор карда шуд"
 
-#: ../src/gpk-enum.c:343
+#: ../src/gpk-enum.c:292
 msgid "The action was forcibly canceled"
 msgstr "Амал маҷбуран бекор карда шуд"
 
-#: ../src/gpk-enum.c:346
+#: ../src/gpk-enum.c:295
 msgid "Reading the configuration file failed"
 msgstr "Хондани конфигуратсияи файл қатъ карда шуд"
 
-#: ../src/gpk-enum.c:349
+#: ../src/gpk-enum.c:298
 msgid "The action cannot be canceled"
 msgstr "Бекор кардани амал номумкин аст"
 
-#: ../src/gpk-enum.c:352
+#: ../src/gpk-enum.c:301
 msgid "Source packages cannot be installed"
 msgstr "Бастаҳои манбаъ насб шуда наметавонанд"
 
-#: ../src/gpk-enum.c:355
+#: ../src/gpk-enum.c:304
 msgid "The license agreement failed"
 msgstr "Қарордоди иҷозатнома қатъ карда шуд"
 
-#: ../src/gpk-enum.c:358
+#: ../src/gpk-enum.c:307
 msgid "Local file conflict between packages"
 msgstr "Ихтилофи файли маҳаллӣ байни бастаҳо"
 
-#: ../src/gpk-enum.c:361
+#: ../src/gpk-enum.c:310
 msgid "Packages are not compatible"
 msgstr "Бастаҳо мувофиқ нестанд"
 
-#: ../src/gpk-enum.c:364
+#: ../src/gpk-enum.c:313
 msgid "Problem connecting to a package source"
 msgstr "Мушкилии пайвастшавӣ ба манбаи бастаҳо"
 
-#: ../src/gpk-enum.c:367
+#: ../src/gpk-enum.c:316
 msgid "Failed to initialize"
 msgstr "Оғоз кардан қатъ карда шуд"
 
-#: ../src/gpk-enum.c:370
+#: ../src/gpk-enum.c:319
 msgid "Failed to finalize"
 msgstr "Ба охир расидан қатъ карда шуд"
 
-#: ../src/gpk-enum.c:373
+#: ../src/gpk-enum.c:322
 msgid "Cannot get lock"
 msgstr "Қулф шуда наметавонад"
 
-#: ../src/gpk-enum.c:376
+#: ../src/gpk-enum.c:325
 msgid "No packages to update"
 msgstr "Бастаи барои навсозӣ нест"
 
-#: ../src/gpk-enum.c:379
+#: ../src/gpk-enum.c:328
 msgid "Cannot write repository configuration"
 msgstr "Конфигуратсияи анбори додаҳоро навишта наметавонад"
 
-#: ../src/gpk-enum.c:382
+#: ../src/gpk-enum.c:331
 msgid "Local install failed"
 msgstr "Насби маҳаллӣ қатъ карда шуд"
 
-#: ../src/gpk-enum.c:385
+#: ../src/gpk-enum.c:334
 msgid "Bad security signature"
 msgstr "Имзои амниятии бад"
 
-#: ../src/gpk-enum.c:388
+#: ../src/gpk-enum.c:337
 msgid "Missing security signature"
 msgstr "Имзои амният мавҷуд нест"
 
-#: ../src/gpk-enum.c:391
+#: ../src/gpk-enum.c:340
 msgid "Repository configuration invalid"
 msgstr "Конфигуратсияи анбори додаҳо беэътибор аст"
 
-#: ../src/gpk-enum.c:394
+#: ../src/gpk-enum.c:343
 msgid "Invalid package file"
 msgstr "Файли бастаи беэътибор"
 
-#: ../src/gpk-enum.c:397
+#: ../src/gpk-enum.c:346
 msgid "Package install blocked"
 msgstr "Насби баста манъ карда шуд"
 
-#: ../src/gpk-enum.c:400
+#: ../src/gpk-enum.c:349
 msgid "Package is corrupt"
 msgstr "Баста вайрон шуд"
 
-#: ../src/gpk-enum.c:403
+#: ../src/gpk-enum.c:352
 msgid "All packages are already installed"
 msgstr "Ҳамаи бастаҳо насб шудаанд"
 
-#: ../src/gpk-enum.c:406
+#: ../src/gpk-enum.c:355
 msgid "The specified file could not be found"
 msgstr "Файли махсус ёфт намешавад"
 
-#: ../src/gpk-enum.c:409
+#: ../src/gpk-enum.c:358
 msgid "No more mirrors are available"
 msgstr "Оинаҳои дигар дастрас нестанд"
 
-#: ../src/gpk-enum.c:412
+#: ../src/gpk-enum.c:361
 msgid "No distribution upgrade data is available"
 msgstr "Ҳеҷгуна таҳияи иттилооти такмилдиҳӣ дастрас нест"
 
-#: ../src/gpk-enum.c:415
+#: ../src/gpk-enum.c:364
 msgid "Package is incompatible with this system"
 msgstr "Баста ба ин система мутобиқ нест"
 
-#: ../src/gpk-enum.c:418
+#: ../src/gpk-enum.c:367
 msgid "No space is left on the disk"
 msgstr "Ҷое дар диск боқӣ намондааст"
 
 #. TRANSLATORS: this is the window title when a new CD or DVD is required
-#: ../src/gpk-enum.c:421 ../src/gpk-task.c:356
+#: ../src/gpk-enum.c:370 ../src/gpk-task.c:345
 msgid "A media change is required"
 msgstr "Шумо бояд медиаро иваз кунед"
 
-#: ../src/gpk-enum.c:424
+#: ../src/gpk-enum.c:373
 msgid "Authorization failed"
 msgstr "Иҷоза қатъ карда шуд"
 
-#: ../src/gpk-enum.c:427
+#: ../src/gpk-enum.c:376
 msgid "Update not found"
 msgstr "Навсозӣ ёфт нашуд"
 
-#: ../src/gpk-enum.c:430
+#: ../src/gpk-enum.c:379
 msgid "Cannot install from untrusted source"
 msgstr "Аз манбаи беэътибор насб карда намешавад"
 
-#: ../src/gpk-enum.c:433
+#: ../src/gpk-enum.c:382
 msgid "Cannot update from untrusted source"
 msgstr "Аз манбаи беэътибор навсозӣ карда намешавад"
 
-#: ../src/gpk-enum.c:436
+#: ../src/gpk-enum.c:385
 msgid "Cannot get the file list"
 msgstr "Рӯйхати файлро гирифта наметавонад"
 
-#: ../src/gpk-enum.c:439
+#: ../src/gpk-enum.c:388
 msgid "Cannot get package requires"
 msgstr "талаботи бастаро гирифта наметавонад"
 
-#: ../src/gpk-enum.c:442
+#: ../src/gpk-enum.c:391
 msgid "Cannot disable source"
 msgstr "Манбаъро ғайрифаъол карда наметавонад"
 
-#: ../src/gpk-enum.c:445
+#: ../src/gpk-enum.c:394
 msgid "The download failed"
 msgstr "Боргирӣ бекор карда шуд"
 
-#: ../src/gpk-enum.c:448
+#: ../src/gpk-enum.c:397
 msgid "Package failed to configure"
 msgstr "Конфигуратсияшавии баста қатъ карда шуд"
 
-#: ../src/gpk-enum.c:451
+#: ../src/gpk-enum.c:400
 msgid "Package failed to build"
 msgstr "Сохтани баста қатъ карда шуд"
 
-#: ../src/gpk-enum.c:454
+#: ../src/gpk-enum.c:403
 msgid "Package failed to install"
 msgstr "Насби баста қатъ карда шуд"
 
-#: ../src/gpk-enum.c:457
+#: ../src/gpk-enum.c:406
 msgid "Package failed to be removed"
 msgstr "Тоза кардани баста қатъ карда шуд"
 
-#: ../src/gpk-enum.c:460
+#: ../src/gpk-enum.c:409
 msgid "Update failed due to running process"
 msgstr "Вобаста ба раванди иҷроиш навсозӣ қатъ карда шуд"
 
-#: ../src/gpk-enum.c:463
+#: ../src/gpk-enum.c:412
 msgid "The package database was changed"
 msgstr "Пойгоҳи иттилоотии баста тағйир ёфт"
 
-#: ../src/gpk-enum.c:466
+#: ../src/gpk-enum.c:415
 msgid "Virtual provide type is not supported"
 msgstr "Навъи таъмини виртуалӣ дастгирӣ карда намешавад"
 
-#: ../src/gpk-enum.c:469
+#: ../src/gpk-enum.c:418
 msgid "Install root is invalid"
 msgstr "Насби root беэътибор аст"
 
-#: ../src/gpk-enum.c:472
+#: ../src/gpk-enum.c:421
 msgid "Cannot fetch install sources"
 msgstr "Манбаҳои насб фарохонӣ карда намешаванд"
 
-#: ../src/gpk-enum.c:475
+#: ../src/gpk-enum.c:424
 msgid "Rescheduled due to priority"
 msgstr "Вобаста ба имтиёз дубора замонбандӣ шуд"
 
-#: ../src/gpk-enum.c:478
+#: ../src/gpk-enum.c:427
 msgid "Unfinished transaction"
 msgstr "Муомилаи анҷомнаёфта"
 
-#: ../src/gpk-enum.c:481
+#: ../src/gpk-enum.c:430
 msgid "Lock required"
 msgstr "Қулф лозим аст"
 
-#: ../src/gpk-enum.c:498
+#: ../src/gpk-enum.c:447
 msgid "Failed with unknown error code."
 msgstr "Бо хатори рамзи номаълум қатъ карда шуд"
 
-#: ../src/gpk-enum.c:501
+#: ../src/gpk-enum.c:450
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
@@ -1709,7 +1219,7 @@ msgstr ""
 "Пайвасти шабакаи дастрас вуҷуд надорад.\n"
 "Лутфан танзимоти пайвасти худро санҷида дубора кӯшиш намоед."
 
-#: ../src/gpk-enum.c:505
+#: ../src/gpk-enum.c:454
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
@@ -1717,7 +1227,7 @@ msgstr ""
 "Ин рӯйхати баста бояд дубора сохта шавад.\n"
 "Ин бояд ба таври худкор тавассути пуштибонӣ анҷом дода шавад."
 
-#: ../src/gpk-enum.c:509
+#: ../src/gpk-enum.c:458
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
@@ -1726,11 +1236,11 @@ msgstr ""
 "Хизматрасонии масъул барои коркарди дархостҳои корбар хотира надорад.\n"
 "Луфтан компютери худро бозоғозӣ намоед."
 
-#: ../src/gpk-enum.c:513
+#: ../src/gpk-enum.c:462
 msgid "A thread could not be created to service the user request."
 msgstr "Барои хизматрасонии дархости корбар ҷараён эҷод шуда наметавонад."
 
-#: ../src/gpk-enum.c:516
+#: ../src/gpk-enum.c:465
 msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug in your distribution bug tracker as this should not have "
@@ -1740,7 +1250,7 @@ msgstr ""
 "Лутфан нуқсонро дар таҳияи пайгирикунандаи нуқсони гузориш диҳед, зеро он "
 "набояд рух диҳад"
 
-#: ../src/gpk-enum.c:520
+#: ../src/gpk-enum.c:469
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug in your distribution bug tracker with the error "
@@ -1750,7 +1260,7 @@ msgstr ""
 "Лутфан, ин мушкилиро бо тафсири хато ба воситаи барномаи пайгирии мушкилиҳо "
 "гузориш диҳед."
 
-#: ../src/gpk-enum.c:524
+#: ../src/gpk-enum.c:473
 msgid ""
 "A security trust relationship could not be made with package source.\n"
 "Please check your security settings."
@@ -1758,13 +1268,13 @@ msgstr ""
 "Робитаи боварии амниятӣ бо манбаи бастаҳо анҷом нагирифт.\n"
 "Лутфан танзимоти амниятии худро санҷед."
 
-#: ../src/gpk-enum.c:528
+#: ../src/gpk-enum.c:477
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
 msgstr ""
 "Бастае, ки барои тоза ё навсозӣ шудан кӯшиш мекунад, ҳоло насб нашудааст."
 
-#: ../src/gpk-enum.c:531
+#: ../src/gpk-enum.c:480
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "package source."
@@ -1772,11 +1282,11 @@ msgstr ""
 "Бастае, ки тағйир ёфта истодааст, дар системаи шумо ё дар ягон манбаи "
 "бастаҳо ёфт нашуд."
 
-#: ../src/gpk-enum.c:534
+#: ../src/gpk-enum.c:483
 msgid "The package that is trying to be installed is already installed."
 msgstr "Бастае, ки кӯшиш ба насб шудан дорад, аллакай насб шуд."
 
-#: ../src/gpk-enum.c:537
+#: ../src/gpk-enum.c:486
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
@@ -1784,7 +1294,7 @@ msgstr ""
 "Боргирии баста қатъ гардид.\n"
 "Пайвастшавии шабакаи худро санҷед."
 
-#: ../src/gpk-enum.c:541
+#: ../src/gpk-enum.c:490
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
@@ -1792,7 +1302,7 @@ msgstr ""
 "Намуди гурӯҳ ёфт нашуд.\n"
 "Лутфан рӯйхати гурӯҳи худро санҷед ва амалро такрор кунед."
 
-#: ../src/gpk-enum.c:545
+#: ../src/gpk-enum.c:494
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source "
@@ -1802,7 +1312,7 @@ msgstr ""
 "Навсозии ҳофизаи шумо метавонад кӯмак намояд, ҳарчанд, ки ин одатан як хатои "
 "манбаи нармафзор аст."
 
-#: ../src/gpk-enum.c:550
+#: ../src/gpk-enum.c:499
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
@@ -1810,11 +1320,11 @@ msgstr ""
 "Барои ба анҷом расонидани ин амал, бастаи лозимӣ вуҷуд надорад.\n"
 "Маълумоти бештар дар гузориши ботафсил мавҷуд аст."
 
-#: ../src/gpk-enum.c:554
+#: ../src/gpk-enum.c:503
 msgid "The search filter was not correctly formed."
 msgstr "Филтри ҷустуҷӯ дуруст шакл наёфтааст."
 
-#: ../src/gpk-enum.c:557
+#: ../src/gpk-enum.c:506
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
@@ -1822,7 +1332,7 @@ msgstr ""
 "Идентификатори баста ҳангоми фиристодан ба сервер хуб шакл нагирифта буд.\n"
 "Ин асосан хатои дохилиро муайян мекунад ва бояд гузориш дода шавад."
 
-#: ../src/gpk-enum.c:561
+#: ../src/gpk-enum.c:510
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
@@ -1830,7 +1340,7 @@ msgstr ""
 "Хатои муомилаи номуайян рух дод.\n"
 "Иттилооти бештар дар гузориши муфассул дастрас аст."
 
-#: ../src/gpk-enum.c:565
+#: ../src/gpk-enum.c:514
 msgid ""
 "The remote package source name was not found.\n"
 "You may need to enable an item in Package Sources."
@@ -1838,16 +1348,16 @@ msgstr ""
 "Номи манбаи бастаҳои дурдаст ёфт нашуд.\n"
 "Шумо бояд объектро дар Манбаҳои бастаҳо фаъол намоед."
 
-#: ../src/gpk-enum.c:569
+#: ../src/gpk-enum.c:518
 msgid "Removing a protected system package is not allowed."
 msgstr "Тоза кардани бастаи системаи ҳифозатшуда мумкин нест."
 
-#: ../src/gpk-enum.c:572
+#: ../src/gpk-enum.c:521
 msgid "The action was canceled successfully and no packages were changed."
 msgstr ""
 "Амал бомуваффақият бекор карда шуд ва ҳеҷ кадоме аз бастаҳо тағйир наёфтанд."
 
-#: ../src/gpk-enum.c:575
+#: ../src/gpk-enum.c:524
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
@@ -1856,7 +1366,7 @@ msgstr ""
 "наёфтанд.\n"
 "Пуштибонӣ озодона набаромад."
 
-#: ../src/gpk-enum.c:579
+#: ../src/gpk-enum.c:528
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
@@ -1864,11 +1374,11 @@ msgstr ""
 "Файли конфигуратсияи бастаи миллӣ кушода нашуд.\n"
 "Луфтан оиди қонунӣ будани кофигуратсия боварӣ ҳосил намоед."
 
-#: ../src/gpk-enum.c:583
+#: ../src/gpk-enum.c:532
 msgid "The action cannot be canceled at this time."
 msgstr "Дар ин вақт бекор кардани амал номумкин аст."
 
-#: ../src/gpk-enum.c:586
+#: ../src/gpk-enum.c:535
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
@@ -1876,13 +1386,13 @@ msgstr ""
 "Бо ин роҳ бастаҳои манбаъ ба таври оддӣ насб намешаванд.\n"
 "Пасванди файлеро, ки шумо насб кардан мехоҳед, санҷед."
 
-#: ../src/gpk-enum.c:590
+#: ../src/gpk-enum.c:539
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
 msgstr "Барои истифодаи ин нармафзор шумо бояд иҷозатномаро қабул намоед."
 
-#: ../src/gpk-enum.c:594
+#: ../src/gpk-enum.c:543
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different sources."
@@ -1890,7 +1400,7 @@ msgstr ""
 "Ҳар ду баста як файлро таҳия мекунанд.\n"
 "Ин асосан аз сабаби омехташавии бастаҳо аз манбаҳои бастаҳои гуногун аст."
 
-#: ../src/gpk-enum.c:598
+#: ../src/gpk-enum.c:547
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different sources."
@@ -1898,7 +1408,7 @@ msgstr ""
 "Якчанд баста мавҷуданд, ки ба якдигар мувофиқ нестанд.\n"
 "Ин асосан аз сабаби омехташавии бастаҳо аз манбаҳои бастаҳои гуногун аст."
 
-#: ../src/gpk-enum.c:602
+#: ../src/gpk-enum.c:551
 msgid ""
 "There was a (possibly temporary) problem connecting to a package source.\n"
 "Please check the detailed error for further details."
@@ -1906,7 +1416,7 @@ msgstr ""
 "Мушкилие (эҳтимолан муваққатӣ) дар пайвастшавӣ ба манбаи бастаҳо буд.\n"
 "Лутфан барои тафсилоти бештар хатои муфассалро санҷед."
 
-#: ../src/gpk-enum.c:606
+#: ../src/gpk-enum.c:555
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
@@ -1914,7 +1424,7 @@ msgstr ""
 "Оғоз кардани пуштибони бастабандӣ қатъ карда шуд.\n"
 "Ин замоне рух медиҳад, ки дигар абзорҳои бастабандӣ якҷоя истифода шаванд."
 
-#: ../src/gpk-enum.c:610
+#: ../src/gpk-enum.c:559
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
@@ -1922,7 +1432,7 @@ msgstr ""
 "Ҳолати пуштибонӣ ба пӯшонида мешавад.\n"
 "Ин хато асосан рад карда мешавад."
 
-#: ../src/gpk-enum.c:614
+#: ../src/gpk-enum.c:563
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
@@ -1931,15 +1441,15 @@ msgstr ""
 " Лутфан ҳаргуна абзорҳои бастабандии ирсии боқимондаро, ки шояд кушода "
 "бошанд, пӯшонед."
 
-#: ../src/gpk-enum.c:618
+#: ../src/gpk-enum.c:567
 msgid "None of the selected packages could be updated."
 msgstr "Ҳеҷ кадоми бастаҳои интихобшуда навсозӣ намешаванд."
 
-#: ../src/gpk-enum.c:621
+#: ../src/gpk-enum.c:570
 msgid "The repository configuration could not be modified."
 msgstr "Конфигуратсияи анбори додаҳо тағйир дода намешавад."
 
-#: ../src/gpk-enum.c:624
+#: ../src/gpk-enum.c:573
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
@@ -1947,11 +1457,11 @@ msgstr ""
 "Насби файли маҳаллӣ қатъ карда шуд.\n"
 "Маълумоти бештар дар гузориши муфассал дастрас аст."
 
-#: ../src/gpk-enum.c:628
+#: ../src/gpk-enum.c:577
 msgid "The package security signature could not be verified."
 msgstr "Имзои амнияти баста тасдиқ шуда наметавонад."
 
-#: ../src/gpk-enum.c:631
+#: ../src/gpk-enum.c:580
 msgid ""
 "The package security signature is missing and this package is untrusted.\n"
 "This package was not signed when created."
@@ -1959,11 +1469,11 @@ msgstr ""
 "Имзои амнияти баста вуҷуд надорад ва ба ин баста бовар кардан мумкин нест.\n"
 "Ин баста ҳангоми эҷод шудан имзо нашудааст."
 
-#: ../src/gpk-enum.c:635
+#: ../src/gpk-enum.c:584
 msgid "Repository configuration was invalid and could not be read."
 msgstr "Конфигуратсияи анбори додаҳо беэътибор буд ва хонда намешуд."
 
-#: ../src/gpk-enum.c:638
+#: ../src/gpk-enum.c:587
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
@@ -1971,25 +1481,25 @@ msgstr ""
 "Бастае, ки шумо насб кардан мехоҳед, эътибор надорад.\n"
 "Файли баста шояд вайрон бошад ё бастаи муносиб набошад."
 
-#: ../src/gpk-enum.c:642
+#: ../src/gpk-enum.c:591
 msgid ""
 "Installation of this package prevented by your packaging system's "
 "configuration."
 msgstr ""
 "Насби ин баста бо конфигуратсияи системаи бастабандии шумо пешгирӣ карда шуд."
 
-#: ../src/gpk-enum.c:645
+#: ../src/gpk-enum.c:594
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr "Бастае, ки боргирӣ шуда буд вайрон шуд ва бояд аз нав боргирӣ шавад."
 
-#: ../src/gpk-enum.c:648
+#: ../src/gpk-enum.c:597
 msgid ""
 "All of the packages selected for install are already installed on the system."
 msgstr ""
 "Ҳамаи бастаҳои интихобшуда барои насб аллакай дар система насб шудаанд."
 
-#: ../src/gpk-enum.c:651
+#: ../src/gpk-enum.c:600
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
@@ -1997,7 +1507,7 @@ msgstr ""
 "Файли махсус дар система ёфт нашуд.\n"
 "Файлро то вақти мавҷуд будан ва нест нашудан санҷед."
 
-#: ../src/gpk-enum.c:655
+#: ../src/gpk-enum.c:604
 msgid ""
 "Required data could not be found on any of the configured package sources.\n"
 "There were no more download mirrors that could be tried."
@@ -2005,7 +1515,7 @@ msgstr ""
 "Иттилооти зарурӣ дар ҳеҷ кадоме аз манбаҳои бастаҳо ёфт нашуд\n"
 "Оинаҳои боргирии дигаре барои кӯшиш кардан вуҷуд надоштанд."
 
-#: ../src/gpk-enum.c:659
+#: ../src/gpk-enum.c:608
 msgid ""
 "Required upgrade data could not be found in any of the configured package "
 "sources.\n"
@@ -2015,12 +1525,12 @@ msgstr ""
 "ёфт нашуд.\n"
 "Рӯйхати такмили таҳия дастнорас мешавад."
 
-#: ../src/gpk-enum.c:663
+#: ../src/gpk-enum.c:612
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
 msgstr "Бастае, ки насб шудан мехоҳад, барои ин система номувофиқ аст."
 
-#: ../src/gpk-enum.c:666
+#: ../src/gpk-enum.c:615
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
@@ -2028,11 +1538,11 @@ msgstr ""
 "Дар дастгоҳ ҷои кофӣ вуҷуд надорад.\n"
 "Барои анҷоми ин ҷойҳоеро дар диски система озод кунед."
 
-#: ../src/gpk-enum.c:670
+#: ../src/gpk-enum.c:619
 msgid "Additional media is required to complete the transaction."
 msgstr "Барои анҷом додани муомила медиаи иловагӣ лозим аст."
 
-#: ../src/gpk-enum.c:673
+#: ../src/gpk-enum.c:622
 msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
@@ -2040,7 +1550,7 @@ msgstr ""
 "Шумо санҷиши ҳаққонияти дурустро таъмин карда натавонистед.\n"
 "Лутфан ягон танзимоти парол ё ҳисобро санҷед."
 
-#: ../src/gpk-enum.c:677
+#: ../src/gpk-enum.c:626
 msgid ""
 "The specified update could not be found.\n"
 "It could have already been installed or no longer available on the remote "
@@ -2049,27 +1559,27 @@ msgstr ""
 "Навсозии махсус ёфт нашуд\n"
 "Шояд аллакай насб шуда бошад ё дигар дар сервери дурдаст дастрас нест."
 
-#: ../src/gpk-enum.c:681
+#: ../src/gpk-enum.c:630
 msgid "The package could not be installed from untrusted source."
 msgstr "Насб кардани баста аз манбаи беэътибор номумкин аст."
 
-#: ../src/gpk-enum.c:684
+#: ../src/gpk-enum.c:633
 msgid "The package could not be updated from untrusted source."
 msgstr "Навсозии баста аз манбаи беэътибор номумкин аст."
 
-#: ../src/gpk-enum.c:687
+#: ../src/gpk-enum.c:636
 msgid "The file list is not available for this package."
 msgstr "Рӯйхати файл барои ин баста дастрас нест."
 
-#: ../src/gpk-enum.c:690
+#: ../src/gpk-enum.c:639
 msgid "The information about what requires this package could not be obtained."
 msgstr "Иттилоот дар бораи чизҳои лозима барои ин баста дастнорас ҳастанд."
 
-#: ../src/gpk-enum.c:693
+#: ../src/gpk-enum.c:642
 msgid "The specified package source could not be disabled."
 msgstr "Манбаи бастаҳои муайяншуда ғайрифаъол нашуд."
 
-#: ../src/gpk-enum.c:696
+#: ../src/gpk-enum.c:645
 msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
@@ -2078,7 +1588,7 @@ msgstr ""
 "шавад.\n"
 "Иттилооти бештар дар гузориши муфассал дастрас аст."
 
-#: ../src/gpk-enum.c:700
+#: ../src/gpk-enum.c:649
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
@@ -2086,7 +1596,7 @@ msgstr ""
 "Конфигуратсияи дурусти яке аз бастаҳои интихобшуда қатъ карда шуд.\n"
 "Иттилооти бештар дар гузориши муфассал дастрас аст."
 
-#: ../src/gpk-enum.c:704
+#: ../src/gpk-enum.c:653
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
@@ -2094,7 +1604,7 @@ msgstr ""
 "Сохтани дурусти яке аз бастаҳои интихобшуда қатъ карда шуд.\n"
 "Иттилооти бештар дар гузориши муфассал дастрас аст."
 
-#: ../src/gpk-enum.c:708
+#: ../src/gpk-enum.c:657
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
@@ -2102,7 +1612,7 @@ msgstr ""
 "Насби дурусти яке аз бастаҳои интихобшуда қатъ карда шуд.\n"
 "Иттилооти бештар дар гузориши муфассал дастрас аст."
 
-#: ../src/gpk-enum.c:712
+#: ../src/gpk-enum.c:661
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
@@ -2110,7 +1620,7 @@ msgstr ""
 "Тоза кардани дурусти яке аз бастаҳои интихобшуда қатъ карда шуд.\n"
 "Иттилооти бештар дар гузориши муфассал дастрас аст."
 
-#: ../src/gpk-enum.c:716
+#: ../src/gpk-enum.c:665
 msgid ""
 "A program is running that has to be closed before the update can proceed.\n"
 "More information is available in the detailed report."
@@ -2119,27 +1629,27 @@ msgstr ""
 "шуда истодааст.\n"
 "Маълумоти бештар дар гузориши муфассал мавҷуд аст."
 
-#: ../src/gpk-enum.c:720
+#: ../src/gpk-enum.c:669
 msgid "The package database was changed while the request was running."
 msgstr "Пойгоҳи иттилоотии баста ҳангоми иҷрошавии дархост тағйир ёфт."
 
-#: ../src/gpk-enum.c:723
+#: ../src/gpk-enum.c:672
 msgid "The virtual provide type is not supported by this system."
 msgstr "Навъи таъмини виртуалӣ бо ин система дастгирӣ намешавад."
 
-#: ../src/gpk-enum.c:726
+#: ../src/gpk-enum.c:675
 msgid "The install root is invalid. Please contact your administrator."
 msgstr "Решаи насб беэътибор аст. Луфтан бо маъмури худ тамос гиред."
 
-#: ../src/gpk-enum.c:729
+#: ../src/gpk-enum.c:678
 msgid "The list of package sources could not be downloaded."
 msgstr "Рӯйхати манбаҳои бастаҳо боргирӣ шуда наметавонад."
 
-#: ../src/gpk-enum.c:732
+#: ../src/gpk-enum.c:681
 msgid "A previous package management transaction was interrupted."
 msgstr "Муомилаи идоракунии бастаҳои қаблӣ қатъ шудааст."
 
-#: ../src/gpk-enum.c:735
+#: ../src/gpk-enum.c:684
 msgid ""
 "The transaction has been canceled and will be retried when the system is "
 "idle."
@@ -2147,953 +1657,972 @@ msgstr ""
 "Муомила бекор карда шуд ва ҳангоми бекор шудани система дубора кӯшиш "
 "мекунад. "
 
-#: ../src/gpk-enum.c:738
+#: ../src/gpk-enum.c:687
 msgid "A package manager lock is required."
 msgstr "Қулфи мудири бастаҳо лозим аст."
 
-#: ../src/gpk-enum.c:755
+#: ../src/gpk-enum.c:704
 msgid "No restart is necessary."
 msgstr "Бозоғозӣ лозим нест."
 
-#: ../src/gpk-enum.c:758
+#: ../src/gpk-enum.c:707
 msgid "You will be required to restart this application."
 msgstr "Шумо бояд ин барномаро бозоғозӣ намоед."
 
-#: ../src/gpk-enum.c:761
+#: ../src/gpk-enum.c:710
 msgid "You will be required to log out and back in."
 msgstr "Шумо бояд баромада дубора баргардед."
 
-#: ../src/gpk-enum.c:764
+#: ../src/gpk-enum.c:713
 msgid "A restart will be required."
 msgstr "Бозоғозӣ талаб карда мешавад."
 
-#: ../src/gpk-enum.c:767
+#: ../src/gpk-enum.c:716
 msgid "You will be required to log out and back in due to a security update."
 msgstr "Шумо дар натиҷаи навсозии амният бояд баромада дубора баргардед."
 
-#: ../src/gpk-enum.c:770
+#: ../src/gpk-enum.c:719
 msgid "A restart will be required due to a security update."
 msgstr "Ба сабаби навсозии амният бозоғозӣ лозим аст."
 
-#: ../src/gpk-enum.c:787
+#: ../src/gpk-enum.c:736
 msgid "No restart is required."
 msgstr "Бозоғозӣ лозим нест."
 
-#: ../src/gpk-enum.c:790
+#: ../src/gpk-enum.c:739
 msgid "A restart is required."
 msgstr "Бозоғозӣ лозим аст."
 
-#: ../src/gpk-enum.c:793
+#: ../src/gpk-enum.c:742
 msgid "You need to log out and log back in."
 msgstr "Шумо бояд баромада дубора баргардед."
 
-#: ../src/gpk-enum.c:796
+#: ../src/gpk-enum.c:745
 msgid "You need to restart the application."
 msgstr "Шумо бояд барномаро бозоғозӣ намоед."
 
-#: ../src/gpk-enum.c:799
+#: ../src/gpk-enum.c:748
 msgid "You need to log out and log back in to remain secure."
 msgstr "Барои боқӣ гузоштани амният шумо бояд баромада баргардед"
 
-#: ../src/gpk-enum.c:802
+#: ../src/gpk-enum.c:751
 msgid "A restart is required to remain secure."
 msgstr "Борои таъмини амният бозоғозӣ лозим аст."
 
-#. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:820
-msgid "Stable"
-msgstr "Устувор"
-
-#. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:824
-msgid "Unstable"
-msgstr "Ноустувор"
-
-#. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:828
-msgid "Testing"
-msgstr "Санҷишӣ"
-
 #. TRANSLATORS: This is when the transaction status is not known
-#: ../src/gpk-enum.c:846
+#: ../src/gpk-enum.c:769
 msgid "Unknown state"
 msgstr "Вазъияти номаълум"
 
 #. TRANSLATORS: transaction state, the daemon is in the process of starting
-#: ../src/gpk-enum.c:850
+#: ../src/gpk-enum.c:773
 msgid "Starting"
 msgstr "Оғоз шуда истодааст"
 
 #. TRANSLATORS: transaction state, the transaction is waiting for another to complete
-#: ../src/gpk-enum.c:854
+#: ../src/gpk-enum.c:777
 msgid "Waiting in queue"
 msgstr "Интизор дар навбат"
 
 #. TRANSLATORS: transaction state, just started
-#: ../src/gpk-enum.c:858
+#: ../src/gpk-enum.c:781
 msgid "Running"
 msgstr "Иҷро шуда истодааст"
 
 #. TRANSLATORS: transaction state, is querying data
-#: ../src/gpk-enum.c:862
+#: ../src/gpk-enum.c:785
 msgid "Querying"
 msgstr "Ковишгарӣ"
 
 #. TRANSLATORS: transaction state, getting data from a server
-#: ../src/gpk-enum.c:866
+#: ../src/gpk-enum.c:789
 msgid "Getting information"
 msgstr "Дарёфти иттилоот"
 
+#. TRANSLATORS: transaction state, removing packages
+#: ../src/gpk-enum.c:793
+msgid "Removing packages"
+msgstr "Бастаҳо тоза шуда истодаанд"
+
 #. TRANSLATORS: transaction state, downloading package files
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:874 ../src/gpk-enum.c:1312
+#: ../src/gpk-enum.c:797 ../src/gpk-enum.c:1193
 msgid "Downloading packages"
 msgstr "Боргирии бастаҳо"
 
+#. TRANSLATORS: transaction state, installing packages
+#: ../src/gpk-enum.c:801
+msgid "Installing packages"
+msgstr "Насбкунии бастаҳо"
+
 #. TRANSLATORS: transaction state, refreshing internal lists
-#: ../src/gpk-enum.c:882
+#: ../src/gpk-enum.c:805
 msgid "Refreshing software list"
 msgstr "Навсозии рӯйхати нармафзор"
 
 #. TRANSLATORS: transaction state, installing updates
-#: ../src/gpk-enum.c:886
+#: ../src/gpk-enum.c:809
 msgid "Installing updates"
 msgstr "Насбкунии навсозиҳо"
 
 #. TRANSLATORS: transaction state, removing old packages, and cleaning config files
-#: ../src/gpk-enum.c:890
+#: ../src/gpk-enum.c:813
 msgid "Cleaning up packages"
 msgstr "Поксозии бастаҳо"
 
 #. TRANSLATORS: transaction state, obsoleting old packages
-#: ../src/gpk-enum.c:894
+#: ../src/gpk-enum.c:817
 msgid "Obsoleting packages"
 msgstr "Бастаҳои кӯҳнашуда"
 
 #. TRANSLATORS: transaction state, checking the transaction before we do it
-#: ../src/gpk-enum.c:898
+#: ../src/gpk-enum.c:821
 msgid "Resolving dependencies"
 msgstr "Вобастагиҳо ҳал шуда истодаанд"
 
 #. TRANSLATORS: transaction state, checking if we have all the security keys for the operation
-#: ../src/gpk-enum.c:902
+#: ../src/gpk-enum.c:825
 msgid "Checking signatures"
 msgstr "Санҷиши имзоҳо"
 
 #. TRANSLATORS: transaction state, when we're doing a test transaction
-#: ../src/gpk-enum.c:906
+#: ../src/gpk-enum.c:829
 msgid "Testing changes"
 msgstr "Санҷиши тағйирот"
 
 #. TRANSLATORS: transaction state, when we're writing to the system package database
-#: ../src/gpk-enum.c:910
+#: ../src/gpk-enum.c:833
 msgid "Committing changes"
 msgstr "Татбиқи тағйирот"
 
 #. TRANSLATORS: transaction state, requesting data from a server
-#: ../src/gpk-enum.c:914
+#: ../src/gpk-enum.c:837
 msgid "Requesting data"
 msgstr "Иттилооти дархостӣ"
 
 #. TRANSLATORS: transaction state, all done!
-#: ../src/gpk-enum.c:918
+#: ../src/gpk-enum.c:841
 msgid "Finished"
 msgstr "Ба анҷом расид"
 
 #. TRANSLATORS: transaction state, in the process of canceling
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:922 ../src/gpk-enum.c:1267
+#: ../src/gpk-enum.c:845 ../src/gpk-enum.c:1148
 msgid "Canceling"
 msgstr "Бекор шуда истодааст"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:926
+#: ../src/gpk-enum.c:849
 msgid "Downloading repository information"
 msgstr "Иттилооти захиравии боргиришаванда"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:930
+#: ../src/gpk-enum.c:853
 msgid "Downloading list of packages"
 msgstr "Рӯйхати боргирии бастаҳо"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:934
+#: ../src/gpk-enum.c:857
 msgid "Downloading file lists"
 msgstr "Рӯйхатҳои файли боргиришаванда"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:938
+#: ../src/gpk-enum.c:861
 msgid "Downloading lists of changes"
 msgstr "Рӯйхатҳои боргиришавандаи тағйирот"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:942
+#: ../src/gpk-enum.c:865
 msgid "Downloading groups"
 msgstr "Гурӯҳҳои боргиришаванда"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:946
+#: ../src/gpk-enum.c:869
 msgid "Downloading update information"
 msgstr "Иттилооти навсозии боргиришаванда"
 
 #. TRANSLATORS: transaction state, repackaging delta files
-#: ../src/gpk-enum.c:950
+#: ../src/gpk-enum.c:873
 msgid "Repackaging files"
 msgstr "Файлҳои дубора бастабандишаванда"
 
 #. TRANSLATORS: transaction state, loading databases
-#: ../src/gpk-enum.c:954
+#: ../src/gpk-enum.c:877
 msgid "Loading cache"
 msgstr "Зерҳофизаи боршаванда"
 
 #. TRANSLATORS: transaction state, scanning for running processes
-#: ../src/gpk-enum.c:958
+#: ../src/gpk-enum.c:881
 msgid "Scanning installed applications"
 msgstr "Скан кардани барномаҳои насбшуда"
 
 #. TRANSLATORS: transaction state, generating a list of packages installed on the system
-#: ../src/gpk-enum.c:962
+#: ../src/gpk-enum.c:885
 msgid "Generating package lists"
 msgstr "Рӯйхатҳои бастаи эҷодшаванда"
 
 #. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
-#: ../src/gpk-enum.c:966
+#: ../src/gpk-enum.c:889
 msgid "Waiting for package manager lock"
 msgstr "Интизорӣ барои қулфи мудири баста"
 
 #. TRANSLATORS: waiting for user to type in a password
-#: ../src/gpk-enum.c:970
+#: ../src/gpk-enum.c:893
 msgid "Waiting for authentication"
 msgstr "Мунтазири санҷиши ҳаққоният"
 
 #. TRANSLATORS: we are updating the list of processes
-#: ../src/gpk-enum.c:974
+#: ../src/gpk-enum.c:897
 msgid "Updating the list of running applications"
 msgstr "Навсозии рӯйхати барномаи иҷрошаванда"
 
 #. TRANSLATORS: we are checking executable files in use
-#: ../src/gpk-enum.c:978
+#: ../src/gpk-enum.c:901
 msgid "Checking for applications currently in use"
 msgstr "Санҷиши истифодабарии ҷории барномаҳо"
 
 #. TRANSLATORS: we are checking for libraries in use
-#: ../src/gpk-enum.c:982
+#: ../src/gpk-enum.c:905
 msgid "Checking for libraries currently in use"
 msgstr "Санҷиши ичтифодабарии ҷории китобхонаҳо"
 
 #. TRANSLATORS: we are copying package files to prepare to install
-#: ../src/gpk-enum.c:986
+#: ../src/gpk-enum.c:909
 msgid "Copying files"
 msgstr "Файлҳо нусхабардорӣ шуда истоданд"
 
-#. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1004
-#, c-format
-msgid "%i trivial update"
-msgid_plural "%i trivial updates"
-msgstr[0] "%i навсозии муқаррарӣ"
-msgstr[1] "%i навсозии муқаррарӣ"
-
-#. TRANSLATORS: type of update in the case that we don't have any data
-#: ../src/gpk-enum.c:1008
-#, c-format
-msgid "%i update"
-msgid_plural "%i updates"
-msgstr[0] "%i навсозӣ"
-msgstr[1] "%i навсозӣ"
-
-#. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1012
-#, c-format
-msgid "%i important update"
-msgid_plural "%i important updates"
-msgstr[0] "%i навсозии муҳим"
-msgstr[1] "%i навсозии муҳим"
-
-#. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1016
-#, c-format
-msgid "%i security update"
-msgid_plural "%i security updates"
-msgstr[0] "%i навсозии амният"
-msgstr[1] "%i навсозии амният"
-
-#. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1020
-#, c-format
-msgid "%i bug fix update"
-msgid_plural "%i bug fix updates"
-msgstr[0] "%i навсозии ислоҳи хато"
-msgstr[1] "%i навсозии ислоҳи хато"
-
-#. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1024
-#, c-format
-msgid "%i enhancement update"
-msgid_plural "%i enhancement updates"
-msgstr[0] "%i навсозии мукаммалсозӣ"
-msgstr[1] "%i навсозии мукаммалсозӣ"
-
-#. TRANSLATORS: number of updates that cannot be installed due to deps
-#: ../src/gpk-enum.c:1028
-#, c-format
-msgid "%i blocked update"
-msgid_plural "%i blocked updates"
-msgstr[0] "%i навсозии басташуда"
-msgstr[1] "%i навсозии басташуда"
-
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1046
+#: ../src/gpk-enum.c:927
 msgid "Trivial update"
 msgstr "Навсозии муқаррарӣ"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1050
+#: ../src/gpk-enum.c:931
 msgid "Normal update"
 msgstr "Навсозии оддӣ"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1054
+#: ../src/gpk-enum.c:935
 msgid "Important update"
 msgstr "Навсозии муҳим"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1058
+#: ../src/gpk-enum.c:939
 msgid "Security update"
 msgstr "Навсозии амният"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1062
+#: ../src/gpk-enum.c:943
 msgid "Bug fix update"
 msgstr "Навсозии ислоҳи хато"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1066
+#: ../src/gpk-enum.c:947
 msgid "Enhancement update"
 msgstr "Навсозии мукаммалсозӣ"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1070
+#: ../src/gpk-enum.c:951
 msgid "Blocked update"
 msgstr "Навсозии басташуда"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
-#: ../src/gpk-enum.c:1080
+#: ../src/gpk-enum.c:961
 msgid "Available"
 msgstr "Дастрас"
 
 #. TRANSLATORS: The type of package
-#: ../src/gpk-enum.c:1084
+#: ../src/gpk-enum.c:965
 msgid "Trusted"
 msgstr "Боэътимод"
 
 #. TRANSLATORS: The type of package
-#: ../src/gpk-enum.c:1088
+#: ../src/gpk-enum.c:969
 msgid "Untrusted"
 msgstr "Беэътимод"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1106
+#: ../src/gpk-enum.c:987
 msgid "Downloading"
 msgstr "Боргирӣ шуда истодааст"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1110
+#: ../src/gpk-enum.c:991
 msgid "Updating"
 msgstr "Навсозӣ шуда истодааст"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1114 ../src/gpk-enum.c:1251
+#: ../src/gpk-enum.c:995 ../src/gpk-enum.c:1132
 msgid "Installing"
 msgstr "Насб шуда истодааст"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1118 ../src/gpk-enum.c:1247
+#: ../src/gpk-enum.c:999 ../src/gpk-enum.c:1128
 msgid "Removing"
 msgstr "Тоза шуда истодааст"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1122
+#: ../src/gpk-enum.c:1003
 msgid "Cleaning up"
 msgstr "Пок шуда истодааст"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1126
+#: ../src/gpk-enum.c:1007
 msgid "Obsoleting"
 msgstr "Кӯҳнашавӣ"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1130
+#: ../src/gpk-enum.c:1011
 msgid "Reinstalling"
 msgstr "Насби такрорӣ"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1134
+#: ../src/gpk-enum.c:1015
 msgid "Preparing"
 msgstr "Омода шуда истодааст"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1138
+#: ../src/gpk-enum.c:1019
 msgid "Decompressing"
 msgstr "Фишурдани такрорӣ"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1156
+#: ../src/gpk-enum.c:1037
 msgid "Downloaded"
 msgstr "Боргиришуда"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1160
+#: ../src/gpk-enum.c:1041
 msgid "Updated"
 msgstr "Навшуда"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1168
+#: ../src/gpk-enum.c:1049
 msgid "Removed"
 msgstr "Тозашуда"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1172
+#: ../src/gpk-enum.c:1053
 msgid "Cleaned up"
 msgstr "Тозашуда"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1176 ../src/gpk-task.c:414
+#: ../src/gpk-enum.c:1057 ../src/gpk-task.c:403
 msgid "Obsoleted"
 msgstr "Кӯҳнашуда"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1180
+#: ../src/gpk-enum.c:1061
 msgid "Reinstalled"
 msgstr "Дубора насбшуда"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1184
+#: ../src/gpk-enum.c:1065
 msgid "Prepared"
 msgstr "Омодашуда"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1188
+#: ../src/gpk-enum.c:1069
 msgid "Decompressed"
 msgstr "Дубора фишурдашуда"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1206 ../src/gpk-enum.c:1348
+#: ../src/gpk-enum.c:1087 ../src/gpk-enum.c:1229
 msgid "Unknown role type"
 msgstr "Намуди вазифаи номаълум"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1210
+#: ../src/gpk-enum.c:1091
 msgid "Getting dependencies"
 msgstr "Дарёфти вобастагиҳо"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1214
+#: ../src/gpk-enum.c:1095
 msgid "Getting update detail"
 msgstr "Дарёфти ҷузъиёти навсозишуда"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1219
+#: ../src/gpk-enum.c:1100
 msgid "Getting details"
 msgstr "Дарёфти ҷузъиёт"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1223
+#: ../src/gpk-enum.c:1104
 msgid "Getting requires"
 msgstr "Дарёфти дархостҳо"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1227
+#: ../src/gpk-enum.c:1108
 msgid "Getting updates"
 msgstr "Дарёфти навсозиҳо"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1231
+#: ../src/gpk-enum.c:1112
 msgid "Searching details"
 msgstr "Ҷустуҷӯи тафсилот"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1239
+#: ../src/gpk-enum.c:1116
+msgid "Searching for file"
+msgstr "Ҷустуҷӯи файл"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1120
 msgid "Searching groups"
 msgstr "Ҷустуҷӯи гурӯҳҳо"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1243
+#: ../src/gpk-enum.c:1124
 msgid "Searching for package name"
 msgstr "Ҷустуҷӯи номи баста"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1255
+#: ../src/gpk-enum.c:1136
 msgid "Installing file"
 msgstr "Файл насб шуда истодааст"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1259
+#: ../src/gpk-enum.c:1140
 msgid "Refreshing package cache"
 msgstr "зерҳофизаи бастаи дубора навсозишуда"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1263
+#: ../src/gpk-enum.c:1144
 msgid "Updating packages"
 msgstr "Бастаҳо навсозӣ шуда истоданд"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1271
+#: ../src/gpk-enum.c:1152
 msgid "Getting list of repositories"
 msgstr "Дарёфти рӯйхати анбори додаҳо"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1275
+#: ../src/gpk-enum.c:1156
 msgid "Enabling repository"
 msgstr "Фаъол кардани анбори додаҳо"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1279
+#: ../src/gpk-enum.c:1160
 msgid "Removing repository"
 msgstr "Анбори додаҳо тоза шуда истодаанд"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1283
+#: ../src/gpk-enum.c:1164
 msgid "Setting repository data"
 msgstr "Танзими иттилооти анбори бастаҳо"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1287
+#: ../src/gpk-enum.c:1168
 msgid "Resolving"
 msgstr "Ҳалгароӣ"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1292
+#: ../src/gpk-enum.c:1173
 msgid "Getting file list"
 msgstr "Дарёфти рӯйхати файл"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1296
+#: ../src/gpk-enum.c:1177
 msgid "Getting what provides"
 msgstr "Дарёфти чизҳои пешниҳодшуда"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1300
+#: ../src/gpk-enum.c:1181
 msgid "Installing signature"
 msgstr "Имзо насб шуда истодааст"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1304
+#: ../src/gpk-enum.c:1185
 msgid "Getting package lists"
 msgstr "Дарёфти рӯйхатҳои баста"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1308
+#: ../src/gpk-enum.c:1189
 msgid "Accepting EULA"
 msgstr "Қабули EULA"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1316
+#: ../src/gpk-enum.c:1197
 msgid "Getting distribution upgrade information"
 msgstr "Дарёфти иттилооти такмилшудаи тақсимот"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1320
+#: ../src/gpk-enum.c:1201
 msgid "Getting categories"
 msgstr "Дарёфти категорияҳо"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1324
+#: ../src/gpk-enum.c:1205
 msgid "Getting old transactions"
 msgstr "Дарёфти муомилаҳои кӯҳна"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1328
+#: ../src/gpk-enum.c:1209
 msgid "Repairing the system"
 msgstr "Таъмири система"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1352
+#: ../src/gpk-enum.c:1233
 msgid "Got dependencies"
 msgstr "Вобастагиҳои гирифташуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1356
+#: ../src/gpk-enum.c:1237
 msgid "Got update detail"
 msgstr "Ҷузъиёти навсозии гирифташуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1361
+#: ../src/gpk-enum.c:1242
 msgid "Got details"
 msgstr "Ҷузъиёти гирифташуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1365
+#: ../src/gpk-enum.c:1246
 msgid "Got requires"
 msgstr "Дархостҳои гирифташуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1369
+#: ../src/gpk-enum.c:1250
 msgid "Got updates"
 msgstr "Навсозиҳои гирифташуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1373
+#: ../src/gpk-enum.c:1254
 msgid "Searched for package details"
 msgstr "Тафсилоти баста ҷустуҷӯ карда шуд"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1377
+#: ../src/gpk-enum.c:1258
 msgid "Searched for file"
 msgstr "Файл ҷустуҷӯ карда шуд"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1381
+#: ../src/gpk-enum.c:1262
 msgid "Searched groups"
 msgstr "Гурӯҳҳо ҷустуҷӯ карда шудаанд"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1385
+#: ../src/gpk-enum.c:1266
 msgid "Searched for package name"
 msgstr "Номи баста ҷустуҷӯ карда шуд"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1389
+#: ../src/gpk-enum.c:1270
 msgid "Removed packages"
 msgstr "Бастаҳои тозашуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1393
+#: ../src/gpk-enum.c:1274
 msgid "Installed packages"
 msgstr "Бастаҳои насбшуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1397
+#: ../src/gpk-enum.c:1278
 msgid "Installed local files"
 msgstr "Файлҳои маҳаллии насбшуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1401
+#: ../src/gpk-enum.c:1282
 msgid "Refreshed package cache"
 msgstr "Зерҳофизаи бастаи навсозишуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1405
+#: ../src/gpk-enum.c:1286
 msgid "Updated packages"
 msgstr "Бастаҳо навсозишуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1409
+#: ../src/gpk-enum.c:1290
 msgid "Canceled"
 msgstr "Бекоршуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1413
+#: ../src/gpk-enum.c:1294
 msgid "Got list of repositories"
 msgstr "Рӯйхати гирифташудаи анбори додаҳо"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1417
+#: ../src/gpk-enum.c:1298
 msgid "Enabled repository"
 msgstr "Анбори додаҳои фаъолшуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1421
+#: ../src/gpk-enum.c:1302
 msgid "Removed repository"
 msgstr "Анбори додаҳои тозашуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1425
+#: ../src/gpk-enum.c:1306
 msgid "Set repository data"
 msgstr "Маҷмӯи иттилооти анбори додаҳо"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1429
+#: ../src/gpk-enum.c:1310
 msgid "Resolved"
 msgstr "Ҳалшуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1434
+#: ../src/gpk-enum.c:1315
 msgid "Got file list"
 msgstr "Рӯйхати файли гирифташуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1438
+#: ../src/gpk-enum.c:1319
 msgid "Got what provides"
 msgstr "Гирифтани чизи таъминшуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1442
+#: ../src/gpk-enum.c:1323
 msgid "Installed signature"
 msgstr "Имзоҳои насбшуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1446
+#: ../src/gpk-enum.c:1327
 msgid "Got package lists"
 msgstr "Рӯйхатҳои бастаи гирифташуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1450
+#: ../src/gpk-enum.c:1331
 msgid "Accepted EULA"
 msgstr "EULA-и қабулшуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1454
+#: ../src/gpk-enum.c:1335
 msgid "Downloaded packages"
 msgstr "Бастаҳои боргиришуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1458
+#: ../src/gpk-enum.c:1339
 msgid "Got distribution upgrades"
 msgstr "Такмилҳои тақсимоти гирифташуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1462
+#: ../src/gpk-enum.c:1343
 msgid "Got categories"
 msgstr "Категорияҳои гирифташуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1466
+#: ../src/gpk-enum.c:1347
 msgid "Got old transactions"
 msgstr "Муомилаҳои кӯҳнаи гирифташуда"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1470
+#: ../src/gpk-enum.c:1351
 msgid "Repaired the system"
 msgstr "Системаро таъмир кард"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1488
+#: ../src/gpk-enum.c:1369
 msgid "Accessibility"
 msgstr "Қобилияти дастрасӣ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1492
+#: ../src/gpk-enum.c:1373
 msgid "Accessories"
 msgstr "Лавозимот"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1496
+#: ../src/gpk-enum.c:1377
 msgid "Education"
 msgstr "Маълумот"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1500
+#: ../src/gpk-enum.c:1381
 msgid "Games"
 msgstr "Бозиҳо"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1504
+#: ../src/gpk-enum.c:1385
 msgid "Graphics"
 msgstr "Графика"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1508
+#: ../src/gpk-enum.c:1389
 msgid "Internet"
 msgstr "Интернет"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1512
+#: ../src/gpk-enum.c:1393
 msgid "Office"
 msgstr "Офис"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1516 ../src/gpk-task.c:434
+#: ../src/gpk-enum.c:1397 ../src/gpk-task.c:423
 msgid "Other"
 msgstr "Дигар"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1520
+#: ../src/gpk-enum.c:1401
 msgid "Programming"
 msgstr "Барномасозӣ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1524
+#: ../src/gpk-enum.c:1405
 msgid "Multimedia"
 msgstr "Мултимедиа"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1528
+#: ../src/gpk-enum.c:1409
 msgid "System"
 msgstr "Система"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1532
+#: ../src/gpk-enum.c:1413
 msgid "GNOME desktop"
 msgstr "Мизи кории GNOME"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1536
+#: ../src/gpk-enum.c:1417
 msgid "KDE desktop"
 msgstr "Мизи кории KDE"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1540
+#: ../src/gpk-enum.c:1421
 msgid "Xfce desktop"
 msgstr "Мизи кории Xfce"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1544
+#: ../src/gpk-enum.c:1425
 msgid "Other desktops"
 msgstr "Мизҳои кории дигар"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1548
+#: ../src/gpk-enum.c:1429
 msgid "Publishing"
 msgstr "Интишордиҳӣ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1552
+#: ../src/gpk-enum.c:1433
 msgid "Servers"
 msgstr "Серверҳо"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1556
+#: ../src/gpk-enum.c:1437
 msgid "Fonts"
 msgstr "Шрифтҳо"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1560
+#: ../src/gpk-enum.c:1441
 msgid "Admin tools"
 msgstr "Абзорҳои маъмур"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1564
+#: ../src/gpk-enum.c:1445
 msgid "Legacy"
 msgstr "Мерос"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1568
+#: ../src/gpk-enum.c:1449
 msgid "Localization"
 msgstr "Локализатсия"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1572
+#: ../src/gpk-enum.c:1453
 msgid "Virtualization"
 msgstr "Виртуализатсия"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1576
+#: ../src/gpk-enum.c:1457
 msgid "Security"
 msgstr "Амният"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1580
+#: ../src/gpk-enum.c:1461
 msgid "Power management"
 msgstr "Идоракунии барқ"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1584
+#: ../src/gpk-enum.c:1465
 msgid "Communication"
 msgstr "Алоқа"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1588
+#: ../src/gpk-enum.c:1469
 msgid "Network"
 msgstr "Шабака"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1592
+#: ../src/gpk-enum.c:1473
 msgid "Maps"
 msgstr "Харитаҳо"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1596
+#: ../src/gpk-enum.c:1477
 msgid "Package sources"
 msgstr "Манбаҳои бастаҳо"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1600
+#: ../src/gpk-enum.c:1481
 msgid "Science"
 msgstr "Илм"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1604
+#: ../src/gpk-enum.c:1485
 msgid "Documentation"
 msgstr "Ҳуҷҷатҳои маҳсул"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1608
+#: ../src/gpk-enum.c:1489
 msgid "Electronics"
 msgstr "Электроника"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1612
+#: ../src/gpk-enum.c:1493
 msgid "Package collections"
 msgstr "Маҷмӯаҳои баста"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1616
+#: ../src/gpk-enum.c:1497
 msgid "Vendor"
 msgstr "Фурӯшанда"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1620
+#: ../src/gpk-enum.c:1501
 msgid "Newest packages"
 msgstr "Бастаҳои навтарин"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1624
+#: ../src/gpk-enum.c:1505
 msgid "Unknown group"
 msgstr "Гурӯҳи номаълум"
 
-#. TRANSLATORS: column for the application icon
-#: ../src/gpk-helper-chooser.c:140 ../src/gpk-helper-run.c:203
-msgid "Icon"
-msgstr "Нишона"
+#. TRANSLATORS: strftime formatted please
+#: ../src/gpk-log.c:161
+msgid "%d %B %Y"
+msgstr "%d %B %Y"
 
-#. TRANSLATORS: column for the application name
-#. TRANSLATORS: column for the package name
-#: ../src/gpk-helper-chooser.c:147 ../src/gpk-helper-run.c:210
-msgid "Package"
-msgstr "Баста"
+#. TRANSLATORS: column for the date
+#: ../src/gpk-log.c:276
+msgid "Date"
+msgstr "Сана"
 
-#: ../src/gpk-helper-chooser.c:286
-msgid "Applications that can open this type of file"
-msgstr "Барномаҳое, ки ин навъи файлҳоро кушода метавонанд"
+#. TRANSLATORS: column for what was done, e.g. update-system
+#: ../src/gpk-log.c:285
+msgid "Action"
+msgstr "Амал"
 
-#. TRANSLATORS: button label, install
-#: ../src/gpk-helper-chooser.c:298
-msgid "_Install"
-msgstr "_Насб кардан"
+#. TRANSLATORS: column for the user name, e.g. Richard Hughes
+#: ../src/gpk-log.c:318
+msgid "User name"
+msgstr "Номи корбар"
 
-#. TRANSLATORS: button tooltip
-#: ../src/gpk-helper-chooser.c:302
-msgid "Install package"
-msgstr "Насб кардани баста"
+#. TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs
+#: ../src/gpk-log.c:325
+msgid "Application"
+msgstr "Барнома"
+
+#. TRANSLATORS: user-friendly name for pkcon
+#: ../src/gpk-log.c:485
+msgid "Command line client"
+msgstr "Муштарии хати фармон"
+
+#. TRANSLATORS: user-friendly name for gpk-update-icon, which used to exist
+#: ../src/gpk-log.c:494
+msgid "Update Icon"
+msgstr "Нишонаи навсозӣ"
+
+#. TRANSLATORS: user-friendly name for the command not found plugin
+#: ../src/gpk-log.c:497
+#| msgid "Bash - Command Not Found"
+msgid "Bash – Command Not Found"
+msgstr "Bash – Фармон ёфт нашуд"
+
+#. TRANSLATORS: user-friendly name for gnome-settings-daemon, which used to handle updates
+#: ../src/gpk-log.c:500
+msgid "GNOME Session"
+msgstr "Сессияи GNOME"
+
+#. TRANSLATORS: user-friendly name for gnome-software
+#: ../src/gpk-log.c:503
+#| msgid "Software"
+msgid "GNOME Software"
+msgstr "Нармафзори GNOME"
+
+#. TRANSLATORS: preset the GtktextBox with this filter text
+#: ../src/gpk-log.c:801
+msgid "Set the filter to this value"
+msgstr "Танзими филтр ба ин қимат"
+
+#. TRANSLATORS: we can make this modal (stay on top of) another window
+#: ../src/gpk-log.c:804 ../src/gpk-prefs.c:612
+msgid "Set the parent window to make this modal"
+msgstr "Танзими равзанаи асосӣ барои сохтани ин шакл"
+
+#: ../src/gpk-log.c:817
+msgid "Software Log Viewer"
+msgstr "Тамошобини сабти рӯйдодҳои нармафзор"
+
+#. are we running privileged
+#: ../src/gpk-log.c:825
+msgid "Log viewer"
+msgstr "Тамошобини сабти рӯйдод"
+
+#. TRANSLATORS: for one reason or another, we could not enable or disable a package source
+#: ../src/gpk-prefs.c:234
+msgid "Failed to change status"
+msgstr "Тағйири ҳолат қатъ карда шуд"
+
+#. TRANSLATORS: column if the source is enabled
+#: ../src/gpk-prefs.c:304
+msgid "Enabled"
+msgstr "Фаъол"
+
+#. TRANSLATORS: column for the source description
+#: ../src/gpk-prefs.c:313
+msgid "Package Source"
+msgstr "Манбаи бастаҳо"
+
+#. TRANSLATORS: for one reason or another, we could not get the list of sources
+#: ../src/gpk-prefs.c:375
+msgid "Failed to get the list of sources"
+msgstr "Дарёфти рӯйхати манбаъҳо қатъ карда шуд"
+
+#. TRANSLATORS: backend is broken, and won't tell us what it supports
+#: ../src/gpk-prefs.c:482 ../src/gpk-update-viewer.c:3146
+msgid "Exiting as backend details could not be retrieved"
+msgstr "тафсилоти мавҷудбуда ҳамчун пуштибонӣ бозёбӣ нашуданд"
+
+#: ../src/gpk-prefs.c:503
+msgid "Getting package source list not supported by backend"
+msgstr "Дарёфти рӯйхати манбаи бастаҳое, ки бо сервер дастгирӣ намешавад"
 
 #. TRANSLATORS: is not GPG signed
-#: ../src/gpk-task.c:140 ../src/gpk-task.c:150 ../src/gpk-task.c:170
+#: ../src/gpk-task.c:129 ../src/gpk-task.c:139 ../src/gpk-task.c:159
 msgid "The software is not signed by a trusted provider."
 msgstr "Нармафзор тавассути провайдери боваринок имзо нашудааст."
 
 #. TRANSLATORS: user has to trust provider -- I know, this sucks
-#: ../src/gpk-task.c:142
+#: ../src/gpk-task.c:131
 msgid "Do not update this package unless you are sure it is safe to do so."
 msgstr "То вақте ки аз бехатарӣ мутмаин нашавед ин бастаро навсозӣ накунед."
 
 #. TRANSLATORS: warn the user that all bets are off
-#: ../src/gpk-task.c:144 ../src/gpk-task.c:154
+#: ../src/gpk-task.c:133 ../src/gpk-task.c:143
 msgid "Malicious software can damage your computer or cause other harm."
 msgstr ""
 "Нармафзори зарарнок метавонад ба компютери шумо осеб расонад ё боиси дигар "
 "зарарҳо шавад."
 
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
-#: ../src/gpk-task.c:146
+#: ../src/gpk-task.c:135
 msgid "Are you <b>sure</b> you want to update this package?"
 msgstr "Оё шумо <b>мутмаин</b> ҳастед, ки ин бастаро навсозӣ кардан мехоҳед?"
 
 #. TRANSLATORS: user has to trust provider -- I know, this sucks
-#: ../src/gpk-task.c:152
+#: ../src/gpk-task.c:141
 msgid "Do not install this package unless you are sure it is safe to do so."
 msgstr "То вақте ки аз бехатарӣ мутмаин нашавед ин бастаро насб накунед."
 
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
-#: ../src/gpk-task.c:156
+#: ../src/gpk-task.c:145
 msgid "Are you <b>sure</b> you want to install this package?"
 msgstr "Оё шумо <b>мутмаин</b> ҳастед, ки ин бастаро насб кардан мехоҳед?"
 
 #. TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc
-#: ../src/gpk-task.c:351
+#: ../src/gpk-task.c:340
 #, c-format
 msgid ""
 "Additional media is required. Please insert the %s labeled '%s' to continue."
@@ -3101,59 +2630,67 @@ msgstr ""
 "Медиаи иловагӣ лозим аст. Лутфан барои идома %s labeled '%s'-ро дарҷ намоед."
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-task.c:360 ../src/gpk-task.c:563
+#: ../src/gpk-task.c:349 ../src/gpk-task.c:552
 msgid "Continue"
 msgstr "Идома додан"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:403
+#: ../src/gpk-task.c:392
 msgid "The following software also needs to be installed"
 msgstr "Нармафзори зерин ҳам бояд насб шавад"
 
+#: ../src/gpk-task.c:393
+msgid "Install"
+msgstr "Насб кардан"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:408 ../src/gpk-task.c:413
+#: ../src/gpk-task.c:397 ../src/gpk-task.c:402
 msgid "The following software also needs to be removed"
 msgstr "Нармафзори зерин ҳам бояд тоза карда шавад"
 
+#: ../src/gpk-task.c:398
+msgid "Remove"
+msgstr "Тоза кардан"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:418
+#: ../src/gpk-task.c:407
 msgid "The following software also needs to be updated"
 msgstr "Нармафзори зерин ҳам бояд навсозӣ карда шавад"
 
-#: ../src/gpk-task.c:419
+#: ../src/gpk-task.c:408
 msgid "Update"
 msgstr "Навсозӣ кардан"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:423
+#: ../src/gpk-task.c:412
 msgid "The following software also needs to be re-installed"
 msgstr "Нармафзори зерин ҳам бояд аз нав насб шавад"
 
-#: ../src/gpk-task.c:424
+#: ../src/gpk-task.c:413
 msgid "Reinstall"
 msgstr "Аз нав насб кардан"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:428
+#: ../src/gpk-task.c:417
 msgid "The following software also needs to be downgraded"
 msgstr "Нармафзори зерин ҳам бояд ба версия қаблӣ барқарор карда шавад"
 
-#: ../src/gpk-task.c:429
+#: ../src/gpk-task.c:418
 msgid "Downgrade"
 msgstr "Барқарори версияи қаблӣ"
 
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:433
+#: ../src/gpk-task.c:422
 msgid "The following software also needs to be processed"
 msgstr "Нармафзори зерин ҳам бояд иҷро шавад"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:496
+#: ../src/gpk-task.c:485
 msgid "Additional confirmation required"
 msgstr "Тасдиқи иловагӣ лозим аст"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:502
+#: ../src/gpk-task.c:491
 msgid "To install this package, additional software also has to be modified."
 msgid_plural ""
 "To install these packages, additional software also has to be modified."
@@ -3162,7 +2699,7 @@ msgstr[1] ""
 "Барои насби ин бастаҳо, нармафзори иловагӣ ҳам бояд тағйир дода шавад"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:507
+#: ../src/gpk-task.c:496
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural ""
 "To remove these packages, additional software also has to be modified."
@@ -3172,7 +2709,7 @@ msgstr[1] ""
 "Барои тоза кардани ин бастаҳо, нармафзори иловагӣ низ бояд тағйир дода шавад."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:512
+#: ../src/gpk-task.c:501
 msgid "To update this package, additional software also has to be modified."
 msgid_plural ""
 "To update these packages, additional software also has to be modified."
@@ -3182,7 +2719,7 @@ msgstr[1] ""
 "Барои навсозии ин бастаҳо, нармафзори иловагӣ низ бояд тағйир дода шавад."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:517
+#: ../src/gpk-task.c:506
 msgid "To install this file, additional software also has to be modified."
 msgid_plural ""
 "To install these files, additional software also has to be modified."
@@ -3191,162 +2728,29 @@ msgstr[1] ""
 "Барои насби ин файлҳо, нармафзори иловагӣ низ бояд тағйир дода шавад."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:522
+#: ../src/gpk-task.c:511
 msgid ""
 "To process this transaction, additional software also has to be modified."
 msgstr ""
 "Барои иҷро кардани ин муомила, нармафзори иловагӣ низ бояд тағйир дода шавад."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:613
+#: ../src/gpk-task.c:602
 msgid "_Force install"
 msgstr "_Насби маҷбурӣ"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:617
+#: ../src/gpk-task.c:606
 msgid "Force installing package"
 msgstr "Бастаи насби маҷбурӣ"
 
-#. TRANSLATORS: window title: do we want to execute a program we just installed?
-#: ../src/gpk-helper-run.c:480
-msgid "Run new application?"
-msgstr "Барномаи навро иҷро мекунед?"
-
-#. add run button
-#: ../src/gpk-helper-run.c:483
-msgid "_Run"
-msgstr "_Иҷро кардан"
-
-#. TRANSLATORS: command line option: a list of files to install
-#: ../src/gpk-install-local-file.c:54
-msgid "Files to install"
-msgstr "Файлҳо барои насб"
-
-#: ../src/gpk-install-local-file.c:69
-msgid "PackageKit File Installer"
-msgstr "Насбкунандаи файли PackageKit"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-local-file.c:77
-msgid "Local file installer"
-msgstr "Насбкунандаи файли маҳаллӣ"
-
-#. TRANSLATORS: could not install a package that contained the file we wanted
-#: ../src/gpk-install-local-file.c:83
-msgid "Failed to install a package to provide a file"
-msgstr "Насби баста барои таъмини як файл қатъ карда шуд"
-
-#. TRANSLATORS: nothing selected
-#: ../src/gpk-install-local-file.c:85
-msgid "You need to specify a file to install"
-msgstr "Шумо бояд файлеро барои насб кардан муайян кунед"
-
-#. TRANSLATORS: strftime formatted please
-#: ../src/gpk-log.c:171
-msgid "%d %B %Y"
-msgstr "%d %B %Y"
-
-#. TRANSLATORS: column for the date
-#: ../src/gpk-log.c:286
-msgid "Date"
-msgstr "Сана"
-
-#. TRANSLATORS: column for what was done, e.g. update-system
-#: ../src/gpk-log.c:295
-msgid "Action"
-msgstr "Амал"
-
-#. TRANSLATORS: column for the user name, e.g. Richard Hughes
-#: ../src/gpk-log.c:328
-msgid "User name"
-msgstr "Номи корбар"
-
-#. TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs
-#: ../src/gpk-log.c:335
-msgid "Application"
-msgstr "Барнома"
-
-#. TRANSLATORS: short name for pkcon
-#: ../src/gpk-log.c:495
-msgid "Command line client"
-msgstr "Муштарии хати фармон"
-
-#. TRANSLATORS: short name for gpk-update-viewer
-#: ../src/gpk-log.c:501
-msgid "Update System"
-msgstr "Навсозии система"
-
-#. TRANSLATORS: short name for gpk-update-icon
-#: ../src/gpk-log.c:504
-msgid "Update Icon"
-msgstr "Нишонаи навсозӣ"
-
-#. TRANSLATORS: short name for the command not found plugin
-#: ../src/gpk-log.c:507
-msgid "Bash - Command Not Found"
-msgstr "Фармони зарбавӣ ёфт нашуд"
-
-#. TRANSLATORS: user friendly name for gnome-settings-daemon
-#: ../src/gpk-log.c:510
-msgid "GNOME Session"
-msgstr "Сессияи GNOME"
-
-#. TRANSLATORS: preset the GtktextBox with this filter text
-#: ../src/gpk-log.c:810
-msgid "Set the filter to this value"
-msgstr "Танзими филтр ба ин қимат"
-
-#. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:813 ../src/gpk-prefs.c:625
-msgid "Set the parent window to make this modal"
-msgstr "Танзими равзанаи асосӣ барои сохтани ин шакл"
-
-#. are we running privileged
-#: ../src/gpk-log.c:834
-msgid "Log viewer"
-msgstr "Тамошобини сабти рӯйдод"
-
-#: ../src/gpk-modal-dialog.c:441
-#, c-format
-msgid "Remaining time: %s"
-msgstr "Вақти боқимонда: %s"
-
-#. TRANSLATORS: for one reason or another, we could not enable or disable a package source
-#: ../src/gpk-prefs.c:244
-msgid "Failed to change status"
-msgstr "Тағйири ҳолат қатъ карда шуд"
-
-#. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-prefs.c:314
-msgid "Enabled"
-msgstr "Фаъол"
-
-#. TRANSLATORS: column for the source description
-#: ../src/gpk-prefs.c:323
-msgid "Package Source"
-msgstr "Манбаи бастаҳо"
-
-#. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-prefs.c:385
-msgid "Failed to get the list of sources"
-msgstr "Дарёфти рӯйхати манбаъҳо қатъ карда шуд"
-
-#. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:492 ../src/gpk-update-viewer.c:3155
-msgid "Exiting as backend details could not be retrieved"
-msgstr "тафсилоти мавҷудбуда ҳамчун пуштибонӣ бозёбӣ нашуданд"
-
-#: ../src/gpk-prefs.c:513
-msgid "Getting package source list not supported by backend"
-msgstr "Дарёфти рӯйхати манбаи бастаҳое, ки бо сервер дастгирӣ намешавад"
-
 #. TRANSLATORS: we don't have a lot to go on here
-#: ../src/gpk-update-viewer.c:183
+#: ../src/gpk-update-viewer.c:180
 msgid "Failed to process request."
 msgstr "Раванди дархост қатъ карда шуд."
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:211
+#: ../src/gpk-update-viewer.c:208
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "before the changes will be applied."
@@ -3355,12 +2759,12 @@ msgstr ""
 "аз компютер дархости бозоғозӣ менамоянд."
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:213 ../src/gpk-update-viewer.c:219
+#: ../src/gpk-update-viewer.c:210 ../src/gpk-update-viewer.c:216
 msgid "Restart Computer"
 msgstr "Компютерро бозоғозӣ намоед"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:217
+#: ../src/gpk-update-viewer.c:214
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "to remain secure."
@@ -3369,7 +2773,7 @@ msgstr ""
 "бозоғозӣ менамоянд."
 
 #. TRANSLATORS: the message text for the log out
-#: ../src/gpk-update-viewer.c:223
+#: ../src/gpk-update-viewer.c:220
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "before the changes will be applied."
@@ -3378,12 +2782,12 @@ msgstr ""
 "аз шумо хориҷ шуда аз нав ворид шуданро дархост  менамоянд."
 
 #. TRANSLATORS: the button text for the log out
-#: ../src/gpk-update-viewer.c:225 ../src/gpk-update-viewer.c:231
+#: ../src/gpk-update-viewer.c:222 ../src/gpk-update-viewer.c:228
 msgid "Log Out"
 msgstr "Баромад"
 
 #. TRANSLATORS: the message text for the log out
-#: ../src/gpk-update-viewer.c:229
+#: ../src/gpk-update-viewer.c:226
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "to remain secure."
@@ -3392,83 +2796,83 @@ msgstr ""
 "шуда аз нав ворид шуданро дархост  менамоянд."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:275
+#: ../src/gpk-update-viewer.c:272
 msgid "Could not restart"
 msgstr "Бозоғозӣ карда натавонист"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:344
+#: ../src/gpk-update-viewer.c:335
 msgid "Some updates were not installed"
 msgstr "Баъзе навсозиҳо насб нашудаанд"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:413 ../src/gpk-update-viewer.c:424
+#: ../src/gpk-update-viewer.c:404 ../src/gpk-update-viewer.c:415
 msgid "Could not update packages"
 msgstr "Бастаҳоро навсозӣ карда натавонист"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:489 ../src/gpk-update-viewer.c:510
+#: ../src/gpk-update-viewer.c:480 ../src/gpk-update-viewer.c:501
 msgid "Updates installed"
 msgstr "Навсозиҳои насбшуда"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:499
+#: ../src/gpk-update-viewer.c:490
 msgid "All updates were installed successfully."
 msgstr "Ҳамаи навозиҳо бомуваффақият насб шуданд."
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:502
+#: ../src/gpk-update-viewer.c:493
 msgid "The selected updates were installed successfully."
 msgstr "Навсозиҳои интихобшуда бомуваффақият насб шуданд."
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:717
+#: ../src/gpk-update-viewer.c:708
 msgid "Trivial updates"
 msgstr "Навсозиҳои муқаррарӣ"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:721
+#: ../src/gpk-update-viewer.c:712
 msgid "Important updates"
 msgstr "Навсозиҳои муҳим"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:725
+#: ../src/gpk-update-viewer.c:716
 msgid "Security updates"
 msgstr "Навсозиҳои амният"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:729
+#: ../src/gpk-update-viewer.c:720
 msgid "Bug fix updates"
 msgstr "Навсозиҳои ислоҳи нуқсон"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:733
+#: ../src/gpk-update-viewer.c:724
 msgid "Enhancement updates"
 msgstr "Навсозиҳои густариш"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:737
+#: ../src/gpk-update-viewer.c:728
 msgid "Blocked updates"
 msgstr "Навсозиҳои манъшуда"
 
 #. TRANSLATORS: The type of update, i.e. unspecified
-#: ../src/gpk-update-viewer.c:741
+#: ../src/gpk-update-viewer.c:732
 msgid "Other updates"
 msgstr "Навсозиҳои дигар"
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1006
+#: ../src/gpk-update-viewer.c:997
 msgid "Getting the list of updates"
 msgstr "Дарёфти рӯйхати навсозиҳо"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1251
+#: ../src/gpk-update-viewer.c:1242
 msgid "Could not run upgrade script"
 msgstr "Скрипти такмилро иҷро карда натавонист"
 
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1282
+#: ../src/gpk-update-viewer.c:1273
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -3483,40 +2887,40 @@ msgstr[1] ""
 "бастаҳо баланд бошад"
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1372
+#: ../src/gpk-update-viewer.c:1363
 msgid "There are no updates available"
 msgstr "Ҳеҷ кадоми навсозиҳо дастрас нестанд"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1431
+#: ../src/gpk-update-viewer.c:1422
 msgid "No updates are available"
 msgstr "Ҳеҷ кадоми навсозиҳо дастрас нестанд"
 
 #. TRANSLATORS: no network connection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1433
+#: ../src/gpk-update-viewer.c:1424
 msgid "No network connection was detected."
 msgstr "Пайвасти шабака ёфт нашудааст."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1450
+#: ../src/gpk-update-viewer.c:1441
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Насб кардани навсозӣ"
 msgstr[1] "_Насб кардани навсозиҳо"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1459
+#: ../src/gpk-update-viewer.c:1450
 msgid "All packages are up to date"
 msgstr "Ҳамаи бастаҳо навсозӣ шудаанд"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1461
+#: ../src/gpk-update-viewer.c:1452
 msgid "There are no package updates available for your computer at this time."
 msgstr ""
 "Дар ҳоли ҳозир ягон бастаи навсозии дастрас барои компютери шумо вуҷуд "
 "надорад."
 
-#: ../src/gpk-update-viewer.c:1488
+#: ../src/gpk-update-viewer.c:1479
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -3524,7 +2928,7 @@ msgstr[0] "%i навсозӣ дастрас аст"
 msgstr[1] "%i навсозӣ дастрасанд"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1504
+#: ../src/gpk-update-viewer.c:1495
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -3532,7 +2936,7 @@ msgstr[0] "%i навсозӣ интихоб шудааст"
 msgstr[1] "%i навсозӣ интихоб шудаанд"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1512
+#: ../src/gpk-update-viewer.c:1503
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -3540,51 +2944,51 @@ msgstr[0] "%i навсозӣ интихоб шудааст (%s)"
 msgstr[1] "%i навсозӣ интихоб шудаанд (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1709
+#: ../src/gpk-update-viewer.c:1700
 msgid "Status"
 msgstr "Вазъият"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1969
+#: ../src/gpk-update-viewer.c:1960
 msgid "This update will add new features and expand functionality."
 msgstr "Ин навсозӣ хусусиятҳои навро илова намуда коромадиро весеъ менамояд."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1973
+#: ../src/gpk-update-viewer.c:1964
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Ин навсозӣ нуқсонҳо ва дигар мушкилоти ғайриҳассосро ислоҳ мекунад."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1977
+#: ../src/gpk-update-viewer.c:1968
 msgid "This update is important as it may solve critical problems."
 msgstr "Ин навсозӣ муҳим аст, зеро он мушекилоти ҷиддиро ҳал карда метавонад."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1981
+#: ../src/gpk-update-viewer.c:1972
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
 "Ин навсозӣ барои бо ин баста ислоҳ кардани осебпазирии амният лозим аст."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1985
+#: ../src/gpk-update-viewer.c:1976
 msgid "This update is blocked."
 msgstr "Ин навсозӣ баста шудааст."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1997
+#: ../src/gpk-update-viewer.c:1988
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr "Ин огоҳӣ дар %s ва навсозии охирин дар %s нашр шудааст."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:2004
+#: ../src/gpk-update-viewer.c:1995
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Ин огоҳӣ дар %s нашр шудааст."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:2026 ../src/gpk-update-viewer.c:2050
+#: ../src/gpk-update-viewer.c:2017 ../src/gpk-update-viewer.c:2041
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -3594,7 +2998,7 @@ msgstr[1] ""
 "Барои иттилооти бештар оиди ин навсозӣ лутфан ба ин вебсайтҳо ворид шавед:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:2033 ../src/gpk-update-viewer.c:2058
+#: ../src/gpk-update-viewer.c:2024 ../src/gpk-update-viewer.c:2049
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -3609,7 +3013,7 @@ msgstr[1] ""
 "вебсайтҳо ворид шавед:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2040 ../src/gpk-update-viewer.c:2066
+#: ../src/gpk-update-viewer.c:2031 ../src/gpk-update-viewer.c:2057
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -3622,7 +3026,7 @@ msgstr[1] ""
 "шавед:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2075
+#: ../src/gpk-update-viewer.c:2066
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
@@ -3630,7 +3034,7 @@ msgstr ""
 "Барои амалӣ шудани тағйирот пас аз навсозӣ компютер бояд бозоғозӣ шавад."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2079
+#: ../src/gpk-update-viewer.c:2070
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -3639,7 +3043,7 @@ msgstr ""
 "шавед."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2086
+#: ../src/gpk-update-viewer.c:2077
 msgid ""
 "The classification of this update is unstable which means it is not designed "
 "for production use."
@@ -3648,7 +3052,7 @@ msgstr ""
 "тарҳрезӣ нашудааст."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2090
+#: ../src/gpk-update-viewer.c:2081
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -3657,7 +3061,7 @@ msgstr ""
 "мушкилӣ ё бозгаштеро, ки рӯбарӯ шудед, лутфан гузориш диҳед."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2099
+#: ../src/gpk-update-viewer.c:2090
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
@@ -3665,73 +3069,73 @@ msgstr ""
 "Сабти рӯйдодҳои барномасоз тавре намоиш дода мешавад, ки гӯё ҳеҷгуна тавсиф "
 "барои ин навсозӣ дастрас нест:"
 
-#: ../src/gpk-update-viewer.c:2153
+#: ../src/gpk-update-viewer.c:2144
 msgid "Loading…"
 msgstr "Бор шуда истодааст..."
 
-#: ../src/gpk-update-viewer.c:2156
+#: ../src/gpk-update-viewer.c:2147
 msgid "No update details available."
 msgstr "Тафсилоти навсозӣ дастрас нестанд."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2188 ../src/gpk-update-viewer.c:2286
-#: ../src/gpk-update-viewer.c:2306
+#: ../src/gpk-update-viewer.c:2179 ../src/gpk-update-viewer.c:2277
+#: ../src/gpk-update-viewer.c:2297
 msgid "Could not get update details"
 msgstr "Тафсилоти навсозӣ дарёфт намешаванд"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2208
+#: ../src/gpk-update-viewer.c:2199
 msgid "Could not get package details"
 msgstr "Тафсилоти баста дарёфт намешаванд"
 
-#: ../src/gpk-update-viewer.c:2208 ../src/gpk-update-viewer.c:2306
+#: ../src/gpk-update-viewer.c:2199 ../src/gpk-update-viewer.c:2297
 msgid "No results were returned."
 msgstr "Ҳеҷ кадоми натиҷаҳо баргардонида нашуданд."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2541
+#: ../src/gpk-update-viewer.c:2532
 msgid "Select all"
 msgstr "Интихоб кардани ҳама"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2549
+#: ../src/gpk-update-viewer.c:2540
 msgid "Unselect all"
 msgstr "Лағв кардани интихоби ҳама"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2556
+#: ../src/gpk-update-viewer.c:2547
 msgid "Select security updates"
 msgstr "Интихоби навсозиҳои амният"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2562
+#: ../src/gpk-update-viewer.c:2553
 msgid "Ignore this update"
 msgstr "Рад кардани ин навсозӣ"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2671
+#: ../src/gpk-update-viewer.c:2662
 msgid "Could not get updates"
 msgstr "Навсозӣ шуда натавонист"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2809
+#: ../src/gpk-update-viewer.c:2800
 msgid "Checking for updates…"
 msgstr "Санҷиши навсозиҳо..."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3088
+#: ../src/gpk-update-viewer.c:3079
 msgid "Could not get list of distribution upgrades"
 msgstr "Рӯйхати такмилшавии таҳияро дарёфт карда натавонист"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3118
+#: ../src/gpk-update-viewer.c:3109
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Ҷудосозии такмили тақсимоти нави '%s' дастрас аст."
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3366
+#: ../src/gpk-update-viewer.c:3357
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -3739,30 +3143,408 @@ msgstr ""
 "Навсозиҳои дигар ҳамчун баъзе бастаҳои муҳими системаи баргардонидашуда бояд "
 "аввал насб карда шаванд."
 
-#: ../src/gpk-update-viewer.c:3411
+#: ../src/gpk-update-viewer.c:3401
 msgid "Update Packages"
 msgstr "Бастаҳои навсозӣ"
 
-#: ../src/gpk-dbus-service.c:126
-msgid "Do not exit after the request has been processed"
-msgstr "Пас аз ҷараён гирифтани дархост хориҷ нашавед"
+#~ msgid "Software Log"
+#~ msgstr "Сабти рӯйдодҳои нармафзор"
 
-#: ../src/gpk-dbus-service.c:142
-msgid "Session D-Bus service for PackageKit"
-msgstr "Сессияи хидмати D-Bus барои PackageKit"
+#~ msgid "Help"
+#~ msgstr "Кӯмак"
 
-#. TRANSLATORS: turn on all debugging
-#: ../src/gpk-debug.c:131
-msgid "Show debugging information for all files"
-msgstr "Иттилооти ислоҳи нуқсонҳо барои ҳамаи файлҳо намоиш диҳед"
+#~ msgid "Software Install"
+#~ msgstr "Насбкунии нармафзор"
 
-#: ../src/gpk-debug.c:189
-msgid "Debugging Options"
-msgstr "Имконоти ислоҳи нуқсонҳо"
+#~ msgid "Install selected software on the system"
+#~ msgstr "Насб кардани нармафзори интихобшуда дар система"
 
-#: ../src/gpk-debug.c:189
-msgid "Show debugging options"
-msgstr "Намоиш додани имконоти ислоҳи нуқсонҳо"
+#~ msgid "Failed to install software"
+#~ msgstr "Насби нармафзор барҳам хӯрд"
+
+#~ msgid "No applications were chosen to be installed"
+#~ msgstr "Ҳеҷ барномае барои насб интихоб нашудааст"
+
+#~ msgid "Error details"
+#~ msgstr "Тафсилоти хато"
+
+#~ msgid "Package Manager error details"
+#~ msgstr "Тафсилоти хатои мудири бастаҳо"
+
+#~ msgid ""
+#~ "Unknown error. Please refer to the detailed report and report in your "
+#~ "distribution bug tracker."
+#~ msgstr ""
+#~ "Хатои номаълум. Лутфан ба гузориши муфассал ва гузориш дар нусхаи "
+#~ "нармафзор муроҷиат намоед."
+
+#~ msgid "Show details"
+#~ msgstr "Намоиш додани тафсилот"
+
+#~ msgid "Failed to install file"
+#~ msgid_plural "Failed to install files"
+#~ msgstr[0] "Насби файл қатъ карда шуд"
+#~ msgstr[1] "Насби файлҳо қатъ карда шуд"
+
+#~ msgid "Do you want to install this file?"
+#~ msgid_plural "Do you want to install these files?"
+#~ msgstr[0] "Оё шумо ин файлро насб кардан мехоҳед?"
+#~ msgstr[1] "Оё шумо ин файлҳоро насб кардан мехоҳед?"
+
+#~ msgid "Install local file"
+#~ msgid_plural "Install local files"
+#~ msgstr[0] "Насб кардани файли маҳаллӣ"
+#~ msgstr[1] "Насб кардани файлҳои маҳаллӣ"
+
+#~ msgid "Could not find packages"
+#~ msgstr "Бастаҳо ёфт нашуданд"
+
+#~ msgid "The packages could not be found in any package source"
+#~ msgstr "Бастаҳо дар ягон манбаи бастаҳо ёфт нашуданд"
+
+#~ msgid "More information"
+#~ msgstr "Маълумоти бештар"
+
+#~ msgid "Nothing to do."
+#~ msgstr "Ҳеҷ кор карда намешавад."
+
+#~ msgid "Failed to install package"
+#~ msgstr "Насби баста қатъ шудааст"
+
+#~ msgid "Incorrect response from search"
+#~ msgstr "Натиҷаи нодурусти ҷустуҷӯ"
+
+#~ msgid "An additional package is required:"
+#~ msgid_plural "Additional packages are required:"
+#~ msgstr[0] "Бастаи иловагӣ лозимест"
+#~ msgstr[1] "Бастаҳои иловагӣ лозиманд"
+
+#~ msgid "Do you want to search for and install this package now?"
+#~ msgid_plural "Do you want to search for and install these packages now?"
+#~ msgstr[0] "Шумо ин бастаро ҳозир ҷустуҷӯ ва насб кардан мехоҳед?"
+#~ msgstr[1] "Шумо ин бастаҳоро ҳозир ҷустуҷӯ ва насб кардан мехоҳед?"
+
+#~ msgid "%s wants to install a package"
+#~ msgid_plural "%s wants to install packages"
+#~ msgstr[0] "%s мехоҳад, ки бастаеро насб кунад"
+#~ msgstr[1] "%s мехоҳад, ки бастаҳоеро насб кунад"
+
+#~ msgid "A program wants to install a package"
+#~ msgid_plural "A program wants to install packages"
+#~ msgstr[0] "Барнома мехоҳад, ки бастаеро насб кунад"
+#~ msgstr[1] "Барнома мехоҳад, ки бастаҳоеро насб кунад"
+
+#~ msgid "Searching for packages"
+#~ msgstr "Ҷустуҷӯи бастаҳо"
+
+#~ msgid "Failed to find package"
+#~ msgstr "Ёфтани баста қатъ карда шуд"
+
+#~ msgid "The file could not be found in any packages"
+#~ msgstr "Файл дар ҳеҷ кадоми бастаҳо ёфт нашуд"
+
+#~ msgid "The %s package already provides this file"
+#~ msgstr "Бастаи %s аллакай ин файлро таъмин менамояд"
+
+#~ msgid "The following file is required:"
+#~ msgid_plural "The following files are required:"
+#~ msgstr[0] "Файли зерин лозим аст:"
+#~ msgstr[1] "Файлҳои зерин лозиманд:"
+
+#~ msgid "Do you want to search for this file now?"
+#~ msgid_plural "Do you want to search for these files now?"
+#~ msgstr[0] "Шумо ин файлро ҳозир ҷустуҷӯ кардан мехоҳед?"
+#~ msgstr[1] "Шумо ин файлҳоро ҳозир ҷустуҷӯ кардан мехоҳед?"
+
+#~ msgid "%s wants to install a file"
+#~ msgid_plural "%s wants to install files"
+#~ msgstr[0] "%s мехоҳад, ки файлеро насб кунад"
+#~ msgstr[1] "%s мехоҳад, ки файлҳоеро насб кунад"
+
+#~ msgid "A program wants to install a file"
+#~ msgid_plural "A program wants to install files"
+#~ msgstr[0] "Барнома мехоҳад, ки файлеро насб кунад"
+#~ msgstr[1] "Барнома мехоҳад, ки файлҳоеро насб кунад"
+
+#~ msgid "The following plugin is required:"
+#~ msgid_plural "The following plugins are required:"
+#~ msgstr[0] "Плагини зерин лозим аст:"
+#~ msgstr[1] "Плагинҳои зерин лозиманд:"
+
+#~ msgid "Do you want to search for this now?"
+#~ msgid_plural "Do you want to search for these now?"
+#~ msgstr[0] "Шумо инро ҳозир ҷустуҷӯ кардан мехоҳед?"
+#~ msgstr[1] "Шумо инҳоро ҳозир ҷустуҷӯ кардан мехоҳед?"
+
+#~ msgid "%s requires an additional plugin to decode this file"
+#~ msgid_plural "%s requires additional plugins to decode this file"
+#~ msgstr[0] "%s плагини иловагиро барои рамзкушоии ин файл талаб мекунад"
+#~ msgstr[1] "%s плагинҳои иловагиро барои рамзкушоии ин файл талаб мекунад"
+
+#~ msgid "%s requires an additional plugin to encode this file"
+#~ msgid_plural "%s requires additional plugins to encode this file"
+#~ msgstr[0] "%s плагини иловагиро барои рамзӣ кардани ин файл талаб мекунад"
+#~ msgstr[1] "%s плагинҳои иловагиро барои рамзӣ кардани ин файл талаб мекунад"
+
+#~ msgid "%s requires an additional plugin for this operation"
+#~ msgid_plural "%s requires additional plugins for this operation"
+#~ msgstr[0] "%s плагини иловагиро барои ин амалиёт талаб мекунад"
+#~ msgstr[1] "%s плагинҳои иловагиро барои ин амалиёт талаб мекунад"
+
+#~ msgid "A program requires an additional plugin to decode this file"
+#~ msgid_plural "A program requires additional plugins to decode this file"
+#~ msgstr[0] "Барнома барои рамзкушоии ин файл плагини иловагиро талаб мекунад"
+#~ msgstr[1] ""
+#~ "Барнома барои рамзкушоии ин файл плагинҳои иловагиро талаб мекунад"
+
+#~ msgid "A program requires an additional plugin to encode this file"
+#~ msgid_plural "A program requires additional plugins to encode this file"
+#~ msgstr[0] ""
+#~ "Барнома барои рамзгузории ин файл плагини иловагиро талаб мекунад"
+#~ msgstr[1] ""
+#~ "Барнома барои рамзгузории ин файл плагинҳои иловагиро талаб мекунад"
+
+#~ msgid "A program requires an additional plugin for this operation"
+#~ msgid_plural "A program requires additional plugins for this operation"
+#~ msgstr[0] "Барнома барои ин амал плагини иловагиро талаб мекунад"
+#~ msgstr[1] "Барнома барои ин амал плагинҳои иловагиро талаб мекунад"
+
+#~ msgid "Search"
+#~ msgstr "Ҷустуҷӯ"
+
+#~ msgid "Failed to search for plugin"
+#~ msgstr "Ҷустуҷӯи плагин қатъ карда шуд"
+
+#~ msgid "Could not find plugin in any configured package source"
+#~ msgstr "Плагин дар ҳеҷ кадоме аз манбаҳои бастаҳои танзимшуда ёфт нашуд"
+
+#~ msgid "Install the following plugin"
+#~ msgid_plural "Install the following plugins"
+#~ msgstr[0] "Насб кардани плагини зерин"
+#~ msgstr[1] "Насб кардани плагинҳои зерин"
+
+#~ msgid "Do you want to install this package now?"
+#~ msgid_plural "Do you want to install these packages now?"
+#~ msgstr[0] "Шумо ин бастаро ҳозир насб кардан мехоҳед?"
+#~ msgstr[1] "Шумо ин бастаҳоро ҳозир насб кардан мехоҳед?"
+
+#~ msgid "Searching for plugins"
+#~ msgstr "Ҷустуҷӯи плагинҳо"
+
+#~ msgid "Searching for plugin: %s"
+#~ msgstr "Ҷустуҷӯи плагин: %s"
+
+#~ msgid "Failed to search for provides"
+#~ msgstr "Ҷустуҷӯи таъминҳо қатъ карда шуд"
+
+#~ msgid "Failed to find software"
+#~ msgstr "Ёфтани нармафзор қатъ карда шуд"
+
+#~ msgid "No new applications can be found to handle this type of file"
+#~ msgstr "Барои коркарди ин навъи файл ягон барномаи нав ёфт намешавад"
+
+#~ msgid "An additional program is required to open this type of file:"
+#~ msgstr "Барои кушодани ин навъи файл барномаи иловагӣ талаб карда мешавад:"
+
+#~ msgid "Do you want to search for a program to open this file type now?"
+#~ msgstr ""
+#~ "Барои ҳозир кушодани ин намуди файл шумо барномаи наверо ҷустуҷӯ кардан "
+#~ "мехоҳед?"
+
+#~ msgid "%s requires a new mime type"
+#~ msgid_plural "%s requires new mime types"
+#~ msgstr[0] "%s навъи нави MIME-ро талаб мекунад"
+#~ msgstr[1] "%s навъҳои нави MIME-ҳоро талаб мекунад"
+
+#~ msgid "A program requires a new mime type"
+#~ msgid_plural "A program requires new mime types"
+#~ msgstr[0] "Барнома намуди MIME-и навро талаб мекунад"
+#~ msgstr[1] "Барнома намудҳои MIME-ҳои навро талаб мекунад"
+
+#~ msgid "Searching for file handlers"
+#~ msgstr "Ҷустуҷӯи дастгузори файлҳо"
+
+#~ msgid "Language tag not parsed"
+#~ msgstr "Барчаспи забон таҷзия нашудааст"
+
+#~ msgid "Language code not matched"
+#~ msgstr "Рамзи забон мутобиқ нест"
+
+#~ msgid "Failed to find font"
+#~ msgid_plural "Failed to find fonts"
+#~ msgstr[0] "Ёфтани шрифт қатъ карда шуд"
+#~ msgstr[1] "Ёфтани шрифтҳо қатъ карда шуд"
+
+#~ msgid "No new fonts can be found for this document"
+#~ msgstr "Ҳеҷгуна шрифти нав барои ин ҳуҷҷат ёфт нашуд"
+
+#~ msgid "An additional font is required to view this document correctly."
+#~ msgid_plural ""
+#~ "Additional fonts are required to view this document correctly."
+#~ msgstr[0] "Барои тамошои дурусти ин ҳуҷҷат шрифти иловагӣ лозим аст."
+#~ msgstr[1] "Барои тамошои дурусти ин ҳуҷҷат шрифтҳои иловагӣ лозиманд."
+
+#~ msgid "Do you want to search for a suitable package now?"
+#~ msgid_plural "Do you want to search for suitable packages now?"
+#~ msgstr[0] "Шумо ҳозир бастаи мувофиқро ҷустуҷӯ кардан мехоҳед?"
+#~ msgstr[1] "Шумо ҳозир бастаҳои мувофиқро ҷустуҷӯ кардан мехоҳед?"
+
+#~ msgid "%s wants to install a font"
+#~ msgid_plural "%s wants to install fonts"
+#~ msgstr[0] "%s мехоҳад, ки шрифтеро насб кунад"
+#~ msgstr[1] "%s мехоҳад, ки шрифтҳоеро насб кунад"
+
+#~ msgid "A program wants to install a font"
+#~ msgid_plural "A program wants to install fonts"
+#~ msgstr[0] "Барнома мехоҳад, ки шрифтеро насб кунад"
+#~ msgstr[1] "Барнома мехоҳад, ки шрифтҳоеро насб кунад"
+
+#~ msgid "Searching for font"
+#~ msgid_plural "Searching for fonts"
+#~ msgstr[0] "Ҷустуҷӯи шрифт"
+#~ msgstr[1] "Ҷустуҷӯи шрифтҳо"
+
+#~ msgid "The following service is required:"
+#~ msgid_plural "The following services are required:"
+#~ msgstr[0] "Хидмати зерин лозим аст:"
+#~ msgstr[1] "Хидматҳои зерин лозиманд:"
+
+#~ msgid "Plasma requires an additional service for this operation"
+#~ msgid_plural "Plasma requires additional services for this operation"
+#~ msgstr[0] "Барои ин кор Plasma ба хидмати иловагӣ ниёз дорад"
+#~ msgstr[1] "Барои ин кор Plasma ба хидматҳои иловагӣ ниёз дорад"
+
+#~ msgid "Failed to search for Plasma service"
+#~ msgstr "Ҷустуҷӯи хидмати Plasma қатъ карда шуд"
+
+#~ msgid "Could not find service in any configured package source"
+#~ msgstr "Хидматро дар ягон манбаи бастаҳои танзимшуда ёфта наметавонад"
+
+#~ msgid "Searching for services"
+#~ msgstr "Ҷустуҷӯи хидматҳо"
+
+#~ msgid "Searching for service: %s"
+#~ msgstr "Ҷустуҷӯи хидмат: %s"
+
+#~ msgid "Failed to remove package"
+#~ msgstr "Тоза кардани баста қатъ карда шуд"
+
+#~ msgid "Install the following driver"
+#~ msgid_plural "Install the following drivers"
+#~ msgstr[0] "Насб кардани драйвери зерин"
+#~ msgstr[1] "Насб кардани драйверҳои зерин"
+
+#~ msgid "Failed to find package for this file"
+#~ msgstr "Ёфтани баста барои ин файл қатъ шудааст"
+
+#~ msgid "The following file will be removed:"
+#~ msgid_plural "The following files will be removed:"
+#~ msgstr[0] "Файли зерин тоза карда мешавад:"
+#~ msgstr[1] "Файлҳои зерин тоза карда мешаванд:"
+
+#~ msgid "Do you want to remove this file now?"
+#~ msgid_plural "Do you want to remove these files now?"
+#~ msgstr[0] "Шумо ин файлро ҳозир тоза кардан мехоҳед?"
+#~ msgstr[1] "Шумо ин файлҳоро ҳозир тоза кардан мехоҳед?"
+
+#~ msgid "%s wants to remove a file"
+#~ msgid_plural "%s wants to remove files"
+#~ msgstr[0] "%s мехоҳад, ки файлеро тоза кунад"
+#~ msgstr[1] "%s мехоҳад, ки файлҳоеро тоза кунад"
+
+#~ msgid "A program wants to remove a file"
+#~ msgid_plural "A program wants to remove files"
+#~ msgstr[0] "Барнома мехоҳад, ки файлеро тоза кунад"
+#~ msgstr[1] "Барнома мехоҳад, ки файлҳоеро тоза кунад"
+
+#~ msgid "Stable"
+#~ msgstr "Устувор"
+
+#~ msgid "Unstable"
+#~ msgstr "Ноустувор"
+
+#~ msgid "Testing"
+#~ msgstr "Санҷишӣ"
+
+#~ msgid "%i trivial update"
+#~ msgid_plural "%i trivial updates"
+#~ msgstr[0] "%i навсозии муқаррарӣ"
+#~ msgstr[1] "%i навсозии муқаррарӣ"
+
+#~ msgid "%i update"
+#~ msgid_plural "%i updates"
+#~ msgstr[0] "%i навсозӣ"
+#~ msgstr[1] "%i навсозӣ"
+
+#~ msgid "%i important update"
+#~ msgid_plural "%i important updates"
+#~ msgstr[0] "%i навсозии муҳим"
+#~ msgstr[1] "%i навсозии муҳим"
+
+#~ msgid "%i security update"
+#~ msgid_plural "%i security updates"
+#~ msgstr[0] "%i навсозии амният"
+#~ msgstr[1] "%i навсозии амният"
+
+#~ msgid "%i bug fix update"
+#~ msgid_plural "%i bug fix updates"
+#~ msgstr[0] "%i навсозии ислоҳи хато"
+#~ msgstr[1] "%i навсозии ислоҳи хато"
+
+#~ msgid "%i enhancement update"
+#~ msgid_plural "%i enhancement updates"
+#~ msgstr[0] "%i навсозии мукаммалсозӣ"
+#~ msgstr[1] "%i навсозии мукаммалсозӣ"
+
+#~ msgid "%i blocked update"
+#~ msgid_plural "%i blocked updates"
+#~ msgstr[0] "%i навсозии басташуда"
+#~ msgstr[1] "%i навсозии басташуда"
+
+#~ msgid "Icon"
+#~ msgstr "Нишона"
+
+#~ msgid "Applications that can open this type of file"
+#~ msgstr "Барномаҳое, ки ин навъи файлҳоро кушода метавонанд"
+
+#~ msgid "_Install"
+#~ msgstr "_Насб кардан"
+
+#~ msgid "Install package"
+#~ msgstr "Насб кардани баста"
+
+#~ msgid "Run new application?"
+#~ msgstr "Барномаи навро иҷро мекунед?"
+
+#~ msgid "_Run"
+#~ msgstr "_Иҷро кардан"
+
+#~ msgid "Files to install"
+#~ msgstr "Файлҳо барои насб"
+
+#~ msgid "PackageKit File Installer"
+#~ msgstr "Насбкунандаи файли PackageKit"
+
+#~ msgid "Local file installer"
+#~ msgstr "Насбкунандаи файли маҳаллӣ"
+
+#~ msgid "Failed to install a package to provide a file"
+#~ msgstr "Насби баста барои таъмини як файл қатъ карда шуд"
+
+#~ msgid "You need to specify a file to install"
+#~ msgstr "Шумо бояд файлеро барои насб кардан муайян кунед"
+
+#~ msgid "Update System"
+#~ msgstr "Навсозии система"
+
+#~ msgid "Remaining time: %s"
+#~ msgstr "Вақти боқимонда: %s"
+
+#~ msgid "Do not exit after the request has been processed"
+#~ msgstr "Пас аз ҷараён гирифтани дархост хориҷ нашавед"
+
+#~ msgid "Session D-Bus service for PackageKit"
+#~ msgstr "Сессияи хидмати D-Bus барои PackageKit"
 
 #~ msgid "Update Software"
 #~ msgstr "Навсозӣ кардани нармафзор"
@@ -3790,9 +3572,6 @@ msgstr "Намоиш додани имконоти ислоҳи нуқсонҳо
 
 #~ msgid "Software Source"
 #~ msgstr "Манбаи нармафзор"
-
-#~ msgid "Software"
-#~ msgstr "Нармафзор"
 
 #~ msgid "Software Update"
 #~ msgstr "Навсозии нармафзор"
