@@ -8,24 +8,29 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-08-16 19:11+0000\n"
-"PO-Revision-Date: 2014-08-17 01:35+0200\n"
-"Last-Translator: Gil Forcada <gilforcada@guifi.net>\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2015-03-23 17:03-0400\n"
+"PO-Revision-Date: 2015-03-23 17:33+0100\n"
+"Last-Translator: David <rbndavid@gmail.com>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bits\n"
+"Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 1.6.9\n"
 
 #. TRANSLATORS: user-friendly name for gpk-update-viewer
-#: ../data/appdata/gpk-application.appdata.xml.in.h:1 ../src/gpk-log.c:489
+#: ../data/appdata/gpk-application.appdata.xml.in.h:1 ../src/gpk-log.c:488
 msgid "GNOME Packages"
 msgstr "Paquets GNOME"
 
 #: ../data/appdata/gpk-application.appdata.xml.in.h:2
+#: ../data/gpk-application.desktop.in.h:2
+msgid "Add or remove software installed on the system"
+msgstr "Afegeix o suprimeix programari instal·lat en el sistema"
+
+#: ../data/appdata/gpk-application.appdata.xml.in.h:3
 msgid ""
 "Packages allows you to install and remove packages on your system. You can "
 "view and search packages by name, details or even file name and also see "
@@ -39,7 +44,7 @@ msgstr ""
 "grups també és possible i és una manera fàcil de trobar programari per al "
 "vostre entorn d'escriptori preferit."
 
-#: ../data/appdata/gpk-application.appdata.xml.in.h:3
+#: ../data/appdata/gpk-application.appdata.xml.in.h:4
 msgid ""
 "Packages uses PackageKit and can work on any distribution using the native "
 "package management framework."
@@ -48,11 +53,16 @@ msgstr ""
 "utilitzant l'entorn de treball nadiu de gestió de paquets."
 
 #. TRANSLATORS: user-friendly name for gpk-update-viewer
-#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1 ../src/gpk-log.c:492
+#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:1 ../src/gpk-log.c:491
 msgid "GNOME Package Updater"
 msgstr "Actualitzador de paquets del GNOME"
 
 #: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:2
+#: ../data/gpk-update-viewer.desktop.in.h:2
+msgid "Update software installed on the system"
+msgstr "Actualitza el programari instal·lat en el sistema"
+
+#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:3
 msgid ""
 "Package Updater allows you to update packages on your system without "
 "rebooting. You can view details about each update and choose which updates "
@@ -62,7 +72,7 @@ msgstr ""
 "distribució sense reiniciar. Podeu veure els detalls de cada actualització i "
 "triar quines actualitzacions s'han d'aplicar."
 
-#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:3
+#: ../data/appdata/gpk-update-viewer.appdata.xml.in.h:4
 msgid ""
 "Package Updater uses PackageKit and can work on any distribution using the "
 "native package management framework."
@@ -70,6 +80,213 @@ msgstr ""
 "L'Actualitzador de paquets utilitza el PackageKit i pot treballar en "
 "qualsevol distribució utilitzant l'entorn de treball nadiu de gestió de "
 "paquets."
+
+#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
+#: ../src/gpk-application.c:2516
+msgid "Packages"
+msgstr "Paquets"
+
+#: ../data/gpk-application.desktop.in.h:3
+msgid "Sources;Repositories;Preferences;Install;Store;"
+msgstr "Actualitzacions;Dipòsits;Preferències;Instal·lació;Botiga;"
+
+#: ../data/gpk-application.ui.h:2
+msgid "Apply Changes"
+msgstr "Aplica els canvis"
+
+#: ../data/gpk-application.ui.h:3
+msgid "Changes are not applied instantly, this button applies all changes"
+msgstr ""
+"Els canvis no s'apliquen immediatament, aquest botó aplica tots els canvis"
+
+#: ../data/gpk-application.ui.h:4
+msgid "Clear"
+msgstr "Neteja"
+
+#: ../data/gpk-application.ui.h:5
+msgid "Clear current selection"
+msgstr "Neteja la selecció actual"
+
+#: ../data/gpk-application.ui.h:6
+msgid "Cancel search"
+msgstr "Cancel·la la cerca"
+
+#: ../data/gpk-application.ui.h:7
+msgid "License"
+msgstr "Llicència"
+
+#: ../data/gpk-application.ui.h:8
+msgid "Source"
+msgstr "Font"
+
+#: ../data/gpk-application.ui.h:9 ../data/gpk-client.ui.h:1
+msgid "Install Package"
+msgstr "Instal·la el paquet"
+
+#: ../data/gpk-application.ui.h:10
+msgid "Remove Package"
+msgstr "Suprimeix el paquet"
+
+#: ../data/gpk-application.ui.h:11
+msgid "Visit home page for selected package"
+msgstr "Visita la pàgina d'inici del paquet seleccionat"
+
+#: ../data/gpk-application.ui.h:12
+msgid "Visit Project Website"
+msgstr "Visita el lloc web del projecte"
+
+#: ../data/gpk-application.ui.h:13
+msgid "Files"
+msgstr "Fitxers"
+
+#: ../data/gpk-application.ui.h:14
+msgid "Required Packages"
+msgstr "Paquets necessaris"
+
+#: ../data/gpk-application.ui.h:15
+msgid "Dependent Packages"
+msgstr "Paquets dependents"
+
+#: ../data/gpk-application.ui.h:16
+msgid "Check for Updates"
+msgstr "Comprova si hi ha actualitzacions"
+
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
+#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:621
+msgid "Package Sources"
+msgstr "Fonts de paquets"
+
+#: ../data/gpk-application.ui.h:18
+msgid "Refresh Package Lists"
+msgstr "Actualitza les llistes de paquets"
+
+#: ../data/gpk-application.ui.h:19 ../data/gpk-log.desktop.in.h:1
+#: ../data/gpk-log.ui.h:1
+msgid "Package Log"
+msgstr "Canvis del paquet"
+
+#: ../data/gpk-application.ui.h:20
+msgid "Only Newest Versions"
+msgstr "Només les versions més noves"
+
+#: ../data/gpk-application.ui.h:21
+msgid "Only Native Packages"
+msgstr "Només els paquets nadius"
+
+#: ../data/gpk-application.ui.h:22
+msgid "About"
+msgstr "Quant a"
+
+#: ../data/gpk-application.ui.h:23
+msgid "_Quit"
+msgstr "_Surt"
+
+#: ../data/gpk-error.ui.h:1
+msgid "More details"
+msgstr "Més detallat"
+
+#: ../data/gpk-eula.ui.h:1
+msgid "License Agreement Required"
+msgstr "Es requereix l'acord de llicència"
+
+#: ../data/gpk-eula.ui.h:2
+msgid "_Accept Agreement"
+msgstr "_Accepta l'acord"
+
+#: ../data/gpk-install-local-file.desktop.in.h:1
+msgid "Package Install"
+msgstr "Instal·lació de paquets"
+
+#: ../data/gpk-install-local-file.desktop.in.h:2
+msgid "Install selected packages on the system"
+msgstr "Instal·la els paquets seleccionats en el sistema"
+
+#: ../data/gpk-log.desktop.in.h:2
+msgid "View past package management tasks"
+msgstr "Visualitza les tasques de gestió de paquets realitzats"
+
+#: ../data/gpk-log.ui.h:2
+msgid "Filter"
+msgstr "Filtre"
+
+#: ../data/gpk-prefs.desktop.in.h:2
+msgid "Enable or disable package repositories"
+msgstr "Habilita o inhabilita els dipòsits de paquets"
+
+#: ../data/gpk-prefs.ui.h:2
+msgid ""
+"A package source contains packages that can be installed on this computer."
+msgstr ""
+"Una font de paquets conté paquets que es poden instal·lar a l'ordinador."
+
+#. shows extra -source, -debuginfo, and -devel sources
+#: ../data/gpk-prefs.ui.h:4
+msgid "_Show debug and development package sources"
+msgstr "_Mostra les fonts de paquets de depuració i de desenvolupament"
+
+#: ../data/gpk-signature.ui.h:1
+msgid "Software signature is required"
+msgstr "Es necessita la signatura del programari"
+
+#: ../data/gpk-signature.ui.h:2
+msgid "Do you trust the source of the packages?"
+msgstr "Confieu en la font dels paquets?"
+
+#: ../data/gpk-signature.ui.h:3
+msgid "Repository name:"
+msgstr "Nom del dipòsit:"
+
+#: ../data/gpk-signature.ui.h:4
+msgid "Signature URL:"
+msgstr "URL de la signatura:"
+
+#: ../data/gpk-signature.ui.h:5
+msgid "Signature user identifier:"
+msgstr "Identificador d'usuari de la signatura:"
+
+#: ../data/gpk-signature.ui.h:6
+msgid "Signature identifier:"
+msgstr "Identificador de la signatura:"
+
+#: ../data/gpk-signature.ui.h:7
+msgid "Package:"
+msgstr "Paquet:"
+
+#: ../data/gpk-signature.ui.h:8
+msgid "Do you recognize the user and trust this key?"
+msgstr "Reconeixeu l'usuari i confieu en aquesta clau?"
+
+#. TRANSLATORS: title to pass to the user if there are not enough privs
+#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
+#: ../src/gpk-update-viewer.c:3418
+msgid "Package Updater"
+msgstr "Actualitzador de paquets"
+
+#: ../data/gpk-update-viewer.desktop.in.h:3
+msgid "Updates;Upgrade;"
+msgstr "Actualitzacions;Actualitza;"
+
+#: ../data/gpk-update-viewer.ui.h:2
+msgid "_Install Updates"
+msgstr "_Instal·la les actualitzacions"
+
+#: ../data/gpk-update-viewer.ui.h:3
+msgid ""
+"Package updates correct errors, eliminate security vulnerabilities, and "
+"provide new features."
+msgstr ""
+"Les actualitzacions de paquets corregeixen errades, eliminen vulneracions de "
+"seguretat i proporcionen funcions noves."
+
+#: ../data/gpk-update-viewer.ui.h:4
+msgid "_Upgrade"
+msgstr "_Actualitza"
+
+#. TRANSLATORS: column for what packages were upgraded
+#: ../data/gpk-update-viewer.ui.h:5 ../src/gpk-log.c:312
+msgid "Details"
+msgstr "Detalls"
 
 #: ../data/org.gnome.packagekit.gschema.xml.h:1
 msgid "Automatically remove unused dependencies"
@@ -260,237 +477,13 @@ msgstr ""
 "Quan es mostri una interfície gràfica des d'una petició de sessió de D-Bus, "
 "força l'ús d'aquestes opcions."
 
-#: ../data/gpk-application.desktop.in.h:1 ../data/gpk-application.ui.h:1
-#: ../src/gpk-application.c:2567
-msgid "Packages"
-msgstr "Paquets"
-
-#: ../data/gpk-application.desktop.in.h:2
-msgid "Add or remove software installed on the system"
-msgstr "Afegeix o suprimeix programari instal·lat en el sistema"
-
-#: ../data/gpk-application.desktop.in.h:3
-msgid "Updates;Upgrade;Sources;Repositories;Preferences;Install;Store;"
-msgstr ""
-"Actualitzacions;Millores;Fonts;Dipòsits;Preferències;Instal·lació;Botiga;"
-
-#: ../data/gpk-application.ui.h:2
-msgid "Apply Changes"
-msgstr "Aplica els canvis"
-
-#: ../data/gpk-application.ui.h:3
-msgid "Changes are not applied instantly, this button applies all changes"
-msgstr ""
-"Els canvis no s'apliquen immediatament, aquest botó aplica tots els canvis"
-
-#: ../data/gpk-application.ui.h:4
-msgid "Clear"
-msgstr "Neteja"
-
-#: ../data/gpk-application.ui.h:5
-msgid "Clear current selection"
-msgstr "Neteja la selecció actual"
-
-#: ../data/gpk-application.ui.h:6
-msgid "Cancel search"
-msgstr "Cancel·la la cerca"
-
-#: ../data/gpk-application.ui.h:7
-msgid "License"
-msgstr "Llicència"
-
-#: ../data/gpk-application.ui.h:8
-msgid "Source"
-msgstr "Font"
-
-#: ../data/gpk-application.ui.h:9 ../data/gpk-client.ui.h:1
-msgid "Install Package"
-msgstr "Instal·la el paquet"
-
-#: ../data/gpk-application.ui.h:10
-msgid "Remove Package"
-msgstr "Suprimeix el paquet"
-
-#: ../data/gpk-application.ui.h:11
-msgid "Visit home page for selected package"
-msgstr "Visita la pàgina d'inici del paquet seleccionat"
-
-#: ../data/gpk-application.ui.h:12
-msgid "Visit Project Website"
-msgstr "Visita el lloc web del projecte"
-
-#: ../data/gpk-application.ui.h:13
-msgid "Files"
-msgstr "Fitxers"
-
-#: ../data/gpk-application.ui.h:14
-msgid "Required Packages"
-msgstr "Paquets necessaris"
-
-#: ../data/gpk-application.ui.h:15
-msgid "Dependent Packages"
-msgstr "Paquets dependents"
-
-#: ../data/gpk-application.ui.h:16
-msgid "Check for Updates"
-msgstr "Comprova si hi ha actualitzacions"
-
-#. TRANSLATORS: program name, an application to add and remove software repositories
-#: ../data/gpk-application.ui.h:17 ../data/gpk-prefs.desktop.in.h:1
-#: ../data/gpk-prefs.ui.h:1 ../src/gpk-prefs.c:622
-msgid "Package Sources"
-msgstr "Fonts de paquets"
-
-#: ../data/gpk-application.ui.h:18
-msgid "Refresh Package Lists"
-msgstr "Actualitza les llistes de paquets"
-
-#: ../data/gpk-application.ui.h:19 ../data/gpk-log.desktop.in.h:1
-#: ../data/gpk-log.ui.h:1
-msgid "Package Log"
-msgstr "Canvis del paquet"
-
-#: ../data/gpk-application.ui.h:20
-msgid "Only Newest Versions"
-msgstr "Només les versions més noves"
-
-#: ../data/gpk-application.ui.h:21
-msgid "Only Native Packages"
-msgstr "Només els paquets nadius"
-
-#: ../data/gpk-application.ui.h:22
-msgid "About"
-msgstr "Quant a"
-
-#: ../data/gpk-application.ui.h:23
-msgid "_Quit"
-msgstr "_Surt"
-
-#: ../data/gpk-error.ui.h:1
-msgid "More details"
-msgstr "Més detallat"
-
-#: ../data/gpk-eula.ui.h:1
-msgid "License Agreement Required"
-msgstr "Es requereix l'acord de llicència"
-
-#: ../data/gpk-eula.ui.h:2
-msgid "_Accept Agreement"
-msgstr "_Accepta l'acord"
-
-#. TRANSLATORS: program name: application to install a package to provide a file
-#. TRANSLATORS: program name, a session wide daemon to watch for updates and changing system state
-#: ../data/gpk-dbus-service.desktop.in.h:1 ../src/gpk-dbus-task.c:3198
-#: ../src/gpk-install-local-file.c:67 ../src/gpk-dbus-service.c:137
-#: ../src/gpk-dbus-service.c:140
-msgid "Software Install"
-msgstr "Instal·lació de programari"
-
-#: ../data/gpk-dbus-service.desktop.in.h:2
-msgid "Install selected software on the system"
-msgstr "Instal·la el programari seleccionat en el sistema"
-
-#: ../data/gpk-install-local-file.desktop.in.h:1
-msgid "Package Install"
-msgstr "Instal·lació de paquets"
-
-#: ../data/gpk-install-local-file.desktop.in.h:2
-msgid "Install selected packages on the system"
-msgstr "Instal·la els paquets seleccionats en el sistema"
-
-#: ../data/gpk-log.desktop.in.h:2
-msgid "View past package management tasks"
-msgstr "Visualitza les tasques de gestió de paquets realitzats"
-
-#: ../data/gpk-log.ui.h:2
-msgid "Filter"
-msgstr "Filtre"
-
-#: ../data/gpk-prefs.desktop.in.h:2
-msgid "Enable or disable package repositories"
-msgstr "Habilita o inhabilita els dipòsits de paquets"
-
-#: ../data/gpk-prefs.ui.h:2
-msgid ""
-"A package source contains packages that can be installed on this computer."
-msgstr ""
-"Una font de paquets conté paquets que es poden instal·lar a l'ordinador."
-
-#. shows extra -source, -debuginfo, and -devel sources
-#: ../data/gpk-prefs.ui.h:4
-msgid "_Show debug and development package sources"
-msgstr "_Mostra les fonts de paquets de depuració i de desenvolupament"
-
-#: ../data/gpk-signature.ui.h:1
-msgid "Software signature is required"
-msgstr "Es necessita la signatura del programari"
-
-#: ../data/gpk-signature.ui.h:2
-msgid "Do you trust the source of the packages?"
-msgstr "Confieu en la font dels paquets?"
-
-#: ../data/gpk-signature.ui.h:3
-msgid "Repository name:"
-msgstr "Nom del dipòsit:"
-
-#: ../data/gpk-signature.ui.h:4
-msgid "Signature URL:"
-msgstr "URL de la signatura:"
-
-#: ../data/gpk-signature.ui.h:5
-msgid "Signature user identifier:"
-msgstr "Identificador d'usuari de la signatura:"
-
-#: ../data/gpk-signature.ui.h:6
-msgid "Signature identifier:"
-msgstr "Identificador de la signatura:"
-
-#: ../data/gpk-signature.ui.h:7
-msgid "Package:"
-msgstr "Paquet:"
-
-#: ../data/gpk-signature.ui.h:8
-msgid "Do you recognize the user and trust this key?"
-msgstr "Reconeixeu l'usuari i confieu en aquesta clau?"
-
-#. TRANSLATORS: title to pass to the user if there are not enough privs
-#: ../data/gpk-update-viewer.desktop.in.h:1 ../data/gpk-update-viewer.ui.h:1
-#: ../src/gpk-update-viewer.c:3428
-msgid "Package Updater"
-msgstr "Actualitzador de paquets"
-
-#: ../data/gpk-update-viewer.desktop.in.h:2
-msgid "Update software installed on the system"
-msgstr "Actualitza el programari instal·lat en el sistema"
-
-#: ../data/gpk-update-viewer.ui.h:2
-msgid "_Install Updates"
-msgstr "_Instal·la les actualitzacions"
-
-#: ../data/gpk-update-viewer.ui.h:3
-msgid ""
-"Package updates correct errors, eliminate security vulnerabilities, and "
-"provide new features."
-msgstr ""
-"Les actualitzacions de paquets corregeixen errades, eliminen vulneracions de "
-"seguretat i proporcionen funcions noves."
-
-#: ../data/gpk-update-viewer.ui.h:4
-msgid "_Upgrade"
-msgstr "_Actualitza"
-
-#. TRANSLATORS: column for what packages were upgraded
-#: ../data/gpk-update-viewer.ui.h:5 ../src/gpk-log.c:313
-msgid "Details"
-msgstr "Detalls"
-
 #. TRANSLATORS: this is a menu group of packages in the queue
-#: ../src/gpk-application.c:347
+#: ../src/gpk-application.c:343
 msgid "Pending"
 msgstr "Pendents"
 
 #. TRANSLATORS: title: how many files are installed by the application
-#: ../src/gpk-application.c:593
+#: ../src/gpk-application.c:589
 #, c-format
 msgid "%i file installed by %s"
 msgid_plural "%i files installed by %s"
@@ -498,17 +491,17 @@ msgstr[0] "%i fitxer instal·lat per %s"
 msgstr[1] "%i fitxers instal·lats per %s"
 
 #. TRANSLATORS: no packages returned
-#: ../src/gpk-application.c:895 ../src/gpk-application.c:1024
+#: ../src/gpk-application.c:891 ../src/gpk-application.c:1020
 msgid "No packages"
 msgstr "Cap paquet"
 
 #. TRANSLATORS: this package is not required by any others
-#: ../src/gpk-application.c:897
+#: ../src/gpk-application.c:893
 msgid "No other packages require this package"
 msgstr "No hi ha cap altre paquet que el requereixi"
 
 #. TRANSLATORS: title: how many packages require this package
-#: ../src/gpk-application.c:904
+#: ../src/gpk-application.c:900
 #, c-format
 msgid "%i package requires %s"
 msgid_plural "%i packages require %s"
@@ -516,7 +509,7 @@ msgstr[0] "%i paquet requereix %s"
 msgstr[1] "%i paquets requereixen %s"
 
 #. TRANSLATORS: show a array of packages for the package
-#: ../src/gpk-application.c:909
+#: ../src/gpk-application.c:905
 #, c-format
 msgid "Packages listed below require %s to function correctly."
 msgid_plural "Packages listed below require %s to function correctly."
@@ -524,12 +517,12 @@ msgstr[0] "Els paquets d'aquí sota necessiten %s per funcionar correctament."
 msgstr[1] "Els paquets d'aquí sota necessiten %s per funcionar correctament."
 
 #. TRANSLATORS: this package does not depend on any others
-#: ../src/gpk-application.c:1026
+#: ../src/gpk-application.c:1022
 msgid "This package does not depend on any others"
 msgstr "Aquest paquet no té dependències"
 
 #. TRANSLATORS: title: show the number of other packages we depend on
-#: ../src/gpk-application.c:1033
+#: ../src/gpk-application.c:1029
 #, c-format
 msgid "%i additional package is required for %s"
 msgid_plural "%i additional packages are required for %s"
@@ -537,7 +530,7 @@ msgstr[0] "Cal %i paquet addicional per %s"
 msgstr[1] "Calen %i paquets addicionals per %s"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
-#: ../src/gpk-application.c:1038
+#: ../src/gpk-application.c:1034
 #, c-format
 msgid "Packages listed below are required for %s to function correctly."
 msgid_plural "Packages listed below are required for %s to function correctly."
@@ -545,27 +538,27 @@ msgstr[0] "Els paquets d'aquí sota necessiten %s per funcionar correctament."
 msgstr[1] "Els paquets d'aquí sota necessiten %s per funcionar correctament."
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
-#: ../src/gpk-application.c:1109
+#: ../src/gpk-application.c:1105
 msgid "Invalid"
 msgstr "No vàlid"
 
 #. TRANSLATORS: no results were found for this search
-#: ../src/gpk-application.c:1262
+#: ../src/gpk-application.c:1258
 msgid "No results were found."
 msgstr "No s'ha trobat cap resultat."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
-#: ../src/gpk-application.c:1270
+#: ../src/gpk-application.c:1266
 msgid "Try entering a package name in the search bar."
 msgstr "Proveu d'introduir el nom d'un paquet a la barra de cerca."
 
 #. TRANSLATORS: nothing in the package queue
-#: ../src/gpk-application.c:1273
+#: ../src/gpk-application.c:1269
 msgid "There are no packages queued to be installed or removed."
 msgstr "No hi ha cap paquet a la cua per suprimir-se o instal·lar-se."
 
 #. TRANSLATORS: tell the user to switch to details search mode
-#: ../src/gpk-application.c:1278
+#: ../src/gpk-application.c:1274
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
@@ -574,113 +567,112 @@ msgstr ""
 "costat del text de cerca."
 
 #. TRANSLATORS: tell the user to try harder
-#: ../src/gpk-application.c:1281
+#: ../src/gpk-application.c:1277
 msgid "Try again with a different search term."
 msgstr "Torneu-ho a provar amb un altre terme de cerca."
 
 #. TRANSLATORS: title: invalid text in the search bar
-#: ../src/gpk-application.c:1545
+#: ../src/gpk-application.c:1497
 msgid "Invalid search text"
 msgstr "Text de cerca no vàlid"
 
 #. TRANSLATORS: message: tell the user that's not allowed
-#: ../src/gpk-application.c:1547
+#: ../src/gpk-application.c:1499
 msgid "The search text contains invalid characters"
 msgstr "El text de cerca conté caràcters no vàlids"
 
 #. TRANSLATORS: title: we failed to execute the method
-#: ../src/gpk-application.c:1588
+#: ../src/gpk-application.c:1540
 msgid "The search could not be completed"
 msgstr "No s'ha pogut completar la cerca"
 
 #. TRANSLATORS: low level failure, details to follow
-#: ../src/gpk-application.c:1590
+#: ../src/gpk-application.c:1542
 msgid "Running the transaction failed"
 msgstr "Ha fallat la transacció"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
-#: ../src/gpk-application.c:1719
+#: ../src/gpk-application.c:1671
 msgid "Changes not applied"
 msgstr "No s'han aplicat els canvis"
 
-#: ../src/gpk-application.c:1720
+#: ../src/gpk-application.c:1672
 msgid "Close _Anyway"
 msgstr "Tanca _igualment"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-application.c:1724
+#: ../src/gpk-application.c:1676
 msgid "You have made changes that have not yet been applied."
 msgstr "Heu fet canvis que encara no s'han aplicat."
 
-#: ../src/gpk-application.c:1725
+#: ../src/gpk-application.c:1677
 msgid "These changes will be lost if you close this window."
 msgstr "Es perdran els canvis si tanqueu aquesta finestra."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-application.c:2018 ../src/gpk-enum.c:1075 ../src/gpk-enum.c:1164
+#: ../src/gpk-application.c:1967 ../src/gpk-enum.c:956 ../src/gpk-enum.c:1045
 msgid "Installed"
 msgstr "Instal·lat"
 
 #. TRANSLATORS: column for package name
 #. TRANSLATORS: column for group name
-#. TRANSLATORS: column for the package name
-#: ../src/gpk-application.c:2034 ../src/gpk-application.c:2056
-#: ../src/gpk-dialog.c:151 ../src/gpk-modal-dialog.c:703
+#: ../src/gpk-application.c:1983 ../src/gpk-application.c:2005
+#: ../src/gpk-dialog.c:145
 msgid "Name"
 msgstr "Nom"
 
 #. TRANSLATORS: the size of the meta package
-#: ../src/gpk-application.c:2223
+#: ../src/gpk-application.c:2172
 msgid "Size"
 msgstr "Mida"
 
 #. TRANSLATORS: the installed size in bytes of the package
-#: ../src/gpk-application.c:2226
+#: ../src/gpk-application.c:2175
 msgid "Installed size"
 msgstr "Mida instal·lada"
 
 #. TRANSLATORS: the download size of the package
-#: ../src/gpk-application.c:2229
+#: ../src/gpk-application.c:2178
 msgid "Download size"
 msgstr "Mida baixada"
 
 #. TRANSLATORS: entry tooltip: basic search
-#: ../src/gpk-application.c:2417
+#: ../src/gpk-application.c:2366
 msgid "Searching by name"
 msgstr "S'està cercant pel nom"
 
 #. TRANSLATORS: entry tooltip: detailed search
-#: ../src/gpk-application.c:2443
+#: ../src/gpk-application.c:2392
 msgid "Searching by description"
 msgstr "S'està cercant per la descripció"
 
 #. TRANSLATORS: entry tooltip: file search
-#: ../src/gpk-application.c:2469
+#: ../src/gpk-application.c:2418
 msgid "Searching by file"
 msgstr "S'està cercant pel fitxer"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2492
+#: ../src/gpk-application.c:2441
 msgid "Search by name"
 msgstr "Cerca pel nom"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2500
+#: ../src/gpk-application.c:2449
 msgid "Search by description"
 msgstr "Cerca per la descripció"
 
 #. TRANSLATORS: context menu item for the search type icon
-#: ../src/gpk-application.c:2508
+#: ../src/gpk-application.c:2457
 msgid "Search by file name"
 msgstr "Cerca pel nom de fitxer"
 
-#: ../src/gpk-application.c:2536
+#: ../src/gpk-application.c:2485
 msgid "Licensed under the GNU General Public License Version 2"
 msgstr "Publicat sota la Llicència Pública General GNU versió 2"
 
-#: ../src/gpk-application.c:2537
+#: ../src/gpk-application.c:2486
 msgid ""
 "PackageKit is free software; you can redistribute it and/or modify it under "
 "the terms of the GNU General Public License as published by the Free "
@@ -692,7 +684,7 @@ msgstr ""
 "publicada per la Free Software Foundation; ja sigui la versió 2 de la "
 "Llicència o bé (si ho preferiu) qualsevol altra versió posterior."
 
-#: ../src/gpk-application.c:2541
+#: ../src/gpk-application.c:2490
 msgid ""
 "PackageKit is distributed in the hope that it will be useful, but WITHOUT "
 "ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or "
@@ -704,7 +696,7 @@ msgstr ""
 "PER UN PROPÒSIT PARTICULAR. Vegeu la Llicència Pública General GNU per "
 "obtenir-ne més detalls."
 
-#: ../src/gpk-application.c:2545
+#: ../src/gpk-application.c:2494
 msgid ""
 "You should have received a copy of the GNU General Public License along with "
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
@@ -715,88 +707,88 @@ msgstr ""
 "Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
-#: ../src/gpk-application.c:2551
+#: ../src/gpk-application.c:2500
 msgid "translator-credits"
 msgstr "Gil Forcada <gilforcada@guifi.net>"
 
-#: ../src/gpk-application.c:2572
+#: ../src/gpk-application.c:2521
 msgid "PackageKit Website"
 msgstr "Lloc web del PackageKit"
 
 #. TRANSLATORS: description of NULL, gpk-application that is
-#: ../src/gpk-application.c:2575
+#: ../src/gpk-application.c:2524
 msgid "Package Manager for GNOME"
 msgstr "Gestor de paquets pel GNOME"
 
 #. TRANSLATORS: welcome text if we can click the group array
-#: ../src/gpk-application.c:2767
+#: ../src/gpk-application.c:2716
 msgid "Enter a search word or click a category to get started."
 msgstr ""
 "Per començar, introduïu una paraula de cerca, o bé, feu clic en una "
 "categoria."
 
 #. TRANSLATORS: welcome text if we have to search by name
-#: ../src/gpk-application.c:2770
+#: ../src/gpk-application.c:2719
 msgid "Enter a search word to get started."
 msgstr "Per començar introduïu una paraula de cerca."
 
 #. TRANSLATORS: daemon is broken
-#: ../src/gpk-application.c:3009
+#: ../src/gpk-application.c:2958
 msgid "Exiting as properties could not be retrieved"
 msgstr "Se surt perquè no s'han pogut obtenir les propietats"
 
 #. TRANSLATORS: title: all of the packages on the system and available in sources
-#: ../src/gpk-application.c:3052
+#: ../src/gpk-application.c:3001
 msgid "All packages"
 msgstr "Tots els paquets"
 
 #. TRANSLATORS: tooltip: all packages
-#: ../src/gpk-application.c:3054
+#: ../src/gpk-application.c:3003
 msgid "Show all packages"
 msgstr "Mostra tots els paquets"
 
 #. TRANSLATORS: show the program version
-#: ../src/gpk-application.c:3479 ../src/gpk-update-viewer.c:3397
+#: ../src/gpk-application.c:3424 ../src/gpk-update-viewer.c:3388
 msgid "Show the program version and exit"
 msgstr "Mostra la versió del programa i surt"
 
-#: ../src/gpk-application.c:3493
+#: ../src/gpk-application.c:3437
 msgid "Install Software"
 msgstr "Instal·la programari"
 
 #. are we running privileged
-#: ../src/gpk-application.c:3509
+#: ../src/gpk-application.c:3453
 msgid "Package installer"
 msgstr "Instal·lador de paquets"
 
 #. TRANSLATORS: a 32 bit package
-#: ../src/gpk-common.c:295
+#: ../src/gpk-common.c:157
 msgid "32-bit"
 msgstr "32-bit"
 
 #. TRANSLATORS: a 64 bit package
-#: ../src/gpk-common.c:302
+#: ../src/gpk-common.c:164
 msgid "64-bit"
 msgstr "64-bit"
 
 #. TRANSLATORS: these tools cannot run as root (unknown name)
-#: ../src/gpk-common.c:427
+#: ../src/gpk-common.c:289
 msgid "This application is running as a privileged user"
 msgstr "Aquesta aplicació s'està executant com a usuari privilegiat"
 
 #. TRANSLATORS: cannot run as root user, and we display the application name
-#: ../src/gpk-common.c:430
+#: ../src/gpk-common.c:292
 #, c-format
 msgid "%s is running as a privileged user"
 msgstr "%s s'està executant com a usuari privilegiat"
 
 #. TRANSLATORS: tell the user off
-#: ../src/gpk-common.c:433
+#: ../src/gpk-common.c:295
 msgid "Package management applications are security sensitive."
 msgstr "Les aplicacions de gestió de paquets són sensibles a la seguretat."
 
 #. TRANSLATORS: and explain why
-#: ../src/gpk-common.c:435
+#: ../src/gpk-common.c:297
 msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
@@ -805,18 +797,18 @@ msgstr ""
 "per motius de seguretat."
 
 #. TRANSLATORS: button: allow the user to run this, even when insecure
-#: ../src/gpk-common.c:441
+#: ../src/gpk-common.c:303
 msgid "Continue _Anyway"
 msgstr "Continua _igualment"
 
 #. TRANSLATORS: The actions has just literally happened
-#: ../src/gpk-common.c:511 ../src/gpk-common.c:561
+#: ../src/gpk-common.c:341 ../src/gpk-common.c:391
 #, c-format
 msgid "Now"
 msgstr "Ara"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:521 ../src/gpk-common.c:571
+#: ../src/gpk-common.c:351 ../src/gpk-common.c:401
 #, c-format
 msgid "%i second"
 msgid_plural "%i seconds"
@@ -824,7 +816,7 @@ msgstr[0] "%i segon"
 msgstr[1] "%i segons"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:531 ../src/gpk-common.c:584
+#: ../src/gpk-common.c:361 ../src/gpk-common.c:414
 #, c-format
 msgid "%i minute"
 msgid_plural "%i minutes"
@@ -832,7 +824,7 @@ msgstr[0] "%i minut"
 msgstr[1] "%i minuts"
 
 #. TRANSLATORS: time
-#: ../src/gpk-common.c:537 ../src/gpk-common.c:603
+#: ../src/gpk-common.c:367 ../src/gpk-common.c:433
 #, c-format
 msgid "%i hour"
 msgid_plural "%i hours"
@@ -843,863 +835,378 @@ msgstr[1] "%i hores"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
 #. TRANSLATOR: "%i %s %i %s" are "%i hours %i minutes"
 #. * Swap order with "%2$s %2$i %1$s %1$i if needed
-#: ../src/gpk-common.c:590 ../src/gpk-common.c:609
+#: ../src/gpk-common.c:420 ../src/gpk-common.c:439
 #, c-format
 msgid "%i %s %i %s"
 msgstr "%i %s %i %s"
 
-#: ../src/gpk-common.c:591 ../src/gpk-common.c:611
+#: ../src/gpk-common.c:421 ../src/gpk-common.c:441
 msgid "minute"
 msgid_plural "minutes"
 msgstr[0] "minut"
 msgstr[1] "minuts"
 
-#: ../src/gpk-common.c:592
+#: ../src/gpk-common.c:422
 msgid "second"
 msgid_plural "seconds"
 msgstr[0] "segon"
 msgstr[1] "segons"
 
-#: ../src/gpk-common.c:610
+#: ../src/gpk-common.c:440
 msgid "hour"
 msgid_plural "hours"
 msgstr[0] "hora"
 msgstr[1] "hores"
 
 #. Translators: a list of two things
-#: ../src/gpk-common.c:638
+#: ../src/gpk-common.c:468
 #, c-format
 msgid "%s and %s"
 msgstr "%s i %s"
 
 #. Translators: a list of three things
-#: ../src/gpk-common.c:642
+#: ../src/gpk-common.c:472
 #, c-format
 msgid "%s, %s and %s"
 msgstr "%s, %s i %s"
 
 #. Translators: a list of four things
-#: ../src/gpk-common.c:646
+#: ../src/gpk-common.c:476
 #, c-format
 msgid "%s, %s, %s and %s"
 msgstr "%s, %s, %s i %s"
 
 #. Translators: a list of five things
-#: ../src/gpk-common.c:651
+#: ../src/gpk-common.c:481
 #, c-format
 msgid "%s, %s, %s, %s and %s"
 msgstr "%s, %s, %s, %s i %s"
 
-#. TRANSLATORS: we failed to install
-#: ../src/gpk-dbus-task.c:243 ../src/gpk-dbus-task.c:460
-msgid "Failed to install software"
-msgstr "No s'ha pogut instal·lar cap programari"
-
-#. TRANSLATORS: we didn't select any applications that were returned
-#: ../src/gpk-dbus-task.c:245
-msgid "No applications were chosen to be installed"
-msgstr "No s'ha seleccionat cap aplicació per instal·lar"
-
-#. TRANSLATORS: detailed text about the error
-#: ../src/gpk-dbus-task.c:277
-msgid "Error details"
-msgstr "Detalls de l'errada"
-
-#: ../src/gpk-dbus-task.c:277
-msgid "Package Manager error details"
-msgstr "Dades de l'errada del gestor de paquets"
-
-#. TRANSLATORS: default fallback error -- this should never happen
-#: ../src/gpk-dbus-task.c:292
-msgid ""
-"Unknown error. Please refer to the detailed report and report in your "
-"distribution bug tracker."
-msgstr ""
-"Error desconegut. Mireu-vos l'informe detallat i informeu-ne al seguidor "
-"d'errades de la distribució."
-
-#. TRANSLATORS: button: show details about the error
-#: ../src/gpk-dbus-task.c:365
-msgid "Show details"
-msgstr "Mostra els detalls"
-
-#. TRANSLATORS: title: installing packages
-#. TRANSLATORS: transaction state, installing packages
-#: ../src/gpk-dbus-task.c:497 ../src/gpk-enum.c:878
-msgid "Installing packages"
-msgstr "S'està instal·lant paquets"
-
-#. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:598 ../src/gpk-dbus-task.c:1365
-msgid "Failed to install file"
-msgid_plural "Failed to install files"
-msgstr[0] "No s'ha pogut instal·lar el fitxer"
-msgstr[1] "No s'han pogut instal·lar els fitxers"
-
-#. TRANSLATORS: title: confirm the user want's to install a local file
-#: ../src/gpk-dbus-task.c:687
-msgid "Do you want to install this file?"
-msgid_plural "Do you want to install these files?"
-msgstr[0] "Voleu instal·lar aquest fitxer?"
-msgstr[1] "Voleu instal·lar aquests fitxers?"
-
-#. TRANSLATORS: title: installing local files
-#. TRANSLATORS: button: confirm to search for packages
-#. TRANSLATORS: button: install codecs
-#. TRANSLATORS: button: install a font
-#. TRANSLATORS: button: install Plasma services
-#. TRANSLATORS: button: install printer drivers
-#: ../src/gpk-dbus-task.c:696 ../src/gpk-dbus-task.c:1241
-#: ../src/gpk-dbus-task.c:1458 ../src/gpk-dbus-task.c:1660
-#: ../src/gpk-dbus-task.c:2124 ../src/gpk-dbus-task.c:2464
-#: ../src/gpk-dbus-task.c:2698 ../src/gpk-task.c:394
-msgid "Install"
-msgstr "Instal·la"
-
-#. TRANSLATORS: title: installing a local file
-#: ../src/gpk-dbus-task.c:1017
-msgid "Install local file"
-msgid_plural "Install local files"
-msgstr[0] "Instal·la un fitxer local"
-msgstr[1] "Instal·la fitxers locals"
-
-#. TRANSLATORS: couldn't resolve name to package
-#: ../src/gpk-dbus-task.c:1077
-#, c-format
-msgid "Could not find packages"
-msgstr "No s'ha pogut trobar el paquet"
-
-#. TRANSLATORS: message: could not find
-#: ../src/gpk-dbus-task.c:1086
-msgid "The packages could not be found in any package source"
-msgstr "No s'han pogut trobar els paquets a cap dipòsit"
-
-#. TRANSLATORS: button: a link to the help file
-#. TRANSLATORS: button: show the user a button to get more help finding stuff
-#. TRANSLATORS: button text
-#. TRANSLATORS: button: show the user a button to get more help finding stuff
-#. TRANSLATORS: button text
-#: ../src/gpk-dbus-task.c:1088 ../src/gpk-dbus-task.c:1327
-#: ../src/gpk-dbus-task.c:1632 ../src/gpk-dbus-task.c:1840
-#: ../src/gpk-dbus-task.c:2097 ../src/gpk-dbus-task.c:2436
-msgid "More information"
-msgstr "Més informació"
-
-#: ../src/gpk-dbus-task.c:1125 ../src/gpk-enum.c:310
-msgid "The package is already installed"
-msgid_plural "The packages are already installed"
-msgstr[0] "El paquet ja està instal·lat"
-msgstr[1] "Els paquets ja estan instal·lats"
-
-#. TRANSLATORS: message: package is already installed
-#: ../src/gpk-dbus-task.c:1129
-msgid "Nothing to do."
-msgstr "No s'ha de fer res."
-
-#. TRANSLATORS: failed to install, shouldn't be shown
-#: ../src/gpk-dbus-task.c:1144
-msgid "Failed to install package"
-msgstr "No s'ha pogut instal·lar el paquet"
-
-#. TRANSLATORS: the search gave us the wrong result. internal error. barf.
-#: ../src/gpk-dbus-task.c:1146
-msgid "Incorrect response from search"
-msgstr "Resposta incorrecta de la cerca"
-
-#. TRANSLATORS: a program needs a package, for instance openoffice-clipart
-#: ../src/gpk-dbus-task.c:1225
-msgid "An additional package is required:"
-msgid_plural "Additional packages are required:"
-msgstr[0] "Es necessita un paquet addicional:"
-msgstr[1] "Es necessiten paquets addicionals:"
-
-#. TRANSLATORS: ask the user if it's okay to search
-#: ../src/gpk-dbus-task.c:1228
-msgid "Do you want to search for and install this package now?"
-msgid_plural "Do you want to search for and install these packages now?"
-msgstr[0] "Voleu cercar i instal·lar aquest paquet ara?"
-msgstr[1] "Voleu cercar i instal·lar aquests paquets ara?"
-
-#. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1234
-#, c-format
-msgid "%s wants to install a package"
-msgid_plural "%s wants to install packages"
-msgstr[0] "El %s vol instal·lar un paquet"
-msgstr[1] "El %s vol instal·lar uns paquets"
-
-#. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1237
-msgid "A program wants to install a package"
-msgid_plural "A program wants to install packages"
-msgstr[0] "Un programa vol instal·lar un paquet"
-msgstr[1] "Un programa vol instal·lar uns paquets"
-
-#. TRANSLATORS: title, searching
-#: ../src/gpk-dbus-task.c:1254 ../src/gpk-dbus-task.c:2758
-msgid "Searching for packages"
-msgstr "Cerca de paquets"
-
-#. TRANSLATORS: failed to fild the package for thefile
-#: ../src/gpk-dbus-task.c:1323
-msgid "Failed to find package"
-msgstr "No s'ha pogut trobar el paquet"
-
-#. TRANSLATORS: nothing found
-#: ../src/gpk-dbus-task.c:1325 ../src/gpk-dbus-task.c:2898
-msgid "The file could not be found in any packages"
-msgstr "No s'ha pogut trobar el fitxer a cap paquet"
-
-#. TRANSLATORS: we've already got a package that provides this file
-#: ../src/gpk-dbus-task.c:1362
-#, c-format
-msgid "The %s package already provides this file"
-msgstr "El paquet %s ja proporciona aquest fitxer"
-
-#. TRANSLATORS: a program wants to install a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:1443
-msgid "The following file is required:"
-msgid_plural "The following files are required:"
-msgstr[0] "Es necessita el fitxer següent:"
-msgstr[1] "Es necessiten els fitxers següents:"
-
-#. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:1446
-msgid "Do you want to search for this file now?"
-msgid_plural "Do you want to search for these files now?"
-msgstr[0] "Voleu cercar aquest fitxer?"
-msgstr[1] "Voleu cercar aquests fitxers?"
-
-#. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1451
-#, c-format
-msgid "%s wants to install a file"
-msgid_plural "%s wants to install files"
-msgstr[0] "El %s vol instal·lar un fitxer"
-msgstr[1] "El %s vol instal·lar uns fitxers"
-
-#. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1454
-msgid "A program wants to install a file"
-msgid_plural "A program wants to install files"
-msgstr[0] "Un programa vol instal·lar un fitxer"
-msgstr[1] "Un programa vol instal·lar uns fitxers"
-
-#. TRANSLATORS: searching for the package that provides the file
-#. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-dbus-task.c:1470 ../src/gpk-dbus-task.c:3000
-#: ../src/gpk-enum.c:1235
-msgid "Searching for file"
-msgstr "Cerca de fitxers"
-
-#. TRANSLATORS: we are listing the plugins in a box
-#: ../src/gpk-dbus-task.c:1513
-msgid "The following plugin is required:"
-msgid_plural "The following plugins are required:"
-msgstr[0] "Es necessita el connector següent:"
-msgstr[1] "Es necessiten els connectors següents:"
-
-#. TRANSLATORS: ask for confirmation
-#: ../src/gpk-dbus-task.c:1531 ../src/gpk-dbus-task.c:2365
-msgid "Do you want to search for this now?"
-msgid_plural "Do you want to search for these now?"
-msgstr[0] "Voleu cercar-lo ara?"
-msgstr[1] "Voleu cercar-los ara?"
-
-#. TRANSLATORS: a program wants to decode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1544
-#, c-format
-msgid "%s requires an additional plugin to decode this file"
-msgid_plural "%s requires additional plugins to decode this file"
-msgstr[0] ""
-"El %s requereix un connector addicional per descodificar aquest fitxer"
-msgstr[1] ""
-"El %s requereix uns connectors addicionals per descodificar aquest fitxer"
-
-#. TRANSLATORS: a program wants to encode something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1548
-#, c-format
-msgid "%s requires an additional plugin to encode this file"
-msgid_plural "%s requires additional plugins to encode this file"
-msgstr[0] "El %s requereix un connector addicional per codificar aquest fitxer"
-msgstr[1] ""
-"El %s requereix uns connectors addicionals per codificar aquest fitxer"
-
-#. TRANSLATORS: a program wants to do something (unknown) -- string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1552
-#, c-format
-msgid "%s requires an additional plugin for this operation"
-msgid_plural "%s requires additional plugins for this operation"
-msgstr[0] "El %s requereix un connector addicional per aquesta operació"
-msgstr[1] "El %s requereix uns connectors addicionals per aquesta operació"
-
-#. TRANSLATORS: a random program which we can't get the name wants to decode something
-#: ../src/gpk-dbus-task.c:1558
-msgid "A program requires an additional plugin to decode this file"
-msgid_plural "A program requires additional plugins to decode this file"
-msgstr[0] ""
-"Un programa requereix un connector addicional per descodificar aquest fitxer"
-msgstr[1] ""
-"Un programa requereix uns connectors addicionals per descodificar aquest "
-"fitxer"
-
-#. TRANSLATORS: a random program which we can't get the name wants to encode something
-#: ../src/gpk-dbus-task.c:1562
-msgid "A program requires an additional plugin to encode this file"
-msgid_plural "A program requires additional plugins to encode this file"
-msgstr[0] ""
-"Un programa requereix un connector addicional per codificar aquest fitxer"
-msgstr[1] ""
-"Un programa requereix uns connectors addicionals per codificar aquest fitxer"
-
-#. TRANSLATORS: a random program which we can't get the name wants to do something (unknown)
-#: ../src/gpk-dbus-task.c:1566
-msgid "A program requires an additional plugin for this operation"
-msgid_plural "A program requires additional plugins for this operation"
-msgstr[0] "Un programa requereix un connector addicional per aquesta operació"
-msgstr[1] ""
-"Un programa requereix uns connectors addicionals per aquesta operació"
-
-#. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:1572 ../src/gpk-dbus-task.c:1926
-#: ../src/gpk-dbus-task.c:2301 ../src/gpk-dbus-task.c:2377
-msgid "Search"
-msgstr "Cerca"
-
-#. TRANSLATORS: failed to search for codec
-#: ../src/gpk-dbus-task.c:1627
-msgid "Failed to search for plugin"
-msgstr "No s'ha pogut cercar el connector"
-
-#. TRANSLATORS: no package sources have the wanted codec
-#: ../src/gpk-dbus-task.c:1629
-msgid "Could not find plugin in any configured package source"
-msgstr "No s'ha pogut trobar el connector a cap font de paquets"
-
-#: ../src/gpk-dbus-task.c:1651 ../src/gpk-dbus-task.c:2455
-msgid "Install the following plugin"
-msgid_plural "Install the following plugins"
-msgstr[0] "Instal·la el connector següent"
-msgstr[1] "Instal·la els connectors següents"
-
-#. TRANSLATORS: title: show a list of fonts
-#: ../src/gpk-dbus-task.c:1652 ../src/gpk-dbus-task.c:2117
-#: ../src/gpk-dbus-task.c:2456 ../src/gpk-dbus-task.c:2690
-msgid "Do you want to install this package now?"
-msgid_plural "Do you want to install these packages now?"
-msgstr[0] "Voleu instal·lar aquest paquet ara?"
-msgstr[1] "Voleu instal·lar aquest paquet ara?"
-
-#. TRANSLATORS: search for codec
-#: ../src/gpk-dbus-task.c:1744
-msgid "Searching for plugins"
-msgstr "Cerca de connectors"
-
-#: ../src/gpk-dbus-task.c:1764
-#, c-format
-msgid "Searching for plugin: %s"
-msgstr "S'està cercant el connector: %s"
-
-#: ../src/gpk-dbus-task.c:1807
-msgid "Failed to search for provides"
-msgstr "No s'han pogut cercar proveïdors"
-
-#. TRANSLATORS: title
-#: ../src/gpk-dbus-task.c:1836
-msgid "Failed to find software"
-msgstr "No s'ha pogut trobar cap programari"
-
-#. TRANSLATORS: nothing found in the package sources that helps
-#: ../src/gpk-dbus-task.c:1838
-msgid "No new applications can be found to handle this type of file"
-msgstr ""
-"No s'ha pogut trobar cap aplicació que pugui gestionar aquest tipus de fitxer"
-
-#. TRANSLATORS: message: mime type opener required
-#: ../src/gpk-dbus-task.c:1908
-msgid "An additional program is required to open this type of file:"
-msgstr "Es necessita un altre programa per obrir aquest tipus de fitxer:"
-
-#. TRANSLATORS: message: confirm with the user
-#: ../src/gpk-dbus-task.c:1911
-msgid "Do you want to search for a program to open this file type now?"
-msgstr "Voleu cercar ara un programa que pugui obrir aquests tipus de fitxers?"
-
-#. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:1919
-#, c-format
-msgid "%s requires a new mime type"
-msgid_plural "%s requires new mime types"
-msgstr[0] "El %s requereix un tipus MIME nou"
-msgstr[1] "El %s requereix uns tipus MIME nous"
-
-#. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:1922
-msgid "A program requires a new mime type"
-msgid_plural "A program requires new mime types"
-msgstr[0] "Un programa requereix un tipus MIME nou"
-msgstr[1] "Un programa requereix uns tipus MIME nous"
-
-#. TRANSLATORS: title: searching for mime type handlers
-#: ../src/gpk-dbus-task.c:1937
-msgid "Searching for file handlers"
-msgstr "Cerca de gestors de fitxers"
-
-#. TRANSLATORS: we could not parse the ISO639 code from the fontconfig tag name
-#: ../src/gpk-dbus-task.c:2019
-msgid "Language tag not parsed"
-msgstr "No s'ha pogut analitzar l'etiqueta d'idioma"
-
-#. TRANSLATORS: we could not find en_US string for ISO639 code
-#: ../src/gpk-dbus-task.c:2027
-msgid "Language code not matched"
-msgstr "No s'ha trobat cap concordança amb el codi d'idioma"
-
-#. TRANSLATORS: title: cannot find in sources
-#: ../src/gpk-dbus-task.c:2087
-msgid "Failed to find font"
-msgid_plural "Failed to find fonts"
-msgstr[0] "No s'ha pogut trobar el tipus de lletra"
-msgstr[1] "No s'han pogut trobar els tipus de lletra"
-
-#. TRANSLATORS: message: tell the user we suck
-#: ../src/gpk-dbus-task.c:2095
-msgid "No new fonts can be found for this document"
-msgstr "No s'ha pogut trobar cap tipus de lletra nova per aquest document"
-
-#. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2280
-msgid "An additional font is required to view this document correctly."
-msgid_plural "Additional fonts are required to view this document correctly."
-msgstr[0] ""
-"Es necessita un tipus de lletra per veure correctament aquest document."
-msgstr[1] ""
-"Es necessiten alguns tipus de lletra per veure correctament aquest document."
-
-#. TRANSLATORS: we need to download a new font package to display a document
-#: ../src/gpk-dbus-task.c:2284
-msgid "Do you want to search for a suitable package now?"
-msgid_plural "Do you want to search for suitable packages now?"
-msgstr[0] "Voleu cercar el paquet adequat ara?"
-msgstr[1] "Voleu cercar els paquets adequats ara?"
-
-#. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2294
-#, c-format
-msgid "%s wants to install a font"
-msgid_plural "%s wants to install fonts"
-msgstr[0] "El %s vol instal·lar un tipus de lletra"
-msgstr[1] "El %s vol instal·lar uns tipus de lletres"
-
-#. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2297
-msgid "A program wants to install a font"
-msgid_plural "A program wants to install fonts"
-msgstr[0] "Un programa vol instal·lar un tipus de lletra"
-msgstr[1] "Un programa vol instal·lar uns tipus de lletres"
-
-#. TRANSLATORS: title to show when searching for font files
-#: ../src/gpk-dbus-task.c:2313
-msgid "Searching for font"
-msgid_plural "Searching for fonts"
-msgstr[0] "S'està cercant un tipus de lletra"
-msgstr[1] "S'estan cercant uns tipus de lletra"
-
-#. TRANSLATORS: we are listing the services in a box
-#: ../src/gpk-dbus-task.c:2353
-msgid "The following service is required:"
-msgid_plural "The following services are required:"
-msgstr[0] "Es necessita el servei següent:"
-msgstr[1] "Es necessiten els serveis següents:"
-
-#: ../src/gpk-dbus-task.c:2373
-msgid "Plasma requires an additional service for this operation"
-msgid_plural "Plasma requires additional services for this operation"
-msgstr[0] "El Plasma requereix un servei addicional per aquesta operació"
-msgstr[1] "El Plasma requereix serveis addicionals per aquesta operació"
-
-#: ../src/gpk-dbus-task.c:2431
-msgid "Failed to search for Plasma service"
-msgstr "No s'ha pogut trobar el servei pel Plasma"
-
-#. TRANSLATORS: no package sources have the wanted Plasma service
-#: ../src/gpk-dbus-task.c:2433
-msgid "Could not find service in any configured package source"
-msgstr "No s'ha pogut trobar el servei a cap font de paquets activa"
-
-#. TRANSLATORS: search for Plasma services
-#: ../src/gpk-dbus-task.c:2538
-msgid "Searching for services"
-msgstr "Cerca de serveis"
-
-#: ../src/gpk-dbus-task.c:2556
-#, c-format
-msgid "Searching for service: %s"
-msgstr "S'està cercant el servei: %s"
-
-#: ../src/gpk-dbus-task.c:2613
-msgid "Failed to remove package"
-msgstr "No s'ha pogut suprimir el paquet"
-
-#: ../src/gpk-dbus-task.c:2689
-msgid "Install the following driver"
-msgid_plural "Install the following drivers"
-msgstr[0] "Instal·la el controlador següent"
-msgstr[1] "Instal·la els controladors següents"
-
-#. TRANSLATORS: title: removing packages
-#. TRANSLATORS: transaction state, removing packages
-#: ../src/gpk-dbus-task.c:2842 ../src/gpk-enum.c:870
-msgid "Removing packages"
-msgstr "S'estan suprimint els paquets"
-
-#. TRANSLATORS: failed to find the package for the file
-#: ../src/gpk-dbus-task.c:2896
-msgid "Failed to find package for this file"
-msgstr "No s'ha pogut trobar el paquet per aquest fitxer"
-
-#. TRANSLATORS: a program wants to remove a file, e.g. /lib/moo.so
-#: ../src/gpk-dbus-task.c:2973
-msgid "The following file will be removed:"
-msgid_plural "The following files will be removed:"
-msgstr[0] "Es suprimirà el fitxer següent:"
-msgstr[1] "Es suprimiran els fitxers següents:"
-
-#. TRANSLATORS: confirm with the user
-#: ../src/gpk-dbus-task.c:2976
-msgid "Do you want to remove this file now?"
-msgid_plural "Do you want to remove these files now?"
-msgstr[0] "Voleu suprimir aquest fitxer?"
-msgstr[1] "Voleu suprimir aquests fitxers?"
-
-#. TRANSLATORS: string is a program name, e.g. "Movie Player"
-#: ../src/gpk-dbus-task.c:2981
-#, c-format
-msgid "%s wants to remove a file"
-msgid_plural "%s wants to remove files"
-msgstr[0] "El %s vol suprimir un fitxer"
-msgstr[1] "El %s vol suprimir uns fitxers"
-
-#. TRANSLATORS: a random program which we can't get the name wants to do something
-#: ../src/gpk-dbus-task.c:2984
-msgid "A program wants to remove a file"
-msgid_plural "A program wants to remove files"
-msgstr[0] "Un programa vol suprimir un fitxer"
-msgstr[1] "Un programa vol suprimir uns fitxers"
-
-#. TRANSLATORS: button: confirm to search for packages
-#: ../src/gpk-dbus-task.c:2988 ../src/gpk-task.c:399
-msgid "Remove"
-msgstr "Suprimeix"
+#. TRANSLATORS: turn on all debugging
+#: ../src/gpk-debug.c:113
+msgid "Show debugging information for all files"
+msgstr "Mostra la informació de depuració de tots els fitxers"
+
+#: ../src/gpk-debug.c:171
+msgid "Debugging Options"
+msgstr "Opcions de depuració"
+
+#: ../src/gpk-debug.c:171
+msgid "Show debugging options"
+msgstr "Mostra les opcions de depuració"
 
 #. TRANSLATORS: This is when we have over 5 items, and we're not interested in detail
-#: ../src/gpk-dialog.c:72
+#: ../src/gpk-dialog.c:71
 msgid "many packages"
 msgstr "molts paquets"
 
-#: ../src/gpk-dialog.c:241
+#: ../src/gpk-dialog.c:235
 msgid "No files"
 msgstr "Cap fitxer"
 
 #. add a checkbutton for deps screen
-#: ../src/gpk-dialog.c:304
+#: ../src/gpk-dialog.c:298
 msgid "Do not show this again"
 msgstr "No ho mostris més"
 
 #. TRANSLATORS: this is compact disk (CD) media
-#: ../src/gpk-enum.c:251
+#: ../src/gpk-enum.c:200
 msgid "CD"
 msgstr "CD"
 
 #. TRANSLATORS: this is digital versatile disk (DVD) media
-#: ../src/gpk-enum.c:255
+#: ../src/gpk-enum.c:204
 msgid "DVD"
 msgstr "DVD"
 
 #. TRANSLATORS: this is either CD or DVD media
-#: ../src/gpk-enum.c:259
+#: ../src/gpk-enum.c:208
 msgid "disc"
 msgstr "disc"
 
 #. TRANSLATORS: this is generic media of unknown type that we will install from
-#: ../src/gpk-enum.c:263
+#: ../src/gpk-enum.c:212
 msgid "media"
 msgstr "suport"
 
-#: ../src/gpk-enum.c:280
+#: ../src/gpk-enum.c:229
 msgid "Failed with unknown error code"
 msgstr "Ha fallat amb un codi d'error desconegut"
 
-#: ../src/gpk-enum.c:283
+#: ../src/gpk-enum.c:232
 msgid "No network connection available"
 msgstr "No hi ha cap connexió disponible"
 
-#: ../src/gpk-enum.c:286
+#: ../src/gpk-enum.c:235
 msgid "No package cache is available."
 msgstr "No hi ha cap memòria cau de paquets disponible."
 
-#: ../src/gpk-enum.c:289
+#: ../src/gpk-enum.c:238
 msgid "Out of memory"
 msgstr "S'ha exhaurit la memòria"
 
-#: ../src/gpk-enum.c:292
+#: ../src/gpk-enum.c:241
 msgid "Failed to create a thread"
 msgstr "No s'ha pogut crear cap fil"
 
-#: ../src/gpk-enum.c:295
+#: ../src/gpk-enum.c:244
 msgid "Not supported by this backend"
 msgstr "No està implementat en aquest rerefons"
 
-#: ../src/gpk-enum.c:298
+#: ../src/gpk-enum.c:247
 msgid "An internal system error has occurred"
 msgstr "S'ha produït un error intern del sistema"
 
-#: ../src/gpk-enum.c:301
+#: ../src/gpk-enum.c:250
 msgid "A security signature is not present"
 msgstr "No hi ha cap signatura de seguretat"
 
-#: ../src/gpk-enum.c:304
+#: ../src/gpk-enum.c:253
 msgid "The package is not installed"
 msgstr "El paquet no està instal·lat"
 
-#: ../src/gpk-enum.c:307
+#: ../src/gpk-enum.c:256
 msgid "The package was not found"
 msgstr "No s'ha trobat el paquet"
 
-#: ../src/gpk-enum.c:313
+#: ../src/gpk-enum.c:259
+msgid "The package is already installed"
+msgstr "El paquet ja està instal·lat"
+
+#: ../src/gpk-enum.c:262
 msgid "The package download failed"
 msgstr "No s'ha pogut baixar el paquet"
 
-#: ../src/gpk-enum.c:316
+#: ../src/gpk-enum.c:265
 msgid "The group was not found"
 msgstr "No s'ha trobat el grup"
 
-#: ../src/gpk-enum.c:319
+#: ../src/gpk-enum.c:268
 msgid "The group list was invalid"
 msgstr "La llista de grup no és vàlida"
 
-#: ../src/gpk-enum.c:322
+#: ../src/gpk-enum.c:271
 msgid "Dependency resolution failed"
 msgstr "No s'han pogut resoldre les dependències"
 
-#: ../src/gpk-enum.c:325
+#: ../src/gpk-enum.c:274
 msgid "Search filter was invalid"
 msgstr "El filtre de cerca és no vàlid"
 
-#: ../src/gpk-enum.c:328
+#: ../src/gpk-enum.c:277
 msgid "The package identifier was not well formed"
 msgstr "L'identificador del paquet no està ben format"
 
-#: ../src/gpk-enum.c:331
+#: ../src/gpk-enum.c:280
 msgid "Transaction error"
 msgstr "Error de transacció"
 
-#: ../src/gpk-enum.c:334
+#: ../src/gpk-enum.c:283
 msgid "Repository name was not found"
 msgstr "No s'ha trobat el nom del dipòsit"
 
-#: ../src/gpk-enum.c:337
+#: ../src/gpk-enum.c:286
 msgid "Could not remove a protected system package"
 msgstr "No s'ha pogut suprimir un paquet protegit del sistema"
 
-#: ../src/gpk-enum.c:340
+#: ../src/gpk-enum.c:289
 msgid "The action was canceled"
 msgstr "S'ha cancel·lat l'acció"
 
-#: ../src/gpk-enum.c:343
+#: ../src/gpk-enum.c:292
 msgid "The action was forcibly canceled"
 msgstr "S'ha forçat la cancel·lació de l'acció"
 
-#: ../src/gpk-enum.c:346
+#: ../src/gpk-enum.c:295
 msgid "Reading the configuration file failed"
 msgstr "Ha fallat la lectura del fitxer de configuració"
 
-#: ../src/gpk-enum.c:349
+#: ../src/gpk-enum.c:298
 msgid "The action cannot be canceled"
 msgstr "No es pot cancel·lar l'acció"
 
-#: ../src/gpk-enum.c:352
+#: ../src/gpk-enum.c:301
 msgid "Source packages cannot be installed"
 msgstr "No es poden instal·lar els paquets font"
 
-#: ../src/gpk-enum.c:355
+#: ../src/gpk-enum.c:304
 msgid "The license agreement failed"
 msgstr "Ha fallat l'acord de llicència"
 
-#: ../src/gpk-enum.c:358
+#: ../src/gpk-enum.c:307
 msgid "Local file conflict between packages"
 msgstr "Hi ha un conflicte en un fitxer local entre diferents paquets"
 
-#: ../src/gpk-enum.c:361
+#: ../src/gpk-enum.c:310
 msgid "Packages are not compatible"
 msgstr "Els paquets no són compatibles"
 
-#: ../src/gpk-enum.c:364
+#: ../src/gpk-enum.c:313
 msgid "Problem connecting to a package source"
 msgstr "S'ha produït un problema en connectar-se a una font de paquets"
 
-#: ../src/gpk-enum.c:367
+#: ../src/gpk-enum.c:316
 msgid "Failed to initialize"
 msgstr "No s'ha pogut inicialitzar"
 
-#: ../src/gpk-enum.c:370
+#: ../src/gpk-enum.c:319
 msgid "Failed to finalize"
 msgstr "No s'ha pogut finalitzar"
 
-#: ../src/gpk-enum.c:373
+#: ../src/gpk-enum.c:322
 msgid "Cannot get lock"
 msgstr "No es pot obtenir el bloqueig"
 
-#: ../src/gpk-enum.c:376
+#: ../src/gpk-enum.c:325
 msgid "No packages to update"
 msgstr "No hi ha paquets per actualitzar"
 
-#: ../src/gpk-enum.c:379
+#: ../src/gpk-enum.c:328
 msgid "Cannot write repository configuration"
 msgstr "No es pot escriure la configuració del dipòsit"
 
-#: ../src/gpk-enum.c:382
+#: ../src/gpk-enum.c:331
 msgid "Local install failed"
 msgstr "Ha fallat la instal·lació local"
 
-#: ../src/gpk-enum.c:385
+#: ../src/gpk-enum.c:334
 msgid "Bad security signature"
 msgstr "Signatura de seguretat dolenta"
 
-#: ../src/gpk-enum.c:388
+#: ../src/gpk-enum.c:337
 msgid "Missing security signature"
 msgstr "Manca la signatura de seguretat"
 
-#: ../src/gpk-enum.c:391
+#: ../src/gpk-enum.c:340
 msgid "Repository configuration invalid"
 msgstr "La configuració del dipòsit no és vàlida"
 
-#: ../src/gpk-enum.c:394
+#: ../src/gpk-enum.c:343
 msgid "Invalid package file"
 msgstr "Fitxer de paquet no vàlid"
 
-#: ../src/gpk-enum.c:397
+#: ../src/gpk-enum.c:346
 msgid "Package install blocked"
 msgstr "S'ha bloquejat la instal·lació del paquet"
 
-#: ../src/gpk-enum.c:400
+#: ../src/gpk-enum.c:349
 msgid "Package is corrupt"
 msgstr "El paquet està malmès"
 
-#: ../src/gpk-enum.c:403
+#: ../src/gpk-enum.c:352
 msgid "All packages are already installed"
 msgstr "Ja s'han instal·lat tots els paquets"
 
-#: ../src/gpk-enum.c:406
+#: ../src/gpk-enum.c:355
 msgid "The specified file could not be found"
 msgstr "No s'ha pogut trobar el fitxer especificat"
 
-#: ../src/gpk-enum.c:409
+#: ../src/gpk-enum.c:358
 msgid "No more mirrors are available"
 msgstr "No hi ha més miralls disponibles"
 
-#: ../src/gpk-enum.c:412
+#: ../src/gpk-enum.c:361
 msgid "No distribution upgrade data is available"
 msgstr "Hi ha disponibles dades d'actualització de la distribució"
 
-#: ../src/gpk-enum.c:415
+#: ../src/gpk-enum.c:364
 msgid "Package is incompatible with this system"
 msgstr "El paquet no és compatible amb aquest sistema"
 
-#: ../src/gpk-enum.c:418
+#: ../src/gpk-enum.c:367
 msgid "No space is left on the disk"
 msgstr "No hi ha espai al disc"
 
 #. TRANSLATORS: this is the window title when a new CD or DVD is required
-#: ../src/gpk-enum.c:421 ../src/gpk-task.c:346
+#: ../src/gpk-enum.c:370 ../src/gpk-task.c:345
 msgid "A media change is required"
 msgstr "Es necessita un altre suport"
 
-#: ../src/gpk-enum.c:424
+#: ../src/gpk-enum.c:373
 msgid "Authorization failed"
 msgstr "Ha fallat l'autorització"
 
-#: ../src/gpk-enum.c:427
+#: ../src/gpk-enum.c:376
 msgid "Update not found"
 msgstr "No s'ha trobat l'actualització"
 
-#: ../src/gpk-enum.c:430
+#: ../src/gpk-enum.c:379
 msgid "Cannot install from untrusted source"
 msgstr "No es pot instal·lar des d'una font en que no es confia"
 
-#: ../src/gpk-enum.c:433
+#: ../src/gpk-enum.c:382
 msgid "Cannot update from untrusted source"
 msgstr "No es pot actualitzar des d'una font en que no es confia"
 
-#: ../src/gpk-enum.c:436
+#: ../src/gpk-enum.c:385
 msgid "Cannot get the file list"
 msgstr "No es pot obtenir la llista de fitxers"
 
-#: ../src/gpk-enum.c:439
+#: ../src/gpk-enum.c:388
 msgid "Cannot get package requires"
 msgstr "No es poden obtenir els requeriments del paquet"
 
-#: ../src/gpk-enum.c:442
+#: ../src/gpk-enum.c:391
 msgid "Cannot disable source"
 msgstr "No es pot inhabilitar la font"
 
-#: ../src/gpk-enum.c:445
+#: ../src/gpk-enum.c:394
 msgid "The download failed"
 msgstr "La baixada ha fallat"
 
-#: ../src/gpk-enum.c:448
+#: ../src/gpk-enum.c:397
 msgid "Package failed to configure"
 msgstr "No s'ha pogut configurar el paquet"
 
-#: ../src/gpk-enum.c:451
+#: ../src/gpk-enum.c:400
 msgid "Package failed to build"
 msgstr "No s'ha pogut construir el paquet"
 
-#: ../src/gpk-enum.c:454
+#: ../src/gpk-enum.c:403
 msgid "Package failed to install"
 msgstr "No s'ha pogut instal·lar el paquet"
 
-#: ../src/gpk-enum.c:457
+#: ../src/gpk-enum.c:406
 msgid "Package failed to be removed"
 msgstr "No s'ha pogut suprimir el paquet"
 
-#: ../src/gpk-enum.c:460
+#: ../src/gpk-enum.c:409
 msgid "Update failed due to running process"
 msgstr "Ha fallat l'actualització degut a un procés que s'està executant"
 
-#: ../src/gpk-enum.c:463
+#: ../src/gpk-enum.c:412
 msgid "The package database was changed"
 msgstr "Ha canviat la base de dades de paquets"
 
-#: ../src/gpk-enum.c:466
+#: ../src/gpk-enum.c:415
 msgid "Virtual provide type is not supported"
 msgstr "No hi ha el concepte de tipus virtuals"
 
-#: ../src/gpk-enum.c:469
+#: ../src/gpk-enum.c:418
 msgid "Install root is invalid"
 msgstr "L'arrel de la instal·lació no és vàlida"
 
-#: ../src/gpk-enum.c:472
+#: ../src/gpk-enum.c:421
 msgid "Cannot fetch install sources"
 msgstr "No es poden obtenir les fonts d'instal·lació"
 
-#: ../src/gpk-enum.c:475
+#: ../src/gpk-enum.c:424
 msgid "Rescheduled due to priority"
 msgstr "S'ha endarrerit degut a la prioritat"
 
-#: ../src/gpk-enum.c:478
+#: ../src/gpk-enum.c:427
 msgid "Unfinished transaction"
 msgstr "No s'ha finalitzat la transacció"
 
-#: ../src/gpk-enum.c:481
+#: ../src/gpk-enum.c:430
 msgid "Lock required"
 msgstr "Es requereix un bloqueig"
 
-#: ../src/gpk-enum.c:498
+#: ../src/gpk-enum.c:447
 msgid "Failed with unknown error code."
 msgstr "Ha fallat amb un codi d'error desconegut."
 
-#: ../src/gpk-enum.c:501
+#: ../src/gpk-enum.c:450
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
@@ -1707,7 +1214,7 @@ msgstr ""
 "No hi ha cap connexió de xarxa disponible.\n"
 "Comproveu els paràmetres de connexió i torneu a provar-ho."
 
-#: ../src/gpk-enum.c:505
+#: ../src/gpk-enum.c:454
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
@@ -1715,7 +1222,7 @@ msgstr ""
 "S'ha de tornar a construir la llista de paquets.\n"
 "El rerefons ja ho hauria d'haver fet automàticament."
 
-#: ../src/gpk-enum.c:509
+#: ../src/gpk-enum.c:458
 msgid ""
 "The service that is responsible for handling user requests is out of "
 "memory.\n"
@@ -1725,11 +1232,11 @@ msgstr ""
 "sense memòria.\n"
 "Reinicieu l'ordinador."
 
-#: ../src/gpk-enum.c:513
+#: ../src/gpk-enum.c:462
 msgid "A thread could not be created to service the user request."
 msgstr "No s'ha pogut crear un fil per servir la sol·licitud de l'usuari."
 
-#: ../src/gpk-enum.c:516
+#: ../src/gpk-enum.c:465
 msgid ""
 "The action is not supported by this backend.\n"
 "Please report a bug in your distribution bug tracker as this should not have "
@@ -1739,7 +1246,7 @@ msgstr ""
 "Informeu de l'errada al seguidor d'errades de la distribució ja que no "
 "hauria d'haver passat."
 
-#: ../src/gpk-enum.c:520
+#: ../src/gpk-enum.c:469
 msgid ""
 "A problem that we were not expecting has occurred.\n"
 "Please report this bug in your distribution bug tracker with the error "
@@ -1749,7 +1256,7 @@ msgstr ""
 "Informeu de l'errada al seguidor d'errades de la distribució amb la "
 "descripció de l'error."
 
-#: ../src/gpk-enum.c:524
+#: ../src/gpk-enum.c:473
 msgid ""
 "A security trust relationship could not be made with package source.\n"
 "Please check your security settings."
@@ -1757,13 +1264,13 @@ msgstr ""
 "No s'ha pogut establir una relació de confiança amb la font de paquets.\n"
 "Comproveu els paràmetres de seguretat."
 
-#: ../src/gpk-enum.c:528
+#: ../src/gpk-enum.c:477
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
 msgstr ""
 "El paquet que s'està intentant suprimir o actualitzar no està instal·lat."
 
-#: ../src/gpk-enum.c:531
+#: ../src/gpk-enum.c:480
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "package source."
@@ -1771,11 +1278,11 @@ msgstr ""
 "El paquet que s'està modificant no s'ha trobat en el sistema ni en cap font "
 "de paquets."
 
-#: ../src/gpk-enum.c:534
+#: ../src/gpk-enum.c:483
 msgid "The package that is trying to be installed is already installed."
 msgstr "El paquet que s'està intentant instal·lar ja està instal·lat."
 
-#: ../src/gpk-enum.c:537
+#: ../src/gpk-enum.c:486
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
@@ -1783,7 +1290,7 @@ msgstr ""
 "No s'ha pogut baixar el paquet.\n"
 "Comproveu la connexió de xarxa."
 
-#: ../src/gpk-enum.c:541
+#: ../src/gpk-enum.c:490
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
@@ -1791,7 +1298,7 @@ msgstr ""
 "No s'ha trobat el tipus de grup.\n"
 "Comproveu la llista de grups i torneu a provar-ho."
 
-#: ../src/gpk-enum.c:545
+#: ../src/gpk-enum.c:494
 msgid ""
 "The group list could not be loaded.\n"
 "Refreshing your cache may help, although this is normally a software source "
@@ -1801,7 +1308,7 @@ msgstr ""
 "Podeu provar d'actualitzar la memòria cau, tot i que normalment és degut a "
 "un error en el codi font del programa."
 
-#: ../src/gpk-enum.c:550
+#: ../src/gpk-enum.c:499
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
@@ -1809,11 +1316,11 @@ msgstr ""
 "No s'ha pogut trobar cap paquet que permeti completar l'acció.\n"
 "Hi ha més informació en l'informe detallat."
 
-#: ../src/gpk-enum.c:554
+#: ../src/gpk-enum.c:503
 msgid "The search filter was not correctly formed."
 msgstr "El filtre de cerca no està ben format."
 
-#: ../src/gpk-enum.c:557
+#: ../src/gpk-enum.c:506
 msgid ""
 "The package identifier was not well formed when sent to the server.\n"
 "This normally indicates an internal error and should be reported."
@@ -1822,7 +1329,7 @@ msgstr ""
 "servidor.\n"
 "Normalment això indica que hi ha un error intern i s'hauria d'informar."
 
-#: ../src/gpk-enum.c:561
+#: ../src/gpk-enum.c:510
 msgid ""
 "An unspecified transaction error has occurred.\n"
 "More information is available in the detailed report."
@@ -1830,7 +1337,7 @@ msgstr ""
 "S'ha produït un error no especificat durant la transacció.\n"
 "Hi ha més informació en l'informe detallat."
 
-#: ../src/gpk-enum.c:565
+#: ../src/gpk-enum.c:514
 msgid ""
 "The remote package source name was not found.\n"
 "You may need to enable an item in Package Sources."
@@ -1838,15 +1345,15 @@ msgstr ""
 "No s'ha trobat el nom de la font de paquets remota.\n"
 "Potser heu d'habilitar un element a les fonts de paquets."
 
-#: ../src/gpk-enum.c:569
+#: ../src/gpk-enum.c:518
 msgid "Removing a protected system package is not allowed."
 msgstr "No es pot suprimir un paquet protegit del sistema."
 
-#: ../src/gpk-enum.c:572
+#: ../src/gpk-enum.c:521
 msgid "The action was canceled successfully and no packages were changed."
 msgstr "S'ha cancel·lat correctament l'acció i no s'ha canviat cap paquet."
 
-#: ../src/gpk-enum.c:575
+#: ../src/gpk-enum.c:524
 msgid ""
 "The action was canceled successfully and no packages were changed.\n"
 "The backend did not exit cleanly."
@@ -1854,7 +1361,7 @@ msgstr ""
 "S'ha cancel·lat correctament l'acció i no s'ha canviat cap paquet.\n"
 "El rerefons no ha finalitzat correctament."
 
-#: ../src/gpk-enum.c:579
+#: ../src/gpk-enum.c:528
 msgid ""
 "The native package configuration file could not be opened.\n"
 "Please make sure configuration is valid."
@@ -1862,11 +1369,11 @@ msgstr ""
 "No s'ha pogut obrir el fitxer de configuració del paquet nadiu.\n"
 "Assegureu-vos que la configuració sigui correcta."
 
-#: ../src/gpk-enum.c:583
+#: ../src/gpk-enum.c:532
 msgid "The action cannot be canceled at this time."
 msgstr "En aquest moment no es pot cancel·lar l'acció."
 
-#: ../src/gpk-enum.c:586
+#: ../src/gpk-enum.c:535
 msgid ""
 "Source packages are not normally installed this way.\n"
 "Check the extension of the file you are trying to install."
@@ -1874,7 +1381,7 @@ msgstr ""
 "Els paquets font no s'instal·len d'aquesta manera.\n"
 "Comproveu l'extensió del fitxer que esteu intentant instal·lar."
 
-#: ../src/gpk-enum.c:590
+#: ../src/gpk-enum.c:539
 msgid ""
 "The license agreement was not agreed to.\n"
 "To use this software you have to accept the license."
@@ -1882,7 +1389,7 @@ msgstr ""
 "No s'ha acceptat l'acord de llicència.\n"
 "Per poder utilitzar aquest programari heu d'acceptar-ne la llicència."
 
-#: ../src/gpk-enum.c:594
+#: ../src/gpk-enum.c:543
 msgid ""
 "Two packages provide the same file.\n"
 "This is usually due to mixing packages from different sources."
@@ -1890,7 +1397,7 @@ msgstr ""
 "Dos paquets proporcionen el mateix fitxer.\n"
 "Normalment es deu a que s'estan barrejant paquets de fonts diferents."
 
-#: ../src/gpk-enum.c:598
+#: ../src/gpk-enum.c:547
 msgid ""
 "Multiple packages exist that are not compatible with each other.\n"
 "This is usually due to mixing packages from different sources."
@@ -1898,7 +1405,7 @@ msgstr ""
 "Hi ha diversos paquets que no són compatibles els uns amb els altres.\n"
 "Normalment es deu a que s'estan barrejant paquets de fonts diferents."
 
-#: ../src/gpk-enum.c:602
+#: ../src/gpk-enum.c:551
 msgid ""
 "There was a (possibly temporary) problem connecting to a package source.\n"
 "Please check the detailed error for further details."
@@ -1907,7 +1414,7 @@ msgstr ""
 "paquets.\n"
 "Per a més informació, comproveu l'error detallat."
 
-#: ../src/gpk-enum.c:606
+#: ../src/gpk-enum.c:555
 msgid ""
 "Failed to initialize packaging backend.\n"
 "This may occur if other packaging tools are being used simultaneously."
@@ -1915,7 +1422,7 @@ msgstr ""
 "No s'ha pogut inicialitzar el rerefons que gestiona els paquets.\n"
 "Pot ser degut si s'utilitzen alhora altres eines de gestió de paquets."
 
-#: ../src/gpk-enum.c:610
+#: ../src/gpk-enum.c:559
 msgid ""
 "Failed to close down the backend instance.\n"
 "This error can normally be ignored."
@@ -1923,7 +1430,7 @@ msgstr ""
 "No s'ha pogut tancar correctament la instància del rerefons.\n"
 "Aquest error es pot ignorar tranquil·lament."
 
-#: ../src/gpk-enum.c:614
+#: ../src/gpk-enum.c:563
 msgid ""
 "Cannot get the exclusive lock on the packaging backend.\n"
 "Please close any other legacy packaging tools that may be open."
@@ -1931,15 +1438,15 @@ msgstr ""
 "No es pot obtenir el blocatge exclusiu en el rerefons de gestió de paquets.\n"
 "Tanqueu la resta d'eines de gestió de paquets que puguin estar obertes."
 
-#: ../src/gpk-enum.c:618
+#: ../src/gpk-enum.c:567
 msgid "None of the selected packages could be updated."
 msgstr "No s'ha pogut actualitzar cap dels paquets seleccionats."
 
-#: ../src/gpk-enum.c:621
+#: ../src/gpk-enum.c:570
 msgid "The repository configuration could not be modified."
 msgstr "No s'ha pogut modificar la configuració del dipòsit."
 
-#: ../src/gpk-enum.c:624
+#: ../src/gpk-enum.c:573
 msgid ""
 "Installing the local file failed.\n"
 "More information is available in the detailed report."
@@ -1947,11 +1454,11 @@ msgstr ""
 "Ha fallat la instal·lació del fitxer local.\n"
 "Hi ha més informació en l'informe detallat."
 
-#: ../src/gpk-enum.c:628
+#: ../src/gpk-enum.c:577
 msgid "The package security signature could not be verified."
 msgstr "No s'ha pogut verificar la signatura de seguretat del paquet."
 
-#: ../src/gpk-enum.c:631
+#: ../src/gpk-enum.c:580
 msgid ""
 "The package security signature is missing and this package is untrusted.\n"
 "This package was not signed when created."
@@ -1959,11 +1466,11 @@ msgstr ""
 "Manca la signatura del paquet i aquest paquet no és de confiança.\n"
 "En crear el paquet no es va signar."
 
-#: ../src/gpk-enum.c:635
+#: ../src/gpk-enum.c:584
 msgid "Repository configuration was invalid and could not be read."
 msgstr "No s'ha pogut llegir la configuració del dipòsit perquè no era vàlida."
 
-#: ../src/gpk-enum.c:638
+#: ../src/gpk-enum.c:587
 msgid ""
 "The package you are attempting to install is not valid.\n"
 "The package file could be corrupt, or not a proper package."
@@ -1971,7 +1478,7 @@ msgstr ""
 "El paquet que esteu intentant instal·lar no és vàlid.\n"
 "El paquet podria està malmès, o bé no ser un paquet."
 
-#: ../src/gpk-enum.c:642
+#: ../src/gpk-enum.c:591
 msgid ""
 "Installation of this package prevented by your packaging system's "
 "configuration."
@@ -1979,18 +1486,18 @@ msgstr ""
 "La configuració del sistema gestor de paquets no permet que s'instal·li "
 "aquest paquet."
 
-#: ../src/gpk-enum.c:645
+#: ../src/gpk-enum.c:594
 msgid ""
 "The package that was downloaded is corrupt and needs to be downloaded again."
 msgstr ""
 "S'ha de tornar a baixar el paquet perquè el que s'havia baixat està malmès."
 
-#: ../src/gpk-enum.c:648
+#: ../src/gpk-enum.c:597
 msgid ""
 "All of the packages selected for install are already installed on the system."
 msgstr "Ja estan instal·lats tots els paquets seleccionats per instal·lar."
 
-#: ../src/gpk-enum.c:651
+#: ../src/gpk-enum.c:600
 msgid ""
 "The specified file could not be found on the system.\n"
 "Check the file still exists and has not been deleted."
@@ -1998,7 +1505,7 @@ msgstr ""
 "No s'ha pogut trobar en el sistema de fitxers el fitxer especificat.\n"
 "Comproveu que existeixi el fitxer i que no s'hagi suprimit."
 
-#: ../src/gpk-enum.c:655
+#: ../src/gpk-enum.c:604
 msgid ""
 "Required data could not be found on any of the configured package sources.\n"
 "There were no more download mirrors that could be tried."
@@ -2007,7 +1514,7 @@ msgstr ""
 "configurades.\n"
 "No hi havia més miralls de baixades per provar."
 
-#: ../src/gpk-enum.c:659
+#: ../src/gpk-enum.c:608
 msgid ""
 "Required upgrade data could not be found in any of the configured package "
 "sources.\n"
@@ -2017,14 +1524,14 @@ msgstr ""
 "fonts de paquets configurades.\n"
 "La llista d'actualitzacions de la distribució no estarà disponible."
 
-#: ../src/gpk-enum.c:663
+#: ../src/gpk-enum.c:612
 msgid ""
 "The package that is trying to be installed is incompatible with this system."
 msgstr ""
 "El paquet que s'està intentant instal·lar no és compatible amb aquest "
 "sistema."
 
-#: ../src/gpk-enum.c:666
+#: ../src/gpk-enum.c:615
 msgid ""
 "There is insufficient space on the device.\n"
 "Free some space on the system disk to perform this operation."
@@ -2032,11 +1539,11 @@ msgstr ""
 "No hi ha prou espai al disc.\n"
 "Allibereu espai al disc per poder realitzar aquesta operació."
 
-#: ../src/gpk-enum.c:670
+#: ../src/gpk-enum.c:619
 msgid "Additional media is required to complete the transaction."
 msgstr "Es necessita un altre suport per completar la transacció."
 
-#: ../src/gpk-enum.c:673
+#: ../src/gpk-enum.c:622
 msgid ""
 "You have failed to provide correct authentication.\n"
 "Please check any passwords or account settings."
@@ -2044,7 +1551,7 @@ msgstr ""
 "No heu proporcionat les dades correctes per autenticar-vos.\n"
 "Comproveu les contrasenyes i les dades dels comptes."
 
-#: ../src/gpk-enum.c:677
+#: ../src/gpk-enum.c:626
 msgid ""
 "The specified update could not be found.\n"
 "It could have already been installed or no longer available on the remote "
@@ -2053,28 +1560,28 @@ msgstr ""
 "No s'ha pogut trobar l'actualització especificada.\n"
 "Potser ja és instal·lada o ja no és disponible en el servidor remot."
 
-#: ../src/gpk-enum.c:681
+#: ../src/gpk-enum.c:630
 msgid "The package could not be installed from untrusted source."
 msgstr "No s'ha pogut instal·lar el paquet des d'una font en que no es confia."
 
-#: ../src/gpk-enum.c:684
+#: ../src/gpk-enum.c:633
 msgid "The package could not be updated from untrusted source."
 msgstr ""
 "No s'ha pogut actualitzar el paquet des d'una font en que no es confia."
 
-#: ../src/gpk-enum.c:687
+#: ../src/gpk-enum.c:636
 msgid "The file list is not available for this package."
 msgstr "Aquest paquet no proporciona la llista de fitxers."
 
-#: ../src/gpk-enum.c:690
+#: ../src/gpk-enum.c:639
 msgid "The information about what requires this package could not be obtained."
 msgstr "No s'ha pogut obtenir la informació dels requeriments d'aquest paquet."
 
-#: ../src/gpk-enum.c:693
+#: ../src/gpk-enum.c:642
 msgid "The specified package source could not be disabled."
 msgstr "No s'ha pogut inhabilitar la font de paquets especificada."
 
-#: ../src/gpk-enum.c:696
+#: ../src/gpk-enum.c:645
 msgid ""
 "The download could not be done automatically and should be done manually.\n"
 "More information is available in the detailed report."
@@ -2082,7 +1589,7 @@ msgstr ""
 "No s'ha pogut baixar automàticament i s'haurà de fer manualment.\n"
 "Hi ha més informació en l'informe detallat."
 
-#: ../src/gpk-enum.c:700
+#: ../src/gpk-enum.c:649
 msgid ""
 "One of the selected packages failed to configure correctly.\n"
 "More information is available in the detailed report."
@@ -2090,7 +1597,7 @@ msgstr ""
 "Un dels paquets seleccionats no s'ha configurat correctament.\n"
 "Hi ha més informació en l'informe detallat."
 
-#: ../src/gpk-enum.c:704
+#: ../src/gpk-enum.c:653
 msgid ""
 "One of the selected packages failed to build correctly.\n"
 "More information is available in the detailed report."
@@ -2098,7 +1605,7 @@ msgstr ""
 "Un dels paquets seleccionats no s'ha construït correctament.\n"
 "Hi ha més informació en l'informe detallat."
 
-#: ../src/gpk-enum.c:708
+#: ../src/gpk-enum.c:657
 msgid ""
 "One of the selected packages failed to install correctly.\n"
 "More information is available in the detailed report."
@@ -2106,7 +1613,7 @@ msgstr ""
 "Un dels paquets seleccionats no s'ha instal·lat correctament.\n"
 "Hi ha més informació en l'informe detallat."
 
-#: ../src/gpk-enum.c:712
+#: ../src/gpk-enum.c:661
 msgid ""
 "One of the selected packages failed to be removed correctly.\n"
 "More information is available in the detailed report."
@@ -2114,7 +1621,7 @@ msgstr ""
 "Un dels paquets seleccionats no s'ha suprimit correctament.\n"
 "Hi ha més informació en l'informe detallat."
 
-#: ../src/gpk-enum.c:716
+#: ../src/gpk-enum.c:665
 msgid ""
 "A program is running that has to be closed before the update can proceed.\n"
 "More information is available in the detailed report."
@@ -2123,29 +1630,29 @@ msgstr ""
 "procés d'actualització.\n"
 "Hi ha més informació en l'informe detallat."
 
-#: ../src/gpk-enum.c:720
+#: ../src/gpk-enum.c:669
 msgid "The package database was changed while the request was running."
 msgstr ""
 "S'ha canviat la base de dades de paquets mentre s'executava la sol·licitud."
 
-#: ../src/gpk-enum.c:723
+#: ../src/gpk-enum.c:672
 msgid "The virtual provide type is not supported by this system."
 msgstr "Aquest sistema no proporciona els tipus virtuals."
 
-#: ../src/gpk-enum.c:726
+#: ../src/gpk-enum.c:675
 msgid "The install root is invalid. Please contact your administrator."
 msgstr ""
 "L'arrel de la instal·lació no és vàlida. Contacteu amb l'administrador."
 
-#: ../src/gpk-enum.c:729
+#: ../src/gpk-enum.c:678
 msgid "The list of package sources could not be downloaded."
 msgstr "No s'ha pogut baixar la llista de fonts de paquets."
 
-#: ../src/gpk-enum.c:732
+#: ../src/gpk-enum.c:681
 msgid "A previous package management transaction was interrupted."
 msgstr "Es va interrompre una transacció anterior del gestor de paquets."
 
-#: ../src/gpk-enum.c:735
+#: ../src/gpk-enum.c:684
 msgid ""
 "The transaction has been canceled and will be retried when the system is "
 "idle."
@@ -2153,954 +1660,971 @@ msgstr ""
 "S'ha cancel·lat la transacció i es tornarà a intentar quan el sistema "
 "estigui inactiu."
 
-#: ../src/gpk-enum.c:738
+#: ../src/gpk-enum.c:687
 msgid "A package manager lock is required."
 msgstr "Es requereix un bloqueig del gestor de paquets."
 
-#: ../src/gpk-enum.c:755
+#: ../src/gpk-enum.c:704
 msgid "No restart is necessary."
 msgstr "No fa falta reiniciar."
 
-#: ../src/gpk-enum.c:758
+#: ../src/gpk-enum.c:707
 msgid "You will be required to restart this application."
 msgstr "Haureu de reiniciar aquesta aplicació."
 
-#: ../src/gpk-enum.c:761
+#: ../src/gpk-enum.c:710
 msgid "You will be required to log out and back in."
 msgstr "Haureu de sortir i tornar a entrar."
 
-#: ../src/gpk-enum.c:764
+#: ../src/gpk-enum.c:713
 msgid "A restart will be required."
 msgstr "Es necessitarà reiniciar."
 
-#: ../src/gpk-enum.c:767
+#: ../src/gpk-enum.c:716
 msgid "You will be required to log out and back in due to a security update."
 msgstr ""
 "Haureu de sortir i tornar a entrar degut a una actualització de seguretat."
 
-#: ../src/gpk-enum.c:770
+#: ../src/gpk-enum.c:719
 msgid "A restart will be required due to a security update."
 msgstr "Es necessitarà reiniciar degut a una actualització de seguretat."
 
-#: ../src/gpk-enum.c:787
+#: ../src/gpk-enum.c:736
 msgid "No restart is required."
 msgstr "No fa falta reiniciar."
 
-#: ../src/gpk-enum.c:790
+#: ../src/gpk-enum.c:739
 msgid "A restart is required."
 msgstr "Es necessita reiniciar."
 
-#: ../src/gpk-enum.c:793
+#: ../src/gpk-enum.c:742
 msgid "You need to log out and log back in."
 msgstr "Heu de sortir i tornar a entrar."
 
-#: ../src/gpk-enum.c:796
+#: ../src/gpk-enum.c:745
 msgid "You need to restart the application."
 msgstr "Heu de reiniciar l'aplicació."
 
-#: ../src/gpk-enum.c:799
+#: ../src/gpk-enum.c:748
 msgid "You need to log out and log back in to remain secure."
 msgstr "Heu de sortir i tornar a entrar per estar segur."
 
-#: ../src/gpk-enum.c:802
+#: ../src/gpk-enum.c:751
 msgid "A restart is required to remain secure."
 msgstr "Es necessita reiniciar per estar segur."
 
-#. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:820
-msgid "Stable"
-msgstr "Estable"
-
-#. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:824
-msgid "Unstable"
-msgstr "Inestable"
-
-#. TRANSLATORS: A distribution stability level
-#: ../src/gpk-enum.c:828
-msgid "Testing"
-msgstr "En proves"
-
 #. TRANSLATORS: This is when the transaction status is not known
-#: ../src/gpk-enum.c:846
+#: ../src/gpk-enum.c:769
 msgid "Unknown state"
 msgstr "Estat desconegut"
 
 #. TRANSLATORS: transaction state, the daemon is in the process of starting
-#: ../src/gpk-enum.c:850
+#: ../src/gpk-enum.c:773
 msgid "Starting"
 msgstr "S'està iniciant"
 
 #. TRANSLATORS: transaction state, the transaction is waiting for another to complete
-#: ../src/gpk-enum.c:854
+#: ../src/gpk-enum.c:777
 msgid "Waiting in queue"
 msgstr "Està en la cua"
 
 #. TRANSLATORS: transaction state, just started
-#: ../src/gpk-enum.c:858
+#: ../src/gpk-enum.c:781
 msgid "Running"
 msgstr "S'està executant"
 
 #. TRANSLATORS: transaction state, is querying data
-#: ../src/gpk-enum.c:862
+#: ../src/gpk-enum.c:785
 msgid "Querying"
 msgstr "S'està consultant"
 
 #. TRANSLATORS: transaction state, getting data from a server
-#: ../src/gpk-enum.c:866
+#: ../src/gpk-enum.c:789
 msgid "Getting information"
 msgstr "S'està obtenint la informació"
 
+#. TRANSLATORS: transaction state, removing packages
+#: ../src/gpk-enum.c:793
+msgid "Removing packages"
+msgstr "S'estan suprimint els paquets"
+
 #. TRANSLATORS: transaction state, downloading package files
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:874 ../src/gpk-enum.c:1312
+#: ../src/gpk-enum.c:797 ../src/gpk-enum.c:1193
 msgid "Downloading packages"
 msgstr "S'estan baixant els paquets"
 
+#. TRANSLATORS: transaction state, installing packages
+#: ../src/gpk-enum.c:801
+msgid "Installing packages"
+msgstr "S'està instal·lant paquets"
+
 #. TRANSLATORS: transaction state, refreshing internal lists
-#: ../src/gpk-enum.c:882
+#: ../src/gpk-enum.c:805
 msgid "Refreshing software list"
 msgstr "S'està actualitzant la llista de programari"
 
 #. TRANSLATORS: transaction state, installing updates
-#: ../src/gpk-enum.c:886
+#: ../src/gpk-enum.c:809
 msgid "Installing updates"
 msgstr "S'estan instal·lant les actualitzacions"
 
 #. TRANSLATORS: transaction state, removing old packages, and cleaning config files
-#: ../src/gpk-enum.c:890
+#: ../src/gpk-enum.c:813
 msgid "Cleaning up packages"
 msgstr "S'estan netejant els paquets"
 
 #. TRANSLATORS: transaction state, obsoleting old packages
-#: ../src/gpk-enum.c:894
+#: ../src/gpk-enum.c:817
 msgid "Obsoleting packages"
 msgstr "S'estan marcant els paquets com a obsolets"
 
 #. TRANSLATORS: transaction state, checking the transaction before we do it
-#: ../src/gpk-enum.c:898
+#: ../src/gpk-enum.c:821
 msgid "Resolving dependencies"
 msgstr "S'estan resolent les dependències"
 
 #. TRANSLATORS: transaction state, checking if we have all the security keys for the operation
-#: ../src/gpk-enum.c:902
+#: ../src/gpk-enum.c:825
 msgid "Checking signatures"
 msgstr "S'estan comprovant les signatures"
 
 #. TRANSLATORS: transaction state, when we're doing a test transaction
-#: ../src/gpk-enum.c:906
+#: ../src/gpk-enum.c:829
 msgid "Testing changes"
 msgstr "S'estan provant els canvis"
 
 #. TRANSLATORS: transaction state, when we're writing to the system package database
-#: ../src/gpk-enum.c:910
+#: ../src/gpk-enum.c:833
 msgid "Committing changes"
 msgstr "S'estan validant els canvis"
 
 #. TRANSLATORS: transaction state, requesting data from a server
-#: ../src/gpk-enum.c:914
+#: ../src/gpk-enum.c:837
 msgid "Requesting data"
 msgstr "S'estan demanant les dades"
 
 #. TRANSLATORS: transaction state, all done!
-#: ../src/gpk-enum.c:918
+#: ../src/gpk-enum.c:841
 msgid "Finished"
 msgstr "S'ha finalitzat"
 
 #. TRANSLATORS: transaction state, in the process of canceling
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:922 ../src/gpk-enum.c:1267
+#: ../src/gpk-enum.c:845 ../src/gpk-enum.c:1148
 msgid "Canceling"
 msgstr "S'està cancel·lant"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:926
+#: ../src/gpk-enum.c:849
 msgid "Downloading repository information"
 msgstr "S'està baixant la informació del dipòsit"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:930
+#: ../src/gpk-enum.c:853
 msgid "Downloading list of packages"
 msgstr "S'està baixant la llista de paquets"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:934
+#: ../src/gpk-enum.c:857
 msgid "Downloading file lists"
 msgstr "S'estan baixant les llistes de fitxers"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:938
+#: ../src/gpk-enum.c:861
 msgid "Downloading lists of changes"
 msgstr "S'estan baixant les llistes de canvis"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:942
+#: ../src/gpk-enum.c:865
 msgid "Downloading groups"
 msgstr "S'estan baixant els grups"
 
 #. TRANSLATORS: transaction state, downloading metadata
-#: ../src/gpk-enum.c:946
+#: ../src/gpk-enum.c:869
 msgid "Downloading update information"
 msgstr "S'està baixant la informació d'actualització"
 
 #. TRANSLATORS: transaction state, repackaging delta files
-#: ../src/gpk-enum.c:950
+#: ../src/gpk-enum.c:873
 msgid "Repackaging files"
 msgstr "S'està tornant a empaquetar els fitxers"
 
 #. TRANSLATORS: transaction state, loading databases
-#: ../src/gpk-enum.c:954
+#: ../src/gpk-enum.c:877
 msgid "Loading cache"
 msgstr "S'està carregant la memòria intermèdia"
 
 #. TRANSLATORS: transaction state, scanning for running processes
-#: ../src/gpk-enum.c:958
+#: ../src/gpk-enum.c:881
 msgid "Scanning installed applications"
 msgstr "S'estan escanejant les aplicacions instal·lades"
 
 #. TRANSLATORS: transaction state, generating a list of packages installed on the system
-#: ../src/gpk-enum.c:962
+#: ../src/gpk-enum.c:885
 msgid "Generating package lists"
 msgstr "S'estan generant les llistes de paquets"
 
 #. TRANSLATORS: transaction state, when we're waiting for the native tools to exit
-#: ../src/gpk-enum.c:966
+#: ../src/gpk-enum.c:889
 msgid "Waiting for package manager lock"
 msgstr "S'està esperant el blocatge del gestor de paquets"
 
 #. TRANSLATORS: waiting for user to type in a password
-#: ../src/gpk-enum.c:970
+#: ../src/gpk-enum.c:893
 msgid "Waiting for authentication"
 msgstr "S'està esperant l'autenticació"
 
 #. TRANSLATORS: we are updating the list of processes
-#: ../src/gpk-enum.c:974
+#: ../src/gpk-enum.c:897
 msgid "Updating the list of running applications"
 msgstr "S'està actualitzant la llista de programes en execució"
 
 #. TRANSLATORS: we are checking executable files in use
-#: ../src/gpk-enum.c:978
+#: ../src/gpk-enum.c:901
 msgid "Checking for applications currently in use"
 msgstr "S'estan comprovant quines aplicacions s'estan utilitzant actualment"
 
 #. TRANSLATORS: we are checking for libraries in use
-#: ../src/gpk-enum.c:982
+#: ../src/gpk-enum.c:905
 msgid "Checking for libraries currently in use"
 msgstr "S'estan comprovant quines biblioteques s'estan utilitzant actualment"
 
 #. TRANSLATORS: we are copying package files to prepare to install
-#: ../src/gpk-enum.c:986
+#: ../src/gpk-enum.c:909
 msgid "Copying files"
 msgstr "S'estan copiant els fitxers"
 
-#. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1004
-#, c-format
-msgid "%i trivial update"
-msgid_plural "%i trivial updates"
-msgstr[0] "%i actualització trivial"
-msgstr[1] "%i actualitzacions trivials"
-
-#. TRANSLATORS: type of update in the case that we don't have any data
-#: ../src/gpk-enum.c:1008
-#, c-format
-msgid "%i update"
-msgid_plural "%i updates"
-msgstr[0] "%i actualització"
-msgstr[1] "%i actualitzacions"
-
-#. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1012
-#, c-format
-msgid "%i important update"
-msgid_plural "%i important updates"
-msgstr[0] "%i actualització important"
-msgstr[1] "%i actualitzacions importants"
-
-#. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1016
-#, c-format
-msgid "%i security update"
-msgid_plural "%i security updates"
-msgstr[0] "%i actualització de seguretat"
-msgstr[1] "%i actualitzacions de seguretat"
-
-#. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1020
-#, c-format
-msgid "%i bug fix update"
-msgid_plural "%i bug fix updates"
-msgstr[0] "%i actualització de correcció d'errades"
-msgstr[1] "%i actualitzacions de correcció d'errades"
-
-#. TRANSLATORS: type of update
-#: ../src/gpk-enum.c:1024
-#, c-format
-msgid "%i enhancement update"
-msgid_plural "%i enhancement updates"
-msgstr[0] "%i actualització de millora"
-msgstr[1] "%i actualitzacions de millora"
-
-#. TRANSLATORS: number of updates that cannot be installed due to deps
-#: ../src/gpk-enum.c:1028
-#, c-format
-msgid "%i blocked update"
-msgid_plural "%i blocked updates"
-msgstr[0] "%i actualització bloquejada"
-msgstr[1] "%i actualitzacions bloquejades"
-
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1046
+#: ../src/gpk-enum.c:927
 msgid "Trivial update"
 msgstr "Actualització trivial"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1050
+#: ../src/gpk-enum.c:931
 msgid "Normal update"
 msgstr "Actualització normal"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1054
+#: ../src/gpk-enum.c:935
 msgid "Important update"
 msgstr "Actualització important"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1058
+#: ../src/gpk-enum.c:939
 msgid "Security update"
 msgstr "Actualització de seguretat"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1062
+#: ../src/gpk-enum.c:943
 msgid "Bug fix update"
 msgstr "Actualització de correcció d'errades"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1066
+#: ../src/gpk-enum.c:947
 msgid "Enhancement update"
 msgstr "Actualització de millora"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-enum.c:1070
+#: ../src/gpk-enum.c:951
 msgid "Blocked update"
 msgstr "Actualització bloquejada"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
-#: ../src/gpk-enum.c:1080
+#: ../src/gpk-enum.c:961
 msgid "Available"
 msgstr "Disponible"
 
 #. TRANSLATORS: The type of package
-#: ../src/gpk-enum.c:1084
+#: ../src/gpk-enum.c:965
 msgid "Trusted"
 msgstr "De confiança"
 
 #. TRANSLATORS: The type of package
-#: ../src/gpk-enum.c:1088
+#: ../src/gpk-enum.c:969
 msgid "Untrusted"
 msgstr "No fiable"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1106
+#: ../src/gpk-enum.c:987
 msgid "Downloading"
 msgstr "S'està baixant"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1110
+#: ../src/gpk-enum.c:991
 msgid "Updating"
 msgstr "S'està actualitzant"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1114 ../src/gpk-enum.c:1251
+#: ../src/gpk-enum.c:995 ../src/gpk-enum.c:1132
 msgid "Installing"
 msgstr "S'està instal·lant"
 
 #. TRANSLATORS: The action of the package, in present tense
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1118 ../src/gpk-enum.c:1247
+#: ../src/gpk-enum.c:999 ../src/gpk-enum.c:1128
 msgid "Removing"
 msgstr "S'està suprimint"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1122
+#: ../src/gpk-enum.c:1003
 msgid "Cleaning up"
 msgstr "S'està netejant"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1126
+#: ../src/gpk-enum.c:1007
 msgid "Obsoleting"
 msgstr "S'està fent obsolet"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1130
+#: ../src/gpk-enum.c:1011
 msgid "Reinstalling"
 msgstr "S'està reinstal·lant"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1134
+#: ../src/gpk-enum.c:1015
 msgid "Preparing"
 msgstr "S'està preparant"
 
 #. TRANSLATORS: The action of the package, in present tense
-#: ../src/gpk-enum.c:1138
+#: ../src/gpk-enum.c:1019
 msgid "Decompressing"
 msgstr "S'està descomprimint"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1156
+#: ../src/gpk-enum.c:1037
 msgid "Downloaded"
 msgstr "S'ha baixat"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1160
+#: ../src/gpk-enum.c:1041
 msgid "Updated"
 msgstr "S'ha actualitzat"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1168
+#: ../src/gpk-enum.c:1049
 msgid "Removed"
 msgstr "S'ha suprimit"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1172
+#: ../src/gpk-enum.c:1053
 msgid "Cleaned up"
 msgstr "S'ha netejat"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1176 ../src/gpk-task.c:404
+#: ../src/gpk-enum.c:1057 ../src/gpk-task.c:403
 msgid "Obsoleted"
 msgstr "Obsolet"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1180
+#: ../src/gpk-enum.c:1061
 msgid "Reinstalled"
 msgstr "Reinstal·lat"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1184
+#: ../src/gpk-enum.c:1065
 msgid "Prepared"
 msgstr "Preparat"
 
 #. TRANSLATORS: The action of the package, in past tense
-#: ../src/gpk-enum.c:1188
+#: ../src/gpk-enum.c:1069
 msgid "Decompressed"
 msgstr "Descomprimit"
 
 #. TRANSLATORS: The role of the transaction, in present tense
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1206 ../src/gpk-enum.c:1348
+#: ../src/gpk-enum.c:1087 ../src/gpk-enum.c:1229
 msgid "Unknown role type"
 msgstr "Tipus de rol desconegut"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1210
+#: ../src/gpk-enum.c:1091
 msgid "Getting dependencies"
 msgstr "S'estan obtenint les dependències"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1214
+#: ../src/gpk-enum.c:1095
 msgid "Getting update detail"
 msgstr "S'estan obtenint els detalls de l'actualització"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1219
+#: ../src/gpk-enum.c:1100
 msgid "Getting details"
 msgstr "S'estan obtenint els detalls"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1223
+#: ../src/gpk-enum.c:1104
 msgid "Getting requires"
 msgstr "S'estan obtenint els requeriments"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1227
+#: ../src/gpk-enum.c:1108
 msgid "Getting updates"
 msgstr "S'estan obtenint les actualitzacions"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1231
+#: ../src/gpk-enum.c:1112
 msgid "Searching details"
 msgstr "S'estan cercant els detalls"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1239
+#: ../src/gpk-enum.c:1116
+msgid "Searching for file"
+msgstr "Cerca de fitxers"
+
+#. TRANSLATORS: The role of the transaction, in present tense
+#: ../src/gpk-enum.c:1120
 msgid "Searching groups"
 msgstr "S'estan cercant els grups"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1243
+#: ../src/gpk-enum.c:1124
 msgid "Searching for package name"
 msgstr "S'està cercant el nom del paquet"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1255
+#: ../src/gpk-enum.c:1136
 msgid "Installing file"
 msgstr "S'està instal·lant el fitxer"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1259
+#: ../src/gpk-enum.c:1140
 msgid "Refreshing package cache"
 msgstr "S'està actualitzant la memòria cau dels paquets"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1263
+#: ../src/gpk-enum.c:1144
 msgid "Updating packages"
 msgstr "S'estan actualitzant els paquets"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1271
+#: ../src/gpk-enum.c:1152
 msgid "Getting list of repositories"
 msgstr "S'està obtenint la llista de dipòsits"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1275
+#: ../src/gpk-enum.c:1156
 msgid "Enabling repository"
 msgstr "S'està habilitant el dipòsit"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1279
+#: ../src/gpk-enum.c:1160
 msgid "Removing repository"
 msgstr "S'està suprimint el dipòsit"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1283
+#: ../src/gpk-enum.c:1164
 msgid "Setting repository data"
 msgstr "S'estan establint les dades del dipòsit"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1287
+#: ../src/gpk-enum.c:1168
 msgid "Resolving"
 msgstr "S'està resolent"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1292
+#: ../src/gpk-enum.c:1173
 msgid "Getting file list"
 msgstr "S'està obtenint la llista de fitxers"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1296
+#: ../src/gpk-enum.c:1177
 msgid "Getting what provides"
 msgstr "S'està obtenint el que proporciona"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1300
+#: ../src/gpk-enum.c:1181
 msgid "Installing signature"
 msgstr "S'està instal·lant la signatura"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1304
+#: ../src/gpk-enum.c:1185
 msgid "Getting package lists"
 msgstr "S'estan obtenint les llistes de paquets"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1308
+#: ../src/gpk-enum.c:1189
 msgid "Accepting EULA"
 msgstr "S'està acceptant l'EULA"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1316
+#: ../src/gpk-enum.c:1197
 msgid "Getting distribution upgrade information"
 msgstr "S'està obtenint la informació sobre l'actualització de la distribució"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1320
+#: ../src/gpk-enum.c:1201
 msgid "Getting categories"
 msgstr "S'estan obtenint les categories"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1324
+#: ../src/gpk-enum.c:1205
 msgid "Getting old transactions"
 msgstr "S'estan obtenint les transaccions anteriors"
 
 #. TRANSLATORS: The role of the transaction, in present tense
-#: ../src/gpk-enum.c:1328
+#: ../src/gpk-enum.c:1209
 msgid "Repairing the system"
 msgstr "S'està reparant el sistema"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1352
+#: ../src/gpk-enum.c:1233
 msgid "Got dependencies"
 msgstr "S'han obtingut les dependències"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1356
+#: ../src/gpk-enum.c:1237
 msgid "Got update detail"
 msgstr "S'han obtingut els detalls de l'actualització"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1361
+#: ../src/gpk-enum.c:1242
 msgid "Got details"
 msgstr "S'han obtingut els detalls"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1365
+#: ../src/gpk-enum.c:1246
 msgid "Got requires"
 msgstr "S'han obtingut els requeriments"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1369
+#: ../src/gpk-enum.c:1250
 msgid "Got updates"
 msgstr "S'han obtingut les actualitzacions"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1373
+#: ../src/gpk-enum.c:1254
 msgid "Searched for package details"
 msgstr "S'han cercat els detalls del paquet"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1377
+#: ../src/gpk-enum.c:1258
 msgid "Searched for file"
 msgstr "S'ha cercat el fitxer"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1381
+#: ../src/gpk-enum.c:1262
 msgid "Searched groups"
 msgstr "S'han cercat els grups"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1385
+#: ../src/gpk-enum.c:1266
 msgid "Searched for package name"
 msgstr "S'ha cercat el nom del paquet"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1389
+#: ../src/gpk-enum.c:1270
 msgid "Removed packages"
 msgstr "S'han suprimit els paquets"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1393
+#: ../src/gpk-enum.c:1274
 msgid "Installed packages"
 msgstr "S'han instal·lat els paquets"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1397
+#: ../src/gpk-enum.c:1278
 msgid "Installed local files"
 msgstr "S'han instal·lat els fitxers locals"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1401
+#: ../src/gpk-enum.c:1282
 msgid "Refreshed package cache"
 msgstr "S'ha actualitzat la memòria cau de paquets"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1405
+#: ../src/gpk-enum.c:1286
 msgid "Updated packages"
 msgstr "Paquets actualitzats"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1409
+#: ../src/gpk-enum.c:1290
 msgid "Canceled"
 msgstr "S'ha cancel·lat"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1413
+#: ../src/gpk-enum.c:1294
 msgid "Got list of repositories"
 msgstr "S'ha obtingut la llista de dipòsits"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1417
+#: ../src/gpk-enum.c:1298
 msgid "Enabled repository"
 msgstr "S'ha habilitat el dipòsit"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1421
+#: ../src/gpk-enum.c:1302
 msgid "Removed repository"
 msgstr "S'ha suprimit el dipòsit"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1425
+#: ../src/gpk-enum.c:1306
 msgid "Set repository data"
 msgstr "S'han establert les dades del dipòsit"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1429
+#: ../src/gpk-enum.c:1310
 msgid "Resolved"
 msgstr "Resolt"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1434
+#: ../src/gpk-enum.c:1315
 msgid "Got file list"
 msgstr "S'ha obtingut la llista de fitxers"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1438
+#: ../src/gpk-enum.c:1319
 msgid "Got what provides"
 msgstr "S'ha obtingut el que proporciona"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1442
+#: ../src/gpk-enum.c:1323
 msgid "Installed signature"
 msgstr "S'ha instal·lat la signatura"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1446
+#: ../src/gpk-enum.c:1327
 msgid "Got package lists"
 msgstr "S'han obtingut les llistes de paquets"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1450
+#: ../src/gpk-enum.c:1331
 msgid "Accepted EULA"
 msgstr "EULA acceptada"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1454
+#: ../src/gpk-enum.c:1335
 msgid "Downloaded packages"
 msgstr "S'han baixat els paquets"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1458
+#: ../src/gpk-enum.c:1339
 msgid "Got distribution upgrades"
 msgstr "S'han obtingut les actualitzacions de la distribució"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1462
+#: ../src/gpk-enum.c:1343
 msgid "Got categories"
 msgstr "S'han obtingut les categories"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1466
+#: ../src/gpk-enum.c:1347
 msgid "Got old transactions"
 msgstr "S'han obtingut les transaccions anteriors"
 
 #. TRANSLATORS: The role of the transaction, in past tense
-#: ../src/gpk-enum.c:1470
+#: ../src/gpk-enum.c:1351
 msgid "Repaired the system"
 msgstr "S'ha reparat el sistema"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1488
+#: ../src/gpk-enum.c:1369
 msgid "Accessibility"
 msgstr "Accessibilitat"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1492
+#: ../src/gpk-enum.c:1373
 msgid "Accessories"
 msgstr "Accessoris"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1496
+#: ../src/gpk-enum.c:1377
 msgid "Education"
 msgstr "Educació"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1500
+#: ../src/gpk-enum.c:1381
 msgid "Games"
 msgstr "Jocs"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1504
+#: ../src/gpk-enum.c:1385
 msgid "Graphics"
 msgstr "Gràfics"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1508
+#: ../src/gpk-enum.c:1389
 msgid "Internet"
 msgstr "Internet"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1512
+#: ../src/gpk-enum.c:1393
 msgid "Office"
 msgstr "Oficina"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1516 ../src/gpk-task.c:424
+#: ../src/gpk-enum.c:1397 ../src/gpk-task.c:423
 msgid "Other"
 msgstr "Altres"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1520
+#: ../src/gpk-enum.c:1401
 msgid "Programming"
 msgstr "Programació"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1524
+#: ../src/gpk-enum.c:1405
 msgid "Multimedia"
 msgstr "So i vídeo"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1528
+#: ../src/gpk-enum.c:1409
 msgid "System"
 msgstr "Sistema"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1532
+#: ../src/gpk-enum.c:1413
 msgid "GNOME desktop"
 msgstr "Escriptori GNOME"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1536
+#: ../src/gpk-enum.c:1417
 msgid "KDE desktop"
 msgstr "Escriptori KDE"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1540
+#: ../src/gpk-enum.c:1421
 msgid "Xfce desktop"
 msgstr "Escriptori XFCE"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1544
+#: ../src/gpk-enum.c:1425
 msgid "Other desktops"
 msgstr "Altres escriptoris"
 
 # TERMCAT
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1548
+#: ../src/gpk-enum.c:1429
 msgid "Publishing"
 msgstr "Autoedició"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1552
+#: ../src/gpk-enum.c:1433
 msgid "Servers"
 msgstr "Servidors"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1556
+#: ../src/gpk-enum.c:1437
 msgid "Fonts"
 msgstr "Tipus de lletra"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1560
+#: ../src/gpk-enum.c:1441
 msgid "Admin tools"
 msgstr "Eines del sistema"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1564
+#: ../src/gpk-enum.c:1445
 msgid "Legacy"
 msgstr "Llegat"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1568
+#: ../src/gpk-enum.c:1449
 msgid "Localization"
 msgstr "Localització"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1572
+#: ../src/gpk-enum.c:1453
 msgid "Virtualization"
 msgstr "Virtualització"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1576
+#: ../src/gpk-enum.c:1457
 msgid "Security"
 msgstr "Seguretat"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1580
+#: ../src/gpk-enum.c:1461
 msgid "Power management"
 msgstr "Gestió de l'energia"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1584
+#: ../src/gpk-enum.c:1465
 msgid "Communication"
 msgstr "Comunicació"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1588
+#: ../src/gpk-enum.c:1469
 msgid "Network"
 msgstr "Xarxa"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1592
+#: ../src/gpk-enum.c:1473
 msgid "Maps"
 msgstr "Mapes"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1596
+#: ../src/gpk-enum.c:1477
 msgid "Package sources"
 msgstr "Fonts de paquets"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1600
+#: ../src/gpk-enum.c:1481
 msgid "Science"
 msgstr "Ciència"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1604
+#: ../src/gpk-enum.c:1485
 msgid "Documentation"
 msgstr "Documentació"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1608
+#: ../src/gpk-enum.c:1489
 msgid "Electronics"
 msgstr "Electrònica"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1612
+#: ../src/gpk-enum.c:1493
 msgid "Package collections"
 msgstr "Col·leccions de paquets"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1616
+#: ../src/gpk-enum.c:1497
 msgid "Vendor"
 msgstr "Proveïdor"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1620
+#: ../src/gpk-enum.c:1501
 msgid "Newest packages"
 msgstr "Paquets més nous"
 
 #. TRANSLATORS: The group type
-#: ../src/gpk-enum.c:1624
+#: ../src/gpk-enum.c:1505
 msgid "Unknown group"
 msgstr "Grup desconegut"
 
-#. TRANSLATORS: column for the application icon
-#: ../src/gpk-helper-chooser.c:130 ../src/gpk-helper-run.c:193
-msgid "Icon"
-msgstr "Icona"
+#. TRANSLATORS: strftime formatted please
+#: ../src/gpk-log.c:161
+msgid "%d %B %Y"
+msgstr "%d de %B de %Y"
 
-#. TRANSLATORS: column for the application name
-#. TRANSLATORS: column for the package name
-#: ../src/gpk-helper-chooser.c:137 ../src/gpk-helper-run.c:200
-msgid "Package"
-msgstr "Paquet"
+#. TRANSLATORS: column for the date
+#: ../src/gpk-log.c:276
+msgid "Date"
+msgstr "Data"
 
-#: ../src/gpk-helper-chooser.c:276
-msgid "Applications that can open this type of file"
-msgstr "Aplicacions que poden obrir aquest tipus de fitxer"
+#. TRANSLATORS: column for what was done, e.g. update-system
+#: ../src/gpk-log.c:285
+msgid "Action"
+msgstr "Acció"
 
-#. TRANSLATORS: button label, install
-#: ../src/gpk-helper-chooser.c:286
-msgid "_Install"
-msgstr "_Instal·la"
+#. TRANSLATORS: column for the user name, e.g. Richard Hughes
+#: ../src/gpk-log.c:318
+msgid "User name"
+msgstr "Nom d'usuari"
 
-#. TRANSLATORS: button tooltip
-#: ../src/gpk-helper-chooser.c:290
-msgid "Install package"
-msgstr "Instal·la el paquet"
+#. TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs
+#: ../src/gpk-log.c:325
+msgid "Application"
+msgstr "Aplicació"
+
+#. TRANSLATORS: user-friendly name for pkcon
+#: ../src/gpk-log.c:485
+msgid "Command line client"
+msgstr "Client de la línia d'ordres"
+
+#. TRANSLATORS: user-friendly name for gpk-update-icon, which used to exist
+#: ../src/gpk-log.c:494
+msgid "Update Icon"
+msgstr "Icona d'actualització"
+
+#. TRANSLATORS: user-friendly name for the command not found plugin
+#: ../src/gpk-log.c:497
+msgid "Bash – Command Not Found"
+msgstr "Bash – no s'ha trobat l'ordre"
+
+#. TRANSLATORS: user-friendly name for gnome-settings-daemon, which used to handle updates
+#: ../src/gpk-log.c:500
+msgid "GNOME Session"
+msgstr "Sessió del GNOME"
+
+#. TRANSLATORS: user-friendly name for gnome-software
+#: ../src/gpk-log.c:503
+msgid "GNOME Software"
+msgstr "Programari GNOME"
+
+#. TRANSLATORS: preset the GtktextBox with this filter text
+#: ../src/gpk-log.c:801
+msgid "Set the filter to this value"
+msgstr "Estableix aquest valor pel filtre"
+
+#. TRANSLATORS: we can make this modal (stay on top of) another window
+#: ../src/gpk-log.c:804 ../src/gpk-prefs.c:612
+msgid "Set the parent window to make this modal"
+msgstr "Estableix la finestra pare de manera que aquesta sigui modal"
+
+#: ../src/gpk-log.c:817
+msgid "Software Log Viewer"
+msgstr "Visualitzador del registre de programari"
+
+#. are we running privileged
+#: ../src/gpk-log.c:825
+msgid "Log viewer"
+msgstr "Visualitzador del registre"
+
+#. TRANSLATORS: for one reason or another, we could not enable or disable a package source
+#: ../src/gpk-prefs.c:234
+msgid "Failed to change status"
+msgstr "No s'ha pogut canviar l'estat"
+
+#. TRANSLATORS: column if the source is enabled
+#: ../src/gpk-prefs.c:304
+msgid "Enabled"
+msgstr "Habilitat"
+
+#. TRANSLATORS: column for the source description
+#: ../src/gpk-prefs.c:313
+msgid "Package Source"
+msgstr "Font de paquet"
+
+#. TRANSLATORS: for one reason or another, we could not get the list of sources
+#: ../src/gpk-prefs.c:375
+msgid "Failed to get the list of sources"
+msgstr "No s'ha pogut obtenir la llista de fonts"
+
+#. TRANSLATORS: backend is broken, and won't tell us what it supports
+#: ../src/gpk-prefs.c:482 ../src/gpk-update-viewer.c:3146
+msgid "Exiting as backend details could not be retrieved"
+msgstr "Se surt perquè no es poden obtenir els detalls del rerefons"
+
+#: ../src/gpk-prefs.c:503
+msgid "Getting package source list not supported by backend"
+msgstr "El rerefons no permet obtenir la llista de fonts de paquets"
 
 #. TRANSLATORS: is not GPG signed
-#: ../src/gpk-task.c:130 ../src/gpk-task.c:140 ../src/gpk-task.c:160
+#: ../src/gpk-task.c:129 ../src/gpk-task.c:139 ../src/gpk-task.c:159
 msgid "The software is not signed by a trusted provider."
 msgstr "El programari no està signat per cap proveïdor de confiança."
 
 #. TRANSLATORS: user has to trust provider -- I know, this sucks
-#: ../src/gpk-task.c:132
+#: ../src/gpk-task.c:131
 msgid "Do not update this package unless you are sure it is safe to do so."
 msgstr "No actualitzeu aquest paquet si no sabeu que és segur fer-ho."
 
 #. TRANSLATORS: warn the user that all bets are off
-#: ../src/gpk-task.c:134 ../src/gpk-task.c:144
+#: ../src/gpk-task.c:133 ../src/gpk-task.c:143
 msgid "Malicious software can damage your computer or cause other harm."
 msgstr ""
 "El programari maliciós pot malmetre l'ordinador o provocar altres fallades."
 
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
-#: ../src/gpk-task.c:136
+#: ../src/gpk-task.c:135
 msgid "Are you <b>sure</b> you want to update this package?"
 msgstr "<b>Segur</b> que voleu actualitzar aquest paquet?"
 
 #. TRANSLATORS: user has to trust provider -- I know, this sucks
-#: ../src/gpk-task.c:142
+#: ../src/gpk-task.c:141
 msgid "Do not install this package unless you are sure it is safe to do so."
 msgstr "No instal·leu aquest paquet si no sabeu que és segur fer-ho."
 
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
-#: ../src/gpk-task.c:146
+#: ../src/gpk-task.c:145
 msgid "Are you <b>sure</b> you want to install this package?"
 msgstr "<b>Segur</b> que voleu instal·lar aquest paquet?"
 
 #. TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc
-#: ../src/gpk-task.c:341
+#: ../src/gpk-task.c:340
 #, c-format
 msgid ""
 "Additional media is required. Please insert the %s labeled '%s' to continue."
@@ -3108,76 +2632,86 @@ msgstr ""
 "Es requereixen altres suports. Inseriu el %s etiquetat «%s» per continuar."
 
 #. TRANSLATORS: this is button text
-#: ../src/gpk-task.c:350 ../src/gpk-task.c:553
+#: ../src/gpk-task.c:349 ../src/gpk-task.c:552
 msgid "Continue"
 msgstr "Continua"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:393
+#: ../src/gpk-task.c:392
 msgid "The following software also needs to be installed"
 msgstr "També s'ha d'instal·lar el programari següent"
 
+#: ../src/gpk-task.c:393
+msgid "Install"
+msgstr "Instal·la"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:398 ../src/gpk-task.c:403
+#: ../src/gpk-task.c:397 ../src/gpk-task.c:402
 msgid "The following software also needs to be removed"
 msgstr "També s'ha de suprimir el programari següent"
 
+#: ../src/gpk-task.c:398
+msgid "Remove"
+msgstr "Suprimeix"
+
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:408
+#: ../src/gpk-task.c:407
 msgid "The following software also needs to be updated"
 msgstr "També s'ha d'actualitzar el programari següent"
 
-#: ../src/gpk-task.c:409
+#: ../src/gpk-task.c:408
 msgid "Update"
 msgstr "Actualització"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:413
+#: ../src/gpk-task.c:412
 msgid "The following software also needs to be re-installed"
 msgstr "També s'ha de reinstal·lar el programari següent"
 
-#: ../src/gpk-task.c:414
+#: ../src/gpk-task.c:413
 msgid "Reinstall"
 msgstr "Reinstal·lació"
 
 #. TRANSLATORS: additional message text for the deps dialog
-#: ../src/gpk-task.c:418
+#: ../src/gpk-task.c:417
 msgid "The following software also needs to be downgraded"
 msgstr "També s'ha de desactualitzar el programari següent"
 
-#: ../src/gpk-task.c:419
+#: ../src/gpk-task.c:418
 msgid "Downgrade"
 msgstr "Desactualització"
 
 #. TRANSLATORS: additional message text for the deps dialog (we don't know how it's going to be processed -- eeek)
-#: ../src/gpk-task.c:423
+#: ../src/gpk-task.c:422
 msgid "The following software also needs to be processed"
 msgstr "També s'ha de processar el programari següent"
 
 #. TRANSLATORS: title of a dependency dialog
-#: ../src/gpk-task.c:486
+#: ../src/gpk-task.c:485
 msgid "Additional confirmation required"
 msgstr "Es requereix una confirmació addicional"
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:492
+#: ../src/gpk-task.c:491
 msgid "To install this package, additional software also has to be modified."
 msgid_plural ""
 "To install these packages, additional software also has to be modified."
-msgstr[0] "Per instal·lar aquest paquet s'ha de modificar programari addicional."
+msgstr[0] ""
+"Per instal·lar aquest paquet s'ha de modificar programari addicional."
 msgstr[1] ""
 "Per instal·lar aquests paquets s'ha de modificar programari addicional."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:497
+#: ../src/gpk-task.c:496
 msgid "To remove this package, additional software also has to be modified."
 msgid_plural ""
 "To remove these packages, additional software also has to be modified."
 msgstr[0] "Per suprimir aquest paquet s'ha de modificar programari addicional."
-msgstr[1] "Per suprimir aquests paquets s'ha de modificar programari addicional."
+msgstr[1] ""
+"Per suprimir aquests paquets s'ha de modificar programari addicional."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:502
+#: ../src/gpk-task.c:501
 msgid "To update this package, additional software also has to be modified."
 msgid_plural ""
 "To update these packages, additional software also has to be modified."
@@ -3187,7 +2721,7 @@ msgstr[1] ""
 "Per actualitzar aquests paquets s'ha de modificar programari addicional."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:507
+#: ../src/gpk-task.c:506
 msgid "To install this file, additional software also has to be modified."
 msgid_plural ""
 "To install these files, additional software also has to be modified."
@@ -3196,166 +2730,29 @@ msgstr[1] ""
 "Per instal·lar aquests fitxers s'ha de modificar programari addicional."
 
 #. TRANSLATORS: message text of a dependency dialog
-#: ../src/gpk-task.c:512
+#: ../src/gpk-task.c:511
 msgid ""
 "To process this transaction, additional software also has to be modified."
 msgstr ""
 "Per processar aquesta transacció s'ha de modificar programari addicional."
 
 #. TRANSLATORS: button label, force the install, even though it's untrusted
-#: ../src/gpk-task.c:603
+#: ../src/gpk-task.c:602
 msgid "_Force install"
 msgstr "_Força la instal·lació"
 
 #. TRANSLATORS: button tooltip
-#: ../src/gpk-task.c:607
+#: ../src/gpk-task.c:606
 msgid "Force installing package"
 msgstr "Força la instal·lació del paquet"
 
-#. TRANSLATORS: window title: do we want to execute a program we just installed?
-#: ../src/gpk-helper-run.c:468
-msgid "Run new application?"
-msgstr "Voleu executar la nova aplicació?"
-
-#. add run button
-#: ../src/gpk-helper-run.c:471
-msgid "_Run"
-msgstr "_Executa"
-
-#. TRANSLATORS: command line option: a list of files to install
-#: ../src/gpk-install-local-file.c:54
-msgid "Files to install"
-msgstr "Fitxers a instal·lar"
-
-#: ../src/gpk-install-local-file.c:69
-msgid "PackageKit File Installer"
-msgstr "Instal·lador de fitxers del PackageKit"
-
-#. TRANSLATORS: title to pass to to the user if there are not enough privs
-#: ../src/gpk-install-local-file.c:77
-msgid "Local file installer"
-msgstr "Instal·lador de fitxers locals"
-
-#. TRANSLATORS: could not install a package that contained the file we wanted
-#: ../src/gpk-install-local-file.c:83
-msgid "Failed to install a package to provide a file"
-msgstr "No s'ha pogut instal·lar el paquet que proporciona el fitxer"
-
-#. TRANSLATORS: nothing selected
-#: ../src/gpk-install-local-file.c:85
-msgid "You need to specify a file to install"
-msgstr "Heu d'especificar un fitxer per instal·lar"
-
-#. TRANSLATORS: strftime formatted please
-#: ../src/gpk-log.c:162
-msgid "%d %B %Y"
-msgstr "%d de %B de %Y"
-
-#. TRANSLATORS: column for the date
-#: ../src/gpk-log.c:277
-msgid "Date"
-msgstr "Data"
-
-#. TRANSLATORS: column for what was done, e.g. update-system
-#: ../src/gpk-log.c:286
-msgid "Action"
-msgstr "Acció"
-
-#. TRANSLATORS: column for the user name, e.g. Richard Hughes
-#: ../src/gpk-log.c:319
-msgid "User name"
-msgstr "Nom d'usuari"
-
-#. TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs
-#: ../src/gpk-log.c:326
-msgid "Application"
-msgstr "Aplicació"
-
-#. TRANSLATORS: user-friendly name for pkcon
-#: ../src/gpk-log.c:486
-msgid "Command line client"
-msgstr "Client de la línia d'ordres"
-
-#. TRANSLATORS: user-friendly name for gpk-update-icon, which used to exist
-#: ../src/gpk-log.c:495
-msgid "Update Icon"
-msgstr "Icona d'actualització"
-
-#. TRANSLATORS: user-friendly name for the command not found plugin
-#: ../src/gpk-log.c:498
-msgid "Bash – Command Not Found"
-msgstr "Bash – no s'ha trobat l'ordre"
-
-#. TRANSLATORS: user-friendly name for gnome-settings-daemon, which used to handle updates
-#: ../src/gpk-log.c:501
-msgid "GNOME Session"
-msgstr "Sessió del GNOME"
-
-#. TRANSLATORS: user-friendly name for gnome-software
-#: ../src/gpk-log.c:504
-msgid "GNOME Software"
-msgstr "Programari GNOME"
-
-#. TRANSLATORS: preset the GtktextBox with this filter text
-#: ../src/gpk-log.c:802
-msgid "Set the filter to this value"
-msgstr "Estableix aquest valor pel filtre"
-
-#. TRANSLATORS: we can make this modal (stay on top of) another window
-#: ../src/gpk-log.c:805 ../src/gpk-prefs.c:613
-msgid "Set the parent window to make this modal"
-msgstr "Estableix la finestra pare de manera que aquesta sigui modal"
-
-#: ../src/gpk-log.c:818
-msgid "Software Log Viewer"
-msgstr "Visualitzador del registre de programari"
-
-#. are we running privileged
-#: ../src/gpk-log.c:826
-msgid "Log viewer"
-msgstr "Visualitzador del registre"
-
-#: ../src/gpk-modal-dialog.c:435
-#, c-format
-msgid "Remaining time: %s"
-msgstr "Temps restant: %s"
-
-#. TRANSLATORS: for one reason or another, we could not enable or disable a package source
-#: ../src/gpk-prefs.c:235
-msgid "Failed to change status"
-msgstr "No s'ha pogut canviar l'estat"
-
-#. TRANSLATORS: column if the source is enabled
-#: ../src/gpk-prefs.c:305
-msgid "Enabled"
-msgstr "Habilitat"
-
-#. TRANSLATORS: column for the source description
-#: ../src/gpk-prefs.c:314
-msgid "Package Source"
-msgstr "Font de paquet"
-
-#. TRANSLATORS: for one reason or another, we could not get the list of sources
-#: ../src/gpk-prefs.c:376
-msgid "Failed to get the list of sources"
-msgstr "No s'ha pogut obtenir la llista de fonts"
-
-#. TRANSLATORS: backend is broken, and won't tell us what it supports
-#: ../src/gpk-prefs.c:483 ../src/gpk-update-viewer.c:3155
-msgid "Exiting as backend details could not be retrieved"
-msgstr "Se surt perquè no es poden obtenir els detalls del rerefons"
-
-#: ../src/gpk-prefs.c:504
-msgid "Getting package source list not supported by backend"
-msgstr "El rerefons no permet obtenir la llista de fonts de paquets"
-
 #. TRANSLATORS: we don't have a lot to go on here
-#: ../src/gpk-update-viewer.c:183
+#: ../src/gpk-update-viewer.c:180
 msgid "Failed to process request."
 msgstr "No s'ha pogut processar la sol·licitud."
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:211
+#: ../src/gpk-update-viewer.c:208
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "before the changes will be applied."
@@ -3364,12 +2761,12 @@ msgstr ""
 "reiniciï l'ordinador perquè es puguin aplicar els canvis."
 
 #. TRANSLATORS: the button text for the restart
-#: ../src/gpk-update-viewer.c:213 ../src/gpk-update-viewer.c:219
+#: ../src/gpk-update-viewer.c:210 ../src/gpk-update-viewer.c:216
 msgid "Restart Computer"
 msgstr "Reinicia l'ordinador"
 
 #. TRANSLATORS: the message text for the restart
-#: ../src/gpk-update-viewer.c:217
+#: ../src/gpk-update-viewer.c:214
 msgid ""
 "Some of the updates that were installed require the computer to be restarted "
 "to remain secure."
@@ -3378,7 +2775,7 @@ msgstr ""
 "reiniciï l'ordinador per estar segurs."
 
 #. TRANSLATORS: the message text for the log out
-#: ../src/gpk-update-viewer.c:223
+#: ../src/gpk-update-viewer.c:220
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "before the changes will be applied."
@@ -3387,12 +2784,12 @@ msgstr ""
 "requereixen que sortiu i torneu a entrar a la sessió."
 
 #. TRANSLATORS: the button text for the log out
-#: ../src/gpk-update-viewer.c:225 ../src/gpk-update-viewer.c:231
+#: ../src/gpk-update-viewer.c:222 ../src/gpk-update-viewer.c:228
 msgid "Log Out"
 msgstr "Surt"
 
 #. TRANSLATORS: the message text for the log out
-#: ../src/gpk-update-viewer.c:229
+#: ../src/gpk-update-viewer.c:226
 msgid ""
 "Some of the updates that were installed require you to log out and back in "
 "to remain secure."
@@ -3401,83 +2798,83 @@ msgstr ""
 "la sessió i torneu a entrar-hi per estar segurs."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:275
+#: ../src/gpk-update-viewer.c:272
 msgid "Could not restart"
 msgstr "No s'ha pogut reiniciar"
 
 #. TRANSLATORS: we failed to install all the updates we requested
-#: ../src/gpk-update-viewer.c:344
+#: ../src/gpk-update-viewer.c:335
 msgid "Some updates were not installed"
 msgstr "No s'han instal·lat algunes actualitzacions"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:413 ../src/gpk-update-viewer.c:424
+#: ../src/gpk-update-viewer.c:404 ../src/gpk-update-viewer.c:415
 msgid "Could not update packages"
 msgstr "No s'han pogut actualitzar els paquets"
 
 #. TRANSLATORS: completed all updates
 #. TRANSLATORS: title: all updates installed okay
-#: ../src/gpk-update-viewer.c:489 ../src/gpk-update-viewer.c:510
+#: ../src/gpk-update-viewer.c:480 ../src/gpk-update-viewer.c:501
 msgid "Updates installed"
 msgstr "S'han instal·lat les actualitzacions"
 
 #. TRANSLATORS: title: all updates for the machine installed okay
-#: ../src/gpk-update-viewer.c:499
+#: ../src/gpk-update-viewer.c:490
 msgid "All updates were installed successfully."
 msgstr "S'han instal·lat correctament totes les actualitzacions."
 
 #. TRANSLATORS: title: all the selected updates installed okay
-#: ../src/gpk-update-viewer.c:502
+#: ../src/gpk-update-viewer.c:493
 msgid "The selected updates were installed successfully."
 msgstr "S'han instal·lat correctament totes les actualitzacions seleccionades."
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:717
+#: ../src/gpk-update-viewer.c:708
 msgid "Trivial updates"
 msgstr "Actualitzacions trivials"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:721
+#: ../src/gpk-update-viewer.c:712
 msgid "Important updates"
 msgstr "Actualitzacions importants"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:725
+#: ../src/gpk-update-viewer.c:716
 msgid "Security updates"
 msgstr "Actualitzacions de seguretat"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:729
+#: ../src/gpk-update-viewer.c:720
 msgid "Bug fix updates"
 msgstr "Actualitzacions de correcció d'errades"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:733
+#: ../src/gpk-update-viewer.c:724
 msgid "Enhancement updates"
 msgstr "Actualitzacions de millora"
 
 #. TRANSLATORS: The type of update
-#: ../src/gpk-update-viewer.c:737
+#: ../src/gpk-update-viewer.c:728
 msgid "Blocked updates"
 msgstr "Actualitzacions bloquejades"
 
 #. TRANSLATORS: The type of update, i.e. unspecified
-#: ../src/gpk-update-viewer.c:741
+#: ../src/gpk-update-viewer.c:732
 msgid "Other updates"
 msgstr "Altres actualitzacions"
 
 #. TRANSLATORS: querying update array
-#: ../src/gpk-update-viewer.c:1006
+#: ../src/gpk-update-viewer.c:997
 msgid "Getting the list of updates"
 msgstr "S'està obtenint la llista d'actualitzacions"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:1251
+#: ../src/gpk-update-viewer.c:1242
 msgid "Could not run upgrade script"
 msgstr "No s'ha pogut executar l'script d'actualització"
 
 #. TRANSLATORS, are we going to cost the user lots of money?
-#: ../src/gpk-update-viewer.c:1282
+#: ../src/gpk-update-viewer.c:1273
 msgid ""
 "Connectivity is being provided by wireless broadband, and it may be "
 "expensive to update this package."
@@ -3492,40 +2889,40 @@ msgstr[1] ""
 "aquests paquets."
 
 #. TRANSLATORS: there are no updates
-#: ../src/gpk-update-viewer.c:1372
+#: ../src/gpk-update-viewer.c:1363
 msgid "There are no updates available"
 msgstr "No hi ha actualitzacions disponibles"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1431
+#: ../src/gpk-update-viewer.c:1422
 msgid "No updates are available"
 msgstr "No hi ha cap actualització"
 
 #. TRANSLATORS: no network connection, according to PackageKit
-#: ../src/gpk-update-viewer.c:1433
+#: ../src/gpk-update-viewer.c:1424
 msgid "No network connection was detected."
 msgstr "No s'ha detectat cap connexió de xarxa."
 
 #. TRANSLATORS: this is the button text when we have updates
-#: ../src/gpk-update-viewer.c:1450
+#: ../src/gpk-update-viewer.c:1441
 msgid "_Install Update"
 msgid_plural "_Install Updates"
 msgstr[0] "_Instal·la l'actualització"
 msgstr[1] "_Instal·la les actualitzacions"
 
 #. TRANSLATORS: title: nothing to do
-#: ../src/gpk-update-viewer.c:1459
+#: ../src/gpk-update-viewer.c:1450
 msgid "All packages are up to date"
 msgstr "Tot els paquets estan actualitzats"
 
 #. TRANSLATORS: tell the user the problem
-#: ../src/gpk-update-viewer.c:1461
+#: ../src/gpk-update-viewer.c:1452
 msgid "There are no package updates available for your computer at this time."
 msgstr ""
 "No hi ha disponible cap actualització de paquets per a l'ordinador en aquest "
 "moment."
 
-#: ../src/gpk-update-viewer.c:1488
+#: ../src/gpk-update-viewer.c:1479
 #, c-format
 msgid "There is %i update available"
 msgid_plural "There are %i updates available"
@@ -3533,7 +2930,7 @@ msgstr[0] "Hi ha %i actualització disponible"
 msgstr[1] "Hi ha %i actualitzacions disponibles"
 
 #. TRANSLATORS: how many updates are selected in the UI
-#: ../src/gpk-update-viewer.c:1504
+#: ../src/gpk-update-viewer.c:1495
 #, c-format
 msgid "%i update selected"
 msgid_plural "%i updates selected"
@@ -3541,7 +2938,7 @@ msgstr[0] "%i actualització seleccionada"
 msgstr[1] "%i actualitzacions seleccionades"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
-#: ../src/gpk-update-viewer.c:1512
+#: ../src/gpk-update-viewer.c:1503
 #, c-format
 msgid "%i update selected (%s)"
 msgid_plural "%i updates selected (%s)"
@@ -3549,29 +2946,29 @@ msgstr[0] "%i actualització seleccionada (%s)"
 msgstr[1] "%i actualitzacions seleccionades (%s)"
 
 #. TRANSLATORS: a column that has state of each package
-#: ../src/gpk-update-viewer.c:1709
+#: ../src/gpk-update-viewer.c:1700
 msgid "Status"
 msgstr "Estat"
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1969
+#: ../src/gpk-update-viewer.c:1960
 msgid "This update will add new features and expand functionality."
 msgstr ""
 "Aquesta actualització afegirà noves característiques i s'ampliarà la "
 "funcionalitat."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1973
+#: ../src/gpk-update-viewer.c:1964
 msgid "This update will fix bugs and other non-critical problems."
 msgstr "Aquesta actualització resoldrà errades i altres problemes no crítics."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1977
+#: ../src/gpk-update-viewer.c:1968
 msgid "This update is important as it may solve critical problems."
 msgstr "Aquesta actualització és important i pot resoldre problemes crítics."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1981
+#: ../src/gpk-update-viewer.c:1972
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
@@ -3579,25 +2976,25 @@ msgstr ""
 "seguretat d'aquest paquet."
 
 #. TRANSLATORS: this is the update type, e.g. security
-#: ../src/gpk-update-viewer.c:1985
+#: ../src/gpk-update-viewer.c:1976
 msgid "This update is blocked."
 msgstr "Aquesta actualització està blocada."
 
 #. TRANSLATORS: this is when the notification was issued and then updated
-#: ../src/gpk-update-viewer.c:1997
+#: ../src/gpk-update-viewer.c:1988
 #, c-format
 msgid "This notification was issued on %s and last updated on %s."
 msgstr ""
 "Aquesta notificació es va emetre el %s i l'última actualització va ser %s."
 
 #. TRANSLATORS: this is when the update was issued
-#: ../src/gpk-update-viewer.c:2004
+#: ../src/gpk-update-viewer.c:1995
 #, c-format
 msgid "This notification was issued on %s."
 msgstr "Aquesta notificació es va emetre el %s."
 
 #. TRANSLATORS: this is a array of vendor URLs
-#: ../src/gpk-update-viewer.c:2026 ../src/gpk-update-viewer.c:2050
+#: ../src/gpk-update-viewer.c:2017 ../src/gpk-update-viewer.c:2041
 msgid "For more information about this update please visit this website:"
 msgid_plural ""
 "For more information about this update please visit these websites:"
@@ -3607,7 +3004,7 @@ msgstr[1] ""
 "Per més informació sobre aquesta actualització visiteu aquests llocs webs:"
 
 #. TRANSLATORS: this is a array of bugzilla URLs
-#: ../src/gpk-update-viewer.c:2033 ../src/gpk-update-viewer.c:2058
+#: ../src/gpk-update-viewer.c:2024 ../src/gpk-update-viewer.c:2049
 msgid ""
 "For more information about bugs fixed by this update please visit this "
 "website:"
@@ -3622,7 +3019,7 @@ msgstr[1] ""
 "aquests llocs web:"
 
 #. TRANSLATORS: this is a array of CVE (security) URLs
-#: ../src/gpk-update-viewer.c:2040 ../src/gpk-update-viewer.c:2066
+#: ../src/gpk-update-viewer.c:2031 ../src/gpk-update-viewer.c:2057
 msgid ""
 "For more information about this security update please visit this website:"
 msgid_plural ""
@@ -3635,7 +3032,7 @@ msgstr[1] ""
 "llocs web:"
 
 #. TRANSLATORS: reboot required
-#: ../src/gpk-update-viewer.c:2075
+#: ../src/gpk-update-viewer.c:2066
 msgid ""
 "The computer will have to be restarted after the update for the changes to "
 "take effect."
@@ -3644,7 +3041,7 @@ msgstr ""
 "canvis tinguin efecte."
 
 #. TRANSLATORS: log out required
-#: ../src/gpk-update-viewer.c:2079
+#: ../src/gpk-update-viewer.c:2070
 msgid ""
 "You will need to log out and back in after the update for the changes to "
 "take effect."
@@ -3652,7 +3049,7 @@ msgstr ""
 "Heu de tancar la sessió i tornar a entrar perquè els canvis tinguin efecte."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2086
+#: ../src/gpk-update-viewer.c:2077
 msgid ""
 "The classification of this update is unstable which means it is not designed "
 "for production use."
@@ -3661,7 +3058,7 @@ msgstr ""
 "està pensada per màquines en producció."
 
 #. TRANSLATORS: this is the stability status of the update
-#: ../src/gpk-update-viewer.c:2090
+#: ../src/gpk-update-viewer.c:2081
 msgid ""
 "This is a test update, and is not designed for normal use. Please report any "
 "problems or regressions you encounter."
@@ -3670,7 +3067,7 @@ msgstr ""
 "corrents. Informeu de qualsevol errada o pèrdua de funció que us trobeu."
 
 #. TRANSLATORS: this is a ChangeLog
-#: ../src/gpk-update-viewer.c:2099
+#: ../src/gpk-update-viewer.c:2090
 msgid ""
 "The developer logs will be shown as no description is available for this "
 "update:"
@@ -3678,73 +3075,73 @@ msgstr ""
 "Es mostraran els registres de desenvolupament ja que no hi ha cap descripció "
 "disponible per aquesta actualització:"
 
-#: ../src/gpk-update-viewer.c:2153
+#: ../src/gpk-update-viewer.c:2144
 msgid "Loading…"
 msgstr "S'està carregant…"
 
-#: ../src/gpk-update-viewer.c:2156
+#: ../src/gpk-update-viewer.c:2147
 msgid "No update details available."
 msgstr "No hi ha informació de l'actualització disponible."
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2188 ../src/gpk-update-viewer.c:2286
-#: ../src/gpk-update-viewer.c:2306
+#: ../src/gpk-update-viewer.c:2179 ../src/gpk-update-viewer.c:2277
+#: ../src/gpk-update-viewer.c:2297
 msgid "Could not get update details"
 msgstr "No s'han pogut obtenir els detalls de l'actualització"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
-#: ../src/gpk-update-viewer.c:2208
+#: ../src/gpk-update-viewer.c:2199
 msgid "Could not get package details"
 msgstr "No s'han pogut obtenir els detalls del paquet"
 
-#: ../src/gpk-update-viewer.c:2208 ../src/gpk-update-viewer.c:2306
+#: ../src/gpk-update-viewer.c:2199 ../src/gpk-update-viewer.c:2297
 msgid "No results were returned."
 msgstr "No ha retornat cap resultat."
 
 #. TRANSLATORS: right click menu, select all the updates
-#: ../src/gpk-update-viewer.c:2541
+#: ../src/gpk-update-viewer.c:2532
 msgid "Select all"
 msgstr "Selecciona'ls tots"
 
 #. TRANSLATORS: right click menu, unselect all the updates
-#: ../src/gpk-update-viewer.c:2549
+#: ../src/gpk-update-viewer.c:2540
 msgid "Unselect all"
 msgstr "Desselecciona'ls tots"
 
 #. TRANSLATORS: right click menu, select only security updates
-#: ../src/gpk-update-viewer.c:2556
+#: ../src/gpk-update-viewer.c:2547
 msgid "Select security updates"
 msgstr "Selecciona les actualitzacions de seguretat"
 
 #. TRANSLATORS: right click option, ignore this update name, not currently used
-#: ../src/gpk-update-viewer.c:2562
+#: ../src/gpk-update-viewer.c:2553
 msgid "Ignore this update"
 msgstr "Ignora aquesta actualització"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:2671
+#: ../src/gpk-update-viewer.c:2662
 msgid "Could not get updates"
 msgstr "No s'han pogut obtenir les actualitzacions"
 
 #. TRANSLATORS: this is the header
-#: ../src/gpk-update-viewer.c:2809
+#: ../src/gpk-update-viewer.c:2800
 msgid "Checking for updates…"
 msgstr "S'està comprovant si hi ha actualitzacions…"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
-#: ../src/gpk-update-viewer.c:3088
+#: ../src/gpk-update-viewer.c:3079
 msgid "Could not get list of distribution upgrades"
 msgstr "No s'ha pogut obtenir la llista d'actualitzacions de distribució"
 
 #. TRANSLATORS: new distro available, e.g. F9 to F10
-#: ../src/gpk-update-viewer.c:3118
+#: ../src/gpk-update-viewer.c:3109
 #, c-format
 msgid "New distribution upgrade release '%s' is available"
 msgstr "Hi ha disponible una actualització de distribució a «%s»"
 
 #. TRANSLATORS: this is when some updates are not being shown as other packages need updating first
-#: ../src/gpk-update-viewer.c:3366
+#: ../src/gpk-update-viewer.c:3357
 msgid ""
 "Other updates are held back as some important system packages need to be "
 "installed first."
@@ -3752,27 +3149,413 @@ msgstr ""
 "S'han retingut temporalment altres actualitzacions degut a que paquets "
 "importants del sistema s'han d'instal·lar primer."
 
-#: ../src/gpk-update-viewer.c:3411
+#: ../src/gpk-update-viewer.c:3401
 msgid "Update Packages"
 msgstr "Actualitza els paquets"
 
-#: ../src/gpk-dbus-service.c:126
-msgid "Do not exit after the request has been processed"
-msgstr "No surtis quan s'acabi de processar la sol·licitud"
+#~ msgid "Software Install"
+#~ msgstr "Instal·lació de programari"
 
-#: ../src/gpk-dbus-service.c:142
-msgid "Session D-Bus service for PackageKit"
-msgstr "Servei de D-Bus de la sessió pel PackageKit"
+#~ msgid "Install selected software on the system"
+#~ msgstr "Instal·la el programari seleccionat en el sistema"
 
-#. TRANSLATORS: turn on all debugging
-#: ../src/gpk-debug.c:131
-msgid "Show debugging information for all files"
-msgstr "Mostra la informació de depuració de tots els fitxers"
+#~ msgid "Failed to install software"
+#~ msgstr "No s'ha pogut instal·lar cap programari"
 
-#: ../src/gpk-debug.c:189
-msgid "Debugging Options"
-msgstr "Opcions de depuració"
+#~ msgid "No applications were chosen to be installed"
+#~ msgstr "No s'ha seleccionat cap aplicació per instal·lar"
 
-#: ../src/gpk-debug.c:189
-msgid "Show debugging options"
-msgstr "Mostra les opcions de depuració"
+#~ msgid "Error details"
+#~ msgstr "Detalls de l'errada"
+
+#~ msgid "Package Manager error details"
+#~ msgstr "Dades de l'errada del gestor de paquets"
+
+#~ msgid ""
+#~ "Unknown error. Please refer to the detailed report and report in your "
+#~ "distribution bug tracker."
+#~ msgstr ""
+#~ "Error desconegut. Mireu-vos l'informe detallat i informeu-ne al seguidor "
+#~ "d'errades de la distribució."
+
+#~ msgid "Show details"
+#~ msgstr "Mostra els detalls"
+
+#~ msgid "Failed to install file"
+#~ msgid_plural "Failed to install files"
+#~ msgstr[0] "No s'ha pogut instal·lar el fitxer"
+#~ msgstr[1] "No s'han pogut instal·lar els fitxers"
+
+#~ msgid "Do you want to install this file?"
+#~ msgid_plural "Do you want to install these files?"
+#~ msgstr[0] "Voleu instal·lar aquest fitxer?"
+#~ msgstr[1] "Voleu instal·lar aquests fitxers?"
+
+#~ msgid "Install local file"
+#~ msgid_plural "Install local files"
+#~ msgstr[0] "Instal·la un fitxer local"
+#~ msgstr[1] "Instal·la fitxers locals"
+
+#~ msgid "Could not find packages"
+#~ msgstr "No s'ha pogut trobar el paquet"
+
+#~ msgid "The packages could not be found in any package source"
+#~ msgstr "No s'han pogut trobar els paquets a cap dipòsit"
+
+#~ msgid "More information"
+#~ msgstr "Més informació"
+
+#~ msgid "Nothing to do."
+#~ msgstr "No s'ha de fer res."
+
+#~ msgid "Failed to install package"
+#~ msgstr "No s'ha pogut instal·lar el paquet"
+
+#~ msgid "Incorrect response from search"
+#~ msgstr "Resposta incorrecta de la cerca"
+
+#~ msgid "An additional package is required:"
+#~ msgid_plural "Additional packages are required:"
+#~ msgstr[0] "Es necessita un paquet addicional:"
+#~ msgstr[1] "Es necessiten paquets addicionals:"
+
+#~ msgid "Do you want to search for and install this package now?"
+#~ msgid_plural "Do you want to search for and install these packages now?"
+#~ msgstr[0] "Voleu cercar i instal·lar aquest paquet ara?"
+#~ msgstr[1] "Voleu cercar i instal·lar aquests paquets ara?"
+
+#~ msgid "%s wants to install a package"
+#~ msgid_plural "%s wants to install packages"
+#~ msgstr[0] "El %s vol instal·lar un paquet"
+#~ msgstr[1] "El %s vol instal·lar uns paquets"
+
+#~ msgid "A program wants to install a package"
+#~ msgid_plural "A program wants to install packages"
+#~ msgstr[0] "Un programa vol instal·lar un paquet"
+#~ msgstr[1] "Un programa vol instal·lar uns paquets"
+
+#~ msgid "Searching for packages"
+#~ msgstr "Cerca de paquets"
+
+#~ msgid "Failed to find package"
+#~ msgstr "No s'ha pogut trobar el paquet"
+
+#~ msgid "The file could not be found in any packages"
+#~ msgstr "No s'ha pogut trobar el fitxer a cap paquet"
+
+#~ msgid "The %s package already provides this file"
+#~ msgstr "El paquet %s ja proporciona aquest fitxer"
+
+#~ msgid "The following file is required:"
+#~ msgid_plural "The following files are required:"
+#~ msgstr[0] "Es necessita el fitxer següent:"
+#~ msgstr[1] "Es necessiten els fitxers següents:"
+
+#~ msgid "Do you want to search for this file now?"
+#~ msgid_plural "Do you want to search for these files now?"
+#~ msgstr[0] "Voleu cercar aquest fitxer?"
+#~ msgstr[1] "Voleu cercar aquests fitxers?"
+
+#~ msgid "%s wants to install a file"
+#~ msgid_plural "%s wants to install files"
+#~ msgstr[0] "El %s vol instal·lar un fitxer"
+#~ msgstr[1] "El %s vol instal·lar uns fitxers"
+
+#~ msgid "A program wants to install a file"
+#~ msgid_plural "A program wants to install files"
+#~ msgstr[0] "Un programa vol instal·lar un fitxer"
+#~ msgstr[1] "Un programa vol instal·lar uns fitxers"
+
+#~ msgid "The following plugin is required:"
+#~ msgid_plural "The following plugins are required:"
+#~ msgstr[0] "Es necessita el connector següent:"
+#~ msgstr[1] "Es necessiten els connectors següents:"
+
+#~ msgid "Do you want to search for this now?"
+#~ msgid_plural "Do you want to search for these now?"
+#~ msgstr[0] "Voleu cercar-lo ara?"
+#~ msgstr[1] "Voleu cercar-los ara?"
+
+#~ msgid "%s requires an additional plugin to decode this file"
+#~ msgid_plural "%s requires additional plugins to decode this file"
+#~ msgstr[0] ""
+#~ "El %s requereix un connector addicional per descodificar aquest fitxer"
+#~ msgstr[1] ""
+#~ "El %s requereix uns connectors addicionals per descodificar aquest fitxer"
+
+#~ msgid "%s requires an additional plugin to encode this file"
+#~ msgid_plural "%s requires additional plugins to encode this file"
+#~ msgstr[0] ""
+#~ "El %s requereix un connector addicional per codificar aquest fitxer"
+#~ msgstr[1] ""
+#~ "El %s requereix uns connectors addicionals per codificar aquest fitxer"
+
+#~ msgid "%s requires an additional plugin for this operation"
+#~ msgid_plural "%s requires additional plugins for this operation"
+#~ msgstr[0] "El %s requereix un connector addicional per aquesta operació"
+#~ msgstr[1] "El %s requereix uns connectors addicionals per aquesta operació"
+
+#~ msgid "A program requires an additional plugin to decode this file"
+#~ msgid_plural "A program requires additional plugins to decode this file"
+#~ msgstr[0] ""
+#~ "Un programa requereix un connector addicional per descodificar aquest "
+#~ "fitxer"
+#~ msgstr[1] ""
+#~ "Un programa requereix uns connectors addicionals per descodificar aquest "
+#~ "fitxer"
+
+#~ msgid "A program requires an additional plugin to encode this file"
+#~ msgid_plural "A program requires additional plugins to encode this file"
+#~ msgstr[0] ""
+#~ "Un programa requereix un connector addicional per codificar aquest fitxer"
+#~ msgstr[1] ""
+#~ "Un programa requereix uns connectors addicionals per codificar aquest "
+#~ "fitxer"
+
+#~ msgid "A program requires an additional plugin for this operation"
+#~ msgid_plural "A program requires additional plugins for this operation"
+#~ msgstr[0] ""
+#~ "Un programa requereix un connector addicional per aquesta operació"
+#~ msgstr[1] ""
+#~ "Un programa requereix uns connectors addicionals per aquesta operació"
+
+#~ msgid "Search"
+#~ msgstr "Cerca"
+
+#~ msgid "Failed to search for plugin"
+#~ msgstr "No s'ha pogut cercar el connector"
+
+#~ msgid "Could not find plugin in any configured package source"
+#~ msgstr "No s'ha pogut trobar el connector a cap font de paquets"
+
+#~ msgid "Install the following plugin"
+#~ msgid_plural "Install the following plugins"
+#~ msgstr[0] "Instal·la el connector següent"
+#~ msgstr[1] "Instal·la els connectors següents"
+
+#~ msgid "Do you want to install this package now?"
+#~ msgid_plural "Do you want to install these packages now?"
+#~ msgstr[0] "Voleu instal·lar aquest paquet ara?"
+#~ msgstr[1] "Voleu instal·lar aquest paquet ara?"
+
+#~ msgid "Searching for plugins"
+#~ msgstr "Cerca de connectors"
+
+#~ msgid "Searching for plugin: %s"
+#~ msgstr "S'està cercant el connector: %s"
+
+#~ msgid "Failed to search for provides"
+#~ msgstr "No s'han pogut cercar proveïdors"
+
+#~ msgid "Failed to find software"
+#~ msgstr "No s'ha pogut trobar cap programari"
+
+#~ msgid "No new applications can be found to handle this type of file"
+#~ msgstr ""
+#~ "No s'ha pogut trobar cap aplicació que pugui gestionar aquest tipus de "
+#~ "fitxer"
+
+#~ msgid "An additional program is required to open this type of file:"
+#~ msgstr "Es necessita un altre programa per obrir aquest tipus de fitxer:"
+
+#~ msgid "Do you want to search for a program to open this file type now?"
+#~ msgstr ""
+#~ "Voleu cercar ara un programa que pugui obrir aquests tipus de fitxers?"
+
+#~ msgid "%s requires a new mime type"
+#~ msgid_plural "%s requires new mime types"
+#~ msgstr[0] "El %s requereix un tipus MIME nou"
+#~ msgstr[1] "El %s requereix uns tipus MIME nous"
+
+#~ msgid "A program requires a new mime type"
+#~ msgid_plural "A program requires new mime types"
+#~ msgstr[0] "Un programa requereix un tipus MIME nou"
+#~ msgstr[1] "Un programa requereix uns tipus MIME nous"
+
+#~ msgid "Searching for file handlers"
+#~ msgstr "Cerca de gestors de fitxers"
+
+#~ msgid "Language tag not parsed"
+#~ msgstr "No s'ha pogut analitzar l'etiqueta d'idioma"
+
+#~ msgid "Language code not matched"
+#~ msgstr "No s'ha trobat cap concordança amb el codi d'idioma"
+
+#~ msgid "Failed to find font"
+#~ msgid_plural "Failed to find fonts"
+#~ msgstr[0] "No s'ha pogut trobar el tipus de lletra"
+#~ msgstr[1] "No s'han pogut trobar els tipus de lletra"
+
+#~ msgid "No new fonts can be found for this document"
+#~ msgstr "No s'ha pogut trobar cap tipus de lletra nova per aquest document"
+
+#~ msgid "An additional font is required to view this document correctly."
+#~ msgid_plural ""
+#~ "Additional fonts are required to view this document correctly."
+#~ msgstr[0] ""
+#~ "Es necessita un tipus de lletra per veure correctament aquest document."
+#~ msgstr[1] ""
+#~ "Es necessiten alguns tipus de lletra per veure correctament aquest "
+#~ "document."
+
+#~ msgid "Do you want to search for a suitable package now?"
+#~ msgid_plural "Do you want to search for suitable packages now?"
+#~ msgstr[0] "Voleu cercar el paquet adequat ara?"
+#~ msgstr[1] "Voleu cercar els paquets adequats ara?"
+
+#~ msgid "%s wants to install a font"
+#~ msgid_plural "%s wants to install fonts"
+#~ msgstr[0] "El %s vol instal·lar un tipus de lletra"
+#~ msgstr[1] "El %s vol instal·lar uns tipus de lletres"
+
+#~ msgid "A program wants to install a font"
+#~ msgid_plural "A program wants to install fonts"
+#~ msgstr[0] "Un programa vol instal·lar un tipus de lletra"
+#~ msgstr[1] "Un programa vol instal·lar uns tipus de lletres"
+
+#~ msgid "Searching for font"
+#~ msgid_plural "Searching for fonts"
+#~ msgstr[0] "S'està cercant un tipus de lletra"
+#~ msgstr[1] "S'estan cercant uns tipus de lletra"
+
+#~ msgid "The following service is required:"
+#~ msgid_plural "The following services are required:"
+#~ msgstr[0] "Es necessita el servei següent:"
+#~ msgstr[1] "Es necessiten els serveis següents:"
+
+#~ msgid "Plasma requires an additional service for this operation"
+#~ msgid_plural "Plasma requires additional services for this operation"
+#~ msgstr[0] "El Plasma requereix un servei addicional per aquesta operació"
+#~ msgstr[1] "El Plasma requereix serveis addicionals per aquesta operació"
+
+#~ msgid "Failed to search for Plasma service"
+#~ msgstr "No s'ha pogut trobar el servei pel Plasma"
+
+#~ msgid "Could not find service in any configured package source"
+#~ msgstr "No s'ha pogut trobar el servei a cap font de paquets activa"
+
+#~ msgid "Searching for services"
+#~ msgstr "Cerca de serveis"
+
+#~ msgid "Searching for service: %s"
+#~ msgstr "S'està cercant el servei: %s"
+
+#~ msgid "Failed to remove package"
+#~ msgstr "No s'ha pogut suprimir el paquet"
+
+#~ msgid "Install the following driver"
+#~ msgid_plural "Install the following drivers"
+#~ msgstr[0] "Instal·la el controlador següent"
+#~ msgstr[1] "Instal·la els controladors següents"
+
+#~ msgid "Failed to find package for this file"
+#~ msgstr "No s'ha pogut trobar el paquet per aquest fitxer"
+
+#~ msgid "The following file will be removed:"
+#~ msgid_plural "The following files will be removed:"
+#~ msgstr[0] "Es suprimirà el fitxer següent:"
+#~ msgstr[1] "Es suprimiran els fitxers següents:"
+
+#~ msgid "Do you want to remove this file now?"
+#~ msgid_plural "Do you want to remove these files now?"
+#~ msgstr[0] "Voleu suprimir aquest fitxer?"
+#~ msgstr[1] "Voleu suprimir aquests fitxers?"
+
+#~ msgid "%s wants to remove a file"
+#~ msgid_plural "%s wants to remove files"
+#~ msgstr[0] "El %s vol suprimir un fitxer"
+#~ msgstr[1] "El %s vol suprimir uns fitxers"
+
+#~ msgid "A program wants to remove a file"
+#~ msgid_plural "A program wants to remove files"
+#~ msgstr[0] "Un programa vol suprimir un fitxer"
+#~ msgstr[1] "Un programa vol suprimir uns fitxers"
+
+#~ msgid "Stable"
+#~ msgstr "Estable"
+
+#~ msgid "Unstable"
+#~ msgstr "Inestable"
+
+#~ msgid "Testing"
+#~ msgstr "En proves"
+
+#~ msgid "%i trivial update"
+#~ msgid_plural "%i trivial updates"
+#~ msgstr[0] "%i actualització trivial"
+#~ msgstr[1] "%i actualitzacions trivials"
+
+#~ msgid "%i update"
+#~ msgid_plural "%i updates"
+#~ msgstr[0] "%i actualització"
+#~ msgstr[1] "%i actualitzacions"
+
+#~ msgid "%i important update"
+#~ msgid_plural "%i important updates"
+#~ msgstr[0] "%i actualització important"
+#~ msgstr[1] "%i actualitzacions importants"
+
+#~ msgid "%i security update"
+#~ msgid_plural "%i security updates"
+#~ msgstr[0] "%i actualització de seguretat"
+#~ msgstr[1] "%i actualitzacions de seguretat"
+
+#~ msgid "%i bug fix update"
+#~ msgid_plural "%i bug fix updates"
+#~ msgstr[0] "%i actualització de correcció d'errades"
+#~ msgstr[1] "%i actualitzacions de correcció d'errades"
+
+#~ msgid "%i enhancement update"
+#~ msgid_plural "%i enhancement updates"
+#~ msgstr[0] "%i actualització de millora"
+#~ msgstr[1] "%i actualitzacions de millora"
+
+#~ msgid "%i blocked update"
+#~ msgid_plural "%i blocked updates"
+#~ msgstr[0] "%i actualització bloquejada"
+#~ msgstr[1] "%i actualitzacions bloquejades"
+
+#~ msgid "Icon"
+#~ msgstr "Icona"
+
+#~ msgid "Package"
+#~ msgstr "Paquet"
+
+#~ msgid "Applications that can open this type of file"
+#~ msgstr "Aplicacions que poden obrir aquest tipus de fitxer"
+
+#~ msgid "_Install"
+#~ msgstr "_Instal·la"
+
+#~ msgid "Install package"
+#~ msgstr "Instal·la el paquet"
+
+#~ msgid "Run new application?"
+#~ msgstr "Voleu executar la nova aplicació?"
+
+#~ msgid "_Run"
+#~ msgstr "_Executa"
+
+#~ msgid "Files to install"
+#~ msgstr "Fitxers a instal·lar"
+
+#~ msgid "PackageKit File Installer"
+#~ msgstr "Instal·lador de fitxers del PackageKit"
+
+#~ msgid "Local file installer"
+#~ msgstr "Instal·lador de fitxers locals"
+
+#~ msgid "Failed to install a package to provide a file"
+#~ msgstr "No s'ha pogut instal·lar el paquet que proporciona el fitxer"
+
+#~ msgid "You need to specify a file to install"
+#~ msgstr "Heu d'especificar un fitxer per instal·lar"
+
+#~ msgid "Remaining time: %s"
+#~ msgstr "Temps restant: %s"
+
+#~ msgid "Do not exit after the request has been processed"
+#~ msgstr "No surtis quan s'acabi de processar la sol·licitud"
+
+#~ msgid "Session D-Bus service for PackageKit"
+#~ msgstr "Servei de D-Bus de la sessió pel PackageKit"
