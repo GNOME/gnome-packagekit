@@ -270,7 +270,7 @@ gpk_task_eula_question (PkTask *task, guint request, PkResults *results)
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder_eula, "label_title"));
 
 	split = pk_package_id_split (package_id);
-	printable = g_strdup_printf ("<b><big>License required for %s by %s</big></b>", split[0], vendor_name);
+	printable = g_markup_printf_escaped("<b><big>License required for %s by %s</big></b>", split[0], vendor_name);
 	gtk_label_set_label (GTK_LABEL (widget), printable);
 
 	buffer = gtk_text_buffer_new (NULL);
