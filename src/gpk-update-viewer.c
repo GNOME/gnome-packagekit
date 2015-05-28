@@ -1103,6 +1103,7 @@ gpk_update_viewer_info_is_update_enum (PkInfoEnum info)
 {
 	gboolean ret = FALSE;
 	switch (info) {
+	case PK_INFO_ENUM_AVAILABLE:
 	case PK_INFO_ENUM_LOW:
 	case PK_INFO_ENUM_NORMAL:
 	case PK_INFO_ENUM_IMPORTANT:
