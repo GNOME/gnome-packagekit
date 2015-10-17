@@ -260,7 +260,7 @@ gpk_dialog_embed_file_list_widget (GtkDialog *dialog, GPtrArray *files)
 
 	/* add scrolled window */
 	widget = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
-	gtk_container_add (GTK_CONTAINER (widget), scroll);
+	gtk_box_pack_start (GTK_BOX (widget), scroll, TRUE, TRUE, 0);
 	g_free (text);
 
 	return TRUE;
