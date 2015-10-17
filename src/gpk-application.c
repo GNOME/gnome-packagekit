@@ -908,6 +908,7 @@ gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, GpkApplica
 
 	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
+	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
 	gpk_dialog_embed_package_list_widget (GTK_DIALOG (dialog), array);
 
@@ -1037,6 +1038,7 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 
 	dialog = gtk_message_dialog_new (window, GTK_DIALOG_DESTROY_WITH_PARENT,
 					 GTK_MESSAGE_INFO, GTK_BUTTONS_OK, "%s", title);
+	gtk_window_set_resizable (GTK_WINDOW (dialog), TRUE);
 	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG (dialog), "%s", message);
 	gpk_dialog_embed_package_list_widget (GTK_DIALOG (dialog), array);
 
