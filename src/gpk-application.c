@@ -1219,7 +1219,7 @@ gpk_application_add_item_to_results (GpkApplicationPrivate *priv, PkPackage *ite
 
 	/* use two lines */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "window_manager"));
-	text = gpk_package_id_format_twoline (gtk_widget_get_style_context (widget),
+	text = gpk_package_id_format_threeline (gtk_widget_get_style_context (widget),
 					      package_id,
 					      summary_markup);
 

@@ -169,6 +169,95 @@ out:
 }
 
 /**
+ * gpk_package_id_format_threeline:
+ * Return value:
+ * "<b>Inkscape</b>
+ * Vector drawing software
+ * <span color="#####">inkscape-0.91-5+b2 (64 bits)</span>"
+ **/
+gchar *
+gpk_package_id_format_threeline (GtkStyleContext *style,
+			       const gchar *package_id,
+			       const gchar *summary)
+{
+	gchar **split = NULL;
+	gchar *color;
+	gchar *summary_safe = NULL;
+	gchar *name;                  // "inkscape"
+	gchar *name_version_arch;     // "inkscape-0.91-5+b2 (64 bits)"
+	gchar *text;                  // Final computed text
+	GString *string;
+	
+	
+	// GString *string2;
+	
+	
+	const gchar *arch;
+	GdkRGBA inactive;
+
+		// string = g_string_new ("dff");
+		// return g_string_free (string, FALSE);
+
+
+	/* get style color */
+	if (style != NULL) {
+		gtk_style_context_get_color (style,
+					     GTK_STATE_FLAG_INSENSITIVE,
+					     &inactive);
+		color = g_strdup_printf ("#%02x%02x%02x",
+					 (guint) (inactive.red * 255.0f),
+					 (guint) (inactive.green * 255.0f),
+					 (guint) (inactive.blue * 255.0f));
+	} else {
+		color = g_strdup ("gray");
+	}
+
+
+	split = pk_package_id_split (package_id);
+	if (split == NULL) {
+		g_warning ("could not parse %s", package_id);
+		goto out;
+	}
+
+	name = split[PK_PACKAGE_ID_NAME];
+	name[0] = toupper(name[0]);
+
+	/* Build id_version_arch - ex: "inkscape-0.91-5+b2 (64 bits)" */
+	string = g_string_new (name);
+	if (split[PK_PACKAGE_ID_VERSION][0] != '\0')
+		g_string_append_printf (string, "-%s", split[PK_PACKAGE_ID_VERSION]);
+	arch = gpk_get_pretty_arch (split[PK_PACKAGE_ID_ARCH]);
+	if (arch != NULL)
+		g_string_append_printf (string, " (%s)", arch);
+	name_version_arch = g_string_free (string, FALSE);
+
+	/* Build the returned text */
+	if (summary == NULL || summary[0] == '\0') {
+		/* no summary */
+		text = name_version_arch;
+	} else {
+		/* name, summary and [name-version-arch] */
+		string = g_string_new ("");
+		// g_string_append_printf (string, "<span color=\"%s\">", "red");
+		g_string_append_printf (string, "<b>%s</b>\n", name);
+		summary_safe = g_markup_escape_text (summary, -1);
+		g_string_append_printf (string, "%s\n", summary_safe);
+		g_string_append_printf (string, "<span color=\"%s\">", color);
+		g_string_append (string, name_version_arch);
+		g_string_append (string, "</span>");
+		text = g_string_free (string, FALSE);
+	}
+	g_free (name_version_arch);
+out:
+	g_free (summary_safe);
+	g_free (color);
+	g_strfreev (split);
+	// g_free (name);
+	return text;
+}
+
+
+/**
  * gpk_package_id_format_twoline:
  *
  * Return value: "<b>GTK Toolkit</b>\ngtk2-2.12.2 (i386)"
