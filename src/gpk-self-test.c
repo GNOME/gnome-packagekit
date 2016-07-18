@@ -80,15 +80,6 @@ gpk_test_enum_func (void)
 		}
 	}
 
-	/* check we convert all the localized present role enums */
-	for (i = 0; i < PK_ROLE_ENUM_LAST; i++) {
-		string = gpk_role_enum_to_localised_present (i);
-		if (string == NULL) {
-			g_warning ("failed to get %i", i);
-			break;
-		}
-	}
-
 	/* check we convert all the role icon name enums */
 	for (i = PK_ROLE_ENUM_UNKNOWN+1; i < PK_ROLE_ENUM_LAST; i++) {
 		string = gpk_role_enum_to_icon_name (i);

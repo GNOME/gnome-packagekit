@@ -64,8 +64,6 @@ gchar		*gpk_package_id_format_twoline		(GtkStyleContext *style,
 							 const gchar	*summary);
 gchar		*gpk_package_id_format_oneline		(const gchar 	*package_id,
 							 const gchar	*summary);
-gchar		*gpk_time_to_localised_string		(guint		 time_secs);
-gchar		*gpk_time_to_imprecise_string		(guint		 time_secs);
 gboolean	 gpk_check_privileged_user		(const gchar	*application_name,
 							 gboolean	 show_ui);
 gchar		*gpk_strv_join_locale			(gchar		**array);

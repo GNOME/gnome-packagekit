@@ -152,17 +152,3 @@ gpk_error_dialog_modal (GtkWindow *window, const gchar *title, const gchar *mess
 {
 	return gpk_error_dialog_modal_with_time (window, title, message, details, 0);
 }
-
-/**
- * gpk_error_dialog:
- * @title: the localized text to put in bold as a title
- * @message: the localized text to put as a message
- * @details: the geeky text to in the expander, or %NULL if nothing
- *
- * Shows a modal error, and blocks until the user clicks close
- **/
-gboolean
-gpk_error_dialog (const gchar *title, const gchar *message, const gchar *details)
-{
-	return gpk_error_dialog_modal (NULL, title, message, details);
-}
