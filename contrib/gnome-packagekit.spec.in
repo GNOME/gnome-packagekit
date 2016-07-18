@@ -7,17 +7,7 @@ Release:   0.#BUILD#%{?alphatag}%{?dist}
 License:   GPLv2+
 Group:     Applications/System
 URL:       http://www.packagekit.org
-Source0:   http://download.gnome.org/sources/gnome-packagekit/3.11/%{name}-%{version}.tar.xz
-
-Requires:  adwaita-icon-theme
-Requires:  PackageKit%{?_isa} >= 0.5.0
-Requires:  PackageKit-libs >= 0.5.0
-Requires:  shared-mime-info
-Requires:  iso-codes
-Requires:  libcanberra%{?_isa} >= 0.10
-
-# required because KPackageKit provides exactly the same interface
-Provides: PackageKit-session-service
+Source0:   http://download.gnome.org/sources/gnome-packagekit/3.20/%{name}-%{version}.tar.xz
 
 BuildRequires: glib2-devel >= 2.25.8
 BuildRequires: gtk3-devel
@@ -41,10 +31,30 @@ BuildRequires: polkit-devel
 BuildRequires: itstool
 BuildRequires: libappstream-glib
 
+# the top level package depends on all the apps to make upgrades work
+Requires: %{name}-installer
+Requires: %{name}-updater
+
 %description
 gnome-packagekit provides session applications for the PackageKit API.
 There are several utilities designed for installing, updating and
 removing packages on your system.
+
+%package common
+Summary: Common files required for %{name}
+Requires:  %{name}%{?_isa} = %{version}-%{release}
+Requires:  adwaita-icon-theme
+Requires:  PackageKit%{?_isa} >= 0.5.0
+Requires:  PackageKit-libs >= 0.5.0
+Requires:  shared-mime-info
+Requires:  iso-codes
+Requires:  libcanberra%{?_isa} >= 0.10
+
+# required because KPackageKit provides exactly the same interface
+Provides: PackageKit-session-service
+
+%description common
+Files shared by all subpackages of %{name}
 
 %package installer
 Summary: PackageKit package installer
@@ -56,7 +66,7 @@ not shown in GNOME Software.
 
 %package updater
 Summary: PackageKit package updater
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name}-common%{?_isa} = %{version}-%{release}
 
 %description updater
 A graphical package updater for PackageKit which is used to update packages
@@ -70,7 +80,7 @@ without rebooting.
 make %{?_smp_mflags}
 
 %install
-make install DESTDIR=$RPM_BUILD_ROOT
+%make_install
 
 # nuke the ChangeLog file, it's huge
 rm -f $RPM_BUILD_ROOT%{_datadir}/doc/gnome-packagekit-*/ChangeLog
@@ -80,7 +90,6 @@ rm -f $RPM_BUILD_ROOT%{_datadir}/doc/gnome-packagekit-*/ChangeLog
 %post
 touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 update-desktop-database %{_datadir}/applications &> /dev/null || :
-update-mime-database %{_datadir}/mime &> /dev/null || :
 
 %postun
 if [ $1 -eq 0 ] ; then
@@ -89,14 +98,17 @@ if [ $1 -eq 0 ] ; then
     glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 fi
 update-desktop-database %{_datadir}/applications &> /dev/null || :
-update-mime-database %{_datadir}/mime &> /dev/null || :
 
 %posttrans
 gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
-%files -f %{name}.lang
-%doc AUTHORS COPYING NEWS README
+%files
+# nada
+
+%files common -f %{name}.lang
+%license COPYING
+%doc AUTHORS NEWS README
 %{_bindir}/gpk-log
 %{_bindir}/gpk-prefs
 %dir %{_datadir}/gnome-packagekit
@@ -114,28 +126,27 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gnome-packagekit/icons/hicolor/scalable/*/*.svg*
 %{_datadir}/icons/hicolor/*/*/*.png
 %{_datadir}/icons/hicolor/scalable/*/*.svg*
-%{_datadir}/man/man1/gpk-log.1.gz
-%{_datadir}/man/man1/gpk-prefs.1.gz
+%{_datadir}/man/man1/gpk-log.1*
+%{_datadir}/man/man1/gpk-prefs.1*
+%{_datadir}/applications/gpk-install-local-file.desktop
 %{_datadir}/applications/gpk-log.desktop
 %{_datadir}/applications/gpk-prefs.desktop
 %{_datadir}/glib-2.0/schemas/org.gnome.packagekit.gschema.xml
 %{_datadir}/GConf/gsettings/org.gnome.packagekit.gschema.migrate
 
 %files installer
-%defattr(-,root,root,-)
 %{_bindir}/gpk-application
 %{_datadir}/appdata/gpk-application.appdata.xml
 %{_datadir}/applications/gpk-application.desktop
 %{_datadir}/gnome-packagekit/gpk-application.ui
-%{_datadir}/man/man1/gpk-application.1.gz
+%{_datadir}/man/man1/gpk-application.1*
 
 %files updater
-%defattr(-,root,root,-)
 %{_bindir}/gpk-update-viewer
 %{_datadir}/appdata/gpk-update-viewer.appdata.xml
 %{_datadir}/applications/gpk-update-viewer.desktop
 %{_datadir}/gnome-packagekit/gpk-update-viewer.ui
-%{_datadir}/man/man1/gpk-update-viewer.1.gz
+%{_datadir}/man/man1/gpk-update-viewer.1*
 
 %changelog
 * #LONGDATE# Richard Hughes <richard@hughsie.com> #VERSION#-0.#BUILD##ALPHATAG#
