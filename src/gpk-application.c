@@ -42,11 +42,6 @@
 #include "gpk-task.h"
 #include "gpk-debug.h"
 
-#if (!PK_CHECK_VERSION(0,9,1))
-#define pk_client_depends_on_async		pk_client_get_depends_async
-#define pk_client_required_by_async		pk_client_get_requires_async
-#endif
-
 typedef enum {
 	GPK_SEARCH_NAME,
 	GPK_SEARCH_DETAILS,

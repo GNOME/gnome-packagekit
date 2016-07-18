@@ -971,7 +971,6 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 
 	} else if (type == PK_PROGRESS_TYPE_ITEM_PROGRESS) {
 
-#if PK_CHECK_VERSION(0,8,1)
 		GtkTreeView *treeview;
 		GtkTreeModel *model;
 		GtkTreeIter iter;
@@ -1011,7 +1010,6 @@ gpk_update_viewer_progress_cb (PkProgress *progress,
 					    -1);
 		}
 		gtk_tree_path_free (path);
-#endif
 
 	} else if (type == PK_PROGRESS_TYPE_ALLOW_CANCEL) {
 		gboolean idle;
@@ -1672,7 +1670,6 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 	g_object_set_data (G_OBJECT (column), "tooltip-id", GINT_TO_POINTER (GPK_UPDATES_COLUMN_SIZE_DISPLAY));
 }
 
-#if PK_CHECK_VERSION(0,8,1)
 static void
 gpk_update_viewer_add_description_link_item (GtkTextBuffer *buffer,
 					     GtkTextIter *iter,
@@ -1697,61 +1694,6 @@ gpk_update_viewer_add_description_link_item (GtkTextBuffer *buffer,
 	}
 	gtk_text_buffer_insert (buffer, iter, "\n", -1);
 }
-#else
-static void
-gpk_update_viewer_add_description_link_item (GtkTextBuffer *buffer,
-					     GtkTextIter *iter,
-					     const gchar *title,
-					     const GPtrArray *array)
-{
-	GtkTextTag *tag;
-	const gchar *uri;
-	gint i;
-
-	/* insert at end */
-	gtk_text_buffer_insert_with_tags_by_name (buffer, iter, title, -1, "para", NULL);
-
-	for (i=0; i<array->len; i++) {
-		uri = g_ptr_array_index (array, i);
-		gtk_text_buffer_insert (buffer, iter, "\n", -1);
-		gtk_text_buffer_insert (buffer, iter, "• ", -1);
-		tag = gtk_text_buffer_create_tag (buffer, NULL,
-						  "foreground", "blue",
-						  "underline", PANGO_UNDERLINE_SINGLE,
-						  NULL);
-		g_object_set_data (G_OBJECT (tag), "href", g_strdup (uri));
-		gtk_text_buffer_insert_with_tags (buffer, iter, uri, -1, tag, NULL);
-		gtk_text_buffer_insert (buffer, iter, ".", -1);
-	}
-	gtk_text_buffer_insert (buffer, iter, "\n", -1);
-}
-
-static GPtrArray *
-gpk_update_viewer_get_uris (const gchar *url_string)
-{
-	GPtrArray *array;
-	gchar **urls;
-	guint length;
-	gint i;
-
-	array = g_ptr_array_new_with_free_func (g_free);
-
-	urls = g_strsplit (url_string, ";", 0);
-	length = g_strv_length (urls);
-
-	/* could we have malformed descriptions with ';' in them? */
-	if (length % 2 != 0) {
-		g_warning ("length not correct, correcting");
-		length--;
-	}
-
-	/* copy into array */
-	for (i=0; i<length; i+=2)
-		g_ptr_array_add (array, g_strdup (urls[i]));
-
-	return array;
-}
-#endif
 
 static gchar *
 gpk_update_viewer_iso8601_format_locale_date (const gchar *iso_date)
@@ -1800,16 +1742,9 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 	GtkTextIter iter;
 	gboolean has_update_text = FALSE;
 	gchar *package_id;
-#if PK_CHECK_VERSION(0,8,1)
 	gchar **vendor_urls;
 	gchar **bugzilla_urls;
 	gchar **cve_urls;
-#else
-	GPtrArray *array;
-	gchar *vendor_url;
-	gchar *bugzilla_url;
-	gchar *cve_url;
-#endif
 	PkRestartEnum restart;
 	gchar *update_text;
 	gchar *changelog;
@@ -1822,15 +1757,9 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 	/* get data */
 	g_object_get (item,
 		      "package-id", &package_id,
-#if PK_CHECK_VERSION(0,8,1)
 		      "vendor-urls", &vendor_urls,
 		      "bugzilla-urls", &bugzilla_urls,
 		      "cve-urls", &cve_urls,
-#else
-		      "vendor-url", &vendor_url,
-		      "bugzilla-url", &bugzilla_url,
-		      "cve-url", &cve_url,
-#endif
 		      "restart", &restart,
 		      "update-text", &update_text,
 		      "changelog", &changelog,
@@ -1904,7 +1833,6 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 		}
 	}
 
-#if PK_CHECK_VERSION(0,8,1)
 	/* add all the links */
 	if (vendor_urls != NULL) {
 		/* TRANSLATORS: this is a array of vendor URLs */
@@ -1927,33 +1855,7 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 				  g_strv_length (cve_urls));
 		gpk_update_viewer_add_description_link_item (text_buffer, &iter, title, cve_urls);
 	}
-#else
-	/* add all the links */
-	if (!_g_strzero (vendor_url)) {
-		array = gpk_update_viewer_get_uris (vendor_url);
-		/* TRANSLATORS: this is a array of vendor URLs */
-		title = ngettext ("For more information about this update please visit this website:",
-				  "For more information about this update please visit these websites:", array->len);
-		gpk_update_viewer_add_description_link_item (text_buffer, &iter, title, array);
-		g_ptr_array_unref (array);
-	}
-	if (!_g_strzero (bugzilla_url)) {
-		array = gpk_update_viewer_get_uris (bugzilla_url);
-		/* TRANSLATORS: this is a array of bugzilla URLs */
-		title = ngettext ("For more information about bugs fixed by this update please visit this website:",
-				  "For more information about bugs fixed by this update please visit these websites:", array->len);
-		gpk_update_viewer_add_description_link_item (text_buffer, &iter, title, array);
-		g_ptr_array_unref (array);
-	}
-	if (!_g_strzero (cve_url)) {
-		array = gpk_update_viewer_get_uris (cve_url);
-		/* TRANSLATORS: this is a array of CVE (security) URLs */
-		title = ngettext ("For more information about this security update please visit this website:",
-				  "For more information about this security update please visit these websites:", array->len);
-		gpk_update_viewer_add_description_link_item (text_buffer, &iter, title, array);
-		g_ptr_array_unref (array);
-	}
-#endif
+
 	/* reboot */
 	if (restart == PK_RESTART_ENUM_SYSTEM) {
 		/* TRANSLATORS: reboot required */
@@ -1987,15 +1889,9 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 	}
 
 	g_free (package_id);
-#if PK_CHECK_VERSION(0,8,1)
 	g_strfreev (vendor_urls);
 	g_strfreev (bugzilla_urls);
 	g_strfreev (cve_urls);
-#else
-	g_free (vendor_url);
-	g_free (bugzilla_url);
-	g_free (cve_url);
-#endif
 	g_free (update_text);
 	g_free (changelog);
 	g_free (issued);

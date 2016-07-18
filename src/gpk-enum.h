@@ -55,24 +55,6 @@ typedef enum {
 	GPK_INFO_ENUM_UNKNOWN
 } GpkInfoStatusEnum;
 
-/* constants defined in previous versions */
-#if (!PK_CHECK_VERSION(0,7,2))
-#define PK_ROLE_ENUM_REPAIR_SYSTEM			(PK_ROLE_ENUM_UPGRADE_SYSTEM+1)
-#endif
-
-#if (!PK_CHECK_VERSION(0,8,1))
-#define PK_ERROR_ENUM_UNFINISHED_TRANSACTION		(PK_ERROR_ENUM_CANCELLED_PRIORITY+1)
-#define PK_ERROR_ENUM_LOCK_REQUIRED			(PK_ERROR_ENUM_UNFINISHED_TRANSACTION+1)
-#endif
-
-#if (!PK_CHECK_VERSION(0,9,1))
-#define PK_ROLE_ENUM_DEPENDS_ON				(PK_ROLE_ENUM_GET_DEPENDS)
-#define PK_ROLE_ENUM_REQUIRED_BY			(PK_ROLE_ENUM_GET_REQUIRES)
-#define PK_ROLE_ENUM_GET_DETAILS_LOCAL			(PK_ROLE_ENUM_REPAIR_SYSTEM+1)
-#define PK_ROLE_ENUM_GET_FILES_LOCAL			(PK_ROLE_ENUM_GET_DETAILS_LOCAL+1)
-#define PK_ROLE_ENUM_REPO_REMOVE			(PK_ROLE_ENUM_GET_FILES_LOCAL+1)
-#endif
-
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;
 const gchar	*gpk_role_enum_to_icon_name		(PkRoleEnum	 role);
