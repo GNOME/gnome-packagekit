@@ -1281,7 +1281,7 @@ static void
 gpk_update_viewer_reconsider_info (void)
 {
 	GtkWidget *widget;
-	guint len;
+	guint len = 0;
 	const gchar *title;
 	g_autofree gchar *text_total = NULL;
 	g_autofree gchar *text_markup = NULL;
