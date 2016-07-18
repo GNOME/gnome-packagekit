@@ -29,7 +29,6 @@
 #include <locale.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-string.h"
 #ifdef HAVE_SYSTEMD
 #include "systemd-proxy.h"
 #endif
@@ -93,6 +92,16 @@ enum {
 };
 
 static gboolean gpk_update_viewer_get_new_update_array (void);
+
+static gboolean
+_g_strzero (const gchar *text)
+{
+	if (text == NULL)
+		return TRUE;
+	if (text[0] == '\0')
+		return TRUE;
+	return FALSE;
+}
 
 /**
  * gpk_update_viewer_quit:
@@ -1998,8 +2007,8 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 	}
 
 	/* update text */
-	if (!egg_strzero (update_text)) {
-		if (!egg_strzero (line)) {
+	if (!_g_strzero (update_text)) {
+		if (!_g_strzero (line)) {
 			gtk_text_buffer_insert (text_buffer, &iter, update_text, -1);
 			gtk_text_buffer_insert (text_buffer, &iter, "\n\n", -1);
 			has_update_text = TRUE;
@@ -2031,7 +2040,7 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 	}
 #else
 	/* add all the links */
-	if (!egg_strzero (vendor_url)) {
+	if (!_g_strzero (vendor_url)) {
 		array = gpk_update_viewer_get_uris (vendor_url);
 		/* TRANSLATORS: this is a array of vendor URLs */
 		title = ngettext ("For more information about this update please visit this website:",
@@ -2039,7 +2048,7 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 		gpk_update_viewer_add_description_link_item (text_buffer, &iter, title, array);
 		g_ptr_array_unref (array);
 	}
-	if (!egg_strzero (bugzilla_url)) {
+	if (!_g_strzero (bugzilla_url)) {
 		array = gpk_update_viewer_get_uris (bugzilla_url);
 		/* TRANSLATORS: this is a array of bugzilla URLs */
 		title = ngettext ("For more information about bugs fixed by this update please visit this website:",
@@ -2047,7 +2056,7 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 		gpk_update_viewer_add_description_link_item (text_buffer, &iter, title, array);
 		g_ptr_array_unref (array);
 	}
-	if (!egg_strzero (cve_url)) {
+	if (!_g_strzero (cve_url)) {
 		array = gpk_update_viewer_get_uris (cve_url);
 		/* TRANSLATORS: this is a array of CVE (security) URLs */
 		title = ngettext ("For more information about this security update please visit this website:",
@@ -2079,8 +2088,8 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 	}
 
 	/* only show changelog if we didn't have any update text */
-	if (!has_update_text && !egg_strzero (changelog)) {
-		if (!egg_strzero (changelog)) {
+	if (!has_update_text && !_g_strzero (changelog)) {
+		if (!_g_strzero (changelog)) {
 			/* TRANSLATORS: this is a ChangeLog */
 			line2 = g_strdup_printf ("%s\n%s\n", _("The developer logs will be shown as no description is available for this update:"), changelog);
 			gtk_text_buffer_insert_markup (text_buffer, &iter, line2, -1);

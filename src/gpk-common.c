@@ -33,8 +33,6 @@
 #include <packagekit-glib2/packagekit.h>
 #include <locale.h>
 
-#include "egg-string.h"
-
 #include "gpk-enum.h"
 #include "gpk-common.h"
 #include "gpk-error.h"

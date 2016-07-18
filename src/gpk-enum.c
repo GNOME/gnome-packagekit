@@ -25,8 +25,6 @@
 #include <glib/gi18n.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-string.h"
-
 #include "gpk-enum.h"
 #include "gpk-common.h"
 

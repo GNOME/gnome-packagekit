@@ -34,8 +34,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "egg-string.h"
-
 #include "gpk-common.h"
 #include "gpk-common.h"
 #include "gpk-dialog.h"
@@ -130,6 +128,16 @@ static void gpk_application_perform_search (GpkApplicationPrivate *priv);
 static void gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv);
 static void gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv);
 
+static gboolean
+_g_strzero (const gchar *text)
+{
+	if (text == NULL)
+		return TRUE;
+	if (text[0] == '\0')
+		return TRUE;
+	return FALSE;
+}
+
 /**
  * gpk_application_state_get_icon:
  **/
@@ -191,7 +199,7 @@ gpk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
 	GtkTextBuffer *buffer;
 	buffer = gtk_text_buffer_new (NULL);
 	/* ITS4: ignore, not used for allocation */
-	if (egg_strzero (text) == FALSE) {
+	if (_g_strzero (text) == FALSE) {
 		gtk_text_buffer_set_text (buffer, text, -1);
 	} else {
 		/* no information */
@@ -1099,7 +1107,7 @@ gpk_application_get_full_repo_name (GpkApplicationPrivate *priv, const gchar *da
 	const gchar *repo_name;
 
 	/* if no data, we can't look up in the hash table */
-	if (egg_strzero (data)) {
+	if (_g_strzero (data)) {
 		g_warning ("no ident data");
 		/* TRANSLATORS: the repo name is invalid or not found, fall back to this */
 		return _("Invalid");
@@ -1464,12 +1472,12 @@ gpk_application_perform_search_name_details_file (GpkApplicationPrivate *priv)
 	priv->search_text = g_strdup (gtk_entry_get_text (entry));
 
 	/* have we got input? */
-	if (egg_strzero (priv->search_text)) {
+	if (_g_strzero (priv->search_text)) {
 		g_debug ("no input");
 		goto out;
 	}
 
-	ret = !egg_strzero (priv->search_text);
+	ret = !_g_strzero (priv->search_text);
 	if (!ret) {
 		g_debug ("invalid input text, will fail");
 		/* TODO - make the dialog turn red... */

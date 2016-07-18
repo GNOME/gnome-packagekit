@@ -26,8 +26,6 @@
 #include <gtk/gtk.h>
 #include <packagekit-glib2/packagekit.h>
 
-#include "egg-string.h"
-
 #include "gpk-common.h"
 #include "gpk-dialog.h"
 #include "gpk-enum.h"
@@ -229,8 +227,7 @@ gpk_dialog_embed_file_list_widget (GtkDialog *dialog, GPtrArray *files)
 	/* split and show */
 	array = pk_ptr_array_to_strv (files);
 	text = g_strjoinv ("\n", array);
-
-	if (egg_strzero (text)) {
+	if (text[0] == '\0') {
 		g_free (text);
 		text = g_strdup (_("No files"));
 	}
