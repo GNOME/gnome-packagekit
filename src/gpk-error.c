@@ -59,10 +59,10 @@ static gboolean
 gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const gchar *message, const gchar *details, guint timestamp)
 {
 	GtkWidget *widget;
-	GtkBuilder *builder;
-	GtkTextBuffer *buffer = NULL;
+	g_autoptr(GtkBuilder) builder = NULL;
+	g_autoptr(GtkTextBuffer) buffer = NULL;
 	guint retval;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 
 	g_return_val_if_fail (message != NULL, FALSE);
 
@@ -71,8 +71,7 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-error.ui", &error);
 	if (retval == 0) {
 		g_warning ("failed to load ui: %s", error->message);
-		g_error_free (error);
-		goto out_build;
+		return FALSE;
 	}
 
 	/* connect up actions */
@@ -131,10 +130,6 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	/* hide window */
 	if (GTK_IS_WIDGET (widget))
 		gtk_widget_hide (widget);
-	if (buffer != NULL)
-		g_object_unref (buffer);
-out_build:
-	g_object_unref (builder);
 	return TRUE;
 }
 

@@ -43,29 +43,26 @@ gpk_dialog_package_id_name_join_locale (gchar **package_ids)
 	guint i;
 	guint length;
 	gchar *text;
-	GPtrArray *array;
-	gchar **array_strv;
-	gchar **split;
+	g_autoptr(GPtrArray) array = NULL;
+	g_auto(GStrv) array_strv = NULL;
 
 	length = g_strv_length (package_ids);
 	array = g_ptr_array_new_with_free_func (g_free);
-	for (i=0; i<length; i++) {
+	for (i = 0; i < length; i++) {
+		g_auto(GStrv) split = NULL;
 		split = pk_package_id_split (package_ids[i]);
 		if (split == NULL) {
 			g_warning ("failed to split %s", package_ids[i]);
 			continue;
 		}
 		g_ptr_array_add (array, g_strdup (split[0]));
-		g_strfreev (split);
 	}
 	array_strv = pk_ptr_array_to_strv (array);
 	text = gpk_strv_join_locale (array_strv);
-	g_strfreev (array_strv);
 	if (text == NULL) {
 		/* TRANSLATORS: This is when we have over 5 items, and we're not interested in detail */
 		text = g_strdup (_("many packages"));
 	}
-	g_ptr_array_unref (array);
 	return text;
 }
 
@@ -76,17 +73,17 @@ gpk_dialog_package_array_to_list_store (GPtrArray *array)
 	GtkTreeIter iter;
 	PkPackage *item;
 	const gchar *icon;
-	gchar *text;
 	guint i;
-	gchar **split;
 	PkInfoEnum info;
-	gchar *package_id = NULL;
-	gchar *summary = NULL;
 
 	store = gtk_list_store_new (GPK_DIALOG_STORE_LAST, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
 	/* add each well */
-	for (i=0; i<array->len; i++) {
+	for (i = 0; i < array->len; i++) {
+		g_auto(GStrv) split = NULL;
+		g_autofree gchar *text = NULL;
+		g_autofree gchar *package_id = NULL;
+		g_autofree gchar *summary = NULL;
 		item = g_ptr_array_index (array, i);
 		g_object_get (item,
 			      "info", &info,
@@ -105,10 +102,6 @@ gpk_dialog_package_array_to_list_store (GPtrArray *array)
 				    GPK_DIALOG_STORE_ID, package_id,
 				    GPK_DIALOG_STORE_TEXT, text,
 				    -1);
-		g_strfreev (split);
-		g_free (package_id);
-		g_free (summary);
-		g_free (text);
 	}
 
 	return store;
@@ -203,8 +196,8 @@ gpk_dialog_embed_file_list_widget (GtkDialog *dialog, GPtrArray *files)
 	GtkWidget *scroll;
 	GtkWidget *widget;
 	GtkTextBuffer *buffer;
-	gchar **array;
-	gchar *text;
+	g_auto(GStrv) array = NULL;
+	g_autofree gchar *text = NULL;
 
 	/* split and show */
 	array = pk_ptr_array_to_strv (files);
@@ -240,7 +233,6 @@ gpk_dialog_embed_file_list_widget (GtkDialog *dialog, GPtrArray *files)
 	/* add scrolled window */
 	widget = gtk_dialog_get_content_area (GTK_DIALOG(dialog));
 	gtk_box_pack_start (GTK_BOX (widget), scroll, TRUE, TRUE, 0);
-	g_free (text);
 
 	return TRUE;
 }
@@ -249,14 +241,13 @@ static void
 gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, const gchar *key)
 {
 	gboolean checked;
-	GSettings *settings;
+	g_autoptr(GSettings) settings = NULL;
 
 	/* set the policy */
 	checked = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (widget));
 	g_debug ("Changing %s to %i", key, checked);
 	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 	g_settings_set_boolean (settings, key, !checked);
-	g_object_unref (settings);
 }
 
 gboolean
@@ -265,7 +256,7 @@ gpk_dialog_embed_do_not_show_widget (GtkDialog *dialog, const gchar *key)
 	GtkWidget *check_button;
 	GtkWidget *widget;
 	gboolean checked;
-	GSettings *settings;
+	g_autoptr(GSettings) settings = NULL;
 
 	/* add a checkbutton for deps screen */
 	check_button = gtk_check_button_new_with_label (_("Do not show this again"));
@@ -279,7 +270,6 @@ gpk_dialog_embed_do_not_show_widget (GtkDialog *dialog, const gchar *key)
 	/* checked? */
 	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
 	checked = g_settings_get_boolean (settings, key);
-	g_object_unref (settings);
 	gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check_button), !checked);
 
 	gtk_widget_show (check_button);
@@ -354,8 +344,8 @@ gpk_dialog_tabbed_download_size_widget (GtkWidget *tab_page, const gchar *title,
 {
 	GtkWidget *label;
 	GtkWidget *hbox;
-	gchar *text = NULL;
-	gchar *size_str = NULL;
+	g_autofree gchar *text = NULL;
+	g_autofree gchar *size_str = NULL;
 
 	/* size is zero, don't show "0 bytes" */
 	if (size == 0) {
@@ -382,7 +372,5 @@ gpk_dialog_tabbed_download_size_widget (GtkWidget *tab_page, const gchar *title,
 	gtk_widget_show (hbox);
 out:
 	gtk_widget_show (label);
-	g_free (text);
-	g_free (size_str);
 	return TRUE;
 }

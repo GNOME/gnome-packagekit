@@ -151,24 +151,23 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 	PkInfoEnum info_local;
 	const gchar *info_text;
 	GString *string;
-	gchar *text;
+	g_autofree gchar *text = NULL;
 	gchar *whole;
-	gchar **sections;
 
 	string = g_string_new ("");
 	size = g_strv_length (array);
 	info_text = gpk_info_enum_to_localised_past (info);
 
 	/* find all of this type */
-	for (i=0; i<size; i++) {
+	for (i = 0; i < size; i++) {
+		g_auto(GStrv) sections = NULL;
 		sections = g_strsplit (array[i], "\t", 0);
 		info_local = pk_info_enum_from_string (sections[0]);
 		if (info_local == info) {
-			text = gpk_package_id_format_oneline (sections[1], NULL);
-			g_string_append_printf (string, "%s, ", text);
-			g_free (text);
+			g_autofree gchar *str = NULL;
+			str = gpk_package_id_format_oneline (sections[1], NULL);
+			g_string_append_printf (string, "%s, ", str);
 		}
-		g_strfreev (sections);
 	}
 
 	/* nothing, so return NULL */
@@ -183,7 +182,6 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 	/* add a nice header, and make text italic */
 	text = g_string_free (string, FALSE);
 	whole = g_strdup_printf ("<b>%s</b>: %s\n", info_text, text);
-	g_free (text);
 	return whole;
 }
 
@@ -192,7 +190,7 @@ gpk_log_get_details_localised (const gchar *timespec, const gchar *data)
 {
 	GString *string;
 	gchar *text;
-	gchar **array;
+	g_auto(GStrv) array = NULL;
 
 	string = g_string_new ("");
 	array = g_strsplit (data, "\n", 0);
@@ -210,7 +208,6 @@ gpk_log_get_details_localised (const gchar *timespec, const gchar *data)
 	if (text != NULL)
 		g_string_append (string, text);
 	g_free (text);
-	g_strfreev (array);
 
 	/* remove last \n */
 	if (string->len > 0)
@@ -322,13 +319,11 @@ gpk_log_filter (PkTransactionPast *item)
 	gboolean ret = FALSE;
 	guint i;
 	guint length;
-	gchar **sections;
-	gchar **packages;
-	gchar **split;
-	gchar *tid;
+	g_auto(GStrv) packages = NULL;
+	g_autofree gchar *tid = NULL;
 	gboolean succeeded;
-	gchar *cmdline;
-	gchar *data;
+	g_autofree gchar *cmdline = NULL;
+	g_autofree gchar *data = NULL;
 
 	/* get data */
 	g_object_get (item,
@@ -354,7 +349,9 @@ gpk_log_filter (PkTransactionPast *item)
 	/* look in all the data for the filter string */
 	packages = g_strsplit (data, "\n", 0);
 	length = g_strv_length (packages);
-	for (i=0; i<length; i++) {
+	for (i = 0; i < length; i++) {
+		g_auto(GStrv) split = NULL;
+		g_auto(GStrv) sections = NULL;
 		sections = g_strsplit (packages[i], "\t", 0);
 
 		/* check if type matches filter */
@@ -370,19 +367,10 @@ gpk_log_filter (PkTransactionPast *item)
 		if (split[2] != NULL && g_strrstr (split[2], filter) != NULL)
 			ret = TRUE;
 
-		g_strfreev (split);
-		g_strfreev (sections);
-
 		/* shortcut for speed */
 		if (ret)
 			break;
 	}
-
-	g_free (tid);
-	g_free (cmdline);
-	g_free (data);
-	g_strfreev (packages);
-
 	return ret;
 }
 
@@ -390,21 +378,21 @@ static void
 gpk_log_add_item (PkTransactionPast *item)
 {
 	GtkTreeIter iter;
-	gchar *details;
-	gchar *date;
+	g_autofree gchar *details = NULL;
+	g_autofree gchar *date = NULL;
 	const gchar *icon_name;
 	const gchar *role_text;
 	const gchar *username = NULL;
 	const gchar *tool;
 	static guint count;
 	struct passwd *pw;
-	gchar *tid;
-	gchar *timespec;
+	g_autofree gchar *tid = NULL;
+	g_autofree gchar *timespec = NULL;
 	gboolean succeeded;
 	guint duration;
-	gchar *cmdline;
+	g_autofree gchar *cmdline = NULL;
 	guint uid;
-	gchar *data;
+	g_autofree gchar *data = NULL;
 	PkRoleEnum role;
 	GtkTreeView *treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_simple"));
 	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
@@ -479,13 +467,6 @@ gpk_log_add_item (PkTransactionPast *item)
 	if (count++ % 10 == 0)
 		while (gtk_events_pending ())
 			gtk_main_iteration ();
-
-	g_free (tid);
-	g_free (timespec);
-	g_free (cmdline);
-	g_free (data);
-	g_free (details);
-	g_free (date);
 }
 
 static void
@@ -516,7 +497,7 @@ gpk_log_refilter (void)
 	gpk_log_mark_nonactive (model);
 
 	/* go through the list, adding and removing the items as required */
-	for (i=0; i<transactions->len; i++) {
+	for (i = 0; i < transactions->len; i++) {
 		item = g_ptr_array_index (transactions, i);
 		ret = gpk_log_filter (item);
 		if (ret)
@@ -531,23 +512,22 @@ static void
 gpk_log_get_old_transactions_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 {
 //	PkClient *client = PK_CLIENT (object);
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	PkResults *results = NULL;
-	PkError *error_code = NULL;
+	g_autoptr(PkError) error_code = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
 		g_warning ("failed to get old transactions: %s", error->message);
-		g_error_free (error);
-		goto out;
+		return;
 	}
 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
 		g_warning ("failed to get old transactions: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		goto out;
+		return;
 	}
 
 	/* get the list */
@@ -555,11 +535,6 @@ gpk_log_get_old_transactions_cb (GObject *object, GAsyncResult *res, gpointer us
 		g_ptr_array_unref (transactions);
 	transactions = pk_results_get_transaction_array (results);
 	gpk_log_refilter ();
-out:
-	if (error_code != NULL)
-		g_object_unref (error_code);
-	if (results != NULL)
-		g_object_unref (results);
 }
 
 static void
@@ -607,7 +582,7 @@ gpk_log_activate_cb (GtkApplication *application, gpointer user_data)
 static void
 gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 {
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GtkTreeSelection *selection;
 	GtkWidget *widget;
 	GtkWindow *window;
@@ -623,7 +598,6 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-log.ui", &error);
 	if (retval == 0) {
 		g_warning ("failed to load ui: %s", error->message);
-		g_error_free (error);
 		goto out;
 	}
 
@@ -706,7 +680,7 @@ main (int argc, char *argv[])
 	gboolean ret;
 	gint status = 1;
 	GOptionContext *context;
-	GtkApplication *application = NULL;
+	g_autoptr(GtkApplication) application = NULL;
 
 	const GOptionEntry options[] = {
 		{ "filter", 'f', 0, G_OPTION_ARG_STRING, &filter,
@@ -755,7 +729,5 @@ main (int argc, char *argv[])
 out:
 	if (builder != NULL)
 		g_object_unref (builder);
-	if (application != NULL)
-		g_object_unref (application);
 	return status;
 }

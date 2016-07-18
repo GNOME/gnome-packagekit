@@ -68,20 +68,17 @@ static gboolean
 gpk_cell_renderer_should_show (GpkCellRendererInfo *cru)
 {
 	guint i;
-	gboolean ret = FALSE;
 	GPtrArray *array;
 	PkInfoEnum info;
 
 	/* are we in the ignore array */
 	array = cru->priv->ignore;
-	for (i=0; i<array->len; i++) {
+	for (i = 0; i < array->len; i++) {
 		info = GPOINTER_TO_UINT (g_ptr_array_index (array, i));
 		if (info == cru->priv->value)
-			goto out;
+			return FALSE;
 	}
-	ret = TRUE;
-out:
-	return ret;
+	return TRUE;
 }
 
 static void
@@ -89,7 +86,7 @@ gpk_cell_renderer_info_set_property (GObject *object, guint param_id,
 				     const GValue *value, GParamSpec *pspec)
 {
 	const gchar *text;
-	gchar **split;
+	g_auto(GStrv) split = NULL;
 	gboolean ret;
 	guint i;
 	PkInfoEnum info;
@@ -114,7 +111,6 @@ gpk_cell_renderer_info_set_property (GObject *object, guint param_id,
 			info = pk_info_enum_from_string (split[i]);
 			g_ptr_array_add (cru->priv->ignore, GUINT_TO_POINTER (info));
 		}
-		g_strfreev (split);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);

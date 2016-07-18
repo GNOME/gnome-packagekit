@@ -279,16 +279,15 @@ static void
 gpk_task_test_install_packages_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 {
 	GpkTask *task = GPK_TASK (object);
-	GError *error = NULL;
-	PkResults *results;
-	GPtrArray *packages;
-	PkError *error_code = NULL;
+	g_autoptr(GError) error = NULL;
+	g_autoptr(PkResults) results = NULL;
+	g_autoptr(GPtrArray) packages = NULL;
+	g_autoptr(PkError) error_code = NULL;
 
 	/* get the results */
 	results = pk_task_generic_finish (PK_TASK(task), res, &error);
 	if (results == NULL) {
 		g_warning ("failed to resolve: %s", error->message);
-		g_error_free (error);
 		goto out;
 	}
 
@@ -303,13 +302,7 @@ gpk_task_test_install_packages_cb (GObject *object, GAsyncResult *res, gpointer 
 
 	if (packages->len != 4)
 		g_warning ("invalid number of packages: %i", packages->len);
-
-	g_ptr_array_unref (packages);
 out:
-	if (error_code != NULL)
-		g_object_unref (error_code);
-	if (results != NULL)
-		g_object_unref (results);
 	_g_test_loop_quit ();
 }
 
@@ -328,8 +321,8 @@ gpk_task_test_progress_cb (PkProgress *progress, PkProgressType type, gpointer u
 static void
 gpk_test_task_func (void)
 {
-	GpkTask *task;
-	gchar **package_ids;
+	g_autoptr(GpkTask) task = NULL;
+	g_auto(GStrv) package_ids = NULL;
 
 	/* get task */
 	task = gpk_task_new ();
@@ -346,10 +339,7 @@ gpk_test_task_func (void)
 	pk_task_install_packages_async (PK_TASK(task), package_ids, NULL,
 				        (PkProgressCallback) gpk_task_test_progress_cb, NULL,
 				        (GAsyncReadyCallback) gpk_task_test_install_packages_cb, NULL);
-	g_strfreev (package_ids);
 	_g_test_loop_wait (150000);
-
-	g_object_unref (task);
 }
 
 int

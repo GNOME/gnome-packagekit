@@ -167,35 +167,32 @@ gpk_prefs_progress_cb (PkProgress *progress, PkProgressType type, GpkPrefsPrivat
 		gtk_widget_hide (widget);
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "scrolledwindow_repo"));
 		gtk_widget_show (widget);
-		goto out;
+		return;
 	}
 
 	/* already pending show */
 	if (priv->status_id > 0)
-		goto out;
+		return;
 
 	/* only show after some time in the transaction */
 	priv->status_id = g_timeout_add (GPK_UI_STATUS_SHOW_DELAY, (GSourceFunc) gpk_prefs_status_changed_timeout_cb, priv);
 	g_source_set_name_by_id (priv->status_id, "[GpkRepo] status");
-out:
-	return;
 }
 
 static void
 gpk_prefs_repo_enable_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *priv)
 {
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GtkWindow *window;
 	PkClient *client = PK_CLIENT (object);
-	PkError *error_code = NULL;
+	g_autoptr(PkError) error_code = NULL;
 	PkResults *results = NULL;
 
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
 		g_warning ("failed to get set repo: %s", error->message);
-		g_error_free (error);
-		goto out;
+		return;
 	}
 
 	/* check error code */
@@ -206,29 +203,24 @@ gpk_prefs_repo_enable_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *p
 		/* TRANSLATORS: for one reason or another, we could not enable or disable a package source */
 		gpk_error_dialog_modal (window, _("Failed to change status"),
 					gpk_error_enum_to_localised_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		goto out;
+		return;
 	}
-out:
-	if (error_code != NULL)
-		g_object_unref (error_code);
-	if (results != NULL)
-		g_object_unref (results);
 }
 
 static void
 gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, GpkPrefsPrivate *priv)
 {
 	gboolean enabled;
-	gchar *repo_id = NULL;
+	g_autofree gchar *repo_id = NULL;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
-	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
+	g_autofree GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
 	GtkTreeView *treeview;
 
 	/* do we have the capability? */
 	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_REPO_ENABLE) == FALSE) {
 		g_debug ("can't change state");
-		goto out;
+		return;
 	}
 
 	/* get toggled iter */
@@ -254,10 +246,6 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, GpkPrefs
 				     (PkProgressCallback) gpk_prefs_progress_cb, priv,
 				     (GAsyncReadyCallback) gpk_prefs_repo_enable_cb, priv);
 
-out:
-	/* clean up */
-	g_free (repo_id);
-	gtk_tree_path_free (path);
 }
 
 static void
@@ -308,17 +296,15 @@ static void
 gpk_prefs_get_repo_list_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *priv)
 {
 	gboolean enabled;
-	gchar *description;
-	gchar *repo_id;
-	GError *error = NULL;
-	GPtrArray *array = NULL;
+	g_autoptr(GError) error = NULL;
+	g_autoptr(GPtrArray) array = NULL;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
 	GtkTreeView *treeview;
 	GtkWindow *window;
 	guint i;
 	PkClient *client = PK_CLIENT (object);
-	PkError *error_code = NULL;
+	g_autoptr(PkError) error_code = NULL;
 	PkRepoDetail *item;
 	PkResults *results = NULL;
 
@@ -326,8 +312,7 @@ gpk_prefs_get_repo_list_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate 
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
 		g_warning ("failed to get repo list: %s", error->message);
-		g_error_free (error);
-		goto out;
+		return;
 	}
 
 	/* check error code */
@@ -338,14 +323,16 @@ gpk_prefs_get_repo_list_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate 
 		/* TRANSLATORS: for one reason or another, we could not get the list of sources */
 		gpk_error_dialog_modal (window, _("Failed to get the list of sources"),
 					gpk_error_enum_to_localised_text (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		goto out;
+		return;
 	}
 
 	/* add repos */
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_repo"));
 	model = gtk_tree_view_get_model (treeview);
 	array = pk_results_get_repo_detail_array (results);
-	for (i=0; i<array->len; i++) {
+	for (i = 0; i < array->len; i++) {
+		g_autofree gchar *description = NULL;
+		g_autofree gchar *repo_id = NULL;
 		item = g_ptr_array_index (array, i);
 		g_object_get (item,
 			      "repo-id", &repo_id,
@@ -361,9 +348,6 @@ gpk_prefs_get_repo_list_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate 
 				    GPK_COLUMN_ACTIVE, TRUE,
 				    GPK_COLUMN_SENSITIVE, TRUE,
 				    -1);
-
-		g_free (repo_id);
-		g_free (description);
 	}
 
 	/* remove the items that are not now present */
@@ -371,13 +355,6 @@ gpk_prefs_get_repo_list_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate 
 
 	/* sort */
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE(priv->list_store), GPK_COLUMN_TEXT, GTK_SORT_ASCENDING);
-out:
-	if (error_code != NULL)
-		g_object_unref (error_code);
-	if (array != NULL)
-		g_ptr_array_unref (array);
-	if (results != NULL)
-		g_object_unref (results);
 }
 
 static void
@@ -423,7 +400,7 @@ static void
 gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *priv)
 {
 	gboolean ret;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GtkWidget *widget;
 	PkControl *control = PK_CONTROL(object);
 
@@ -432,8 +409,7 @@ gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate
 	if (!ret) {
 		/* TRANSLATORS: backend is broken, and won't tell us what it supports */
 		g_print ("%s: %s\n", _("Exiting as backend details could not be retrieved"), error->message);
-		g_error_free (error);
-		goto out;
+		return;
 	}
 
 	/* get values */
@@ -462,8 +438,6 @@ gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_detail"));
 		gtk_widget_set_sensitive (widget, FALSE);
 	}
-out:
-	return;
 }
 
 static void
@@ -476,12 +450,12 @@ gpk_prefs_close_cb (GtkWidget *widget, gpointer data)
 static void
 gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 {
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	GtkTreeSelection *selection;
 	GtkWidget *main_window;
 	GtkWidget *widget;
 	guint retval;
-	PkControl *control;
+	g_autoptr(PkControl) control = NULL;
 
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
@@ -496,8 +470,7 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 	retval = gtk_builder_add_from_file (priv->builder, GPK_DATA "/gpk-prefs.ui", &error);
 	if (retval == 0) {
 		g_warning ("failed to load ui: %s", error->message);
-		g_error_free (error);
-		goto out;
+		return;
 	}
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_close"));
@@ -532,8 +505,6 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 
 	/* get some data */
 	pk_control_get_properties_async (control, NULL, (GAsyncReadyCallback) gpk_prefs_get_properties_cb, priv);
-out:
-	g_object_unref (control);
 }
 
 
@@ -542,10 +513,9 @@ gpm_prefs_commandline_cb (GApplication *application,
 			  GApplicationCommandLine *cmdline,
 			  GpkPrefsPrivate *priv)
 {
-	gboolean ret;
-	gchar **argv;
+	g_auto(GStrv) argv = NULL;
 	gint argc;
-	GOptionContext *context;
+	g_autoptr(GOptionContext) context = NULL;
 	GtkWindow *window;
 	guint xid = 0;
 
@@ -564,9 +534,8 @@ gpm_prefs_commandline_cb (GApplication *application,
 	g_option_context_set_summary(context, _("Package Sources"));
 	g_option_context_add_main_entries (context, options, NULL);
 	g_option_context_add_group (context, gpk_debug_get_option_group ());
-	ret = g_option_context_parse (context, &argc, &argv, NULL);
-	if (!ret)
-		goto out;
+	if (!g_option_context_parse (context, &argc, &argv, NULL))
+		return FALSE;
 
 	/* make sure the window is raised */
 	window = GTK_WINDOW (gtk_builder_get_object (priv->builder, "dialog_prefs"));
@@ -577,10 +546,7 @@ gpm_prefs_commandline_cb (GApplication *application,
 		g_debug ("Setting xid %i", xid);
 		gpk_window_set_parent_xid (window, xid);
 	}
-out:
-	g_strfreev (argv);
-	g_option_context_free (context);
-	return ret;
+	return TRUE;
 }
 
 int

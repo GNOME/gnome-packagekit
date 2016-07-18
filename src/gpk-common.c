@@ -67,7 +67,7 @@ pk_strv_to_ptr_array (gchar **array)
 
 	parray = g_ptr_array_new ();
 	length = g_strv_length (array);
-	for (i=0; i<length; i++)
+	for (i = 0; i < length; i++)
 		g_ptr_array_add (parray, g_strdup (array[i]));
 	return parray;
 }
@@ -162,11 +162,10 @@ gpk_package_id_format_twoline (GtkStyleContext *style,
 			       const gchar *package_id,
 			       const gchar *summary)
 {
-	gchar *summary_safe = NULL;
-	gchar *text = NULL;
+	g_autofree gchar *summary_safe = NULL;
 	GString *string;
-	gchar **split = NULL;
-	gchar *color;
+	g_auto(GStrv) split = NULL;
+	g_autofree gchar *color = NULL;
 	const gchar *arch;
 	GdkRGBA inactive;
 
@@ -189,7 +188,7 @@ gpk_package_id_format_twoline (GtkStyleContext *style,
 	split = pk_package_id_split (package_id);
 	if (split == NULL) {
 		g_warning ("could not parse %s", package_id);
-		goto out;
+		return NULL;
 	}
 
 	/* no summary */
@@ -200,8 +199,7 @@ gpk_package_id_format_twoline (GtkStyleContext *style,
 		arch = gpk_get_pretty_arch (split[PK_PACKAGE_ID_ARCH]);
 		if (arch != NULL)
 			g_string_append_printf (string, " (%s)", arch);
-		text = g_string_free (string, FALSE);
-		goto out;
+		return g_string_free (string, FALSE);
 	}
 
 	/* name and summary */
@@ -216,50 +214,39 @@ gpk_package_id_format_twoline (GtkStyleContext *style,
 	if (arch != NULL)
 		g_string_append_printf (string, " (%s)", arch);
 	g_string_append (string, "</span>");
-	text = g_string_free (string, FALSE);
-out:
-	g_free (summary_safe);
-	g_free (color);
-	g_strfreev (split);
-	return text;
+	return g_string_free (string, FALSE);
 }
 
 gchar *
 gpk_package_id_format_oneline (const gchar *package_id, const gchar *summary)
 {
-	gchar *summary_safe;
-	gchar *text;
-	gchar **split;
+	g_autofree gchar *summary_safe = NULL;
+	g_auto(GStrv) split = NULL;
 
 	g_return_val_if_fail (package_id != NULL, NULL);
 
 	split = pk_package_id_split (package_id);
 	if (summary == NULL || summary[0] == '\0') {
 		/* just have name */
-		text = g_strdup (split[PK_PACKAGE_ID_NAME]);
-	} else {
-		summary_safe = g_markup_escape_text (summary, -1);
-		text = g_strdup_printf ("<b>%s</b> (%s)", summary_safe, split[PK_PACKAGE_ID_NAME]);
-		g_free (summary_safe);
+		return g_strdup (split[PK_PACKAGE_ID_NAME]);
 	}
-	g_strfreev (split);
-	return text;
+	summary_safe = g_markup_escape_text (summary, -1);
+	return g_strdup_printf ("<b>%s</b> (%s)", summary_safe, split[PK_PACKAGE_ID_NAME]);
 }
 
 gboolean
 gpk_check_privileged_user (const gchar *application_name, gboolean show_ui)
 {
 	guint uid;
-	gboolean ret = TRUE;
-	gchar *message = NULL;
-	gchar *title = NULL;
+	g_autofree gchar *message = NULL;
+	g_autofree gchar *title = NULL;
 	GtkResponseType result;
 	GtkWidget *dialog;
 
 	uid = getuid ();
 	if (uid == 0) {
 		if (!show_ui)
-			goto out;
+			return TRUE;
 		if (application_name == NULL)
 			/* TRANSLATORS: these tools cannot run as root (unknown name) */
 			title = g_strdup (_("This application is running as a privileged user"));
@@ -284,15 +271,11 @@ gpk_check_privileged_user (const gchar *application_name, gboolean show_ui)
 
 		/* user did not agree to run insecure */
 		if (result != GTK_RESPONSE_OK) {
-			ret = FALSE;
 			g_warning ("uid=%i so closing", uid);
-			goto out;
+			return FALSE;
 		}
 	}
-out:
-	g_free (title);
-	g_free (message);
-	return ret;
+	return TRUE;
 }
 
 /**

@@ -91,7 +91,7 @@ gboolean
 systemd_proxy_restart (SystemdProxy  *proxy,
                        GError       **error)
 {
-        GDBusConnection *bus;
+        g_autoptr(GDBusConnection) bus = NULL;
 
         bus = g_bus_get_sync (G_BUS_TYPE_SYSTEM, NULL, NULL);
         g_dbus_connection_call_sync (bus,
@@ -101,7 +101,5 @@ systemd_proxy_restart (SystemdProxy  *proxy,
                                     "Reboot",
                                     g_variant_new ("(b)", TRUE),
                                     NULL, 0, G_MAXINT, NULL, NULL);
-        g_object_unref (bus);
-
         return TRUE;
 }

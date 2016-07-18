@@ -90,7 +90,7 @@ static void
 gpk_task_untrusted_question (PkTask *task, guint request, PkResults *results)
 {
 	GtkWidget *widget;
-	gchar *message;
+	g_autofree gchar *message = NULL;
 	PkRoleEnum role;
 	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
 
@@ -126,7 +126,6 @@ gpk_task_untrusted_question (PkTask *task, guint request, PkResults *results)
 	}
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder_untrusted, "label_message"));
 	gtk_label_set_markup (GTK_LABEL (widget), message);
-	g_free (message);
 
 	/* show window */
 	priv->current_window = GTK_WINDOW(gtk_builder_get_object (priv->builder_untrusted, "dialog_error"));
@@ -143,14 +142,14 @@ gpk_task_untrusted_question (PkTask *task, guint request, PkResults *results)
 static void
 gpk_task_key_question (PkTask *task, guint request, PkResults *results)
 {
-	GPtrArray *array;
+	g_autoptr(GPtrArray) array = NULL;
 	GtkWidget *widget;
-	gchar *printable = NULL;
-	gchar *package_id = NULL;
-	gchar *repository_name = NULL;
-	gchar *key_url = NULL;
-	gchar *key_userid = NULL;
-	gchar *key_id = NULL;
+	g_autofree gchar *printable = NULL;
+	g_autofree gchar *package_id = NULL;
+	g_autofree gchar *repository_name = NULL;
+	g_autofree gchar *key_url = NULL;
+	g_autofree gchar *key_userid = NULL;
+	g_autofree gchar *key_id = NULL;
 	PkRepoSignatureRequired *item;
 	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
 
@@ -161,7 +160,7 @@ gpk_task_key_question (PkTask *task, guint request, PkResults *results)
 	array = pk_results_get_repo_signature_required_array (results);
 	if (array->len != 1) {
 		g_warning ("array length %i, aborting", array->len);
-		goto out;
+		return;
 	}
 
 	/* only one item supported */
@@ -198,28 +197,20 @@ gpk_task_key_question (PkTask *task, guint request, PkResults *results)
 	}
 	priv->help_id = "gpg-signature";
 	gtk_widget_show (GTK_WIDGET(priv->current_window));
-out:
-	g_free (printable);
-	g_free (package_id);
-	g_free (repository_name);
-	g_free (key_url);
-	g_free (key_userid);
-	g_free (key_id);
-	g_ptr_array_unref (array);
 }
 
 static void
 gpk_task_eula_question (PkTask *task, guint request, PkResults *results)
 {
-	GPtrArray *array;
+	g_autoptr(GPtrArray) array = NULL;
 	GtkWidget *widget;
-	GtkTextBuffer *buffer;
-	gchar *printable = NULL;
-	gchar **split = NULL;
+	g_autoptr(GtkTextBuffer) buffer = NULL;
+	g_autofree gchar *printable = NULL;
+	g_auto(GStrv) split = NULL;
 	PkEulaRequired *item;
-	gchar *package_id = NULL;
-	gchar *vendor_name = NULL;
-	gchar *license_agreement = NULL;
+	g_autofree gchar *package_id = NULL;
+	g_autofree gchar *vendor_name = NULL;
+	g_autofree gchar *license_agreement = NULL;
 	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
 
 	/* save the current request */
@@ -229,7 +220,7 @@ gpk_task_eula_question (PkTask *task, guint request, PkResults *results)
 	array = pk_results_get_eula_required_array (results);
 	if (array->len != 1) {
 		g_warning ("array length %i, aborting", array->len);
-		goto out;
+		return;
 	}
 
 	/* only one item supported */
@@ -265,24 +256,15 @@ gpk_task_eula_question (PkTask *task, guint request, PkResults *results)
 	}
 	priv->help_id = "eula";
 	gtk_widget_show (GTK_WIDGET(priv->current_window));
-
-	g_object_unref (buffer);
-out:
-	g_free (printable);
-	g_free (package_id);
-	g_free (vendor_name);
-	g_free (license_agreement);
-	g_strfreev (split);
-	g_ptr_array_unref (array);
 }
 
 static void
 gpk_task_media_change_question (PkTask *task, guint request, PkResults *results)
 {
-	GPtrArray *array;
+	g_autoptr(GPtrArray) array = NULL;
 	PkMediaChangeRequired *item;
 	const gchar *name;
-	gchar *message = NULL;
+	g_autofree gchar *message = NULL;
 	gchar *media_id;
 	PkMediaTypeEnum media_type;
 	gchar *media_text;
@@ -295,7 +277,7 @@ gpk_task_media_change_question (PkTask *task, guint request, PkResults *results)
 	array = pk_results_get_media_change_required_array (results);
 	if (array->len != 1) {
 		g_warning ("array length %i, aborting", array->len);
-		goto out;
+		return;
 	}
 
 	/* only one item supported */
@@ -324,9 +306,6 @@ gpk_task_media_change_question (PkTask *task, guint request, PkResults *results)
 
 	g_signal_connect (priv->current_window, "response", G_CALLBACK (gpk_task_dialog_response_cb), task);
 	gtk_widget_show_all (GTK_WIDGET(priv->current_window));
-out:
-	g_free (message);
-	g_ptr_array_unref (array);
 }
 
 static void
@@ -335,10 +314,10 @@ gpk_task_add_dialog_deps_section (PkTask *task,
 				  PkPackageSack *sack,
 				  PkInfoEnum info)
 {
-	PkPackageSack *sack_tmp;
-	GPtrArray *array_tmp = NULL;
+	g_autoptr(PkPackageSack) sack_tmp = NULL;
+	g_autoptr(GPtrArray) array_tmp = NULL;
 	gboolean ret;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 	guint64 size;
 	const gchar *title;
 	GtkWidget *tab_page;
@@ -347,7 +326,7 @@ gpk_task_add_dialog_deps_section (PkTask *task,
 	sack_tmp = pk_package_sack_filter_by_info (sack, info);
 	if (pk_package_sack_get_size (sack_tmp) == 0) {
 		g_debug ("no packages with %s", pk_info_enum_to_string (info));
-		goto out;
+		return;
 	}
 
 	tab_page = gtk_box_new (GTK_ORIENTATION_VERTICAL, 6);
@@ -396,7 +375,6 @@ gpk_task_add_dialog_deps_section (PkTask *task,
 	ret = pk_package_sack_get_details (sack_tmp, NULL, &error);
 	if (!ret) {
 		g_warning ("failed to get details about packages: %s", error->message);
-		g_error_free (error);
 	}
 	size = pk_package_sack_get_total_bytes (sack_tmp);
 
@@ -405,20 +383,16 @@ gpk_task_add_dialog_deps_section (PkTask *task,
 	gpk_dialog_tabbed_download_size_widget (tab_page, title, size);
 	gpk_dialog_tabbed_package_list_widget (tab_page, array_tmp);
 	gtk_notebook_append_page (tabbed_widget, tab_page, tab_label);
-out:
-	if (array_tmp != NULL)
-		g_ptr_array_unref (array_tmp);
-	g_object_unref (sack_tmp);
 }
 
 static void
 gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 {
 	gboolean ret;
-	GPtrArray *array = NULL;
+	g_autoptr(GPtrArray) array = NULL;
 	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
 	PkRoleEnum role;
-	PkPackageSack *sack = NULL;
+	g_autoptr(PkPackageSack) sack = NULL;
 	guint inputs;
 	const gchar *title;
 	const gchar *message = NULL;
@@ -442,7 +416,7 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 		if (!ret) {
 			g_debug ("we've said we don't want the dep dialog");
 			pk_task_user_accepted (PK_TASK(task), priv->request);
-			goto out;
+			return;
 		}
 	}
 
@@ -521,11 +495,6 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 
 	g_signal_connect (priv->current_window, "response", G_CALLBACK (gpk_task_dialog_response_cb), task);
 	gtk_widget_show_all (GTK_WIDGET(priv->current_window));
-out:
-	if (sack != NULL)
-		g_object_unref (sack);
-	if (array != NULL)
-		g_ptr_array_unref (array);
 }
 
 static void
@@ -534,14 +503,13 @@ gpk_task_setup_dialog_untrusted (GpkTask *task)
 	GtkWidget *widget;
 	GtkWidget *button;
 	guint retval;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 
 	/* get UI */
 	task->priv->builder_untrusted = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (task->priv->builder_untrusted, GPK_DATA "/gpk-error.ui", &error);
 	if (retval == 0) {
 		g_warning ("failed to load ui: %s", error->message);
-		g_error_free (error);
 	}
 
 	/* connect up default actions */
@@ -577,14 +545,13 @@ gpk_task_setup_dialog_signature (GpkTask *task)
 {
 	GtkWidget *widget;
 	guint retval;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 
 	/* get UI */
 	task->priv->builder_signature = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (task->priv->builder_signature, GPK_DATA "/gpk-signature.ui", &error);
 	if (retval == 0) {
 		g_warning ("failed to load ui: %s", error->message);
-		g_error_free (error);
 	}
 
 	/* connect up default actions */
@@ -607,14 +574,13 @@ gpk_task_setup_dialog_eula (GpkTask *task)
 {
 	GtkWidget *widget;
 	guint retval;
-	GError *error = NULL;
+	g_autoptr(GError) error = NULL;
 
 	/* get UI */
 	task->priv->builder_eula = gtk_builder_new ();
 	retval = gtk_builder_add_from_file (task->priv->builder_eula, GPK_DATA "/gpk-eula.ui", &error);
 	if (retval == 0) {
 		g_warning ("failed to load ui: %s", error->message);
-		g_error_free (error);
 	}
 
 	/* connect up default actions */
