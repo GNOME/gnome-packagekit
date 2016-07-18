@@ -30,7 +30,6 @@
 #include <packagekit-glib2/packagekit.h>
 
 #include "egg-string.h"
-#include "egg-markdown.h"
 #ifdef HAVE_SYSTEMD
 #include "systemd-proxy.h"
 #endif
@@ -58,7 +57,6 @@ static	PkRestartEnum		 restart_worst = 0;
 #ifdef HAVE_SYSTEMD
 static  SystemdProxy		*proxy = NULL;
 #endif
-static	EggMarkdown		*markdown = NULL;
 static	GCancellable		*cancellable = NULL;
 static	GSettings		*settings = NULL;
 static	GPtrArray		*update_array = NULL;
@@ -2001,14 +1999,11 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 
 	/* update text */
 	if (!egg_strzero (update_text)) {
-		/* convert the bullets */
-		line = egg_markdown_parse (markdown, update_text);
 		if (!egg_strzero (line)) {
-			gtk_text_buffer_insert_markup (text_buffer, &iter, line, -1);
+			gtk_text_buffer_insert (text_buffer, &iter, update_text, -1);
 			gtk_text_buffer_insert (text_buffer, &iter, "\n\n", -1);
 			has_update_text = TRUE;
 		}
-		g_free (line);
 	}
 
 #if PK_CHECK_VERSION(0,8,1)
@@ -2085,14 +2080,12 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 
 	/* only show changelog if we didn't have any update text */
 	if (!has_update_text && !egg_strzero (changelog)) {
-		line = egg_markdown_parse (markdown, changelog);
-		if (!egg_strzero (line)) {
+		if (!egg_strzero (changelog)) {
 			/* TRANSLATORS: this is a ChangeLog */
-			line2 = g_strdup_printf ("%s\n%s\n", _("The developer logs will be shown as no description is available for this update:"), line);
+			line2 = g_strdup_printf ("%s\n%s\n", _("The developer logs will be shown as no description is available for this update:"), changelog);
 			gtk_text_buffer_insert_markup (text_buffer, &iter, line2, -1);
 			g_free (line2);
 		}
-		g_free (line);
 	}
 
 	g_free (package_id);
@@ -3210,10 +3203,6 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	proxy = systemd_proxy_new ();
 #endif
 	cancellable = g_cancellable_new ();
-	markdown = egg_markdown_new ();
-	egg_markdown_set_output (markdown, EGG_MARKDOWN_OUTPUT_PANGO);
-	egg_markdown_set_escape (markdown, TRUE);
-	egg_markdown_set_autocode (markdown, TRUE);
 
 	control = pk_control_new ();
 	g_signal_connect (control, "repo-list-changed",
@@ -3454,8 +3443,6 @@ main (int argc, char *argv[])
 		g_object_unref (control);
 	if (settings != NULL)
 		g_object_unref (settings);
-	if (markdown != NULL)
-		g_object_unref (markdown);
 	if (task != NULL)
 		g_object_unref (task);
 	if (text_buffer != NULL)

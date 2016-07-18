@@ -34,7 +34,6 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "egg-markdown.h"
 #include "egg-string.h"
 
 #include "gpk-common.h"
@@ -73,7 +72,6 @@ typedef enum {
 } GpkActionMode;
 
 typedef struct {
-	EggMarkdown		*markdown;
 	gboolean		 has_package;
 	gboolean		 search_in_progress;
 	GCancellable		*cancellable;
@@ -1160,25 +1158,12 @@ gpk_application_clear_packages (GpkApplicationPrivate *priv)
 }
 
 /**
- * gpk_application_text_format_display:
- **/
-static gchar *
-gpk_application_text_format_display (GpkApplicationPrivate *priv, const gchar *ascii)
-{
-	gchar *text;
-	egg_markdown_set_output (priv->markdown, EGG_MARKDOWN_OUTPUT_TEXT);
-	text = egg_markdown_parse (priv->markdown, ascii);
-	return text;
-}
-
-/**
  * gpk_application_add_item_to_results:
  **/
 static void
 gpk_application_add_item_to_results (GpkApplicationPrivate *priv, PkPackage *item)
 {
 	GtkTreeIter iter;
-	gchar *summary_markup;
 	gchar *text;
 	gboolean in_queue;
 	gboolean installed;
@@ -1196,10 +1181,6 @@ gpk_application_add_item_to_results (GpkApplicationPrivate *priv, PkPackage *ite
 		      "package-id", &package_id,
 		      "summary", &summary,
 		      NULL);
-
-	/* format if required */
-	egg_markdown_set_output (priv->markdown, EGG_MARKDOWN_OUTPUT_PANGO);
-	summary_markup = egg_markdown_parse (priv->markdown, summary);
 
 	/* mark as got so we don't warn */
 	priv->has_package = TRUE;
@@ -1221,7 +1202,7 @@ gpk_application_add_item_to_results (GpkApplicationPrivate *priv, PkPackage *ite
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "window_manager"));
 	text = gpk_package_id_format_twoline (gtk_widget_get_style_context (widget),
 					      package_id,
-					      summary_markup);
+					      summary);
 
 	/* can we modify this? */
 	enabled = gpk_application_get_checkbox_enable (priv, state);
@@ -1244,7 +1225,6 @@ gpk_application_add_item_to_results (GpkApplicationPrivate *priv, PkPackage *ite
 	}
 
 	g_free (package_id);
-	g_free (summary_markup);
 	g_free (summary);
 	g_free (text);
 }
@@ -2076,7 +2056,6 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	GPtrArray *array = NULL;
 	PkDetails *item;
 	GtkWidget *widget;
-	gchar *text;
 	gchar *value;
 	const gchar *repo_name;
 	gboolean installed;
@@ -2160,10 +2139,8 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	}
 
 	/* set the description */
-	text = gpk_application_text_format_display (priv, description);
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "textview_description"));
-	gpk_application_set_text_buffer (widget, text);
-	g_free (text);
+	gpk_application_set_text_buffer (widget, description);
 
 	/* if non-zero, set the size */
 	if (size > 0) {
@@ -3164,9 +3141,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	priv->cancellable = g_cancellable_new ();
 	priv->repos = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
 
-	priv->markdown = egg_markdown_new ();
-	egg_markdown_set_max_lines (priv->markdown, 50);
-
 	/* watch gnome-packagekit keys */
 	g_signal_connect (priv->settings, "changed", G_CALLBACK (gpk_application_key_changed_cb), priv);
 
@@ -3491,8 +3465,6 @@ main (int argc, char *argv[])
 		g_object_unref (priv->task);
 	if (priv->settings != NULL)
 		g_object_unref (priv->settings);
-	if (priv->markdown != NULL)
-		g_object_unref (priv->markdown);
 	if (priv->builder != NULL)
 		g_object_unref (priv->builder);
 	if (priv->cancellable != NULL)
