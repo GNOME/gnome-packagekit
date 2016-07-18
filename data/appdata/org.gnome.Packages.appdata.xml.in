@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2013 Richard Hughes <richard@hughsie.com> -->
 <application>
-  <id type="desktop">gpk-update-viewer.desktop</id>
+  <id type="desktop">org.gnome.Packages.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0+</project_license>
-  <_name>GNOME Package Updater</_name>
-  <_summary>Update software installed on the system</_summary>
+  <_name>GNOME Packages</_name>
+  <_summary>Add or remove software installed on the system</_summary>
   <description>
     <_p>
-      Package Updater allows you to update packages on your system without
-      rebooting.
-      You can view details about each update and choose which updates to apply.
+      Packages allows you to install and remove packages on your system.
+      You can view and search packages by name, details or even file name
+      and also see dependencies of one package on other packages.
+      Searching by groups is possible and is an easy way to find software in
+      your favorite desktop environment.
     </_p>
     <_p>
-      Package Updater uses PackageKit and can work on any distribution using
+      Packages uses PackageKit and can work on any distribution using
       the native package management framework.
     </_p>
   </description>
   <screenshots>
-    <screenshot type="default">https://git.gnome.org/browse/gnome-packagekit/plain/data/appdata/ss-updater.png</screenshot>
+    <screenshot type="default">https://git.gnome.org/browse/gnome-packagekit/plain/data/appdata/ss-application.png</screenshot>
+    <screenshot>https://git.gnome.org/browse/gnome-packagekit/plain/data/appdata/ss-application-details.png</screenshot>
   </screenshots>
   <!--
    Validate with `appstream-util validate *.appdata.xml`
@@ -30,6 +33,7 @@
         <p>This release for GNOME 3.20 fixes the following bugs:</p>
         <ul>
           <li>Add a missing tag to the AppData file</li>
+          <li>Add resizing to various modal dialogs</li>
         </ul>
         <p>This release also updates translations.</p>
       </description>
@@ -41,9 +45,10 @@
     </release>
     <release version="3.17.90" timestamp="1439989821">
       <description>
-        <p>This release fixes the following bug:</p>
+        <p>This release fixes the following bugs:</p>
         <ul>
-          <li>Consider available packages as updatable</li>
+          <li>Set minimum content height for scrolled windows</li>
+          <li>Ensure to escape package and vendor name</li>
         </ul>
       </description>
     </release>
@@ -64,17 +69,10 @@
     </release>
     <release version="3.15.90" timestamp="1424118207">
       <description>
-        <p>This release moves the session D-Bus interface to GNOME Software.</p>
+        <p>This release removes the dialog to run newly installed software.</p>
       </description>
     </release>
-    <release version="3.15.4" timestamp="1421625600">
-      <description>
-        <p>This release fixes the following bugs:</p>
-        <ul>
-          <li>Add suitable Keywords to the package updater desktop file</li>
-        </ul>
-      </description>
-    </release>
+    <release version="3.15.4" timestamp="1421625600"/>
     <release version="3.15.3" timestamp="1418774400">
       <description>
         <p>This release fixes the following bug:</p>
@@ -88,7 +86,10 @@
     <kudo>AppMenu</kudo>
     <kudo>HiDpiIcon</kudo>
     <kudo>ModernToolkit</kudo>
+    <kudo>Notifications</kudo>
   </kudos>
   <url type="homepage">http://www.packagekit.org/</url>
   <updatecontact>richard_at_hughsie.com</updatecontact>
+  <project_group>GNOME</project_group>
+  <translation type="gettext">gnome-packagekit</translation>
 </application>

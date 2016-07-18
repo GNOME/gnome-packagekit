@@ -9,10 +9,10 @@ dist_migration_DATA = org.gnome.packagekit.gschema.migrate
 desktopdir = $(datadir)/applications
 desktop_in_files =					\
 	gpk-install-local-file.desktop.in		\
-	gpk-prefs.desktop.in				\
-	gpk-application.desktop.in			\
-	gpk-update-viewer.desktop.in			\
 	gpk-log.desktop.in				\
+	gpk-prefs.desktop.in				\
+	org.gnome.Packages.desktop.in			\
+	org.gnome.PackageUpdater.desktop.in		\
 	$(NULL)
 
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
@@ -45,11 +45,11 @@ clean-local :
 	rm -f *~
 
 DISTCLEANFILES =					\
-	gpk-prefs.desktop				\
-	gpk-update-viewer.desktop			\
 	gpk-install-local-file.desktop			\
 	gpk-log.desktop					\
-	gpk-application.desktop				\
+	gpk-prefs.desktop				\
 	org.freedesktop.PackageKit.service		\
+	org.gnome.Packages.desktop			\
+	org.gnome.PackageUpdater.desktop		\
 	$(NULL)
 
