@@ -56,9 +56,6 @@ enum {
 	GPK_COLUMN_LAST
 };
 
-/**
- * gpk_prefs_find_iter_model_cb:
- **/
 static gboolean
 gpk_prefs_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GpkPrefsPrivate *priv)
 {
@@ -73,9 +70,6 @@ gpk_prefs_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIte
 	return FALSE;
 }
 
-/**
- * gpk_prefs_mark_nonactive_cb:
- **/
 static gboolean
 gpk_prefs_mark_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, GpkPrefsPrivate *priv)
 {
@@ -85,18 +79,12 @@ gpk_prefs_mark_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter
 	return FALSE;
 }
 
-/**
- * gpk_prefs_mark_nonactive:
- **/
 static void
 gpk_prefs_mark_nonactive (GpkPrefsPrivate *priv, GtkTreeModel *model)
 {
 	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_prefs_mark_nonactive_cb, priv);
 }
 
-/**
- * gpk_prefs_model_get_iter:
- **/
 static gboolean
 gpk_prefs_model_get_iter (GpkPrefsPrivate *priv, GtkTreeModel *model, GtkTreeIter *iter, const gchar *id)
 {
@@ -113,9 +101,6 @@ gpk_prefs_model_get_iter (GpkPrefsPrivate *priv, GtkTreeModel *model, GtkTreeIte
 	return ret;
 }
 
-/**
- * gpk_prefs_remove_nonactive_cb:
- **/
 static gboolean
 gpk_prefs_remove_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gboolean *ret)
 {
@@ -131,9 +116,6 @@ gpk_prefs_remove_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIt
 	return FALSE;
 }
 
-/**
- * gpk_prefs_remove_nonactive:
- **/
 static void
 gpk_prefs_remove_nonactive (GtkTreeModel *model)
 {
@@ -145,9 +127,6 @@ gpk_prefs_remove_nonactive (GtkTreeModel *model)
 	} while (ret);
 }
 
-/**
- * gpk_prefs_status_changed_timeout_cb:
- **/
 static gboolean
 gpk_prefs_status_changed_timeout_cb (GpkPrefsPrivate *priv)
 {
@@ -164,9 +143,6 @@ gpk_prefs_status_changed_timeout_cb (GpkPrefsPrivate *priv)
 	return FALSE;
 }
 
-/**
- * gpk_prefs_progress_cb:
- **/
 static void
 gpk_prefs_progress_cb (PkProgress *progress, PkProgressType type, GpkPrefsPrivate *priv)
 {
@@ -205,9 +181,6 @@ out:
 	return;
 }
 
-/**
- * gpk_prefs_repo_enable_cb
- **/
 static void
 gpk_prefs_repo_enable_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *priv)
 {
@@ -287,9 +260,6 @@ out:
 	gtk_tree_path_free (path);
 }
 
-/**
- * gpk_treeview_add_columns:
- **/
 static void
 gpk_treeview_add_columns (GpkPrefsPrivate *priv, GtkTreeView *treeview)
 {
@@ -317,9 +287,6 @@ gpk_treeview_add_columns (GpkPrefsPrivate *priv, GtkTreeView *treeview)
 	gtk_tree_view_append_column (treeview, column);
 }
 
-/**
- * gpk_repos_treeview_clicked_cb:
- **/
 static void
 gpk_repos_treeview_clicked_cb (GtkTreeSelection *selection, GpkPrefsPrivate *priv)
 {
@@ -337,9 +304,6 @@ gpk_repos_treeview_clicked_cb (GtkTreeSelection *selection, GpkPrefsPrivate *pri
 	}
 }
 
-/**
- * gpk_prefs_get_repo_list_cb
- **/
 static void
 gpk_prefs_get_repo_list_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *priv)
 {
@@ -416,9 +380,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_prefs_repo_list_refresh:
- **/
 static void
 gpk_prefs_repo_list_refresh (GpkPrefsPrivate *priv)
 {
@@ -446,27 +407,18 @@ gpk_prefs_repo_list_refresh (GpkPrefsPrivate *priv)
 				       (GAsyncReadyCallback) gpk_prefs_get_repo_list_cb, priv);
 }
 
-/**
- * gpk_prefs_repo_list_changed_cb:
- **/
 static void
 gpk_prefs_repo_list_changed_cb (PkControl *control, GpkPrefsPrivate *priv)
 {
 	gpk_prefs_repo_list_refresh (priv);
 }
 
-/**
- * gpk_prefs_checkbutton_detail_cb:
- **/
 static void
 gpk_prefs_checkbutton_detail_cb (GtkWidget *widget, GpkPrefsPrivate *priv)
 {
 	gpk_prefs_repo_list_refresh (priv);
 }
 
-/**
- * gpk_prefs_get_properties_cb:
- **/
 static void
 gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate *priv)
 {
@@ -514,9 +466,6 @@ out:
 	return;
 }
 
-/**
- * gpk_prefs_close_cb:
- **/
 static void
 gpk_prefs_close_cb (GtkWidget *widget, gpointer data)
 {
@@ -524,9 +473,6 @@ gpk_prefs_close_cb (GtkWidget *widget, gpointer data)
 	g_application_release (G_APPLICATION (priv->application));
 }
 
-/**
- * gpk_pack_startup_cb:
- **/
 static void
 gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 {
@@ -591,9 +537,6 @@ out:
 }
 
 
-/**
- * gpm_prefs_commandline_cb:
- **/
 static int
 gpm_prefs_commandline_cb (GApplication *application,
 			  GApplicationCommandLine *cmdline,
@@ -640,9 +583,6 @@ out:
 	return ret;
 }
 
-/**
- * main:
- **/
 int
 main (int argc, char *argv[])
 {

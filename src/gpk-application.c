@@ -138,9 +138,6 @@ _g_strzero (const gchar *text)
 	return FALSE;
 }
 
-/**
- * gpk_application_state_get_icon:
- **/
 static const gchar *
 gpk_application_state_get_icon (PkBitfield state)
 {
@@ -171,9 +168,6 @@ gpk_application_state_get_icon (PkBitfield state)
 	return NULL;
 }
 
-/**
- * gpk_application_state_get_checkbox:
- **/
 static gboolean
 gpk_application_state_get_checkbox (PkBitfield state)
 {
@@ -190,9 +184,6 @@ gpk_application_state_get_checkbox (PkBitfield state)
 	return FALSE;
 }
 
-/**
- * gpk_application_set_text_buffer:
- **/
 static void
 gpk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
 {
@@ -208,9 +199,6 @@ gpk_application_set_text_buffer (GtkWidget *widget, const gchar *text)
 	gtk_text_view_set_buffer (GTK_TEXT_VIEW (widget), buffer);
 }
 
-/**
- * gpk_application_allow_install:
- **/
 static void
 gpk_application_allow_install (GpkApplicationPrivate *priv, gboolean allow)
 {
@@ -219,9 +207,6 @@ gpk_application_allow_install (GpkApplicationPrivate *priv, gboolean allow)
 	gtk_widget_set_visible (widget, allow);
 }
 
-/**
- * gpk_application_allow_remove:
- **/
 static void
 gpk_application_allow_remove (GpkApplicationPrivate *priv, gboolean allow)
 {
@@ -230,9 +215,6 @@ gpk_application_allow_remove (GpkApplicationPrivate *priv, gboolean allow)
 	gtk_widget_set_visible (widget, allow);
 }
 
-/**
- * gpk_application_packages_checkbox_invert:
- **/
 static void
 gpk_application_packages_checkbox_invert (GpkApplicationPrivate *priv)
 {
@@ -270,9 +252,6 @@ gpk_application_packages_checkbox_invert (GpkApplicationPrivate *priv)
 	g_free (package_id);
 }
 
-/**
- * gpk_application_get_checkbox_enable:
- **/
 static gboolean
 gpk_application_get_checkbox_enable (GpkApplicationPrivate *priv, PkBitfield state)
 {
@@ -289,9 +268,6 @@ gpk_application_get_checkbox_enable (GpkApplicationPrivate *priv, PkBitfield sta
 	return enable_available;
 }
 
-/**
- * gpk_application_get_selected_package:
- **/
 static gboolean
 gpk_application_get_selected_package (GpkApplicationPrivate *priv, gchar **package_id, gchar **summary)
 {
@@ -325,9 +301,6 @@ out:
 	return ret;
 }
 
-/**
- * gpk_application_group_add_selected:
- **/
 static void
 gpk_application_group_add_selected (GpkApplicationPrivate *priv)
 {
@@ -356,9 +329,6 @@ out:
 	g_free (id);
 }
 
-/**
- * gpk_application_group_remove_selected:
- **/
 static void
 gpk_application_group_remove_selected (GpkApplicationPrivate *priv)
 {
@@ -379,9 +349,6 @@ out:
 	g_free (id);
 }
 
-/**
- * gpk_application_change_queue_status:
- **/
 static void
 gpk_application_change_queue_status (GpkApplicationPrivate *priv)
 {
@@ -436,9 +403,6 @@ gpk_application_change_queue_status (GpkApplicationPrivate *priv)
 	}
 }
 
-/**
- * gpk_application_install:
- **/
 static gboolean
 gpk_application_install (GpkApplicationPrivate *priv)
 {
@@ -505,27 +469,18 @@ out:
 	return ret;
 }
 
-/**
- * gpk_application_menu_homepage_cb:
- **/
 static void
 gpk_application_menu_homepage_cb (GtkAction *action, GpkApplicationPrivate *priv)
 {
 	gtk_show_uri (NULL, priv->homepage_url, GDK_CURRENT_TIME, NULL);
 }
 
-/**
- * gpk_application_strcmp_indirect:
- **/
 static gint
 gpk_application_strcmp_indirect (gchar **a, gchar **b)
 {
 	return strcmp (*a, *b);
 }
 
-/**
- * gpk_application_get_files_cb:
- **/
 static void
 gpk_application_get_files_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
@@ -620,9 +575,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_application_status_changed_timeout_cb:
- **/
 static gboolean
 gpk_application_status_changed_timeout_cb (GpkApplicationPrivate *priv)
 {
@@ -648,9 +600,6 @@ gpk_application_status_changed_timeout_cb (GpkApplicationPrivate *priv)
 	return FALSE;
 }
 
-/**
- * gpk_application_progress_cb:
- **/
 static void
 gpk_application_progress_cb (PkProgress *progress, PkProgressType type, GpkApplicationPrivate *priv)
 {
@@ -725,9 +674,6 @@ out:
 	return;
 }
 
-/**
- * gpk_application_menu_files_cb:
- **/
 static void
 gpk_application_menu_files_cb (GtkAction *action, GpkApplicationPrivate *priv)
 {
@@ -755,9 +701,6 @@ out:
 	g_strfreev (package_ids);
 }
 
-/**
- * gpk_application_remove:
- **/
 static gboolean
 gpk_application_remove (GpkApplicationPrivate *priv)
 {
@@ -820,27 +763,18 @@ out:
 	return TRUE;
 }
 
-/**
- * gpk_application_menu_install_cb:
- **/
 static void
 gpk_application_menu_install_cb (GtkAction *action, GpkApplicationPrivate *priv)
 {
 	gpk_application_install (priv);
 }
 
-/**
- * gpk_application_menu_remove_cb:
- **/
 static void
 gpk_application_menu_remove_cb (GtkAction *action, GpkApplicationPrivate *priv)
 {
 	gpk_application_remove (priv);
 }
 
-/**
- * gpk_application_get_requires_cb:
- **/
 static void
 gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
@@ -934,9 +868,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_application_menu_requires_cb:
- **/
 static void
 gpk_application_menu_requires_cb (GtkAction *action, GpkApplicationPrivate *priv)
 {
@@ -968,9 +899,6 @@ out:
 	g_strfreev (package_ids);
 }
 
-/**
- * gpk_application_get_depends_cb:
- **/
 static void
 gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
@@ -1064,9 +992,6 @@ out:
 	g_free (message);
 }
 
-/**
- * gpk_application_menu_depends_cb:
- **/
 static void
 gpk_application_menu_depends_cb (GtkAction *_action, GpkApplicationPrivate *priv)
 {
@@ -1098,9 +1023,6 @@ out:
 	g_strfreev (package_ids);
 }
 
-/**
- * gpk_application_get_full_repo_name:
- **/
 static const gchar *
 gpk_application_get_full_repo_name (GpkApplicationPrivate *priv, const gchar *data)
 {
@@ -1122,9 +1044,6 @@ gpk_application_get_full_repo_name (GpkApplicationPrivate *priv, const gchar *da
 	return repo_name;
 }
 
-/**
- * gpk_application_clear_details_cb:
- **/
 static gboolean
 gpk_application_clear_details_cb (GpkApplicationPrivate *priv)
 {
@@ -1139,9 +1058,6 @@ gpk_application_clear_details_cb (GpkApplicationPrivate *priv)
 	return FALSE;
 }
 
-/**
- * gpk_application_clear_details:
- **/
 static void
 gpk_application_clear_details (GpkApplicationPrivate *priv)
 {
@@ -1154,9 +1070,6 @@ gpk_application_clear_details (GpkApplicationPrivate *priv)
 				 "[GpkApplication] clear-details");
 }
 
-/**
- * gpk_application_clear_packages:
- **/
 static void
 gpk_application_clear_packages (GpkApplicationPrivate *priv)
 {
@@ -1165,9 +1078,6 @@ gpk_application_clear_packages (GpkApplicationPrivate *priv)
 	gtk_list_store_clear (priv->packages_store);
 }
 
-/**
- * gpk_application_add_item_to_results:
- **/
 static void
 gpk_application_add_item_to_results (GpkApplicationPrivate *priv, PkPackage *item)
 {
@@ -1237,9 +1147,6 @@ gpk_application_add_item_to_results (GpkApplicationPrivate *priv, PkPackage *ite
 	g_free (text);
 }
 
-/**
- * gpk_application_suggest_better_search:
- **/
 static void
 gpk_application_suggest_better_search (GpkApplicationPrivate *priv)
 {
@@ -1280,9 +1187,6 @@ gpk_application_suggest_better_search (GpkApplicationPrivate *priv)
 	g_free (text);
 }
 
-/**
- * gpk_application_perform_search_idle_cb:
- **/
 static gboolean
 gpk_application_perform_search_idle_cb (GpkApplicationPrivate *priv)
 {
@@ -1338,9 +1242,6 @@ gpk_application_select_exact_match (GpkApplicationPrivate *priv, const gchar *te
 }
 
 #if 0
-/**
- * gpk_application_finished_cb:
- **/
 static void
 gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runtime, GpkApplicationPrivate *priv)
 {
@@ -1351,9 +1252,6 @@ gpk_application_finished_cb (PkClient *client, PkExitEnum exit_enum, guint runti
 }
 #endif
 
-/**
- * gpk_application_cancel_cb:
- **/
 static void
 gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplicationPrivate *priv)
 {
@@ -1363,9 +1261,6 @@ gpk_application_cancel_cb (GtkWidget *button_widget, GpkApplicationPrivate *priv
 	priv->search_mode = GPK_MODE_UNKNOWN;
 }
 
-/**
- * gpk_application_set_button_find_sensitivity:
- **/
 static void
 gpk_application_set_button_find_sensitivity (GpkApplicationPrivate *priv)
 {
@@ -1376,9 +1271,6 @@ gpk_application_set_button_find_sensitivity (GpkApplicationPrivate *priv)
 	gtk_widget_set_sensitive (widget, !priv->search_in_progress);
 }
 
-/**
- * gpk_application_search_cb:
- **/
 static void
 gpk_application_search_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
@@ -1455,9 +1347,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_application_perform_search_name_details_file:
- **/
 static void
 gpk_application_perform_search_name_details_file (GpkApplicationPrivate *priv)
 {
@@ -1537,9 +1426,6 @@ out:
 	g_strfreev (searches);
 }
 
-/**
- * gpk_application_perform_search_others:
- **/
 static void
 gpk_application_perform_search_others (GpkApplicationPrivate *priv)
 {
@@ -1565,9 +1451,6 @@ gpk_application_perform_search_others (GpkApplicationPrivate *priv)
 	}
 }
 
-/**
- * gpk_application_populate_selected:
- **/
 static gboolean
 gpk_application_populate_selected (GpkApplicationPrivate *priv)
 {
@@ -1595,9 +1478,6 @@ out:
 	return TRUE;
 }
 
-/**
- * gpk_application_perform_search:
- **/
 static void
 gpk_application_perform_search (GpkApplicationPrivate *priv)
 {
@@ -1625,9 +1505,6 @@ gpk_application_perform_search (GpkApplicationPrivate *priv)
 	}
 }
 
-/**
- * gpk_application_find_cb:
- **/
 static void
 gpk_application_find_cb (GtkWidget *button_widget, GpkApplicationPrivate *priv)
 {
@@ -1635,10 +1512,6 @@ gpk_application_find_cb (GtkWidget *button_widget, GpkApplicationPrivate *priv)
 	gpk_application_perform_search (priv);
 }
 
-/**
- * gpk_application_quit:
- * @event: The event type, unused.
- **/
 static gboolean
 gpk_application_quit (GpkApplicationPrivate *priv)
 {
@@ -1680,9 +1553,6 @@ gpk_application_quit (GpkApplicationPrivate *priv)
 	return TRUE;
 }
 
-/**
- * gpk_application_text_changed_cb:
- **/
 static gboolean
 gpk_application_text_changed_cb (GtkEntry *entry, GpkApplicationPrivate *priv)
 {
@@ -1702,9 +1572,6 @@ gpk_application_text_changed_cb (GtkEntry *entry, GpkApplicationPrivate *priv)
 	return FALSE;
 }
 
-/**
- * gpk_application_packages_installed_clicked_cb:
- **/
 static void
 gpk_application_packages_installed_clicked_cb (GtkCellRendererToggle *cell, gchar *path_str, GpkApplicationPrivate *priv)
 {
@@ -1739,9 +1606,6 @@ gpk_application_packages_installed_clicked_cb (GtkCellRendererToggle *cell, gcha
 
 static void gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkApplicationPrivate *priv);
 
-/**
- * gpk_application_button_clear_cb:
- **/
 static void
 gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplicationPrivate *priv)
 {
@@ -1791,9 +1655,6 @@ gpk_application_button_clear_cb (GtkWidget *widget_button, GpkApplicationPrivate
 	gpk_application_change_queue_status (priv);
 }
 
-/**
- * gpk_application_install_packages_cb:
- **/
 static void
 gpk_application_install_packages_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
@@ -1840,9 +1701,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_application_remove_packages_cb:
- **/
 static void
 gpk_application_remove_packages_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
@@ -1889,9 +1747,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_application_button_apply_cb:
- **/
 static void
 gpk_application_button_apply_cb (GtkWidget *widget, GpkApplicationPrivate *priv)
 {
@@ -2000,9 +1855,6 @@ gpk_application_groups_add_columns (GtkTreeView *treeview)
 
 }
 
-/**
- * gpk_application_groups_treeview_changed_cb:
- **/
 static void
 gpk_application_groups_treeview_changed_cb (GtkTreeSelection *selection, GpkApplicationPrivate *priv)
 {
@@ -2052,9 +1904,6 @@ gpk_application_groups_treeview_changed_cb (GtkTreeSelection *selection, GpkAppl
 	}
 }
 
-/**
- * gpk_application_get_details_cb:
- **/
 static void
 gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
@@ -2206,9 +2055,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_application_packages_treeview_clicked_cb:
- **/
 static void
 gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkApplicationPrivate *priv)
 {
@@ -2292,9 +2138,6 @@ out:
 	g_strfreev (package_ids);
 }
 
-/**
- * gpk_application_notify_network_state_cb:
- **/
 static void
 gpk_application_notify_network_state_cb (PkControl *_control, GParamSpec *pspec, GpkApplicationPrivate *priv)
 {
@@ -2307,9 +2150,6 @@ gpk_application_notify_network_state_cb (PkControl *_control, GParamSpec *pspec,
 	g_debug ("state=%i", state);
 }
 
-/**
- * gpk_application_group_add_data:
- **/
 static void
 gpk_application_group_add_data (GpkApplicationPrivate *priv, PkGroupEnum group)
 {
@@ -2330,9 +2170,6 @@ gpk_application_group_add_data (GpkApplicationPrivate *priv, PkGroupEnum group)
 			    -1);
 }
 
-/**
- * gpk_application_menu_search_by_name:
- **/
 static void
 gpk_application_menu_search_by_name (GtkMenuItem *item, GpkApplicationPrivate *priv)
 {
@@ -2356,9 +2193,6 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, GpkApplicationPrivate *p
 					   "edit-find");
 }
 
-/**
- * gpk_application_menu_search_by_description:
- **/
 static void
 gpk_application_menu_search_by_description (GtkMenuItem *item, GpkApplicationPrivate *priv)
 {
@@ -2382,9 +2216,6 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, GpkApplicationPri
 					   "edit-find-replace");
 }
 
-/**
- * gpk_application_menu_search_by_file:
- **/
 static void
 gpk_application_menu_search_by_file (GtkMenuItem *item, GpkApplicationPrivate *priv)
 {
@@ -2408,9 +2239,6 @@ gpk_application_menu_search_by_file (GtkMenuItem *item, GpkApplicationPrivate *p
 					   "folder-open");
 }
 
-/**
- * gpk_application_entry_text_icon_press_cb:
- **/
 static void
 gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition icon_pos, GdkEventButton *event, GpkApplicationPrivate *priv)
 {
@@ -2452,9 +2280,6 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 			event->button, event->time);
 }
 
-/**
- * gpk_application_activate_about_cb:
- **/
 static void
 gpk_application_activate_about_cb (GSimpleAction *action,
 				   GVariant *parameter,
@@ -2517,9 +2342,6 @@ gpk_application_activate_about_cb (GSimpleAction *action,
 	g_free (license_trans);
 }
 
-/**
- * gpk_application_activate_sources_cb:
- **/
 static void
 gpk_application_activate_sources_cb (GSimpleAction *action,
 				     GVariant *parameter,
@@ -2544,9 +2366,6 @@ gpk_application_activate_sources_cb (GSimpleAction *action,
 	g_free (command);
 }
 
-/**
- * gpk_application_activate_log_cb:
- **/
 static void
 gpk_application_activate_log_cb (GSimpleAction *action,
 				 GVariant *parameter,
@@ -2571,9 +2390,6 @@ gpk_application_activate_log_cb (GSimpleAction *action,
 	g_free (command);
 }
 
-/**
- * gpk_application_refresh_cache_cb:
- **/
 static void
 gpk_application_refresh_cache_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
@@ -2610,9 +2426,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_application_activate_refresh_cb:
- **/
 static void
 gpk_application_activate_refresh_cb (GSimpleAction *action,
 				     GVariant *parameter,
@@ -2628,9 +2441,6 @@ gpk_application_activate_refresh_cb (GSimpleAction *action,
 				     (GAsyncReadyCallback) gpk_application_refresh_cache_cb, priv);
 }
 
-/**
- * gpk_application_package_row_activated_cb:
- **/
 static void
 gpk_application_package_row_activated_cb (GtkTreeView *treeview, GtkTreePath *path,
 					  GtkTreeViewColumn *col, GpkApplicationPrivate *priv)
@@ -2669,9 +2479,6 @@ out:
 	g_free (package_id);
 }
 
-/**
- * gpk_application_group_row_separator_func:
- **/
 static gboolean
 gpk_application_group_row_separator_func (GtkTreeModel *model, GtkTreeIter *iter, GpkApplicationPrivate *priv)
 {
@@ -2683,9 +2490,6 @@ gpk_application_group_row_separator_func (GtkTreeModel *model, GtkTreeIter *iter
 	return ret;
 }
 
-/**
- * gpk_application_add_welcome:
- **/
 static void
 gpk_application_add_welcome (GpkApplicationPrivate *priv)
 {
@@ -2716,9 +2520,6 @@ gpk_application_add_welcome (GpkApplicationPrivate *priv)
 			    -1);
 }
 
-/**
- * gpk_application_create_group_array_enum:
- **/
 static void
 gpk_application_create_group_array_enum (GpkApplicationPrivate *priv)
 {
@@ -2741,9 +2542,6 @@ gpk_application_create_group_array_enum (GpkApplicationPrivate *priv)
 	}
 }
 
-/**
- * gpk_application_get_categories_cb:
- **/
 static void
 gpk_application_get_categories_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
@@ -2863,9 +2661,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_application_create_group_array_categories:
- **/
 static void
 gpk_application_create_group_array_categories (GpkApplicationPrivate *priv)
 {
@@ -2878,11 +2673,6 @@ gpk_application_create_group_array_categories (GpkApplicationPrivate *priv)
 				        (GAsyncReadyCallback) gpk_application_get_categories_cb, priv);
 }
 
-/**
- * gpk_application_key_changed_cb:
- *
- * We might have to do things when the keys change; do them here.
- **/
 static void
 gpk_application_key_changed_cb (GSettings *settings, const gchar *key, GpkApplicationPrivate *priv)
 {
@@ -2924,9 +2714,6 @@ gpk_application_key_changed_cb (GSettings *settings, const gchar *key, GpkApplic
 	}
 }
 
-/**
- * pk_backend_status_get_properties_cb:
- **/
 static void
 pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
@@ -3052,9 +2839,6 @@ out:
 	return;
 }
 
-/**
- * gpk_application_get_repo_list_cb:
- **/
 static void
 gpk_application_get_repo_list_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
@@ -3116,9 +2900,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_application_activate_cb:
- **/
 static void
 gpk_application_activate_cb (GtkApplication *_application, GpkApplicationPrivate *priv)
 {
@@ -3127,9 +2908,6 @@ gpk_application_activate_cb (GtkApplication *_application, GpkApplicationPrivate
 	gtk_window_present (window);
 }
 
-/**
- * gpk_application_startup_cb:
- **/
 static void
 gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *priv)
 {
@@ -3389,9 +3167,6 @@ static GActionEntry gpk_menu_app_entries[] = {
 	{ "about",		gpk_application_activate_about_cb, NULL, NULL, NULL },
 };
 
-/**
- * main:
- **/
 int
 main (int argc, char *argv[])
 {

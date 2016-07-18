@@ -185,9 +185,6 @@ static const PkEnumMatch enum_restart_icon_name[] = {
 	{0, NULL}
 };
 
-/**
- * gpk_media_type_enum_to_localised_text:
- **/
 const gchar *
 gpk_media_type_enum_to_localised_text (PkMediaTypeEnum type)
 {
@@ -215,9 +212,6 @@ gpk_media_type_enum_to_localised_text (PkMediaTypeEnum type)
 	return text;
 }
 
-/**
- * gpk_error_enum_to_localised_text:
- **/
 const gchar *
 gpk_error_enum_to_localised_text (PkErrorEnum code)
 {
@@ -433,9 +427,6 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 	return text;
 }
 
-/**
- * gpk_error_enum_to_localised_message:
- **/
 const gchar *
 gpk_error_enum_to_localised_message (PkErrorEnum code)
 {
@@ -690,9 +681,6 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 	return text;
 }
 
-/**
- * gpk_restart_enum_to_localised_text_future:
- **/
 const gchar *
 gpk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 {
@@ -722,9 +710,6 @@ gpk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 	return text;
 }
 
-/**
- * gpk_restart_enum_to_localised_text:
- **/
 const gchar *
 gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 {
@@ -754,9 +739,6 @@ gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 	return text;
 }
 
-/**
- * gpk_status_enum_to_localised_text:
- **/
 const gchar *
 gpk_status_enum_to_localised_text (PkStatusEnum status)
 {
@@ -912,9 +894,6 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 	return text;
 }
 
-/**
- * gpk_info_enum_to_localised_text:
- **/
 const gchar *
 gpk_info_enum_to_localised_text (PkInfoEnum info)
 {
@@ -972,9 +951,6 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 	return text;
 }
 
-/**
- * gpk_info_enum_to_localised_present:
- **/
 static const gchar *
 gpk_info_enum_to_localised_present (PkInfoEnum info)
 {
@@ -1022,9 +998,6 @@ gpk_info_enum_to_localised_present (PkInfoEnum info)
 	return text;
 }
 
-/**
- * gpk_info_enum_to_localised_past:
- **/
 const gchar *
 gpk_info_enum_to_localised_past (PkInfoEnum info)
 {
@@ -1072,9 +1045,6 @@ gpk_info_enum_to_localised_past (PkInfoEnum info)
 	return text;
 }
 
-/**
- * gpk_role_enum_to_localised_present:
- **/
 const gchar *
 gpk_role_enum_to_localised_present (PkRoleEnum role)
 {
@@ -1212,11 +1182,6 @@ gpk_role_enum_to_localised_present (PkRoleEnum role)
 	return text;
 }
 
-/**
- * gpk_role_enum_to_localised_past:
- *
- * These are past tense versions of the action
- **/
 const gchar *
 gpk_role_enum_to_localised_past (PkRoleEnum role)
 {
@@ -1354,9 +1319,6 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 	return text;
 }
 
-/**
- * gpk_group_enum_to_localised_text:
- **/
 const gchar *
 gpk_group_enum_to_localised_text (PkGroupEnum group)
 {
@@ -1508,45 +1470,30 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 	return text;
 }
 
-/**
- * gpk_info_enum_to_icon_name:
- **/
 const gchar *
 gpk_info_enum_to_icon_name (PkInfoEnum info)
 {
 	return pk_enum_find_string (enum_info_icon_name, info);
 }
 
-/**
- * gpk_status_enum_to_icon_name:
- **/
 const gchar *
 gpk_status_enum_to_icon_name (PkStatusEnum status)
 {
 	return pk_enum_find_string (enum_status_icon_name, status);
 }
 
-/**
- * gpk_role_enum_to_icon_name:
- **/
 const gchar *
 gpk_role_enum_to_icon_name (PkRoleEnum role)
 {
 	return pk_enum_find_string (enum_role_icon_name, role);
 }
 
-/**
- * gpk_group_enum_to_icon_name:
- **/
 const gchar *
 gpk_group_enum_to_icon_name (PkGroupEnum group)
 {
 	return pk_enum_find_string (enum_group_icon_name, group);
 }
 
-/**
- * gpk_restart_enum_to_icon_name:
- **/
 const gchar *
 gpk_restart_enum_to_icon_name (PkRestartEnum restart)
 {
@@ -1557,9 +1504,6 @@ gpk_restart_enum_to_icon_name (PkRestartEnum restart)
 	return tmp;
 }
 
-/**
- * gpk_info_status_enum_to_string:
- **/
 const gchar *
 gpk_info_status_enum_to_string (GpkInfoStatusEnum info)
 {
@@ -1568,9 +1512,6 @@ gpk_info_status_enum_to_string (GpkInfoStatusEnum info)
 	return gpk_info_enum_to_localised_present (info);
 }
 
-/**
- * gpk_info_status_enum_to_icon_name:
- **/
 const gchar *
 gpk_info_status_enum_to_icon_name (GpkInfoStatusEnum info)
 {

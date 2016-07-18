@@ -33,11 +33,6 @@ static void     gpk_task_finalize	(GObject     *object);
 
 #define GPK_TASK_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_TASK, GpkTaskPrivate))
 
-/**
- * GpkTaskPrivate:
- *
- * Private #GpkTask data
- **/
 struct _GpkTaskPrivate
 {
 	gpointer		 user_data;
@@ -53,9 +48,6 @@ struct _GpkTaskPrivate
 
 G_DEFINE_TYPE (GpkTask, gpk_task, PK_TYPE_TASK)
 
-/**
- * gpk_task_set_parent_window:
- **/
 gboolean
 gpk_task_set_parent_window (GpkTask *task, GtkWindow *parent_window)
 {
@@ -65,9 +57,6 @@ gpk_task_set_parent_window (GpkTask *task, GtkWindow *parent_window)
 	return TRUE;
 }
 
-/**
- * gpk_task_button_accept_cb:
- **/
 static void
 gpk_task_button_accept_cb (GtkWidget *widget, GpkTask *task)
 {
@@ -77,9 +66,6 @@ gpk_task_button_accept_cb (GtkWidget *widget, GpkTask *task)
 	task->priv->current_window = NULL;
 }
 
-/**
- * gpk_task_button_decline_cb:
- **/
 static void
 gpk_task_button_decline_cb (GtkWidget *widget, GpkTask *task)
 {
@@ -89,9 +75,6 @@ gpk_task_button_decline_cb (GtkWidget *widget, GpkTask *task)
 	task->priv->current_window = NULL;
 }
 
-/**
- * gpk_task_dialog_response_cb:
- **/
 static void
 gpk_task_dialog_response_cb (GtkDialog *dialog, gint response_id, GpkTask *task)
 {
@@ -103,9 +86,6 @@ gpk_task_dialog_response_cb (GtkDialog *dialog, gint response_id, GpkTask *task)
 	gpk_task_button_decline_cb (GTK_WIDGET(dialog), task);
 }
 
-/**
- * gpk_task_untrusted_question:
- **/
 static void
 gpk_task_untrusted_question (PkTask *task, guint request, PkResults *results)
 {
@@ -160,9 +140,6 @@ gpk_task_untrusted_question (PkTask *task, guint request, PkResults *results)
 	gtk_widget_show (GTK_WIDGET(priv->current_window));
 }
 
-/**
- * gpk_task_key_question:
- **/
 static void
 gpk_task_key_question (PkTask *task, guint request, PkResults *results)
 {
@@ -231,9 +208,6 @@ out:
 	g_ptr_array_unref (array);
 }
 
-/**
- * gpk_task_eula_question:
- **/
 static void
 gpk_task_eula_question (PkTask *task, guint request, PkResults *results)
 {
@@ -302,9 +276,6 @@ out:
 	g_ptr_array_unref (array);
 }
 
-/**
- * gpk_task_media_change_question:
- **/
 static void
 gpk_task_media_change_question (PkTask *task, guint request, PkResults *results)
 {
@@ -358,9 +329,6 @@ out:
 	g_ptr_array_unref (array);
 }
 
-/**
- * gpk_task_add_dialog_deps_section:
- **/
 static void
 gpk_task_add_dialog_deps_section (PkTask *task,
 				  GtkNotebook *tabbed_widget,
@@ -443,9 +411,6 @@ out:
 	g_object_unref (sack_tmp);
 }
 
-/**
- * gpk_task_simulate_question:
- **/
 static void
 gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 {
@@ -563,9 +528,6 @@ out:
 		g_ptr_array_unref (array);
 }
 
-/**
- * gpk_task_setup_dialog_untrusted:
- **/
 static void
 gpk_task_setup_dialog_untrusted (GpkTask *task)
 {
@@ -610,9 +572,6 @@ gpk_task_setup_dialog_untrusted (GpkTask *task)
 	gtk_widget_show (button);
 }
 
-/**
- * gpk_task_setup_dialog_signature:
- **/
 static void
 gpk_task_setup_dialog_signature (GpkTask *task)
 {
@@ -643,9 +602,6 @@ gpk_task_setup_dialog_signature (GpkTask *task)
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_task_button_decline_cb), task);
 }
 
-/**
- * gpk_task_setup_dialog_eula:
- **/
 static void
 gpk_task_setup_dialog_eula (GpkTask *task)
 {
@@ -676,9 +632,6 @@ gpk_task_setup_dialog_eula (GpkTask *task)
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_task_button_decline_cb), task);
 }
 
-/**
- * gpk_task_class_init:
- **/
 static void
 gpk_task_class_init (GpkTaskClass *klass)
 {
@@ -695,10 +648,6 @@ gpk_task_class_init (GpkTaskClass *klass)
 	g_type_class_add_private (klass, sizeof (GpkTaskPrivate));
 }
 
-/**
- * gpk_task_init:
- * @task: This class instance
- **/
 static void
 gpk_task_init (GpkTask *task)
 {
@@ -714,10 +663,6 @@ gpk_task_init (GpkTask *task)
 	gpk_task_setup_dialog_signature (task);
 }
 
-/**
- * gpk_task_finalize:
- * @object: The object to finalize
- **/
 static void
 gpk_task_finalize (GObject *object)
 {
@@ -731,11 +676,6 @@ gpk_task_finalize (GObject *object)
 	G_OBJECT_CLASS (gpk_task_parent_class)->finalize (object);
 }
 
-/**
- * gpk_task_new:
- *
- * Return value: a new GpkTask object.
- **/
 GpkTask *
 gpk_task_new (void)
 {

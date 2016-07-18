@@ -31,9 +31,6 @@
 #include "gpk-common.h"
 #include "gpk-error.h"
 
-/**
- * gpk_error_dialog_expanded_cb:
- **/
 static void
 gpk_error_dialog_expanded_cb (GObject *object, GParamSpec *param_spec, GtkBuilder *builder)
 {

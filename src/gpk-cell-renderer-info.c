@@ -122,10 +122,6 @@ gpk_cell_renderer_info_set_property (GObject *object, guint param_id,
 	}
 }
 
-/**
- * gpk_cell_renderer_finalize:
- * @object: The object to finalize
- **/
 static void
 gpk_cell_renderer_finalize (GObject *object)
 {
@@ -156,9 +152,6 @@ gpk_cell_renderer_info_class_init (GpkCellRendererInfoClass *class)
 	g_type_class_add_private (object_class, sizeof (GpkCellRendererInfoPrivate));
 }
 
-/**
- * gpk_cell_renderer_info_init:
- **/
 static void
 gpk_cell_renderer_info_init (GpkCellRendererInfo *cru)
 {
@@ -168,9 +161,6 @@ gpk_cell_renderer_info_init (GpkCellRendererInfo *cru)
 	cru->priv->ignore = g_ptr_array_new ();
 }
 
-/**
- * gpk_cell_renderer_info_new:
- **/
 GtkCellRenderer *
 gpk_cell_renderer_info_new (void)
 {

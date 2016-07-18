@@ -37,9 +37,6 @@ enum {
 	GPK_DIALOG_STORE_LAST
 };
 
-/**
- * gpk_dialog_package_id_name_join_locale:
- **/
 gchar *
 gpk_dialog_package_id_name_join_locale (gchar **package_ids)
 {
@@ -72,9 +69,6 @@ gpk_dialog_package_id_name_join_locale (gchar **package_ids)
 	return text;
 }
 
-/**
- * gpk_dialog_package_array_to_list_store:
- **/
 static GtkListStore *
 gpk_dialog_package_array_to_list_store (GPtrArray *array)
 {
@@ -120,9 +114,6 @@ gpk_dialog_package_array_to_list_store (GPtrArray *array)
 	return store;
 }
 
-/**
- * gpk_dialog_treeview_for_package_list:
- **/
 static gboolean
 gpk_dialog_treeview_for_package_list (GtkTreeView *treeview)
 {
@@ -154,18 +145,12 @@ gpk_dialog_treeview_for_package_list (GtkTreeView *treeview)
 	return TRUE;
 }
 
-/**
- * gpk_dialog_widget_unrealize_unref_cb:
- **/
 static void
 gpk_dialog_widget_unrealize_unref_cb (GtkWidget *widget, GObject *obj)
 {
 	g_object_unref (obj);
 }
 
-/**
- * gpk_dialog_embed_package_list_widget:
- **/
 gboolean
 gpk_dialog_embed_package_list_widget (GtkDialog *dialog, GPtrArray *array)
 {
@@ -212,9 +197,6 @@ gpk_dialog_embed_package_list_widget (GtkDialog *dialog, GPtrArray *array)
 	return TRUE;
 }
 
-/**
- * gpk_dialog_embed_file_list_widget:
- **/
 gboolean
 gpk_dialog_embed_file_list_widget (GtkDialog *dialog, GPtrArray *files)
 {
@@ -263,9 +245,6 @@ gpk_dialog_embed_file_list_widget (GtkDialog *dialog, GPtrArray *files)
 	return TRUE;
 }
 
-/**
- * gpk_client_checkbutton_show_depends_cb:
- **/
 static void
 gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, const gchar *key)
 {
@@ -280,9 +259,6 @@ gpk_client_checkbutton_show_depends_cb (GtkWidget *widget, const gchar *key)
 	g_object_unref (settings);
 }
 
-/**
- * gpk_dialog_embed_do_not_show_widget:
- **/
 gboolean
 gpk_dialog_embed_do_not_show_widget (GtkDialog *dialog, const gchar *key)
 {
@@ -310,9 +286,6 @@ gpk_dialog_embed_do_not_show_widget (GtkDialog *dialog, const gchar *key)
 	return TRUE;
 }
 
-/**
- * gpk_dialog_embed_tabbed_widget
- **/
 gboolean
 gpk_dialog_embed_tabbed_widget (GtkDialog *dialog, GtkNotebook *tabbed_widget)
 {
@@ -331,9 +304,6 @@ gpk_dialog_embed_tabbed_widget (GtkDialog *dialog, GtkNotebook *tabbed_widget)
 	return TRUE;
 }
 
-/**
- * gpk_dialog_tabbed_package_list_widget:
- **/
 gboolean
 gpk_dialog_tabbed_package_list_widget (GtkWidget *tab_page, GPtrArray *array)
 {
@@ -379,9 +349,6 @@ gpk_dialog_tabbed_package_list_widget (GtkWidget *tab_page, GPtrArray *array)
 	return TRUE;
 }
 
-/**
- * gpk_dialog_tabbed_download_size_widget:
- **/
 gboolean
 gpk_dialog_tabbed_download_size_widget (GtkWidget *tab_page, const gchar *title, guint64 size)
 {

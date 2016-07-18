@@ -58,9 +58,6 @@ enum
 	GPK_LOG_COLUMN_LAST
 };
 
-/**
- * gpk_log_find_iter_model_cb:
- **/
 static gboolean
 gpk_log_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, const gchar *id)
 {
@@ -73,9 +70,6 @@ gpk_log_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter 
 	return FALSE;
 }
 
-/**
- * gpk_log_mark_nonactive_cb:
- **/
 static gboolean
 gpk_log_mark_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
 {
@@ -83,18 +77,12 @@ gpk_log_mark_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *
 	return FALSE;
 }
 
-/**
- * gpk_log_mark_nonactive:
- **/
 static void
 gpk_log_mark_nonactive (GtkTreeModel *model)
 {
 	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_log_mark_nonactive_cb, NULL);
 }
 
-/**
- * gpk_log_remove_nonactive_cb:
- **/
 static gboolean
 gpk_log_remove_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gboolean *ret)
 {
@@ -108,9 +96,6 @@ gpk_log_remove_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter
 	return FALSE;
 }
 
-/**
- * gpk_log_remove_nonactive:
- **/
 static void
 gpk_log_remove_nonactive (GtkTreeModel *model)
 {
@@ -122,9 +107,6 @@ gpk_log_remove_nonactive (GtkTreeModel *model)
 	} while (ret);
 }
 
-/**
- * gpk_log_model_get_iter:
- **/
 static gboolean
 gpk_log_model_get_iter (GtkTreeModel *model, GtkTreeIter *iter, const gchar *id)
 {
@@ -140,9 +122,6 @@ gpk_log_model_get_iter (GtkTreeModel *model, GtkTreeIter *iter, const gchar *id)
 	return ret;
 }
 
-/**
- * gpk_log_get_localised_date:
- **/
 static gchar *
 gpk_log_get_localised_date (const gchar *timespec)
 {
@@ -164,9 +143,6 @@ gpk_log_get_localised_date (const gchar *timespec)
 	return g_strdup (buffer);
 }
 
-/**
- * gpk_log_get_type_line:
- **/
 static gchar *
 gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 {
@@ -211,9 +187,6 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 	return whole;
 }
 
-/**
- * gpk_log_get_details_localised:
- **/
 static gchar *
 gpk_log_get_details_localised (const gchar *timespec, const gchar *data)
 {
@@ -246,9 +219,6 @@ gpk_log_get_details_localised (const gchar *timespec, const gchar *data)
 	return g_string_free (string, FALSE);
 }
 
-/**
- * gpk_log_treeview_size_allocate_cb:
- **/
 static void
 gpk_log_treeview_size_allocate_cb (GtkWidget *widget, GtkAllocation *allocation, GtkCellRenderer *cell)
 {
@@ -260,9 +230,6 @@ gpk_log_treeview_size_allocate_cb (GtkWidget *widget, GtkAllocation *allocation,
 	g_object_set (cell, "wrap-width", width - 10, NULL);
 }
 
-/**
- * pk_treeview_add_general_columns:
- **/
 static void
 pk_treeview_add_general_columns (GtkTreeView *treeview)
 {
@@ -329,9 +296,6 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	gtk_tree_view_column_set_sort_column_id (column, GPK_LOG_COLUMN_TOOL);
 }
 
-/**
- * gpk_log_treeview_clicked_cb:
- **/
 static void
 gpk_log_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 {
@@ -352,9 +316,6 @@ gpk_log_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 	}
 }
 
-/**
- * gpk_log_filter:
- **/
 static gboolean
 gpk_log_filter (PkTransactionPast *item)
 {
@@ -425,9 +386,6 @@ gpk_log_filter (PkTransactionPast *item)
 	return ret;
 }
 
-/**
- * gpk_log_add_item
- **/
 static void
 gpk_log_add_item (PkTransactionPast *item)
 {
@@ -530,9 +488,6 @@ gpk_log_add_item (PkTransactionPast *item)
 	g_free (date);
 }
 
-/**
- * gpk_log_refilter
- **/
 static void
 gpk_log_refilter (void)
 {
@@ -572,9 +527,6 @@ gpk_log_refilter (void)
 	gpk_log_remove_nonactive (model);
 }
 
-/**
- * gpk_log_get_old_transactions_cb
- **/
 static void
 gpk_log_get_old_transactions_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 {
@@ -610,9 +562,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_log_refresh
- **/
 static void
 gpk_log_refresh (void)
 {
@@ -621,9 +570,6 @@ gpk_log_refresh (void)
 					      (GAsyncReadyCallback) gpk_log_get_old_transactions_cb, NULL);
 }
 
-/**
- * gpk_log_button_refresh_cb:
- **/
 static void
 gpk_log_button_refresh_cb (GtkWidget *widget, gpointer data)
 {
@@ -631,18 +577,12 @@ gpk_log_button_refresh_cb (GtkWidget *widget, gpointer data)
 	gpk_log_refresh ();
 }
 
-/**
- * gpk_log_button_filter_cb:
- **/
 static void
 gpk_log_button_filter_cb (GtkWidget *widget2, gpointer data)
 {
 	gpk_log_refilter ();
 }
 
-/**
- * gpk_log_entry_filter_cb:
- **/
 static gboolean
 gpk_log_entry_filter_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
@@ -650,18 +590,12 @@ gpk_log_entry_filter_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_da
 	return FALSE;
 }
 
-/**
- * gpk_log_button_close_cb:
- **/
 static void
 gpk_log_button_close_cb (GtkWidget *widget, GtkApplication *application)
 {
 	g_application_release (G_APPLICATION (application));
 }
 
-/**
- * gpk_log_activate_cb:
- **/
 static void
 gpk_log_activate_cb (GtkApplication *application, gpointer user_data)
 {
@@ -670,9 +604,6 @@ gpk_log_activate_cb (GtkApplication *application, gpointer user_data)
 	gtk_window_present (window);
 }
 
-/**
- * gpk_log_startup_cb:
- **/
 static void
 gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 {
@@ -784,9 +715,6 @@ out:
 		g_ptr_array_unref (transactions);
 }
 
-/**
- * main:
- **/
 int
 main (int argc, char *argv[])
 {

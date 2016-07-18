@@ -40,9 +40,6 @@ _g_test_hang_wait_cb (gpointer user_data)
 	return FALSE;
 }
 
-/**
- * _g_test_loop_wait:
- **/
 static void
 _g_test_loop_wait (guint timeout_ms)
 {
@@ -52,9 +49,6 @@ _g_test_loop_wait (guint timeout_ms)
 	g_main_loop_run (_test_loop);
 }
 
-/**
- * _g_test_loop_quit:
- **/
 static void
 _g_test_loop_quit (void)
 {

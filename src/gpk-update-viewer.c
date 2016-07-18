@@ -103,9 +103,6 @@ _g_strzero (const gchar *text)
 	return FALSE;
 }
 
-/**
- * gpk_update_viewer_quit:
- **/
 static void
 gpk_update_viewer_quit (void)
 {
@@ -114,18 +111,12 @@ gpk_update_viewer_quit (void)
 	g_application_release (G_APPLICATION (application));
 }
 
-/**
- * gpk_update_viewer_button_quit_cb:
- **/
 static void
 gpk_update_viewer_button_quit_cb (GtkWidget *widget, gpointer user_data)
 {
 	gpk_update_viewer_quit ();
 }
 
-/**
- * gpk_update_viewer_packages_set_sensitive:
- **/
 static void
 gpk_update_viewer_packages_set_sensitive (gboolean sensitive)
 {
@@ -161,9 +152,6 @@ gpk_update_viewer_packages_set_sensitive (gboolean sensitive)
 	}
 }
 
-/**
- * gpk_update_viewer_auto_shutdown_cb:
- **/
 static gboolean
 gpk_update_viewer_auto_shutdown_cb (GtkDialog *dialog)
 {
@@ -173,9 +161,6 @@ gpk_update_viewer_auto_shutdown_cb (GtkDialog *dialog)
 	return FALSE;
 }
 
-/**
- * gpk_update_viewer_error_dialog:
- **/
 static void
 gpk_update_viewer_error_dialog (const gchar *title, const gchar *message, const gchar *details)
 {
@@ -192,9 +177,6 @@ gpk_update_viewer_error_dialog (const gchar *title, const gchar *message, const 
 	gpk_error_dialog_modal (window, title, message, details);
 }
 
-/**
- * gpk_update_viewer_check_restart:
- **/
 static gboolean
 gpk_update_viewer_check_restart (void)
 {
@@ -285,9 +267,6 @@ out:
 	return ret;
 }
 
-/**
- * gpk_update_viewer_check_blocked_packages:
- **/
 static void
 gpk_update_viewer_check_blocked_packages (GPtrArray *array)
 {
@@ -344,9 +323,6 @@ out:
 	g_free (text);
 }
 
-/**
- * gpk_update_viewer_are_all_updates_selected:
- **/
 static gboolean
 gpk_update_viewer_are_all_updates_selected (GtkTreeModel *model)
 {
@@ -382,9 +358,6 @@ out:
 	return selected;
 }
 
-/**
- * gpk_update_viewer_update_packages_cb:
- **/
 static void
 gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, gpointer user_data)
 {
@@ -542,9 +515,6 @@ out:
 static GSList *active_rows = NULL;
 static guint active_row_timeout_id = 0;
 
-/**
- * gpk_update_viewer_compare_refs:
- **/
 static gint
 gpk_update_viewer_compare_refs (GtkTreeRowReference *a, GtkTreeRowReference *b)
 {
@@ -569,9 +539,6 @@ gpk_update_viewer_compare_refs (GtkTreeRowReference *a, GtkTreeRowReference *b)
 	return res;
 }
 
-/**
- * gpk_update_viewer_pulse_active_rows:
- **/
 static gboolean
 gpk_update_viewer_pulse_active_rows (void)
 {
@@ -597,9 +564,6 @@ gpk_update_viewer_pulse_active_rows (void)
 	return TRUE;
 }
 
-/**
- * gpk_update_viewer_add_active_row:
- **/
 static void
 gpk_update_viewer_add_active_row (GtkTreeModel *model, GtkTreePath *path)
 {
@@ -627,9 +591,6 @@ out:
 	return;
 }
 
-/**
- * gpk_update_viewer_remove_active_row:
- **/
 static void
 gpk_update_viewer_remove_active_row (GtkTreeModel *model, GtkTreePath *path)
 {
@@ -658,9 +619,6 @@ gpk_update_viewer_remove_active_row (GtkTreeModel *model, GtkTreePath *path)
 	}
 }
 
-/**
- * gpk_update_viewer_find_iter_model_cb:
- **/
 static gboolean
 gpk_update_viewer_find_iter_model_cb (GtkTreeModel *model,
 				      GtkTreePath *path,
@@ -688,9 +646,6 @@ out:
 	return ret;
 }
 
-/**
- * gpk_update_viewer_model_get_path:
- **/
 static GtkTreePath *
 gpk_update_viewer_model_get_path (GtkTreeModel *model, const gchar *package_id)
 {
@@ -702,9 +657,6 @@ gpk_update_viewer_model_get_path (GtkTreeModel *model, const gchar *package_id)
 	return path;
 }
 
-/**
- * gpk_update_view_get_info_headers:
- **/
 static const gchar *
 gpk_update_view_get_info_headers (PkInfoEnum info)
 {
@@ -741,9 +693,6 @@ gpk_update_view_get_info_headers (PkInfoEnum info)
 	return text;
 }
 
-/**
- * gpk_update_viewer_get_parent_for_info:
- **/
 static void
 gpk_update_viewer_get_parent_for_info (PkInfoEnum info, GtkTreeIter *parent)
 {
@@ -816,9 +765,6 @@ gpk_update_viewer_get_parent_for_info (PkInfoEnum info, GtkTreeIter *parent)
 	}
 }
 
-/**
- * gpk_update_viewer_progress_cb:
- **/
 static void
 gpk_update_viewer_progress_cb (PkProgress *progress,
 			       PkProgressType type,
@@ -1083,9 +1029,6 @@ out:
 		g_object_unref (package);
 }
 
-/**
- * gpk_update_viewer_client_notify_idle_cb:
- **/
 static void
 gpk_update_viewer_client_notify_idle_cb (PkClient *client, GParamSpec *pspec, gpointer user_data)
 {
@@ -1102,9 +1045,6 @@ gpk_update_viewer_client_notify_idle_cb (PkClient *client, GParamSpec *pspec, gp
 	}
 }
 
-/**
- * gpk_update_viewer_info_is_update_enum:
- **/
 static gboolean
 gpk_update_viewer_info_is_update_enum (PkInfoEnum info)
 {
@@ -1126,9 +1066,6 @@ gpk_update_viewer_info_is_update_enum (PkInfoEnum info)
 	return ret;
 }
 
-/**
- * gpk_update_viewer_get_install_package_ids:
- **/
 static GPtrArray *
 gpk_update_viewer_get_install_package_ids (void)
 {
@@ -1186,9 +1123,6 @@ gpk_update_viewer_get_install_package_ids (void)
 	return array;
 }
 
-/**
- * gpk_update_viewer_button_install_cb:
- **/
 static void
 gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer user_data)
 {
@@ -1235,9 +1169,6 @@ gpk_update_viewer_button_install_cb (GtkWidget *widget, gpointer user_data)
 		g_ptr_array_unref (array);
 }
 
-/**
- * gpk_update_viewer_button_upgrade_cb:
- **/
 static void
 gpk_update_viewer_button_upgrade_cb (GtkWidget *widget, gpointer user_data)
 {
@@ -1252,9 +1183,6 @@ gpk_update_viewer_button_upgrade_cb (GtkWidget *widget, gpointer user_data)
 	}
 }
 
-/**
- * gpk_update_viewer_check_mobile_broadband:
- **/
 static void
 gpk_update_viewer_check_mobile_broadband (void)
 {
@@ -1289,9 +1217,6 @@ out:
 	return;
 }
 
-/**
- * gpk_update_viewer_update_global_state_recursive:
- **/
 static void
 gpk_update_viewer_update_global_state_recursive (GtkTreeModel *model, GtkTreeIter *iter)
 {
@@ -1324,9 +1249,6 @@ gpk_update_viewer_update_global_state_recursive (GtkTreeModel *model, GtkTreeIte
 	g_free (package_id);
 }
 
-/**
- * gpk_update_viewer_update_global_state:
- **/
 static void
 gpk_update_viewer_update_global_state (void)
 {
@@ -1351,9 +1273,6 @@ gpk_update_viewer_update_global_state (void)
 	}
 }
 
-/**
- * gpk_update_viewer_modal_error_with_timeout:
- **/
 static void
 gpk_update_viewer_modal_error_with_timeout (const gchar *title, const gchar *message)
 {
@@ -1401,9 +1320,6 @@ gpk_update_viewer_modal_error_with_timeout (const gchar *title, const gchar *mes
 		gpk_update_viewer_quit ();
 }
 
-/**
- * gpk_update_viewer_reconsider_info:
- **/
 static void
 gpk_update_viewer_reconsider_info (void)
 {
@@ -1523,9 +1439,6 @@ out:
 	gpk_update_viewer_check_mobile_broadband ();
 }
 
-/**
- * gpk_update_viewer_treeview_update_toggled:
- **/
 static void
 gpk_update_viewer_treeview_update_toggled (GtkCellRendererToggle *cell, gchar *path_str, gpointer user_data)
 {
@@ -1569,9 +1482,6 @@ gpk_update_viewer_treeview_update_toggled (GtkCellRendererToggle *cell, gchar *p
 	gpk_update_viewer_reconsider_info ();
 }
 
-/**
- * gpk_update_viewer_treeview_updates_size_allocate_cb:
- **/
 static void
 gpk_update_viewer_treeview_updates_size_allocate_cb (GtkWidget *widget, GtkAllocation *allocation, GtkCellRenderer *cell)
 {
@@ -1589,9 +1499,6 @@ gpk_update_viewer_treeview_updates_size_allocate_cb (GtkWidget *widget, GtkAlloc
 	g_object_set (cell, "wrap-width", wrap_width, NULL);
 }
 
-/**
- * gpk_update_viewer_treeview_query_tooltip_cb:
- */
 static gboolean
 gpk_update_viewer_treeview_query_tooltip_cb (GtkWidget *widget, gint x, gint y, gboolean keyboard, GtkTooltip *tooltip, gpointer user_data)
 {
@@ -1657,9 +1564,6 @@ out:
 	return ret;
 }
 
-/**
- * gpk_update_viewer_treeview_add_columns_update:
- **/
 static void
 gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 {
@@ -1769,9 +1673,6 @@ gpk_update_viewer_treeview_add_columns_update (GtkTreeView *treeview)
 }
 
 #if PK_CHECK_VERSION(0,8,1)
-/**
- * gpk_update_viewer_add_description_link_item:
- **/
 static void
 gpk_update_viewer_add_description_link_item (GtkTextBuffer *buffer,
 					     GtkTextIter *iter,
@@ -1797,9 +1698,6 @@ gpk_update_viewer_add_description_link_item (GtkTextBuffer *buffer,
 	gtk_text_buffer_insert (buffer, iter, "\n", -1);
 }
 #else
-/**
- * gpk_update_viewer_add_description_link_item:
- **/
 static void
 gpk_update_viewer_add_description_link_item (GtkTextBuffer *buffer,
 					     GtkTextIter *iter,
@@ -1828,9 +1726,6 @@ gpk_update_viewer_add_description_link_item (GtkTextBuffer *buffer,
 	gtk_text_buffer_insert (buffer, iter, "\n", -1);
 }
 
-/**
- * gpk_update_viewer_get_uris:
- **/
 static GPtrArray *
 gpk_update_viewer_get_uris (const gchar *url_string)
 {
@@ -1858,9 +1753,6 @@ gpk_update_viewer_get_uris (const gchar *url_string)
 }
 #endif
 
-/**
- * gpk_update_viewer_iso8601_format_locale_date:
- **/
 static gchar *
 gpk_update_viewer_iso8601_format_locale_date (const gchar *iso_date)
 {
@@ -1894,9 +1786,6 @@ out:
 	return text;
 }
 
-/**
- * gpk_update_viewer_populate_details:
- **/
 static void
 gpk_update_viewer_populate_details (PkUpdateDetail *item)
 {
@@ -2115,9 +2004,6 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 	g_free (updated_locale);
 }
 
-/**
- * gpk_packages_treeview_clicked_cb:
- **/
 static void
 gpk_packages_treeview_clicked_cb (GtkTreeSelection *selection, gpointer user_data)
 {
@@ -2153,9 +2039,6 @@ out:
 	g_free (package_id);
 }
 
-/**
- * gpk_update_viewer_get_details_cb:
- **/
 static void
 gpk_update_viewer_get_details_cb (PkClient *client, GAsyncResult *res, gpointer user_data)
 {
@@ -2253,9 +2136,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_update_viewer_get_update_detail_cb:
- **/
 static void
 gpk_update_viewer_get_update_detail_cb (PkClient *client, GAsyncResult *res, gpointer user_data)
 {
@@ -2334,18 +2214,12 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_update_viewer_repo_array_changed_cb:
- **/
 static void
 gpk_update_viewer_repo_array_changed_cb (PkClient *client, gpointer user_data)
 {
 	gpk_update_viewer_get_new_update_array ();
 }
 
-/**
- * gpk_update_viewer_detail_popup_menu_select_all:
- **/
 static void
 gpk_update_viewer_detail_popup_menu_select_all (GtkWidget *menuitem, gpointer user_data)
 {
@@ -2382,9 +2256,6 @@ gpk_update_viewer_detail_popup_menu_select_all (GtkWidget *menuitem, gpointer us
 	gpk_update_viewer_reconsider_info ();
 }
 
-/**
- * gpk_update_viewer_detail_popup_menu_select_security:
- **/
 static void
 gpk_update_viewer_detail_popup_menu_select_security (GtkWidget *menuitem, gpointer user_data)
 {
@@ -2424,9 +2295,6 @@ gpk_update_viewer_detail_popup_menu_select_security (GtkWidget *menuitem, gpoint
 	gpk_update_viewer_reconsider_info ();
 }
 
-/**
- * gpk_update_viewer_detail_popup_menu_select_none:
- **/
 static void
 gpk_update_viewer_detail_popup_menu_select_none (GtkWidget *menuitem, gpointer user_data)
 {
@@ -2461,9 +2329,6 @@ gpk_update_viewer_detail_popup_menu_select_none (GtkWidget *menuitem, gpointer u
 	gpk_update_viewer_reconsider_info ();
 }
 
-/**
- * gpk_update_viewer_get_checked_status:
- **/
 static gboolean
 gpk_update_viewer_get_checked_status (gboolean *all_checked, gboolean *none_checked)
 {
@@ -2509,9 +2374,6 @@ gpk_update_viewer_get_checked_status (gboolean *all_checked, gboolean *none_chec
 	return clickable;
 }
 
-/**
- * gpk_update_viewer_detail_popup_menu_create:
- **/
 static void
 gpk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton *event, gpointer user_data)
 {
@@ -2565,9 +2427,6 @@ gpk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton 
 			gdk_event_get_time((GdkEvent*)event));
 }
 
-/**
- * gpk_update_viewer_detail_button_pressed:
- **/
 static gboolean
 gpk_update_viewer_detail_button_pressed (GtkWidget *treeview, GdkEventButton *event, gpointer user_data)
 {
@@ -2600,9 +2459,6 @@ gpk_update_viewer_detail_button_pressed (GtkWidget *treeview, GdkEventButton *ev
 	return TRUE;
 }
 
-/**
- * gpk_update_viewer_detail_popup_menu:
- **/
 static gboolean
 gpk_update_viewer_detail_popup_menu (GtkWidget *treeview, gpointer user_data)
 {
@@ -2610,9 +2466,6 @@ gpk_update_viewer_detail_popup_menu (GtkWidget *treeview, gpointer user_data)
 	return TRUE;
 }
 
-/**
- * gpk_update_viewer_packages_to_ids:
- **/
 static gchar **
 gpk_update_viewer_packages_to_ids (GPtrArray *array)
 {
@@ -2630,9 +2483,6 @@ gpk_update_viewer_packages_to_ids (GPtrArray *array)
 	return value;
 }
 
-/**
- * gpk_update_viewer_get_updates_cb:
- **/
 static void
 gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer user_data)
 {
@@ -2783,9 +2633,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_update_viewer_get_new_update_array
- **/
 static gboolean
 gpk_update_viewer_get_new_update_array (void)
 {
@@ -2842,11 +2689,6 @@ gpk_update_viewer_textview_follow_link (GtkWidget *text_view, GtkTextIter *iter)
 		g_slist_free (tags);
 }
 
-/**
- * gpk_update_viewer_textview_key_press_event:
- *
- * Links can be activated by pressing Enter
- **/
 static gboolean
 gpk_update_viewer_textview_key_press_event (GtkWidget *text_view, GdkEventKey *event)
 {
@@ -2867,11 +2709,6 @@ gpk_update_viewer_textview_key_press_event (GtkWidget *text_view, GdkEventKey *e
 	return FALSE;
 }
 
-/**
- * gpk_update_viewer_textview_event_after:
- *
- * Links can also be activated by clicking
- **/
 static gboolean
 gpk_update_viewer_textview_event_after (GtkWidget *text_view, GdkEvent *ev)
 {
@@ -2945,11 +2782,6 @@ gpk_update_viewer_textview_set_cursor (GtkTextView *text_view, gint x, gint y)
 		g_slist_free (tags);
 }
 
-/**
- * gpk_update_viewer_textview_motion_notify_event:
- *
- * Update the cursor image if the pointer moved.
- **/
 static gboolean
 gpk_update_viewer_textview_motion_notify_event (GtkWidget *text_view, GdkEventMotion *event)
 {
@@ -2988,9 +2820,6 @@ out:
 	return FALSE;
 }
 
-/**
- * gpk_update_viewer_updates_changed_cb:
- **/
 static void
 gpk_update_viewer_updates_changed_cb (PkControl *_control, gpointer user_data)
 {
@@ -3003,9 +2832,6 @@ gpk_update_viewer_updates_changed_cb (PkControl *_control, gpointer user_data)
 	gpk_update_viewer_get_new_update_array ();
 }
 
-/**
- * gpk_update_viewer_search_equal_func:
- **/
 static gboolean
 gpk_update_viewer_search_equal_func (GtkTreeModel *model, gint column, const gchar *key, GtkTreeIter *iter, gpointer search_data)
 {
@@ -3031,9 +2857,6 @@ gpk_update_viewer_search_equal_func (GtkTreeModel *model, gint column, const gch
 	return result;
 }
 
-/**
- * gpk_update_viewer_get_distro_upgrades_best:
- **/
 static PkDistroUpgrade *
 gpk_update_viewer_get_distro_upgrades_best (GPtrArray *array)
 {
@@ -3058,9 +2881,6 @@ out:
 	return item;
 }
 
-/**
- * gpk_update_viewer_get_distro_upgrades_cb:
- **/
 static void
 gpk_update_viewer_get_distro_upgrades_cb (PkClient *client, GAsyncResult *res, gpointer user_data)
 {
@@ -3133,9 +2953,6 @@ out:
 		g_object_unref (results);
 }
 
-/**
- * gpk_update_viewer_get_properties_cb:
- **/
 static void
 gpk_update_viewer_get_properties_cb (PkControl *_control, GAsyncResult *res, gpointer user_data)
 {
@@ -3167,9 +2984,6 @@ out:
 	return;
 }
 
-/**
- * gpk_update_viewer_notify_network_state_cb:
- **/
 static void
 gpk_update_viewer_notify_network_state_cb (PkControl *_control, GParamSpec *pspec, gpointer user_data)
 {
@@ -3177,9 +2991,6 @@ gpk_update_viewer_notify_network_state_cb (PkControl *_control, GParamSpec *pspe
 	gpk_update_viewer_get_new_update_array ();
 }
 
-/**
- * gpk_update_viewer_activate_cb:
- **/
 static void
 gpk_update_viewer_activate_cb (GtkApplication *_application, gpointer user_data)
 {
@@ -3188,9 +2999,6 @@ gpk_update_viewer_activate_cb (GtkApplication *_application, gpointer user_data)
 	gtk_window_present (window);
 }
 
-/**
- * gpk_update_viewer_application_startup_cb:
- **/
 static void
 gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer user_data)
 {
@@ -3370,9 +3178,6 @@ out:
 	return;
 }
 
-/**
- * main:
- **/
 int
 main (int argc, char *argv[])
 {

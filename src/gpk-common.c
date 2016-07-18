@@ -72,9 +72,6 @@ pk_strv_to_ptr_array (gchar **array)
 	return parray;
 }
 
-/**
- * gpk_window_set_size_request:
- **/
 gboolean
 gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 {
@@ -116,9 +113,6 @@ out:
 	return !small_form_factor_mode;
 }
 
-/**
- * gpk_window_set_parent_xid:
- **/
 gboolean
 gpk_window_set_parent_xid (GtkWindow *window, guint32 xid)
 {
@@ -138,9 +132,6 @@ gpk_window_set_parent_xid (GtkWindow *window, guint32 xid)
 	return TRUE;
 }
 
-/**
- * gpk_get_pretty_arch:
- **/
 static const gchar *
 gpk_get_pretty_arch (const gchar *arch)
 {
@@ -166,11 +157,6 @@ out:
 	return id;
 }
 
-/**
- * gpk_package_id_format_twoline:
- *
- * Return value: "<b>GTK Toolkit</b>\ngtk2-2.12.2 (i386)"
- **/
 gchar *
 gpk_package_id_format_twoline (GtkStyleContext *style,
 			       const gchar *package_id,
@@ -238,11 +224,6 @@ out:
 	return text;
 }
 
-/**
- * gpk_package_id_format_oneline:
- *
- * Return value: "<b>GTK Toolkit</b> (gtk2)"
- **/
 gchar *
 gpk_package_id_format_oneline (const gchar *package_id, const gchar *summary)
 {
@@ -265,9 +246,6 @@ gpk_package_id_format_oneline (const gchar *package_id, const gchar *summary)
 	return text;
 }
 
-/**
- * gpk_check_privileged_user
- **/
 gboolean
 gpk_check_privileged_user (const gchar *application_name, gboolean show_ui)
 {
@@ -482,11 +460,6 @@ gpk_strv_join_locale (gchar **array)
 	return NULL;
 }
 
-/**
- * gpk_package_entry_completion_new:
- *
- * Creates a %GtkEntryCompletion containing completions from the system package list
- **/
 GtkEntryCompletion *
 gpk_package_entry_completion_new (void)
 {
