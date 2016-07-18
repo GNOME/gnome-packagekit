@@ -587,7 +587,6 @@ gpk_task_setup_dialog_untrusted (GpkTask *task)
 	g_signal_connect (widget, "delete_event", G_CALLBACK (gpk_task_button_decline_cb), task);
 
 	/* set icon name */
-	widget = GTK_WIDGET (gtk_builder_get_object (task->priv->builder_untrusted, "dialog_error"));
 	gtk_window_set_icon_name (GTK_WINDOW(widget), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* connect up buttons */
@@ -605,10 +604,9 @@ gpk_task_setup_dialog_untrusted (GpkTask *task)
 	/* TRANSLATORS: button tooltip */
 	gtk_widget_set_tooltip_text (button, _("Force installing package"));
 
-	/* add to box */
+	/* add to dialog */
 	widget = GTK_WIDGET (gtk_builder_get_object (task->priv->builder_untrusted, "dialog_error"));
-	widget = gtk_dialog_get_action_area (GTK_DIALOG(widget));
-	gtk_box_pack_start (GTK_BOX (widget), button, FALSE, FALSE, 0);
+	gtk_dialog_add_action_widget (GTK_DIALOG (widget), button, GTK_RESPONSE_NONE);
 	gtk_widget_show (button);
 }
 
