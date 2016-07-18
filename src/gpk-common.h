@@ -31,7 +31,6 @@
 G_BEGIN_DECLS
 
 #define GPK_SETTINGS_SCHEMA				"org.gnome.packagekit"
-#define GPK_SETTINGS_AUTOCOMPLETE			"autocomplete"
 #define GPK_SETTINGS_CATEGORY_GROUPS			"category-groups"
 #define GPK_SETTINGS_DBUS_DEFAULT_INTERACTION		"dbus-default-interaction"
 #define GPK_SETTINGS_DBUS_ENFORCED_INTERACTION		"dbus-enforced-interaction"
@@ -70,7 +69,6 @@ gchar		*gpk_time_to_imprecise_string		(guint		 time_secs);
 gboolean	 gpk_check_privileged_user		(const gchar	*application_name,
 							 gboolean	 show_ui);
 gchar		*gpk_strv_join_locale			(gchar		**array);
-GtkEntryCompletion *gpk_package_entry_completion_new	(void);
 gboolean	 gpk_window_set_size_request		(GtkWindow	*window,
 							 guint		 width,
 							 guint		 height);

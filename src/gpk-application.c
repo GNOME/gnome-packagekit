@@ -2676,9 +2676,7 @@ gpk_application_create_group_array_categories (GpkApplicationPrivate *priv)
 static void
 gpk_application_key_changed_cb (GSettings *settings, const gchar *key, GpkApplicationPrivate *priv)
 {
-	GtkEntryCompletion *completion;
 	gboolean ret;
-	GtkEntry *entry;
 
 	if (g_strcmp0 (key, GPK_SETTINGS_CATEGORY_GROUPS) == 0) {
 		ret = g_settings_get_boolean (priv->settings, key);
@@ -2687,16 +2685,6 @@ gpk_application_key_changed_cb (GSettings *settings, const gchar *key, GpkApplic
 			gpk_application_create_group_array_categories (priv);
 		else
 			gpk_application_create_group_array_enum (priv);
-	} else if (g_strcmp0 (key, GPK_SETTINGS_AUTOCOMPLETE) == 0) {
-		ret = g_settings_get_boolean (priv->settings, key);
-		entry = GTK_ENTRY (gtk_builder_get_object (priv->builder, "entry_text"));
-		if (ret) {
-			completion = gpk_package_entry_completion_new ();
-			gtk_entry_set_completion (entry, completion);
-			g_object_unref (completion);
-		} else {
-			gtk_entry_set_completion (entry, NULL);
-		}
 	} else if (g_strcmp0 (key, "filter-newest") == 0) {
 		/* refresh the search results */
 		if (g_settings_get_boolean (priv->settings, key))
@@ -2912,10 +2900,8 @@ static void
 gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *priv)
 {
 	GAction *action;
-	gboolean ret;
 	GError *error = NULL;
 	GMenuModel *menu;
-	GtkEntryCompletion *completion;
 	GtkStyleContext *context;
 	GtkTreeSelection *selection;
 	GtkWidget *main_window;
@@ -3036,15 +3022,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 
 	/* the fancy text entry widget */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "entry_text"));
-
-	/* autocompletion can be turned off as it's slow */
-	ret = g_settings_get_boolean (priv->settings, GPK_SETTINGS_AUTOCOMPLETE);
-	if (ret) {
-		/* create the completion object */
-		completion = gpk_package_entry_completion_new ();
-		gtk_entry_set_completion (GTK_ENTRY (widget), completion);
-		g_object_unref (completion);
-	}
 
 	/* set focus on entry text */
 	gtk_widget_grab_focus (widget);

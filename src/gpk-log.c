@@ -607,10 +607,7 @@ gpk_log_activate_cb (GtkApplication *application, gpointer user_data)
 static void
 gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 {
-	gboolean ret;
 	GError *error = NULL;
-	GSettings *settings;
-	GtkEntryCompletion *completion;
 	GtkTreeSelection *selection;
 	GtkWidget *widget;
 	GtkWindow *window;
@@ -659,19 +656,7 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 	g_signal_connect (widget, "activate", G_CALLBACK (gpk_log_button_filter_cb), NULL);
 
 	/* autocompletion can be turned off as it's slow */
-	settings = g_settings_new (GPK_SETTINGS_SCHEMA);
-	ret = g_settings_get_boolean (settings, GPK_SETTINGS_AUTOCOMPLETE);
-	if (ret) {
-		/* create the completion object */
-		completion = gpk_package_entry_completion_new ();
-		widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
-		gtk_entry_set_completion (GTK_ENTRY (widget), completion);
-		g_object_unref (completion);
-	} else {
-		/* use search as you type */
-		g_signal_connect (widget, "key-release-event", G_CALLBACK (gpk_log_entry_filter_cb), NULL);
-	}
-	g_object_unref (settings);
+	g_signal_connect (widget, "key-release-event", G_CALLBACK (gpk_log_entry_filter_cb), NULL);
 
 	/* create list stores */
 	list_store = gtk_list_store_new (GPK_LOG_COLUMN_LAST, G_TYPE_STRING, G_TYPE_STRING,
