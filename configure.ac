@@ -128,7 +128,7 @@ AC_ARG_ENABLE([systemd],
               [with_systemd=auto])
 
 PKG_CHECK_MODULES(SYSTEMD,
-                  [libsystemd-login polkit-gobject-1],
+                  [libsystemd polkit-gobject-1],
                   [have_systemd=yes], [have_systemd=no])
 
 AC_MSG_CHECKING([whether to use systemd])
