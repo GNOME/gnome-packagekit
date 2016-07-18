@@ -64,30 +64,3 @@ egg_strzero (const gchar *text)
 		return TRUE;
 	return FALSE;
 }
-
-/**
- * egg_strlen:
- * @text: The text to check
- * @len: The maximum length of the string
- *
- * This function is a much safer way of doing strlen as it checks for NULL and
- * a stupidly long string.
- *
- * Return value: the length of the string, or len if the string is too long.
- **/
-guint
-egg_strlen (const gchar *text, guint len)
-{
-	guint i;
-
-	/* common case */
-	if (text == NULL || text[0] == '\0')
-		return 0;
-
-	/* only count up to len */
-	for (i=1; i<len; i++) {
-		if (text[i] == '\0')
-			break;
-	}
-	return i;
-}

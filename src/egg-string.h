@@ -26,9 +26,6 @@
 
 G_BEGIN_DECLS
 
-guint		 egg_strlen				(const gchar	*text,
-							 guint		 len)
-							 G_GNUC_WARN_UNUSED_RESULT;
 gboolean	 egg_strzero				(const gchar	*text)
 							 G_GNUC_WARN_UNUSED_RESULT;
 
