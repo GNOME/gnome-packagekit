@@ -11,8 +11,7 @@ EXTRA_DIST =						\
 	MAINTAINERS					\
 	intltool-extract.in				\
 	intltool-merge.in				\
-	intltool-update.in				\
-	omf.make
+	intltool-update.in
 
 clean-local :
 	rm -f *~
