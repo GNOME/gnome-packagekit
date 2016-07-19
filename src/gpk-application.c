@@ -962,6 +962,10 @@ gpk_application_get_full_repo_name (GpkApplicationPrivate *priv, const gchar *da
 		return _("Invalid");
 	}
 
+	/* trim prefix */
+	if (g_str_has_prefix (data, "installed:"))
+		data += 10;
+
 	/* try to find in cached repo array */
 	repo_name = (const gchar *) g_hash_table_lookup (priv->repos, data);
 	if (repo_name == NULL) {
@@ -1903,21 +1907,11 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 		gtk_widget_hide (widget);
 	}
 
-	/* set the repo text, or hide if installed */
-	if (!installed && g_strcmp0 (split[PK_PACKAGE_ID_DATA], "meta") != 0) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_source_title"));
-		gtk_widget_show (widget);
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_source"));
-		/* get the full name of the repo from the repo_id */
-		repo_name = gpk_application_get_full_repo_name (priv, split[PK_PACKAGE_ID_DATA]);
-		gtk_label_set_label (GTK_LABEL (widget), repo_name);
-		gtk_widget_show (widget);
-	} else {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_source_title"));
-		gtk_widget_hide (widget);
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_source"));
-		gtk_widget_hide (widget);
-	}
+	/* set the repo text */
+	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_source"));
+	/* get the full name of the repo from the repo_id */
+	repo_name = gpk_application_get_full_repo_name (priv, split[PK_PACKAGE_ID_DATA]);
+	gtk_label_set_label (GTK_LABEL (widget), repo_name);
 }
 
 static void
