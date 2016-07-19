@@ -501,7 +501,6 @@ static void
 gpk_task_setup_dialog_untrusted (GpkTask *task)
 {
 	GtkWidget *widget;
-	GtkWidget *button;
 	guint retval;
 	g_autoptr(GError) error = NULL;
 
@@ -529,17 +528,10 @@ gpk_task_setup_dialog_untrusted (GpkTask *task)
 	widget = GTK_WIDGET (gtk_builder_get_object (task->priv->builder_untrusted, "expander_details"));
 	gtk_widget_hide (widget);
 
-	/* TRANSLATORS: button label, force the install, even though it's untrusted */
-	button = gtk_button_new_with_mnemonic (_("_Force install"));
-	g_signal_connect (button, "clicked", G_CALLBACK (gpk_task_button_accept_cb), task);
-
-	/* TRANSLATORS: button tooltip */
-	gtk_widget_set_tooltip_text (button, _("Force installing package"));
-
 	/* add to dialog */
-	widget = GTK_WIDGET (gtk_builder_get_object (task->priv->builder_untrusted, "dialog_error"));
-	gtk_dialog_add_action_widget (GTK_DIALOG (widget), button, GTK_RESPONSE_NONE);
-	gtk_widget_show (button);
+	widget = GTK_WIDGET (gtk_builder_get_object (task->priv->builder_untrusted, "button_force"));
+	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_task_button_accept_cb), task);
+	gtk_widget_show (widget);
 }
 
 static void

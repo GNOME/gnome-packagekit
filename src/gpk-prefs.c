@@ -214,7 +214,7 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, GpkPrefs
 	g_autofree gchar *repo_id = NULL;
 	GtkTreeIter iter;
 	GtkTreeModel *model;
-	g_autofree GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
+	GtkTreePath *path = gtk_tree_path_new_from_string (path_str);
 	GtkTreeView *treeview;
 
 	/* do we have the capability? */
@@ -230,6 +230,7 @@ gpk_misc_enabled_toggled (GtkCellRendererToggle *cell, gchar *path_str, GpkPrefs
 	gtk_tree_model_get (model, &iter,
 			    GPK_COLUMN_ENABLED, &enabled,
 			    GPK_COLUMN_ID, &repo_id, -1);
+	gtk_tree_path_free (path);
 
 	/* do something with the value */
 	enabled ^= 1;
@@ -441,13 +442,6 @@ gpk_prefs_get_properties_cb (GObject *object, GAsyncResult *res, GpkPrefsPrivate
 }
 
 static void
-gpk_prefs_close_cb (GtkWidget *widget, gpointer data)
-{
-	GpkPrefsPrivate *priv = (GpkPrefsPrivate *) data;
-	g_application_release (G_APPLICATION (priv->application));
-}
-
-static void
 gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 {
 	g_autoptr(GError) error = NULL;
@@ -474,10 +468,6 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 		g_warning ("failed to load ui: %s", error->message);
 		return;
 	}
-
-	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_close"));
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_prefs_close_cb), priv);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "checkbutton_detail"));
 	g_settings_bind (priv->settings_gpk,

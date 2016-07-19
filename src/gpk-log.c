@@ -566,12 +566,6 @@ gpk_log_entry_filter_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_da
 }
 
 static void
-gpk_log_button_close_cb (GtkWidget *widget, GtkApplication *application)
-{
-	g_application_release (G_APPLICATION (application));
-}
-
-static void
 gpk_log_activate_cb (GtkApplication *application, gpointer user_data)
 {
 	GtkWindow *window;
@@ -615,11 +609,6 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 		widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
 		gtk_entry_set_text (GTK_ENTRY(widget), filter);
 	}
-
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
-	g_signal_connect (widget, "clicked",
-			  G_CALLBACK (gpk_log_button_close_cb), application);
-	gtk_widget_grab_default (widget);
 
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_refresh"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_refresh_cb), NULL);
