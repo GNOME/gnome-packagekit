@@ -27,8 +27,11 @@ gpk-log.1: gpk-log.sgml
 	docbook2man $? > /dev/null
 endif
 
+CLEANFILES = $(man_MANS) *.links *.log *.refs
+
 clean-local :
 	rm -f *~
 	rm -f *.1
 	rm -f manpage.*
 
+-include $(top_srcdir)/git.mk

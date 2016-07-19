@@ -41,4 +41,6 @@ install-data-hook:
 EXTRA_DIST =				\
 	$(icons_DATA)
 
+-include $(top_srcdir)/git.mk
+
 

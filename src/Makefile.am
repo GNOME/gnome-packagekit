@@ -213,10 +213,11 @@ clean-local:
 	rm -f gcov.txt
 	rm -f gprof.txt
 
-CLEANFILES = *~ $(BUILT_SOURCES)
+CLEANFILES = *~ $(BUILT_SOURCES) $(noinst_LIBRARIES)
 
 MAINTAINERCLEANFILES =					\
 	*~			      			\
 	Makefile.in					\
 	$(NULL)
 
+-include $(top_srcdir)/git.mk

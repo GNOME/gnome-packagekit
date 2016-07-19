@@ -7,4 +7,4 @@ appdata_in_files =					\
 EXTRA_DIST = $(appdata_in_files)
 CLEANFILES = $(appdata_DATA)
 
-
+-include $(top_srcdir)/git.mk

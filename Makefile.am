@@ -27,6 +27,28 @@ DISTCLEANFILES =					\
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-scrollkeeper
 
+MAINTAINERCLEANFILES =					\
+	*~						\
+	aclocal.m4					\
+	compile						\
+	config.guess					\
+	config.h.*					\
+	config.sub					\
+	configure					\
+	depcomp						\
+	gtk-doc.make					\
+	INSTALL						\
+	install-sh					\
+	ltmain.sh					\
+	Makefile.in					\
+	missing						\
+	mkinstalldirs					\
+	NEWS						\
+	test-driver
+
+CLEANFILES =						\
+	ChangeLog
+
 distclean-local:
 	if test $(srdcir) = .; then :; else \
 		rm -f ChangeLog; \
@@ -56,3 +78,5 @@ NEWS: data/appdata/*.appdata.xml
 	fi
 
 .PHONY: ChangeLog NEWS
+
+-include $(top_srcdir)/git.mk

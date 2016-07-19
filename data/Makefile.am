@@ -41,3 +41,4 @@ DISTCLEANFILES =					\
 	org.gnome.PackageUpdater.desktop		\
 	$(NULL)
 
+-include $(top_srcdir)/git.mk
