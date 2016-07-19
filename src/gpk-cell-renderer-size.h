@@ -25,29 +25,10 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
-#define GPK_TYPE_CELL_RENDERER_SIZE		(gpk_cell_renderer_size_get_type())
-#define GPK_CELL_RENDERER_SIZE(obj)		(G_TYPE_CHECK_INSTANCE_CAST((obj), GPK_TYPE_CELL_RENDERER_SIZE, GpkCellRendererSize))
-#define GPK_CELL_RENDERER_SIZE_CLASS(cls)	(G_TYPE_CHECK_CLASS_CAST((cls), GPK_TYPE_CELL_RENDERER_SIZE, GpkCellRendererSizeClass))
-#define GPK_IS_CELL_RENDERER_SIZE(obj)		(G_TYPE_CHECK_INSTANCE_TYPE((obj), GPK_TYPE_CELL_RENDERER_SIZE))
-#define GPK_IS_CELL_RENDERER_SIZE_CLASS(cls)	(G_TYPE_CHECK_CLASS_TYPE((cls), GPK_TYPE_CELL_RENDERER_SIZE))
-#define GPK_CELL_RENDERER_SIZE_GET_CLASS(obj)	(G_TYPE_INSTANCE_GET_CLASS((obj), GPK_TYPE_CELL_RENDERER_SIZE, GpkCellRendererSizeClass))
-
 G_BEGIN_DECLS
 
-typedef struct _GpkCellRendererSize		GpkCellRendererSize;
-typedef struct _GpkCellRendererSizeClass	GpkCellRendererSizeClass;
-
-struct _GpkCellRendererSize
-{
-	GtkCellRendererText	 parent;
-	guint			 value;
-	gchar			*markup;
-};
-
-struct _GpkCellRendererSizeClass
-{
-	GtkCellRendererTextClass parent_class;
-};
+#define GPK_TYPE_CELL_RENDERER_SIZE (gpk_cell_renderer_size_get_type())
+G_DECLARE_FINAL_TYPE (GpkCellRendererSize, gpk_cell_renderer_size, GPK, CELL_RENDERER_SIZE, GtkCellRendererText)
 
 GType		 gpk_cell_renderer_size_get_type	(void);
 GtkCellRenderer	*gpk_cell_renderer_size_new		(void);

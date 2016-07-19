@@ -26,29 +26,10 @@
 #include <gtk/gtk.h>
 #include <packagekit-glib2/packagekit.h>
 
-#define GPK_TYPE_CELL_RENDERER_INFO		(gpk_cell_renderer_info_get_type())
-#define GPK_CELL_RENDERER_INFO(obj)		(G_TYPE_CHECK_INSTANCE_CAST((obj), GPK_TYPE_CELL_RENDERER_INFO, GpkCellRendererInfo))
-#define GPK_CELL_RENDERER_INFO_CLASS(cls)	(G_TYPE_CHECK_CLASS_CAST((cls), GPK_TYPE_CELL_RENDERER_INFO, GpkCellRendererInfoClass))
-#define GPK_IS_CELL_RENDERER_INFO(obj)		(G_TYPE_CHECK_INSTANCE_TYPE((obj), GPK_TYPE_CELL_RENDERER_INFO))
-#define GPK_IS_CELL_RENDERER_INFO_CLASS(cls)	(G_TYPE_CHECK_CLASS_TYPE((cls), GPK_TYPE_CELL_RENDERER_INFO))
-#define GPK_CELL_RENDERER_INFO_GET_CLASS(obj)	(G_TYPE_INSTANCE_GET_CLASS((obj), GPK_TYPE_CELL_RENDERER_INFO, GpkCellRendererInfoClass))
-
 G_BEGIN_DECLS
 
-typedef struct _GpkCellRendererInfo		GpkCellRendererInfo;
-typedef struct _GpkCellRendererInfoClass	GpkCellRendererInfoClass;
-typedef struct _GpkCellRendererInfoPrivate	GpkCellRendererInfoPrivate;
-
-struct _GpkCellRendererInfo
-{
-	GtkCellRendererPixbuf		 parent;
-	GpkCellRendererInfoPrivate	*priv;
-};
-
-struct _GpkCellRendererInfoClass
-{
-	GtkCellRendererPixbufClass parent_class;
-};
+#define GPK_TYPE_CELL_RENDERER_INFO (gpk_cell_renderer_info_get_type())
+G_DECLARE_FINAL_TYPE (GpkCellRendererInfo, gpk_cell_renderer_info, GPK, CELL_RENDERER_INFO, GtkCellRendererPixbuf)
 
 GType		 gpk_cell_renderer_info_get_type	(void);
 GtkCellRenderer	*gpk_cell_renderer_info_new		(void);

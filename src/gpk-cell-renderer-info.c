@@ -29,19 +29,19 @@
 #include "gpk-enum.h"
 #include "gpk-cell-renderer-info.h"
 
+struct _GpkCellRendererInfo
+{
+	GtkCellRendererPixbuf	 parent_instance;
+	GPtrArray		*array;
+	PkInfoEnum		 value;
+	const gchar		*icon_name;
+	GPtrArray		*ignore;
+};
+
 enum {
 	PROP_0,
 	PROP_VALUE,
 	PROP_IGNORE_VALUES
-};
-
-#define GPK_CELL_RENDERER_INFO_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GPK_TYPE_CELL_RENDERER_INFO, GpkCellRendererInfoPrivate))
-
-struct _GpkCellRendererInfoPrivate
-{
-	PkInfoEnum		 value;
-	const gchar		*icon_name;
-	GPtrArray		*ignore;
 };
 
 G_DEFINE_TYPE (GpkCellRendererInfo, gpk_cell_renderer_info, GTK_TYPE_CELL_RENDERER_PIXBUF)
@@ -56,7 +56,7 @@ gpk_cell_renderer_info_get_property (GObject *object, guint param_id,
 
 	switch (param_id) {
 	case PROP_VALUE:
-		g_value_set_uint (value, cru->priv->value);
+		g_value_set_uint (value, cru->value);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, param_id, pspec);
@@ -72,10 +72,10 @@ gpk_cell_renderer_should_show (GpkCellRendererInfo *cru)
 	PkInfoEnum info;
 
 	/* are we in the ignore array */
-	array = cru->priv->ignore;
+	array = cru->ignore;
 	for (i = 0; i < array->len; i++) {
 		info = GPOINTER_TO_UINT (g_ptr_array_index (array, i));
-		if (info == cru->priv->value)
+		if (info == cru->value)
 			return FALSE;
 	}
 	return TRUE;
@@ -94,13 +94,13 @@ gpk_cell_renderer_info_set_property (GObject *object, guint param_id,
 
 	switch (param_id) {
 	case PROP_VALUE:
-		cru->priv->value = g_value_get_uint (value);
+		cru->value = g_value_get_uint (value);
 		ret = gpk_cell_renderer_should_show (cru);
 		if (!ret) {
 			g_object_set (cru, "icon-name", NULL, NULL);
 		} else {
-			cru->priv->icon_name = gpk_info_status_enum_to_icon_name (cru->priv->value);
-			g_object_set (cru, "icon-name", cru->priv->icon_name, NULL);
+			cru->icon_name = gpk_info_status_enum_to_icon_name (cru->value);
+			g_object_set (cru, "icon-name", cru->icon_name, NULL);
 		}
 		break;
 	case PROP_IGNORE_VALUES:
@@ -109,7 +109,7 @@ gpk_cell_renderer_info_set_property (GObject *object, guint param_id,
 		split = g_strsplit (text, ",", -1);
 		for (i=0; split[i] != NULL; i++) {
 			info = pk_info_enum_from_string (split[i]);
-			g_ptr_array_add (cru->priv->ignore, GUINT_TO_POINTER (info));
+			g_ptr_array_add (cru->ignore, GUINT_TO_POINTER (info));
 		}
 		break;
 	default:
@@ -123,7 +123,7 @@ gpk_cell_renderer_finalize (GObject *object)
 {
 	GpkCellRendererInfo *cru;
 	cru = GPK_CELL_RENDERER_INFO (object);
-	g_ptr_array_free (cru->priv->ignore, TRUE);
+	g_ptr_array_free (cru->ignore, TRUE);
 	G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -144,17 +144,13 @@ gpk_cell_renderer_info_class_init (GpkCellRendererInfoClass *class)
 	g_object_class_install_property (object_class, PROP_IGNORE_VALUES,
 					 g_param_spec_string ("ignore-values", "IGNORE-VALUES",
 					 "IGNORE-VALUES", "unknown", G_PARAM_WRITABLE));
-
-	g_type_class_add_private (object_class, sizeof (GpkCellRendererInfoPrivate));
 }
 
 static void
 gpk_cell_renderer_info_init (GpkCellRendererInfo *cru)
 {
-	cru->priv = GPK_CELL_RENDERER_INFO_GET_PRIVATE (cru);
-	cru->priv->value = PK_INFO_ENUM_UNKNOWN;
-	cru->priv->icon_name = NULL;
-	cru->priv->ignore = g_ptr_array_new ();
+	cru->value = PK_INFO_ENUM_UNKNOWN;
+	cru->ignore = g_ptr_array_new ();
 }
 
 GtkCellRenderer *
