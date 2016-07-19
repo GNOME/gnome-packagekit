@@ -2768,7 +2768,9 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 
 	/* get UI */
 	priv->builder = gtk_builder_new ();
-	retval = gtk_builder_add_from_file (priv->builder, GPK_DATA "/gpk-application.ui", &error);
+	retval = gtk_builder_add_from_resource (priv->builder,
+						"/org/gnome/packagekit/gpk-application.ui",
+						&error);
 	if (retval == 0) {
 		g_warning ("failed to load ui: %s", error->message);
 		return;

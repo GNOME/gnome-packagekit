@@ -467,7 +467,9 @@ gpk_pack_startup_cb (GtkApplication *application, GpkPrefsPrivate *priv)
 			  G_CALLBACK (gpk_prefs_repo_list_changed_cb), priv);
 
 	/* get UI */
-	retval = gtk_builder_add_from_file (priv->builder, GPK_DATA "/gpk-prefs.ui", &error);
+	retval = gtk_builder_add_from_resource (priv->builder,
+						"/org/gnome/packagekit/gpk-prefs.ui",
+						&error);
 	if (retval == 0) {
 		g_warning ("failed to load ui: %s", error->message);
 		return;

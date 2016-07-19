@@ -70,6 +70,8 @@ shared_LIBS =						\
 
 gpk_application_SOURCES =				\
 	gpk-application.c				\
+	gpk-application-resources.c			\
+	gpk-application-resources.h			\
 	$(NULL)
 
 gpk_application_LDADD =					\
@@ -87,6 +89,8 @@ gpk_prefs_SOURCES =					\
 	gpk-error.c					\
 	gpk-error.h					\
 	gpk-prefs.c					\
+	gpk-prefs-resources.c				\
+	gpk-prefs-resources.h				\
 	$(NULL)
 
 gpk_prefs_LDADD =					\
@@ -96,6 +100,8 @@ gpk_prefs_LDADD =					\
 
 gpk_update_viewer_SOURCES =				\
 	gpk-update-viewer.c				\
+	gpk-update-viewer-resources.c			\
+	gpk-update-viewer-resources.h			\
 	gpk-cell-renderer-size.c			\
 	gpk-cell-renderer-size.h			\
 	gpk-cell-renderer-info.c			\
@@ -111,6 +117,8 @@ gpk_update_viewer_LDADD =				\
 
 gpk_log_SOURCES =					\
 	gpk-log.c					\
+	gpk-log-resources.c				\
+	gpk-log-resources.h				\
 	$(NULL)
 
 gpk_log_LDADD =						\
@@ -151,6 +159,51 @@ gpk_self_test_CFLAGS = $(AM_CFLAGS)
 
 TESTS = gpk-self-test
 endif
+
+gpk-application-resources.c: gpk-application.gresource.xml gpk-application.ui
+	glib-compile-resources --target=$@ --generate-source --c-name gpk $(srcdir)/gpk-application.gresource.xml
+gpk-application-resources.h: gpk-application.gresource.xml
+	glib-compile-resources --target=$@ --generate-header --c-name gpk $(srcdir)/gpk-application.gresource.xml
+
+gpk-log-resources.c: gpk-log.gresource.xml gpk-log.ui
+	glib-compile-resources --target=$@ --generate-source --c-name gpk $(srcdir)/gpk-log.gresource.xml
+gpk-log-resources.h: gpk-log.gresource.xml
+	glib-compile-resources --target=$@ --generate-header --c-name gpk $(srcdir)/gpk-log.gresource.xml
+
+gpk-prefs-resources.c: gpk-prefs.gresource.xml gpk-prefs.ui
+	glib-compile-resources --target=$@ --generate-source --c-name gpk $(srcdir)/gpk-prefs.gresource.xml
+gpk-prefs-resources.h: gpk-prefs.gresource.xml
+	glib-compile-resources --target=$@ --generate-header --c-name gpk $(srcdir)/gpk-prefs.gresource.xml
+
+gpk-update-viewer-resources.c: gpk-update-viewer.gresource.xml gpk-update-viewer.ui
+	glib-compile-resources --target=$@ --generate-source --c-name gpk $(srcdir)/gpk-update-viewer.gresource.xml
+gpk-update-viewer-resources.h: gpk-update-viewer.gresource.xml
+	glib-compile-resources --target=$@ --generate-header --c-name gpk $(srcdir)/gpk-update-viewer.gresource.xml
+
+BUILT_SOURCES =						\
+	gpk-application-resources.c			\
+	gpk-application-resources.h			\
+	gpk-log-resources.c				\
+	gpk-log-resources.h				\
+	gpk-prefs-resources.c				\
+	gpk-prefs-resources.h				\
+	gpk-update-viewer-resources.c			\
+	gpk-update-viewer-resources.h			\
+	$(NULL)
+
+EXTRA_DIST =						\
+	gpk-application.gresource.xml			\
+	gpk-application.ui				\
+	gpk-client.ui					\
+	gpk-error.ui					\
+	gpk-eula.ui					\
+	gpk-log.gresource.xml				\
+	gpk-log.ui					\
+	gpk-prefs.gresource.xml				\
+	gpk-prefs.ui					\
+	gpk-signature.ui				\
+	gpk-update-viewer.gresource.xml			\
+	gpk-update-viewer.ui
 
 clean-local:
 	rm -f *~

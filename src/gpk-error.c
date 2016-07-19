@@ -68,7 +68,9 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 
 	/* get UI */
 	builder = gtk_builder_new ();
-	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-error.ui", &error);
+	retval = gtk_builder_add_from_resource (builder,
+						"/org/gnome/packagekit/gpk-error.ui",
+						&error);
 	if (retval == 0) {
 		g_warning ("failed to load ui: %s", error->message);
 		return FALSE;

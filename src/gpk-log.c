@@ -595,7 +595,9 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 
 	/* get UI */
 	builder = gtk_builder_new ();
-	retval = gtk_builder_add_from_file (builder, GPK_DATA "/gpk-log.ui", &error);
+	retval = gtk_builder_add_from_resource (builder,
+						"/org/gnome/packagekit/gpk-log.ui",
+						&error);
 	if (retval == 0) {
 		g_warning ("failed to load ui: %s", error->message);
 		goto out;

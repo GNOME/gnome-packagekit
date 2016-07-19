@@ -19,17 +19,6 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 @INTLTOOL_DESKTOP_RULE@
 
-pkgdata_DATA =						\
-	gpk-eula.ui					\
-	gpk-application.ui				\
-	gpk-update-viewer.ui				\
-	gpk-prefs.ui					\
-	gpk-signature.ui				\
-	gpk-error.ui					\
-	gpk-log.ui					\
-	gpk-client.ui					\
-	$(NULL)
-
 @GSETTINGS_RULES@
 gsettings_SCHEMAS = org.gnome.packagekit.gschema.xml
 
@@ -37,7 +26,6 @@ EXTRA_DIST =						\
 	$(gsettings_SCHEMAS)				\
 	$(autostart_in_files)				\
 	$(desktop_in_files)				\
-	$(pkgdata_DATA)					\
 	$(service_in_files)				\
 	$(NULL)
 

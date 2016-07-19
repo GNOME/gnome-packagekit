@@ -112,12 +112,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_bindir}/gpk-log
 %{_bindir}/gpk-prefs
 %dir %{_datadir}/gnome-packagekit
-%{_datadir}/gnome-packagekit/gpk-client.ui
-%{_datadir}/gnome-packagekit/gpk-error.ui
-%{_datadir}/gnome-packagekit/gpk-eula.ui
-%{_datadir}/gnome-packagekit/gpk-log.ui
-%{_datadir}/gnome-packagekit/gpk-prefs.ui
-%{_datadir}/gnome-packagekit/gpk-signature.ui
 %dir %{_datadir}/gnome-packagekit/icons
 %dir %{_datadir}/gnome-packagekit/icons/hicolor
 %dir %{_datadir}/gnome-packagekit/icons/hicolor/*
@@ -138,14 +132,12 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_bindir}/gpk-application
 %{_datadir}/appdata/org.gnome.Packages.appdata.xml
 %{_datadir}/applications/org.gnome.Packages.desktop
-%{_datadir}/gnome-packagekit/gpk-application.ui
 %{_datadir}/man/man1/gpk-application.1*
 
 %files updater
 %{_bindir}/gpk-update-viewer
 %{_datadir}/appdata/org.gnome.PackageUpdater.appdata.xml
 %{_datadir}/applications/org.gnome.PackageUpdater.desktop
-%{_datadir}/gnome-packagekit/gpk-update-viewer.ui
 %{_datadir}/man/man1/gpk-update-viewer.1*
 
 %changelog
