@@ -1333,8 +1333,8 @@ gpk_update_viewer_reconsider_info (void)
 
 	/* header */
 	widget = GTK_WIDGET(gtk_builder_get_object (builder, "label_header_title"));
-	text_total = g_strdup_printf (ngettext ("There is %i update available",
-						"There are %i updates available", len), len);
+	text_total = g_strdup_printf (ngettext ("There is %u update available",
+						"There are %u updates available", len), len);
 	text_markup = g_strdup_printf ("<big><b>%s</b></big>", text_total);
 	gtk_label_set_label (GTK_LABEL(widget), text_markup);
 	widget = GTK_WIDGET(gtk_builder_get_object (builder, "hbox_header"));
@@ -1348,8 +1348,8 @@ gpk_update_viewer_reconsider_info (void)
 		if (size_total == 0) {
 			g_autofree gchar *text = NULL;
 			/* TRANSLATORS: how many updates are selected in the UI */
-			text = g_strdup_printf (ngettext ("%i update selected",
-							  "%i updates selected",
+			text = g_strdup_printf (ngettext ("%u update selected",
+							  "%u updates selected",
 							  number_total), number_total);
 			gtk_header_bar_set_subtitle (GTK_HEADER_BAR(widget), text);
 		} else {
@@ -1357,8 +1357,8 @@ gpk_update_viewer_reconsider_info (void)
 			g_autofree gchar *text_size = NULL;
 			text_size = g_format_size (size_total);
 			/* TRANSLATORS: how many updates are selected in the UI, and the size of packages to download */
-			text = g_strdup_printf (ngettext ("%i update selected (%s)",
-							  "%i updates selected (%s)",
+			text = g_strdup_printf (ngettext ("%u update selected (%s)",
+							  "%u updates selected (%s)",
 							  number_total), number_total, text_size);
 			gtk_header_bar_set_subtitle (GTK_HEADER_BAR(widget), text);
 		}

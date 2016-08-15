@@ -1,8 +1,6 @@
 ## We require new-style dependency handling.
 AUTOMAKE_OPTIONS = 1.7
 
-NULL =
-
 AM_CPPFLAGS =						\
 	$(GLIB_CFLAGS)					\
 	$(GIO_CFLAGS)					\
@@ -24,15 +22,13 @@ AM_CPPFLAGS =						\
 	-DLOCALEDIR=\""$(localedir)"\"			\
 	-DVERSION="\"$(VERSION)\"" 			\
 	-DGPK_DATA=\"$(pkgdatadir)\"			\
-	-DG_LOG_DOMAIN=\"GnomePackageKit\"		\
-	$(NULL)
+	-DG_LOG_DOMAIN=\"GnomePackageKit\"
 
 bin_PROGRAMS =						\
 	gpk-application					\
 	gpk-prefs					\
 	gpk-update-viewer				\
-	gpk-log						\
-	$(NULL)
+	gpk-log
 
 noinst_LIBRARIES = libgpkshared.a
 libgpkshared_a_SOURCES =				\
@@ -47,8 +43,7 @@ libgpkshared_a_SOURCES =				\
 	gpk-task.c					\
 	gpk-task.h					\
 	gpk-error.c					\
-	gpk-error.h					\
-	$(NULL)
+	gpk-error.h
 
 if WITH_SYSTEMD
 libgpkshared_a_SOURCES +=				\
@@ -65,19 +60,16 @@ shared_LIBS =						\
 	$(SYSTEMD_LIBS)					\
 	$(PACKAGEKIT_LIBS)				\
 	$(GNOME_MENUS_LIBS)				\
-	$(CANBERRA_LIBS)				\
-	$(NULL)
+	$(CANBERRA_LIBS)
 
 gpk_application_SOURCES =				\
 	gpk-application.c				\
 	gpk-application-resources.c			\
-	gpk-application-resources.h			\
-	$(NULL)
+	gpk-application-resources.h
 
 gpk_application_LDADD =					\
 	libgpkshared.a					\
-	$(shared_LIBS)					\
-	$(NULL)
+	$(shared_LIBS)
 
 gpk_prefs_SOURCES =					\
 	gpk-debug.h					\
@@ -90,13 +82,15 @@ gpk_prefs_SOURCES =					\
 	gpk-error.h					\
 	gpk-prefs.c					\
 	gpk-prefs-resources.c				\
-	gpk-prefs-resources.h				\
-	$(NULL)
+	gpk-prefs-resources.h
 
 gpk_prefs_LDADD =					\
 	libgpkshared.a					\
 	$(shared_LIBS)					\
 	-lm
+
+gpk_prefs_CFLAGS =					\
+	$(WARN_CFLAGS)
 
 gpk_update_viewer_SOURCES =				\
 	gpk-update-viewer.c				\
@@ -107,24 +101,26 @@ gpk_update_viewer_SOURCES =				\
 	gpk-cell-renderer-info.c			\
 	gpk-cell-renderer-info.h			\
 	gpk-cell-renderer-restart.c			\
-	gpk-cell-renderer-restart.h			\
-	$(NULL)
+	gpk-cell-renderer-restart.h
 
 gpk_update_viewer_LDADD =				\
 	libgpkshared.a					\
-	$(shared_LIBS)					\
-	$(NULL)
+	$(shared_LIBS)
+
+gpk_update_viewer_CFLAGS =				\
+	$(WARN_CFLAGS)
 
 gpk_log_SOURCES =					\
 	gpk-log.c					\
 	gpk-log-resources.c				\
-	gpk-log-resources.h				\
-	$(NULL)
+	gpk-log-resources.h
 
 gpk_log_LDADD =						\
 	libgpkshared.a					\
-	$(shared_LIBS)					\
-	$(NULL)
+	$(shared_LIBS)
+
+gpk_log_CFLAGS =					\
+	$(WARN_CFLAGS)
 
 if EGG_BUILD_TESTS
 
@@ -147,15 +143,14 @@ gpk_self_test_SOURCES =					\
 	gpk-task.c					\
 	gpk-task.h					\
 	gpk-dialog.c					\
-	gpk-dialog.h					\
-	$(NULL)
+	gpk-dialog.h
 
 gpk_self_test_LDADD =					\
 	$(shared_LIBS)					\
-	$(SELFTEST_LIBS)				\
-	$(NULL)
+	$(SELFTEST_LIBS)
 
-gpk_self_test_CFLAGS = $(AM_CFLAGS)
+gpk_self_test_CFLAGS =					\
+	$(WARN_CFLAGS)
 
 TESTS = gpk-self-test
 endif
@@ -188,8 +183,7 @@ BUILT_SOURCES =						\
 	gpk-prefs-resources.c				\
 	gpk-prefs-resources.h				\
 	gpk-update-viewer-resources.c			\
-	gpk-update-viewer-resources.h			\
-	$(NULL)
+	gpk-update-viewer-resources.h
 
 EXTRA_DIST =						\
 	gpk-application.gresource.xml			\
@@ -217,7 +211,6 @@ CLEANFILES = *~ $(BUILT_SOURCES) $(noinst_LIBRARIES)
 
 MAINTAINERCLEANFILES =					\
 	*~			      			\
-	Makefile.in					\
-	$(NULL)
+	Makefile.in
 
 -include $(top_srcdir)/git.mk

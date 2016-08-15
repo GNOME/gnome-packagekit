@@ -20,48 +20,29 @@ GTK_DOC_CHECK(1.9)
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
-dnl ---------------------------------------------------------------------------
-dnl - Use strict options (default enabled for devs, disabled in releases)
-dnl ---------------------------------------------------------------------------
-
-dnl if .git directory is present, considering we are working in the repository
-if test -d ".git"; then
-	default_strict=yes
-else
-	default_strict=no
-fi
-
-dnl ---------------------------------------------------------------------------
-dnl - Extra verbose warning switches
-dnl ---------------------------------------------------------------------------
-if test "$GCC" = "yes"; then
-	CPPFLAGS="$CPPFLAGS -Wall -Wreturn-type"
-#	CPPFLAGS="$CPPFLAGS -Wextra"
-	CPPFLAGS="$CPPFLAGS -Wdeclaration-after-statement"
-#	CPPFLAGS="$CPPFLAGS -Wmissing-declarations"
-	CPPFLAGS="$CPPFLAGS -Wno-uninitialized"
-#	CPPFLAGS="$CPPFLAGS -Wredundant-decls"
-	CPPFLAGS="$CPPFLAGS -Wshadow"
-	CPPFLAGS="$CPPFLAGS -Wpointer-arith"
-	CPPFLAGS="$CPPFLAGS -Wcast-align"
-	CPPFLAGS="$CPPFLAGS -Wwrite-strings"
-	CPPFLAGS="$CPPFLAGS -Winline"
-	CPPFLAGS="$CPPFLAGS -Wformat-nonliteral"
-	CPPFLAGS="$CPPFLAGS -Wformat-security"
-	CPPFLAGS="$CPPFLAGS -Wswitch-default"
-	CPPFLAGS="$CPPFLAGS -Winit-self"
-	CPPFLAGS="$CPPFLAGS -Wmissing-include-dirs"
-	CPPFLAGS="$CPPFLAGS -Wno-strict-aliasing"
-	CPPFLAGS="$CPPFLAGS -Wundef"
-	CPPFLAGS="$CPPFLAGS -Waggregate-return"
-	CPPFLAGS="$CPPFLAGS -Wmissing-format-attribute"
-fi
-
-dnl ---------------------------------------------------------------------------
-dnl - Debugging switches (uncomment this if you want to use gdb)
-dnl ---------------------------------------------------------------------------
-#CPPFLAGS="$CPPFLAGS -g"
-#CPPFLAGS="$CPPFLAGS -fexceptions"
+GNOME_COMPILE_WARNINGS([maximum],[
+	-Wmissing-declarations
+	-Wcast-align
+	-Wwrite-strings
+	-Wreturn-type
+	-Wformat-nonliteral
+	-Wmissing-format-attribute
+	-Wclobbered
+	-Wempty-body
+	-Wignored-qualifiers
+	-Wsign-compare
+	-Wtype-limits
+	-Wuninitialized
+	-Waggregate-return
+	-Wdeclaration-after-statement
+	-Wshadow
+	-Wno-strict-aliasing
+	-Winline
+	-Wmissing-parameter-type
+	-Woverride-init
+	-Wno-discarded-qualifiers
+	-Wformat-signedness
+])
 
 dnl ---------------------------------------------------------------------------
 dnl - xsltproc

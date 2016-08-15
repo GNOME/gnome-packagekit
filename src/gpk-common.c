@@ -106,7 +106,7 @@ gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 		goto out;
 #endif
 	/* normal size laptop panel */
-	g_debug ("using native mode: %ix%i", width, height);
+	g_debug ("using native mode: %ux%u", width, height);
 	gtk_window_set_default_size (window, width, height);
 	small_form_factor_mode = FALSE;
 out:
@@ -271,7 +271,7 @@ gpk_check_privileged_user (const gchar *application_name, gboolean show_ui)
 
 		/* user did not agree to run insecure */
 		if (result != GTK_RESPONSE_OK) {
-			g_warning ("uid=%i so closing", uid);
+			g_warning ("uid=%u so closing", uid);
 			return FALSE;
 		}
 	}

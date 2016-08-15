@@ -489,7 +489,7 @@ gpk_log_refilter (void)
 	else
 		filter = NULL;
 
-	g_debug ("len=%i", transactions->len);
+	g_debug ("len=%u", transactions->len);
 
 	/* mark the items as not used */
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_simple"));
@@ -650,7 +650,7 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 
 	/* set the parent window if it is specified */
 	if (xid != 0) {
-		g_debug ("Setting xid %i", xid);
+		g_debug ("Setting xid %u", xid);
 		gpk_window_set_parent_xid (GTK_WINDOW (widget), xid);
 	}
 

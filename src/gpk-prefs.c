@@ -535,7 +535,7 @@ gpm_prefs_commandline_cb (GApplication *application,
 
 	/* set the parent window if it is specified */
 	if (xid != 0) {
-		g_debug ("Setting xid %i", xid);
+		g_debug ("Setting xid %u", xid);
 		gpk_window_set_parent_xid (window, xid);
 	}
 	return TRUE;
