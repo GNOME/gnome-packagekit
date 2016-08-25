@@ -21,6 +21,8 @@
 
 #include "config.h"
 
+#pragma GCC diagnostic ignored "-Wswitch-enum"
+
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <packagekit-glib2/packagekit.h>

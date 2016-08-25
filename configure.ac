@@ -20,7 +20,7 @@ GTK_DOC_CHECK(1.9)
 
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 
-GNOME_COMPILE_WARNINGS([maximum],[
+WARN_CFLAGS_EXTRA="
 	-Wmissing-declarations
 	-Wcast-align
 	-Wwrite-strings
@@ -41,8 +41,8 @@ GNOME_COMPILE_WARNINGS([maximum],[
 	-Wmissing-parameter-type
 	-Woverride-init
 	-Wno-discarded-qualifiers
-	-Wformat-signedness
-])
+	-Wformat-signedness"
+AX_COMPILER_FLAGS([WARN_CFLAGS],[WARN_LDFLAGS], [yes], [$WARN_CFLAGS_EXTRA])
 
 dnl ---------------------------------------------------------------------------
 dnl - xsltproc
