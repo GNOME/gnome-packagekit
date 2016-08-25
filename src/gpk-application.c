@@ -530,8 +530,8 @@ gpk_application_get_files_cb (PkClient *client, GAsyncResult *res, GpkApplicatio
 	/* title */
 	split = pk_package_id_split (package_id_selected);
 	/* TRANSLATORS: title: how many files are installed by the application */
-	title = g_strdup_printf (ngettext ("%i file installed by %s",
-					   "%i files installed by %s",
+	title = g_strdup_printf (ngettext ("%u file installed by %s",
+					   "%u files installed by %s",
 					   array_sort->len), array_sort->len, split[PK_PACKAGE_ID_NAME]);
 
 	window = GTK_WINDOW (gtk_builder_get_object (priv->builder, "window_manager"));
@@ -797,8 +797,8 @@ gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, GpkApplica
 	package_ids = pk_package_ids_from_id (package_id_selected);
 	name = gpk_dialog_package_id_name_join_locale (package_ids);
 	/* TRANSLATORS: title: how many packages require this package */
-	title = g_strdup_printf (ngettext ("%i package requires %s",
-					   "%i packages require %s",
+	title = g_strdup_printf (ngettext ("%u package requires %s",
+					   "%u packages require %s",
 					   array->len), array->len, name);
 
 	/* TRANSLATORS: show a array of packages for the package */
@@ -904,8 +904,8 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	package_ids = pk_package_ids_from_id (package_id_selected);
 	name = gpk_dialog_package_id_name_join_locale (package_ids);
 	/* TRANSLATORS: title: show the number of other packages we depend on */
-	title = g_strdup_printf (ngettext ("%i additional package is required for %s",
-					   "%i additional packages are required for %s",
+	title = g_strdup_printf (ngettext ("%u additional package is required for %s",
+					   "%u additional packages are required for %s",
 					   array->len), array->len, name);
 
 	/* TRANSLATORS: message: show the array of dependent packages for this package */
@@ -1831,7 +1831,7 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	/* get data */
 	array = pk_results_get_details_array (results);
 	if (array->len != 1) {
-		g_warning ("not one entry %i", array->len);
+		g_warning ("not one entry %u", array->len);
 		return;
 	}
 
@@ -1998,7 +1998,7 @@ gpk_application_notify_network_state_cb (PkControl *_control, GParamSpec *pspec,
 	g_object_get (priv->control,
 		      "network-state", &state,
 		      NULL);
-	g_debug ("state=%i", state);
+	g_debug ("state=%u", state);
 }
 
 static void
@@ -2028,7 +2028,7 @@ gpk_application_menu_search_by_name (GtkMenuItem *item, GpkApplicationPrivate *p
 
 	/* change type */
 	priv->search_type = GPK_SEARCH_NAME;
-	g_debug ("set search type=%i", priv->search_type);
+	g_debug ("set search type=%u", priv->search_type);
 
 	/* save default to GSettings */
 	g_settings_set_enum (priv->settings,
@@ -2051,7 +2051,7 @@ gpk_application_menu_search_by_description (GtkMenuItem *item, GpkApplicationPri
 
 	/* set type */
 	priv->search_type = GPK_SEARCH_DETAILS;
-	g_debug ("set search type=%i", priv->search_type);
+	g_debug ("set search type=%u", priv->search_type);
 
 	/* save default to GSettings */
 	g_settings_set_enum (priv->settings,
@@ -2074,7 +2074,7 @@ gpk_application_menu_search_by_file (GtkMenuItem *item, GpkApplicationPrivate *p
 
 	/* set type */
 	priv->search_type = GPK_SEARCH_FILE;
-	g_debug ("set search type=%i", priv->search_type);
+	g_debug ("set search type=%u", priv->search_type);
 
 	/* save default to GSettings */
 	g_settings_set_enum (priv->settings,
@@ -2100,7 +2100,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 	if (event->button != 1)
 		return;
 
-	g_debug ("icon_pos=%i", icon_pos);
+	g_debug ("icon_pos=%u", icon_pos);
 
 	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_SEARCH_NAME)) {
 		/* TRANSLATORS: context menu item for the search type icon */
@@ -2617,7 +2617,7 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 		if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_SEARCH_DETAILS)) {
 			gpk_application_menu_search_by_description (NULL, priv);
 		} else {
-			g_warning ("cannot use mode %i as not capable, using name", priv->search_type);
+			g_warning ("cannot use mode %u as not capable, using name", priv->search_type);
 			gpk_application_menu_search_by_name (NULL, priv);
 		}
 
@@ -2628,13 +2628,13 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 		if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_SEARCH_FILE)) {
 			gpk_application_menu_search_by_file (NULL, priv);
 		} else {
-			g_warning ("cannot use mode %i as not capable, using name", priv->search_type);
+			g_warning ("cannot use mode %u as not capable, using name", priv->search_type);
 			gpk_application_menu_search_by_name (NULL, priv);
 		}
 
 	/* mode not recognized */
 	} else {
-		g_warning ("cannot recognize mode %i, using name", priv->search_type);
+		g_warning ("cannot recognize mode %u, using name", priv->search_type);
 		gpk_application_menu_search_by_name (NULL, priv);
 	}
 

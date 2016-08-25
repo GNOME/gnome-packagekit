@@ -71,6 +71,9 @@ gpk_application_LDADD =					\
 	libgpkshared.a					\
 	$(shared_LIBS)
 
+gpk_application_CFLAGS =				\
+	$(WARN_CFLAGS)
+
 gpk_prefs_SOURCES =					\
 	gpk-debug.h					\
 	gpk-debug.c					\
