@@ -31,7 +31,6 @@ G_BEGIN_DECLS
 #define GPK_TYPE_CELL_RENDERER_RESTART (gpk_cell_renderer_restart_get_type())
 G_DECLARE_FINAL_TYPE (GpkCellRendererRestart, gpk_cell_renderer_restart, GPK, CELL_RENDERER_RESTART, GtkCellRendererPixbuf)
 
-GType		 gpk_cell_renderer_restart_get_type	(void);
 GtkCellRenderer	*gpk_cell_renderer_restart_new		(void);
 
 G_END_DECLS

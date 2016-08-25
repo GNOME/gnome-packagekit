@@ -30,7 +30,6 @@ G_BEGIN_DECLS
 #define GPK_TYPE_CELL_RENDERER_SIZE (gpk_cell_renderer_size_get_type())
 G_DECLARE_FINAL_TYPE (GpkCellRendererSize, gpk_cell_renderer_size, GPK, CELL_RENDERER_SIZE, GtkCellRendererText)
 
-GType		 gpk_cell_renderer_size_get_type	(void);
 GtkCellRenderer	*gpk_cell_renderer_size_new		(void);
 
 G_END_DECLS

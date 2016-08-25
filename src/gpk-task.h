@@ -51,7 +51,6 @@ struct _GpkTaskClass
 };
 
 GQuark		 gpk_task_error_quark		(void);
-GType		 gpk_task_get_type		(void);
 GpkTask		*gpk_task_new			(void);
 gboolean	 gpk_task_set_parent_window	(GpkTask	*task,
 						 GtkWindow	*window);

@@ -31,7 +31,6 @@ G_BEGIN_DECLS
 #define GPK_TYPE_CELL_RENDERER_INFO (gpk_cell_renderer_info_get_type())
 G_DECLARE_FINAL_TYPE (GpkCellRendererInfo, gpk_cell_renderer_info, GPK, CELL_RENDERER_INFO, GtkCellRendererPixbuf)
 
-GType		 gpk_cell_renderer_info_get_type	(void);
 GtkCellRenderer	*gpk_cell_renderer_info_new		(void);
 
 G_END_DECLS
