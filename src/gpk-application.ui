@@ -409,4 +409,47 @@
       </object>
     </child>
   </object>
+
+  <menu id="appmenu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Check for Updates</attribute>
+        <attribute name="action">app.updates</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Package Sources</attribute>
+        <attribute name="action">app.sources</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Refresh Package Lists</attribute>
+        <attribute name="action">app.refresh</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Package Log</attribute>
+        <attribute name="action">app.log</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Only Newest Versions</attribute>
+        <attribute name="action">app.filter-newest</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Only Native Packages</attribute>
+        <attribute name="action">app.filter-arch</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">About</attribute>
+        <attribute name="action">app.about</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Quit</attribute>
+        <attribute name="action">app.quit</attribute>
+        <attribute name="accel">&lt;Primary&gt;q</attribute>
+      </item>
+    </section>
+  </menu>
+
 </interface>
