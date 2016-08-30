@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-26 13:53+0200\n"
-"PO-Revision-Date: 2016-08-26 13:55+0200\n"
+"POT-Creation-Date: 2016-08-30 13:28+0200\n"
+"PO-Revision-Date: 2016-08-30 13:29+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -148,13 +148,48 @@ msgstr ""
 "Zmiany nie są natychmiast uwzględniane. Ten przycisk zastosowuje wszystkie "
 "zmiany"
 
+#: ../src/gpk-application.ui.h:15
+msgid "Check for Updates"
+msgstr "Wyszukaj aktualizacje"
+
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../src/gpk-application.ui.h:16 ../data/gpk-prefs.desktop.in.h:1
+#: ../src/gpk-prefs.ui.h:4 ../src/gpk-prefs.c:526
+msgid "Package Sources"
+msgstr "Źródła pakietów"
+
+#: ../src/gpk-application.ui.h:17
+msgid "Refresh Package Lists"
+msgstr "Odśwież listy pakietów"
+
+#: ../src/gpk-application.ui.h:18 ../data/gpk-log.desktop.in.h:1
+#: ../src/gpk-log.ui.h:2
+msgid "Package Log"
+msgstr "Dziennik pakietów"
+
+#: ../src/gpk-application.ui.h:19
+msgid "Only Newest Versions"
+msgstr "Tylko najnowsze wersje"
+
+#: ../src/gpk-application.ui.h:20
+msgid "Only Native Packages"
+msgstr "Tylko natywne pakiety"
+
+#: ../src/gpk-application.ui.h:21
+msgid "About"
+msgstr "O programie"
+
+#: ../src/gpk-application.ui.h:22
+msgid "_Quit"
+msgstr "Za_kończ"
+
 #: ../src/gpk-client.ui.h:1
 msgid "Install Package"
 msgstr "Zainstaluj pakiet"
 
 #: ../src/gpk-error.ui.h:1
 msgid "More details"
-msgstr "Więcej szczegółów"
+msgstr "Więcej informacji"
 
 #: ../src/gpk-error.ui.h:2
 msgid "_Force install"
@@ -181,10 +216,6 @@ msgstr "Instalacja pakietów"
 msgid "Install selected packages on the system"
 msgstr "Instalacja wybranych pakietów w komputerze"
 
-#: ../data/gpk-log.desktop.in.h:1 ../src/gpk-log.ui.h:2
-msgid "Package Log"
-msgstr "Dziennik pakietów"
-
 #: ../data/gpk-log.desktop.in.h:2
 msgid "View past package management tasks"
 msgstr "Wyświetlanie przeszłych zadań zarządzania pakietami"
@@ -192,12 +223,6 @@ msgstr "Wyświetlanie przeszłych zadań zarządzania pakietami"
 #: ../src/gpk-log.ui.h:1
 msgid "Filter"
 msgstr "Filtr"
-
-#. TRANSLATORS: program name, an application to add and remove software repositories
-#: ../data/gpk-prefs.desktop.in.h:1 ../src/gpk-prefs.ui.h:4
-#: ../src/gpk-prefs.c:526
-msgid "Package Sources"
-msgstr "Źródła pakietów"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Enable or disable package repositories"
@@ -1974,12 +1999,12 @@ msgstr "Pobrano zależności"
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1063
 msgid "Got update detail"
-msgstr "Pobrano szczegóły o aktualizacji"
+msgstr "Pobrano informacje o aktualizacji"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1068
 msgid "Got details"
-msgstr "Pobrano szczegóły"
+msgstr "Pobrano informacje"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1072
@@ -1994,7 +2019,7 @@ msgstr "Pobrano aktualizacje"
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1080
 msgid "Searched for package details"
-msgstr "Odnaleziono szczegóły pakietu"
+msgstr "Odnaleziono informacje o pakiecie"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: ../src/gpk-enum.c:1084
@@ -2384,7 +2409,7 @@ msgstr "Pobieranie listy źródeł się nie powiodło"
 #: ../src/gpk-prefs.c:412 ../src/gpk-update-viewer.c:2705
 msgid "Exiting as backend details could not be retrieved"
 msgstr ""
-"Zakończono, ponieważ nie można pobrać szczegółów modułu przetwarzającego"
+"Zakończono, ponieważ nie można pobrać informacji o module przetwarzającym"
 
 #: ../src/gpk-prefs.c:432
 msgid "Getting package source list not supported by backend"
@@ -2908,12 +2933,12 @@ msgstr "Brak dostępnych informacji o aktualizacji."
 #: ../src/gpk-update-viewer.c:1862 ../src/gpk-update-viewer.c:1948
 #: ../src/gpk-update-viewer.c:1967
 msgid "Could not get update details"
-msgstr "Nie można pobrać szczegółów o aktualizacji"
+msgstr "Nie można pobrać informacji o aktualizacji"
 
 #. TRANSLATORS: PackageKit did not send any results for the query...
 #: ../src/gpk-update-viewer.c:1881
 msgid "Could not get package details"
-msgstr "Nie można pobrać szczegółów pakietu"
+msgstr "Nie można pobrać informacji o pakiecie"
 
 #: ../src/gpk-update-viewer.c:1881 ../src/gpk-update-viewer.c:1967
 msgid "No results were returned."
@@ -2947,7 +2972,7 @@ msgstr "Nie można pobrać aktualizacji"
 #. TRANSLATORS: this is the header
 #: ../src/gpk-update-viewer.c:2412
 msgid "Checking for updates…"
-msgstr "Sprawdzanie aktualizacji…"
+msgstr "Wyszukiwanie aktualizacji…"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: ../src/gpk-update-viewer.c:2652
