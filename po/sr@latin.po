@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-08-15 10:25+0000\n"
-"PO-Revision-Date: 2016-08-24 22:23+0200\n"
+"POT-Creation-Date: 2016-08-29 09:07+0000\n"
+"PO-Revision-Date: 2016-09-01 17:23+0200\n"
 "Last-Translator: Miroslav Nikolić <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: srpski <gnome-sr@googlegroups.org>\n"
 "Language: sr\n"
@@ -120,12 +120,10 @@ msgid "Files"
 msgstr "Datoteke"
 
 #: ../src/gpk-application.ui.h:8
-#| msgid "Lock required"
 msgid "Required"
 msgstr "Potreban"
 
 #: ../src/gpk-application.ui.h:9
-#| msgid "Dependent Packages"
 msgid "Dependent"
 msgstr "Zavisan"
 
@@ -144,6 +142,41 @@ msgstr "Primeni izmene"
 #: ../src/gpk-application.ui.h:14
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "Izmene se ne primenjuju odmah, već klikom na ovo dugme"
+
+#: ../src/gpk-application.ui.h:15
+msgid "Check for Updates"
+msgstr "Potraži ažuriranja"
+
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../src/gpk-application.ui.h:16 ../data/gpk-prefs.desktop.in.h:1
+#: ../src/gpk-prefs.ui.h:4 ../src/gpk-prefs.c:526
+msgid "Package Sources"
+msgstr "Izvori paketa"
+
+#: ../src/gpk-application.ui.h:17
+msgid "Refresh Package Lists"
+msgstr "Osveži spisak paketa"
+
+#: ../src/gpk-application.ui.h:18 ../data/gpk-log.desktop.in.h:1
+#: ../src/gpk-log.ui.h:2
+msgid "Package Log"
+msgstr "Dnevnik paketa"
+
+#: ../src/gpk-application.ui.h:19
+msgid "Only Newest Versions"
+msgstr "Samo nova izdanja"
+
+#: ../src/gpk-application.ui.h:20
+msgid "Only Native Packages"
+msgstr "Samo izvorni paketi"
+
+#: ../src/gpk-application.ui.h:21
+msgid "About"
+msgstr "O programu"
+
+#: ../src/gpk-application.ui.h:22
+msgid "_Quit"
+msgstr "_Izađi"
 
 #: ../src/gpk-client.ui.h:1
 msgid "Install Package"
@@ -178,10 +211,6 @@ msgstr "Instalacija paketa"
 msgid "Install selected packages on the system"
 msgstr "Instalirajte izabrane pakete na sistemu"
 
-#: ../data/gpk-log.desktop.in.h:1 ../src/gpk-log.ui.h:2
-msgid "Package Log"
-msgstr "Dnevnik paketa"
-
 #: ../data/gpk-log.desktop.in.h:2
 msgid "View past package management tasks"
 msgstr "Pregledajte prethodne poslove upravnika paketa"
@@ -189,12 +218,6 @@ msgstr "Pregledajte prethodne poslove upravnika paketa"
 #: ../src/gpk-log.ui.h:1
 msgid "Filter"
 msgstr "Filter"
-
-#. TRANSLATORS: program name, an application to add and remove software repositories
-#: ../data/gpk-prefs.desktop.in.h:1 ../src/gpk-prefs.ui.h:4
-#: ../src/gpk-prefs.c:526
-msgid "Package Sources"
-msgstr "Izvori paketa"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Enable or disable package repositories"
@@ -216,22 +239,18 @@ msgid "Do you trust the source of the packages?"
 msgstr "Da li verujete izvoru ovog paketa?"
 
 #: ../src/gpk-signature.ui.h:2
-#| msgid "Repository name:"
 msgid "Repository name"
 msgstr "Naziv skladišta"
 
 #: ../src/gpk-signature.ui.h:3
-#| msgid "Signature URL:"
 msgid "Signature URL"
 msgstr "Adresa potpisa"
 
 #: ../src/gpk-signature.ui.h:4
-#| msgid "Signature user identifier:"
 msgid "Signature user identifier"
 msgstr "Odrednik potpisa korisnika"
 
 #: ../src/gpk-signature.ui.h:5
-#| msgid "Signature identifier:"
 msgid "Signature identifier"
 msgstr "Odrednik potpisa"
 
@@ -457,12 +476,14 @@ msgstr "Na čekanju"
 #. TRANSLATORS: title: how many files are installed by the application
 #: ../src/gpk-application.c:533
 #, c-format
-msgid "%i file installed by %s"
-msgid_plural "%i files installed by %s"
-msgstr[0] "%i datoteku je instalirao %s"
-msgstr[1] "%i datoteke je instalirao %s"
-msgstr[2] "%i datoteka je instalirao %s"
-msgstr[3] "%i datoteku je instalirao %s"
+#| msgid "%i file installed by %s"
+#| msgid_plural "%i files installed by %s"
+msgid "%u file installed by %s"
+msgid_plural "%u files installed by %s"
+msgstr[0] "„%s“ je instalirao %u datoteku"
+msgstr[1] "„%s“ je instalirao %u datoteke"
+msgstr[2] "„%s“ je instalirao %u datoteka"
+msgstr[3] "„%s“ je instalirao jednu datoteku"
 
 #. TRANSLATORS: no packages returned
 #: ../src/gpk-application.c:791 ../src/gpk-application.c:898
@@ -477,12 +498,14 @@ msgstr "Nema drugih paketa koji zahtevaju ovaj paket"
 #. TRANSLATORS: title: how many packages require this package
 #: ../src/gpk-application.c:800
 #, c-format
-msgid "%i package requires %s"
-msgid_plural "%i packages require %s"
-msgstr[0] "%i paket zahteva „%s“"
-msgstr[1] "%i paketa zahtevaju „%s“"
-msgstr[2] "%i paketa zahteva „%s“"
-msgstr[3] "%i paket zahteva „%s“"
+#| msgid "%i package requires %s"
+#| msgid_plural "%i packages require %s"
+msgid "%u package requires %s"
+msgid_plural "%u packages require %s"
+msgstr[0] "„%s“ zahteva %u paket"
+msgstr[1] "„%s“ zahteva %u paketa"
+msgstr[2] "„%s“ zahteva %u paketa"
+msgstr[3] "„%s“ zahteva jedan paket"
 
 #. TRANSLATORS: show a array of packages for the package
 #: ../src/gpk-application.c:805
@@ -502,12 +525,14 @@ msgstr "Ovaj paket ne zavisi ni od jednog drugog paketa"
 #. TRANSLATORS: title: show the number of other packages we depend on
 #: ../src/gpk-application.c:907
 #, c-format
-msgid "%i additional package is required for %s"
-msgid_plural "%i additional packages are required for %s"
-msgstr[0] "%i dodatni paket je potreban za „%s“"
-msgstr[1] "%i dodatna paketa su potrebna za „%s“"
-msgstr[2] "%i dodatnih paketa je potrebno za „%s“"
-msgstr[3] "%i dodatni paket je potreban za „%s“"
+#| msgid "%i additional package is required for %s"
+#| msgid_plural "%i additional packages are required for %s"
+msgid "%u additional package is required for %s"
+msgid_plural "%u additional packages are required for %s"
+msgstr[0] "%u dodatni paket je potreban za „%s“"
+msgstr[1] "%u dodatna paketa su potrebna za „%s“"
+msgstr[2] "%u dodatnih paketa je potrebno za „%s“"
+msgstr[3] "Jedan dodatni paket je potreban za „%s“"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #: ../src/gpk-application.c:912
@@ -2704,8 +2729,6 @@ msgstr "Trenutno nema dostupnih ažuriranja paketa za vaš računar."
 
 #: ../src/gpk-update-viewer.c:1336
 #, c-format
-#| msgid "There is %i update available"
-#| msgid_plural "There are %i updates available"
 msgid "There is %u update available"
 msgid_plural "There are %u updates available"
 msgstr[0] "Dostupno je %u ažuriranje"
@@ -2716,8 +2739,6 @@ msgstr[3] "Dostupno je jedno ažuriranje"
 #. TRANSLATORS: how many updates are selected in the UI
 #: ../src/gpk-update-viewer.c:1351
 #, c-format
-#| msgid "%i update selected"
-#| msgid_plural "%i updates selected"
 msgid "%u update selected"
 msgid_plural "%u updates selected"
 msgstr[0] "Izabrano je %u ažuriranje"
@@ -2728,8 +2749,6 @@ msgstr[3] "Izabrano je jedno ažuriranje"
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
 #: ../src/gpk-update-viewer.c:1360
 #, c-format
-#| msgid "%i update selected (%s)"
-#| msgid_plural "%i updates selected (%s)"
 msgid "%u update selected (%s)"
 msgid_plural "%u updates selected (%s)"
 msgstr[0] "Izabrano je %u ažuriranje (%s)"
@@ -2955,24 +2974,6 @@ msgstr "Osvežite pakete"
 
 #~ msgid "Required Packages"
 #~ msgstr "Potrebni paketi"
-
-#~ msgid "Check for Updates"
-#~ msgstr "Potraži ažuriranja"
-
-#~ msgid "Refresh Package Lists"
-#~ msgstr "Osveži spisak paketa"
-
-#~ msgid "Only Newest Versions"
-#~ msgstr "Samo nova izdanja"
-
-#~ msgid "Only Native Packages"
-#~ msgstr "Samo izvorni paketi"
-
-#~ msgid "About"
-#~ msgstr "O programu"
-
-#~ msgid "_Quit"
-#~ msgstr "_Izađi"
 
 #~ msgid "Software signature is required"
 #~ msgstr "Potpis programa je obavezan"
