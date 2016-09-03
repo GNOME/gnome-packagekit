@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-08-15 10:25+0000\n"
-"PO-Revision-Date: 2016-08-21 13:02+0300\n"
+"POT-Creation-Date: 2016-08-29 09:07+0000\n"
+"PO-Revision-Date: 2016-09-03 12:56+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -129,12 +129,10 @@ msgid "Files"
 msgstr "Tiedostot"
 
 #: ../src/gpk-application.ui.h:8
-#| msgid "Lock required"
 msgid "Required"
 msgstr "Vaadittu"
 
 #: ../src/gpk-application.ui.h:9
-#| msgid "Dependent Packages"
 msgid "Dependent"
 msgstr "Riippuva"
 
@@ -153,6 +151,41 @@ msgstr "Toteuta muutokset"
 #: ../src/gpk-application.ui.h:14
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "Muutoksia ei toteuteta heti, tämä painike toteuttaa kaikki muutokset"
+
+#: ../src/gpk-application.ui.h:15
+msgid "Check for Updates"
+msgstr "Tarkista päivitykset"
+
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../src/gpk-application.ui.h:16 ../data/gpk-prefs.desktop.in.h:1
+#: ../src/gpk-prefs.ui.h:4 ../src/gpk-prefs.c:526
+msgid "Package Sources"
+msgstr "Pakettilähteet"
+
+#: ../src/gpk-application.ui.h:17
+msgid "Refresh Package Lists"
+msgstr "Päivitä pakettiluettelot"
+
+#: ../src/gpk-application.ui.h:18 ../data/gpk-log.desktop.in.h:1
+#: ../src/gpk-log.ui.h:2
+msgid "Package Log"
+msgstr "Pakettiloki"
+
+#: ../src/gpk-application.ui.h:19
+msgid "Only Newest Versions"
+msgstr "Vain uusimmat versiot"
+
+#: ../src/gpk-application.ui.h:20
+msgid "Only Native Packages"
+msgstr "Vain natiivit paketit"
+
+#: ../src/gpk-application.ui.h:21
+msgid "About"
+msgstr "Tietoja"
+
+#: ../src/gpk-application.ui.h:22
+msgid "_Quit"
+msgstr "_Lopeta"
 
 #: ../src/gpk-client.ui.h:1
 msgid "Install Package"
@@ -187,10 +220,6 @@ msgstr "Paketin asennin"
 msgid "Install selected packages on the system"
 msgstr "Asenna valitut paketit järjestelmään"
 
-#: ../data/gpk-log.desktop.in.h:1 ../src/gpk-log.ui.h:2
-msgid "Package Log"
-msgstr "Pakettiloki"
-
 #: ../data/gpk-log.desktop.in.h:2
 msgid "View past package management tasks"
 msgstr "Katso aiemmat paketinhallintatehtävät"
@@ -198,12 +227,6 @@ msgstr "Katso aiemmat paketinhallintatehtävät"
 #: ../src/gpk-log.ui.h:1
 msgid "Filter"
 msgstr "Suodata"
-
-#. TRANSLATORS: program name, an application to add and remove software repositories
-#: ../data/gpk-prefs.desktop.in.h:1 ../src/gpk-prefs.ui.h:4
-#: ../src/gpk-prefs.c:526
-msgid "Package Sources"
-msgstr "Pakettilähteet"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Enable or disable package repositories"
@@ -225,22 +248,18 @@ msgid "Do you trust the source of the packages?"
 msgstr "Luotatko pakettien lähteeseen?"
 
 #: ../src/gpk-signature.ui.h:2
-#| msgid "Repository name:"
 msgid "Repository name"
 msgstr "Asennuslähteen nimi:"
 
 #: ../src/gpk-signature.ui.h:3
-#| msgid "Signature URL:"
 msgid "Signature URL"
 msgstr "Allekirjoituksen URL"
 
 #: ../src/gpk-signature.ui.h:4
-#| msgid "Signature user identifier:"
 msgid "Signature user identifier"
 msgstr "Allekirjoituksen käyttäjätunniste"
 
 #: ../src/gpk-signature.ui.h:5
-#| msgid "Signature identifier:"
 msgid "Signature identifier"
 msgstr "Allekirjoituksen tunniste"
 
@@ -466,10 +485,12 @@ msgstr "Odottaa"
 #. TRANSLATORS: title: how many files are installed by the application
 #: ../src/gpk-application.c:533
 #, c-format
-msgid "%i file installed by %s"
-msgid_plural "%i files installed by %s"
-msgstr[0] "%i tiedosto asennettu paketista %s"
-msgstr[1] "%i tiedostoa asennettu paketista %s"
+#| msgid "%i file installed by %s"
+#| msgid_plural "%i files installed by %s"
+msgid "%u file installed by %s"
+msgid_plural "%u files installed by %s"
+msgstr[0] "%u tiedosto asennettu paketista %s"
+msgstr[1] "%u tiedostoa asennettu paketista %s"
 
 #. TRANSLATORS: no packages returned
 #: ../src/gpk-application.c:791 ../src/gpk-application.c:898
@@ -484,10 +505,12 @@ msgstr "Muut paketit eivät vaadi tätä pakettia"
 #. TRANSLATORS: title: how many packages require this package
 #: ../src/gpk-application.c:800
 #, c-format
-msgid "%i package requires %s"
-msgid_plural "%i packages require %s"
-msgstr[0] "%i paketti vaatii paketin %s"
-msgstr[1] "%i pakettia vaatii paketin %s"
+#| msgid "%i package requires %s"
+#| msgid_plural "%i packages require %s"
+msgid "%u package requires %s"
+msgid_plural "%u packages require %s"
+msgstr[0] "%u paketti vaatii paketin %s"
+msgstr[1] "%u pakettia vaatii paketin %s"
 
 #. TRANSLATORS: show a array of packages for the package
 #: ../src/gpk-application.c:805
@@ -505,10 +528,12 @@ msgstr "Tämä paketti ei ole riippuvainen mistään toisesta paketista"
 #. TRANSLATORS: title: show the number of other packages we depend on
 #: ../src/gpk-application.c:907
 #, c-format
-msgid "%i additional package is required for %s"
-msgid_plural "%i additional packages are required for %s"
-msgstr[0] "%2$s vaatii %1$i ylimääräisen paketin"
-msgstr[1] "%2$s vaatii %1$i ylimääräistä pakettia"
+#| msgid "%i additional package is required for %s"
+#| msgid_plural "%i additional packages are required for %s"
+msgid "%u additional package is required for %s"
+msgid_plural "%u additional packages are required for %s"
+msgstr[0] "%u ylimääräinen paketti vaaditaan %s toimesta"
+msgstr[1] "%u ylimääräistä pakettia vaaditaan %s toimesta"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #: ../src/gpk-application.c:912
@@ -2682,8 +2707,6 @@ msgstr ""
 
 #: ../src/gpk-update-viewer.c:1336
 #, c-format
-#| msgid "There is %i update available"
-#| msgid_plural "There are %i updates available"
 msgid "There is %u update available"
 msgid_plural "There are %u updates available"
 msgstr[0] "%u päivitys saatavilla"
@@ -2692,8 +2715,6 @@ msgstr[1] "%u päivitystä saatavilla"
 #. TRANSLATORS: how many updates are selected in the UI
 #: ../src/gpk-update-viewer.c:1351
 #, c-format
-#| msgid "%i update selected"
-#| msgid_plural "%i updates selected"
 msgid "%u update selected"
 msgid_plural "%u updates selected"
 msgstr[0] "%u päivitys valittu"
@@ -2702,8 +2723,6 @@ msgstr[1] "%u päivitystä valittu"
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
 #: ../src/gpk-update-viewer.c:1360
 #, c-format
-#| msgid "%i update selected (%s)"
-#| msgid_plural "%i updates selected (%s)"
 msgid "%u update selected (%s)"
 msgid_plural "%u updates selected (%s)"
 msgstr[0] "%u päivitys valittu (%s)"
@@ -2922,24 +2941,6 @@ msgstr "Päivitä paketit"
 
 #~ msgid "Required Packages"
 #~ msgstr "Vaaditut paketit"
-
-#~ msgid "Check for Updates"
-#~ msgstr "Tarkista päivitykset"
-
-#~ msgid "Refresh Package Lists"
-#~ msgstr "Päivitä pakettiluettelot"
-
-#~ msgid "Only Newest Versions"
-#~ msgstr "Vain uusimmat versiot"
-
-#~ msgid "Only Native Packages"
-#~ msgstr "Vain natiivit paketit"
-
-#~ msgid "About"
-#~ msgstr "Tietoja"
-
-#~ msgid "_Quit"
-#~ msgstr "_Lopeta"
 
 #~ msgid "Software signature is required"
 #~ msgstr "Ohjelmistoallekirjoitus vaaditaan"
