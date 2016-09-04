@@ -15,8 +15,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-08-15 10:25+0000\n"
-"PO-Revision-Date: 2016-08-21 23:39+0200\n"
+"POT-Creation-Date: 2016-08-29 09:07+0000\n"
+"PO-Revision-Date: 2016-09-04 10:50+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -125,12 +125,10 @@ msgid "Files"
 msgstr "Soubory"
 
 #: ../src/gpk-application.ui.h:8
-#| msgid "Lock required"
 msgid "Required"
 msgstr "Vyžaduje"
 
 #: ../src/gpk-application.ui.h:9
-#| msgid "Dependent Packages"
 msgid "Dependent"
 msgstr "Závislosti"
 
@@ -150,6 +148,41 @@ msgstr "Provést změny"
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr ""
 "Změny nejsou provedeny ihned, toto tlačítko provede všechny změny naráz"
+
+#: ../src/gpk-application.ui.h:15
+msgid "Check for Updates"
+msgstr "Zkontrolovat aktualizace"
+
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../src/gpk-application.ui.h:16 ../data/gpk-prefs.desktop.in.h:1
+#: ../src/gpk-prefs.ui.h:4 ../src/gpk-prefs.c:526
+msgid "Package Sources"
+msgstr "Zdroje balíčků"
+
+#: ../src/gpk-application.ui.h:17
+msgid "Refresh Package Lists"
+msgstr "Aktualizovat seznam balíčků"
+
+#: ../src/gpk-application.ui.h:18 ../data/gpk-log.desktop.in.h:1
+#: ../src/gpk-log.ui.h:2
+msgid "Package Log"
+msgstr "Záznamy správy balíčků"
+
+#: ../src/gpk-application.ui.h:19
+msgid "Only Newest Versions"
+msgstr "Pouze nejnovější verze"
+
+#: ../src/gpk-application.ui.h:20
+msgid "Only Native Packages"
+msgstr "Pouze nativní balíčky"
+
+#: ../src/gpk-application.ui.h:21
+msgid "About"
+msgstr "O aplikaci"
+
+#: ../src/gpk-application.ui.h:22
+msgid "_Quit"
+msgstr "U_končit"
 
 #: ../src/gpk-client.ui.h:1
 msgid "Install Package"
@@ -184,10 +217,6 @@ msgstr "Instalace balíčků"
 msgid "Install selected packages on the system"
 msgstr "Instalujte vybraný software do tohoto systému"
 
-#: ../data/gpk-log.desktop.in.h:1 ../src/gpk-log.ui.h:2
-msgid "Package Log"
-msgstr "Záznamy správy balíčků"
-
 #: ../data/gpk-log.desktop.in.h:2
 msgid "View past package management tasks"
 msgstr "Zobrazte si poslední úkoly správy balíčků"
@@ -195,12 +224,6 @@ msgstr "Zobrazte si poslední úkoly správy balíčků"
 #: ../src/gpk-log.ui.h:1
 msgid "Filter"
 msgstr "Filtr"
-
-#. TRANSLATORS: program name, an application to add and remove software repositories
-#: ../data/gpk-prefs.desktop.in.h:1 ../src/gpk-prefs.ui.h:4
-#: ../src/gpk-prefs.c:526
-msgid "Package Sources"
-msgstr "Zdroje balíčků"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Enable or disable package repositories"
@@ -462,11 +485,11 @@ msgstr "Čekající"
 #. TRANSLATORS: title: how many files are installed by the application
 #: ../src/gpk-application.c:533
 #, c-format
-msgid "%i file installed by %s"
-msgid_plural "%i files installed by %s"
-msgstr[0] "%i soubor nainstalován přes %s"
-msgstr[1] "%i soubory nainstalovány přes %s"
-msgstr[2] "%i souborů nainstalováno přes %s"
+msgid "%u file installed by %s"
+msgid_plural "%u files installed by %s"
+msgstr[0] "%u soubor nainstalován přes %s"
+msgstr[1] "%u soubory nainstalovány přes %s"
+msgstr[2] "%u souborů nainstalováno přes %s"
 
 #. TRANSLATORS: no packages returned
 #: ../src/gpk-application.c:791 ../src/gpk-application.c:898
@@ -481,11 +504,11 @@ msgstr "Žádné další balíčky nevyžadují tento balíček"
 #. TRANSLATORS: title: how many packages require this package
 #: ../src/gpk-application.c:800
 #, c-format
-msgid "%i package requires %s"
-msgid_plural "%i packages require %s"
-msgstr[0] "%i balíček vyžaduje %s"
-msgstr[1] "%i balíčky vyžadují %s"
-msgstr[2] "%i balíčků vyžaduje %s"
+msgid "%u package requires %s"
+msgid_plural "%u packages require %s"
+msgstr[0] "%u balíček vyžaduje %s"
+msgstr[1] "%u balíčky vyžadují %s"
+msgstr[2] "%u balíčků vyžaduje %s"
 
 #. TRANSLATORS: show a array of packages for the package
 #: ../src/gpk-application.c:805
@@ -504,11 +527,11 @@ msgstr "Tento balíček nezávisí na žádném dalším"
 #. TRANSLATORS: title: show the number of other packages we depend on
 #: ../src/gpk-application.c:907
 #, c-format
-msgid "%i additional package is required for %s"
-msgid_plural "%i additional packages are required for %s"
-msgstr[0] "Pro %2$s je vyžadován %1$i další balíček"
-msgstr[1] "Pro %2$s jsou vyžadovány %1$i další balíčky"
-msgstr[2] "Pro %2$s je vyžadováno %1$i dalších balíčků"
+msgid "%u additional package is required for %s"
+msgid_plural "%u additional packages are required for %s"
+msgstr[0] "Pro %2$s je vyžadován %1$u další balíček"
+msgstr[1] "Pro %2$s jsou vyžadovány %1$u další balíčky"
+msgstr[2] "Pro %2$s je vyžadováno %1$u dalších balíčků"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #: ../src/gpk-application.c:912
@@ -2929,165 +2952,3 @@ msgstr ""
 #: ../src/gpk-update-viewer.c:2932
 msgid "Update Packages"
 msgstr "Aktualizovat balíčky"
-
-#~ msgid "Clear"
-#~ msgstr "Zrušit"
-
-#~ msgid "Remove Package"
-#~ msgstr "Odebrat balíček"
-
-#~ msgid "Visit Project Website"
-#~ msgstr "Navštívit web projektu"
-
-#~ msgid "Required Packages"
-#~ msgstr "Vyžadované balíčky"
-
-#~ msgid "Check for Updates"
-#~ msgstr "Zkontrolovat aktualizace"
-
-#~ msgid "Refresh Package Lists"
-#~ msgstr "Aktualizovat seznam balíčků"
-
-#~ msgid "Only Newest Versions"
-#~ msgstr "Pouze nejnovější verze"
-
-#~ msgid "Only Native Packages"
-#~ msgstr "Pouze nativní balíčky"
-
-#~ msgid "About"
-#~ msgstr "O aplikaci"
-
-#~ msgid "_Quit"
-#~ msgstr "U_končit"
-
-#~ msgid "Software signature is required"
-#~ msgstr "Pro software je vyžadován podpis"
-
-#~ msgid "Package:"
-#~ msgstr "Balíček:"
-
-#~ msgid "If search terms should be completed automatically"
-#~ msgstr "Zda se mají vyhledávací podmínky doplňovat samy"
-
-#~ msgid "If search terms should be completed automatically."
-#~ msgstr "Zda mají být vyhledávací podmínky doplňovány automaticky."
-
-#~ msgid "Now"
-#~ msgstr "Nyní"
-
-#~ msgid "%i second"
-#~ msgid_plural "%i seconds"
-#~ msgstr[0] "%i sekunda"
-#~ msgstr[1] "%i sekundy"
-#~ msgstr[2] "%i sekund"
-
-#~ msgid "%i minute"
-#~ msgid_plural "%i minutes"
-#~ msgstr[0] "%i minuta"
-#~ msgstr[1] "%i minuty"
-#~ msgstr[2] "%i minut"
-
-#~ msgid "%i hour"
-#~ msgid_plural "%i hours"
-#~ msgstr[0] "%i hodina"
-#~ msgstr[1] "%i hodiny"
-#~ msgstr[2] "%i hodin"
-
-#~ msgid "%i %s %i %s"
-#~ msgstr "%i %s %i %s"
-
-#~ msgid "minute"
-#~ msgid_plural "minutes"
-#~ msgstr[0] "minuta"
-#~ msgstr[1] "minuty"
-#~ msgstr[2] "minut"
-
-#~ msgid "second"
-#~ msgid_plural "seconds"
-#~ msgstr[0] "sekunda"
-#~ msgstr[1] "sekundy"
-#~ msgstr[2] "sekund"
-
-#~ msgid "hour"
-#~ msgid_plural "hours"
-#~ msgstr[0] "hodina"
-#~ msgstr[1] "hodiny"
-#~ msgstr[2] "hodin"
-
-#~ msgid "Getting dependencies"
-#~ msgstr "Získávají se závislosti"
-
-#~ msgid "Getting update detail"
-#~ msgstr "Získávají se podrobnsoti o aktualizaci"
-
-#~ msgid "Getting details"
-#~ msgstr "Získávají se podrobnosti"
-
-#~ msgid "Getting requires"
-#~ msgstr "Získávají se požadavky"
-
-#~ msgid "Getting updates"
-#~ msgstr "Získávají se aktualizace"
-
-#~ msgid "Searching details"
-#~ msgstr "Vyhledávají se podrobnosti"
-
-#~ msgid "Searching for file"
-#~ msgstr "Vyhledává se soubor"
-
-#~ msgid "Searching groups"
-#~ msgstr "Vyhledávají se skupiny"
-
-#~ msgid "Searching for package name"
-#~ msgstr "Vyhledává se název balíčku"
-
-#~ msgid "Installing file"
-#~ msgstr "Instaluje se soubor"
-
-#~ msgid "Refreshing package cache"
-#~ msgstr "Aktualizuje se vyrovnávací paměť balíčků"
-
-#~ msgid "Updating packages"
-#~ msgstr "Aktualizují se balíčky"
-
-#~ msgid "Getting list of repositories"
-#~ msgstr "Získává se seznam repozitářů"
-
-#~ msgid "Enabling repository"
-#~ msgstr "Repozitáře se povoluje"
-
-#~ msgid "Removing repository"
-#~ msgstr "Repozitáře se odebírá"
-
-#~ msgid "Setting repository data"
-#~ msgstr "Nastavují se údaje repozitáře"
-
-#~ msgid "Resolving"
-#~ msgstr "Probíhá řešení"
-
-#~ msgid "Getting file list"
-#~ msgstr "Získává se seznam souborů"
-
-#~ msgid "Getting what provides"
-#~ msgstr "Získávají se poskytované"
-
-#~ msgid "Installing signature"
-#~ msgstr "Instaluje se podpis"
-
-#~ msgid "Getting package lists"
-#~ msgstr "Získává se seznam balíčků"
-
-#~ msgid "Accepting EULA"
-#~ msgstr "Potvrzuje se EULA"
-
-#~ msgid "Getting distribution upgrade information"
-#~ msgstr "Získávají se informace o povýšení distribuce"
-
-#~ msgid "Getting categories"
-#~ msgstr "Získávají se kategorie"
-
-#~ msgid "Getting old transactions"
-#~ msgstr "Získávají se staré transakce"
-
-#~ msgid "Repairing the system"
-#~ msgstr "Opravuje se systém"
