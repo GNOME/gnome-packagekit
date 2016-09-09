@@ -21,8 +21,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-07-19 12:27+0000\n"
-"PO-Revision-Date: 2016-08-04 11:43+0200\n"
+"POT-Creation-Date: 2016-08-29 09:07+0000\n"
+"PO-Revision-Date: 2016-09-09 20:42+0200\n"
 "Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -30,7 +30,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.9\n"
 
 #. TRANSLATORS: user-friendly name for gpk-update-viewer
 #: ../data/appdata/org.gnome.Packages.appdata.xml.in.h:1 ../src/gpk-log.c:434
@@ -158,6 +158,41 @@ msgstr ""
 "Änderungen werden nicht unmittelbar, sondern durch Anklicken dieses Knopfes "
 "angewendet"
 
+#: ../src/gpk-application.ui.h:15
+msgid "Check for Updates"
+msgstr "Auf Aktualisierungen prüfen"
+
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../src/gpk-application.ui.h:16 ../data/gpk-prefs.desktop.in.h:1
+#: ../src/gpk-prefs.ui.h:4 ../src/gpk-prefs.c:526
+msgid "Package Sources"
+msgstr "Paketquellen"
+
+#: ../src/gpk-application.ui.h:17
+msgid "Refresh Package Lists"
+msgstr "Paketlisten aktualisieren"
+
+#: ../src/gpk-application.ui.h:18 ../data/gpk-log.desktop.in.h:1
+#: ../src/gpk-log.ui.h:2
+msgid "Package Log"
+msgstr "Paketprotokoll"
+
+#: ../src/gpk-application.ui.h:19
+msgid "Only Newest Versions"
+msgstr "Nur neueste Versionen"
+
+#: ../src/gpk-application.ui.h:20
+msgid "Only Native Packages"
+msgstr "Nur native Pakete"
+
+#: ../src/gpk-application.ui.h:21
+msgid "About"
+msgstr "Info"
+
+#: ../src/gpk-application.ui.h:22
+msgid "_Quit"
+msgstr "_Beenden"
+
 #: ../src/gpk-client.ui.h:1
 msgid "Install Package"
 msgstr "Paket installieren"
@@ -192,10 +227,6 @@ msgstr "Paketinstallation"
 msgid "Install selected packages on the system"
 msgstr "Ausgewählte Pakete auf dem System installieren"
 
-#: ../data/gpk-log.desktop.in.h:1 ../src/gpk-log.ui.h:2
-msgid "Package Log"
-msgstr "Paketprotokoll"
-
 #: ../data/gpk-log.desktop.in.h:2
 msgid "View past package management tasks"
 msgstr "Vorherige Paketmanagement-Aufgaben anzeigen"
@@ -203,12 +234,6 @@ msgstr "Vorherige Paketmanagement-Aufgaben anzeigen"
 #: ../src/gpk-log.ui.h:1
 msgid "Filter"
 msgstr "Filter"
-
-#. TRANSLATORS: program name, an application to add and remove software repositories
-#: ../data/gpk-prefs.desktop.in.h:1 ../src/gpk-prefs.ui.h:4
-#: ../src/gpk-prefs.c:526
-msgid "Package Sources"
-msgstr "Paketquellen"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Enable or disable package repositories"
@@ -470,10 +495,10 @@ msgstr "Ausstehend"
 #. TRANSLATORS: title: how many files are installed by the application
 #: ../src/gpk-application.c:533
 #, c-format
-msgid "%i file installed by %s"
-msgid_plural "%i files installed by %s"
-msgstr[0] "%i Datei installiert durch %s"
-msgstr[1] "%i Dateien installiert durch %s"
+msgid "%u file installed by %s"
+msgid_plural "%u files installed by %s"
+msgstr[0] "%u Datei installiert durch %s"
+msgstr[1] "%u Dateien installiert durch %s"
 
 #. TRANSLATORS: no packages returned
 #: ../src/gpk-application.c:791 ../src/gpk-application.c:898
@@ -488,10 +513,10 @@ msgstr "Keine anderen Pakete benötigen dieses Paket"
 #. TRANSLATORS: title: how many packages require this package
 #: ../src/gpk-application.c:800
 #, c-format
-msgid "%i package requires %s"
-msgid_plural "%i packages require %s"
-msgstr[0] "%i Paket benötigt %s"
-msgstr[1] "%i Pakete benötigen %s"
+msgid "%u package requires %s"
+msgid_plural "%u packages require %s"
+msgstr[0] "%u Paket benötigt %s"
+msgstr[1] "%u Pakete benötigen %s"
 
 #. TRANSLATORS: show a array of packages for the package
 #: ../src/gpk-application.c:805
@@ -511,10 +536,10 @@ msgstr "Diese Software hängt von keiner weiteren ab"
 #. TRANSLATORS: title: show the number of other packages we depend on
 #: ../src/gpk-application.c:907
 #, c-format
-msgid "%i additional package is required for %s"
-msgid_plural "%i additional packages are required for %s"
-msgstr[0] "%i zusätzliches Paket ist für %s notwendig"
-msgstr[1] "%i zusätzliche Pakete sind für %s notwendig"
+msgid "%u additional package is required for %s"
+msgid_plural "%u additional packages are required for %s"
+msgstr[0] "%u zusätzliches Paket ist für %s notwendig"
+msgstr[1] "%u zusätzliche Pakete sind für %s notwendig"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #: ../src/gpk-application.c:912
@@ -2764,26 +2789,26 @@ msgstr ""
 
 #: ../src/gpk-update-viewer.c:1336
 #, c-format
-msgid "There is %i update available"
-msgid_plural "There are %i updates available"
-msgstr[0] "%i Aktualisierung ist verfügbar"
-msgstr[1] "%i Aktualisierungen sind verfügbar"
+msgid "There is %u update available"
+msgid_plural "There are %u updates available"
+msgstr[0] "%u Aktualisierung ist verfügbar"
+msgstr[1] "%u Aktualisierungen sind verfügbar"
 
 #. TRANSLATORS: how many updates are selected in the UI
 #: ../src/gpk-update-viewer.c:1351
 #, c-format
-msgid "%i update selected"
-msgid_plural "%i updates selected"
-msgstr[0] "%i Aktualisierung ausgewählt"
-msgstr[1] "%i Aktualisierungen ausgewählt"
+msgid "%u update selected"
+msgid_plural "%u updates selected"
+msgstr[0] "%u Aktualisierung ausgewählt"
+msgstr[1] "%u Aktualisierungen ausgewählt"
 
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
 #: ../src/gpk-update-viewer.c:1360
 #, c-format
-msgid "%i update selected (%s)"
-msgid_plural "%i updates selected (%s)"
-msgstr[0] "%i Aktualisierung ausgewählt (%s)"
-msgstr[1] "%i Aktualisierungen ausgewählt (%s)"
+msgid "%u update selected (%s)"
+msgid_plural "%u updates selected (%s)"
+msgstr[0] "%u Aktualisierung ausgewählt (%s)"
+msgstr[1] "%u Aktualisierungen ausgewählt (%s)"
 
 #. TRANSLATORS: a column that has state of each package
 #: ../src/gpk-update-viewer.c:1539
@@ -3009,24 +3034,6 @@ msgstr "Pakete aktualisieren"
 
 #~ msgid "Required Packages"
 #~ msgstr "Benötigte Pakete"
-
-#~ msgid "Check for Updates"
-#~ msgstr "Auf Aktualisierungen prüfen"
-
-#~ msgid "Refresh Package Lists"
-#~ msgstr "Paketlisten aktualisieren"
-
-#~ msgid "Only Newest Versions"
-#~ msgstr "Nur neueste Versionen"
-
-#~ msgid "Only Native Packages"
-#~ msgstr "Nur native Pakete"
-
-#~ msgid "About"
-#~ msgstr "Info"
-
-#~ msgid "_Quit"
-#~ msgstr "_Beenden"
 
 #~ msgid "Software signature is required"
 #~ msgstr "Software-Signatur wird benötigt"
