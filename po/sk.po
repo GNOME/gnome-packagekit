@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-08-15 10:25+0000\n"
-"PO-Revision-Date: 2016-08-15 13:36+0200\n"
+"POT-Creation-Date: 2016-08-29 09:07+0000\n"
+"PO-Revision-Date: 2016-09-10 17:15+0200\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -154,6 +154,46 @@ msgstr "Aplikovať zmeny"
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "Zmeny sa nepoužijú okamžite, toto tlačidlo aplikuje všetky zmeny"
 
+# menu item
+#: ../src/gpk-application.ui.h:15
+msgid "Check for Updates"
+msgstr "Skontrolovať dostupnosť aktualizácií"
+
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../src/gpk-application.ui.h:16 ../data/gpk-prefs.desktop.in.h:1
+#: ../src/gpk-prefs.ui.h:4 ../src/gpk-prefs.c:526
+msgid "Package Sources"
+msgstr "Zdroje balíkov"
+
+# menu item
+#: ../src/gpk-application.ui.h:17
+msgid "Refresh Package Lists"
+msgstr "Aktualizovať zoznamy balíkov"
+
+#: ../src/gpk-application.ui.h:18 ../data/gpk-log.desktop.in.h:1
+#: ../src/gpk-log.ui.h:2
+msgid "Package Log"
+msgstr "Záznam balíkov"
+
+# menu item
+#: ../src/gpk-application.ui.h:19
+msgid "Only Newest Versions"
+msgstr "Iba najnovšie verzie"
+
+# menu item
+#: ../src/gpk-application.ui.h:20
+msgid "Only Native Packages"
+msgstr "Iba natívne balíky"
+
+#: ../src/gpk-application.ui.h:21
+msgid "About"
+msgstr "O programe"
+
+# menu item
+#: ../src/gpk-application.ui.h:22
+msgid "_Quit"
+msgstr "_Ukončiť"
+
 # GtkButon label
 #: ../src/gpk-client.ui.h:1
 msgid "Install Package"
@@ -192,10 +232,6 @@ msgstr "Inštalátor balíkov"
 msgid "Install selected packages on the system"
 msgstr "Inštaluje do systému vybrané balíky"
 
-#: ../data/gpk-log.desktop.in.h:1 ../src/gpk-log.ui.h:2
-msgid "Package Log"
-msgstr "Záznam balíkov"
-
 #  desktop entry comment
 #: ../data/gpk-log.desktop.in.h:2
 msgid "View past package management tasks"
@@ -205,12 +241,6 @@ msgstr "Zobrazuje predchádzajúce úlohy vykonané pri správe balíkov"
 #: ../src/gpk-log.ui.h:1
 msgid "Filter"
 msgstr "Filtrovať"
-
-#. TRANSLATORS: program name, an application to add and remove software repositories
-#: ../data/gpk-prefs.desktop.in.h:1 ../src/gpk-prefs.ui.h:4
-#: ../src/gpk-prefs.c:526
-msgid "Package Sources"
-msgstr "Zdroje balíkov"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Enable or disable package repositories"
@@ -523,11 +553,11 @@ msgstr "Čakajúce"
 #. TRANSLATORS: title: how many files are installed by the application
 #: ../src/gpk-application.c:533
 #, c-format
-msgid "%i file installed by %s"
-msgid_plural "%i files installed by %s"
-msgstr[0] "%i súborov nainštalovaných aplikáciou %s"
-msgstr[1] "%i súbor nainštalovaný aplikáciou %s"
-msgstr[2] "%i súbory nainštalované aplikáciou %s"
+msgid "%u file installed by %s"
+msgid_plural "%u files installed by %s"
+msgstr[0] "%u súborov nainštalovaných aplikáciou %s"
+msgstr[1] "%u súbor nainštalovaný aplikáciou %s"
+msgstr[2] "%u súbory nainštalované aplikáciou %s"
 
 #. TRANSLATORS: no packages returned
 #: ../src/gpk-application.c:791 ../src/gpk-application.c:898
@@ -542,11 +572,11 @@ msgstr "Žiadne ďalšie balíky nevyžadujú tento balík."
 #. TRANSLATORS: title: how many packages require this package
 #: ../src/gpk-application.c:800
 #, c-format
-msgid "%i package requires %s"
-msgid_plural "%i packages require %s"
-msgstr[0] "%i balíkov požaduje %s"
-msgstr[1] "%i balík požaduje %s"
-msgstr[2] "%i balíky požadujú %s"
+msgid "%u package requires %s"
+msgid_plural "%u packages require %s"
+msgstr[0] "%u balíkov požaduje %s"
+msgstr[1] "%u balík požaduje %s"
+msgstr[2] "%u balíky požadujú %s"
 
 #. TRANSLATORS: show a array of packages for the package
 #: ../src/gpk-application.c:805
@@ -565,11 +595,11 @@ msgstr "Tento balík nezávisí na žiadnom inom balíku"
 #. TRANSLATORS: title: show the number of other packages we depend on
 #: ../src/gpk-application.c:907
 #, c-format
-msgid "%i additional package is required for %s"
-msgid_plural "%i additional packages are required for %s"
-msgstr[0] "%i ďalších balíkov je potrebných pre %s"
-msgstr[1] "%i ďalší balík je potrebný pre %s"
-msgstr[2] "%i ďalšie balíky sú potrebné pre %s"
+msgid "%u additional package is required for %s"
+msgid_plural "%u additional packages are required for %s"
+msgstr[0] "%u ďalších balíkov je potrebných pre %s"
+msgstr[1] "%u ďalší balík je potrebný pre %s"
+msgstr[2] "%u ďalšie balíky sú potrebné pre %s"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #: ../src/gpk-application.c:912
@@ -3031,29 +3061,6 @@ msgstr "Aktualizuje balíky"
 # GtkButon label
 #~ msgid "Required Packages"
 #~ msgstr "Požadované balíky"
-
-# menu item
-#~ msgid "Check for Updates"
-#~ msgstr "Skontrolovať dostupnosť aktualizácií"
-
-# menu item
-#~ msgid "Refresh Package Lists"
-#~ msgstr "Aktualizovať zoznamy balíkov"
-
-# menu item
-#~ msgid "Only Newest Versions"
-#~ msgstr "Iba najnovšie verzie"
-
-# menu item
-#~ msgid "Only Native Packages"
-#~ msgstr "Iba natívne balíky"
-
-#~ msgid "About"
-#~ msgstr "O programe"
-
-# menu item
-#~ msgid "_Quit"
-#~ msgstr "_Ukončiť"
 
 # GtkDialog title
 #~ msgid "Software signature is required"
