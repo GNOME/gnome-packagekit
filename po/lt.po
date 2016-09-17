@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: packagekit master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-08-15 10:25+0000\n"
-"PO-Revision-Date: 2016-08-21 17:31+0300\n"
+"POT-Creation-Date: 2016-08-29 09:07+0000\n"
+"PO-Revision-Date: 2016-09-17 14:36+0300\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -146,6 +146,41 @@ msgstr ""
 "Pakeitimai pritaikomi neiškart, spustelėjus šį mygtuką pritaikomi visi "
 "pakeitimai"
 
+#: ../src/gpk-application.ui.h:15
+msgid "Check for Updates"
+msgstr "Tikrinti, ar yra atnaujinimų"
+
+#. TRANSLATORS: program name, an application to add and remove software repositories
+#: ../src/gpk-application.ui.h:16 ../data/gpk-prefs.desktop.in.h:1
+#: ../src/gpk-prefs.ui.h:4 ../src/gpk-prefs.c:526
+msgid "Package Sources"
+msgstr "Paketų šaltiniai"
+
+#: ../src/gpk-application.ui.h:17
+msgid "Refresh Package Lists"
+msgstr "Atnaujinti paketų sąrašus"
+
+#: ../src/gpk-application.ui.h:18 ../data/gpk-log.desktop.in.h:1
+#: ../src/gpk-log.ui.h:2
+msgid "Package Log"
+msgstr "Paketų žurnalas"
+
+#: ../src/gpk-application.ui.h:19
+msgid "Only Newest Versions"
+msgstr "Tik naujausios versijos"
+
+#: ../src/gpk-application.ui.h:20
+msgid "Only Native Packages"
+msgstr "Tik savieji paketai"
+
+#: ../src/gpk-application.ui.h:21
+msgid "About"
+msgstr "Apie"
+
+#: ../src/gpk-application.ui.h:22
+msgid "_Quit"
+msgstr "_Išeiti"
+
 #: ../src/gpk-client.ui.h:1
 msgid "Install Package"
 msgstr "Įdiegti paketą"
@@ -179,10 +214,6 @@ msgstr "Paketų diegtuvė"
 msgid "Install selected packages on the system"
 msgstr "Įdiegti pasirinktus paketus sistemoje"
 
-#: ../data/gpk-log.desktop.in.h:1 ../src/gpk-log.ui.h:2
-msgid "Package Log"
-msgstr "Paketų žurnalas"
-
 #: ../data/gpk-log.desktop.in.h:2
 msgid "View past package management tasks"
 msgstr "Rodyti ankstesnes paketų tvarkymo užduotis"
@@ -190,12 +221,6 @@ msgstr "Rodyti ankstesnes paketų tvarkymo užduotis"
 #: ../src/gpk-log.ui.h:1
 msgid "Filter"
 msgstr "Filtras"
-
-#. TRANSLATORS: program name, an application to add and remove software repositories
-#: ../data/gpk-prefs.desktop.in.h:1 ../src/gpk-prefs.ui.h:4
-#: ../src/gpk-prefs.c:526
-msgid "Package Sources"
-msgstr "Paketų šaltiniai"
 
 #: ../data/gpk-prefs.desktop.in.h:2
 msgid "Enable or disable package repositories"
@@ -455,11 +480,13 @@ msgstr "Laukia"
 #. TRANSLATORS: title: how many files are installed by the application
 #: ../src/gpk-application.c:533
 #, c-format
-msgid "%i file installed by %s"
-msgid_plural "%i files installed by %s"
-msgstr[0] "%i failą įdiegus programa %s"
-msgstr[1] "%i failus įdiegus programa %s"
-msgstr[2] "%i failų įdiegus programa %s"
+#| msgid "%i file installed by %s"
+#| msgid_plural "%i files installed by %s"
+msgid "%u file installed by %s"
+msgid_plural "%u files installed by %s"
+msgstr[0] "%u failas, įdiegtas programos %s"
+msgstr[1] "%u failai, įdiegti programos %s"
+msgstr[2] "%u failų, įdiegtų programos %s"
 
 #. TRANSLATORS: no packages returned
 #: ../src/gpk-application.c:791 ../src/gpk-application.c:898
@@ -474,11 +501,13 @@ msgstr "Jokiam kitam paketui šio paketo nereikia"
 #. TRANSLATORS: title: how many packages require this package
 #: ../src/gpk-application.c:800
 #, c-format
-msgid "%i package requires %s"
-msgid_plural "%i packages require %s"
-msgstr[0] "%i paketui reikia %s"
-msgstr[1] "%i paketams reikia %s"
-msgstr[2] "%i paketų reikia %s"
+#| msgid "%i package requires %s"
+#| msgid_plural "%i packages require %s"
+msgid "%u package requires %s"
+msgid_plural "%u packages require %s"
+msgstr[0] "%u paketui reikia %s"
+msgstr[1] "%u paketams reikia %s"
+msgstr[2] "%u paketų reikia %s"
 
 #. TRANSLATORS: show a array of packages for the package
 #: ../src/gpk-application.c:805
@@ -497,11 +526,13 @@ msgstr "Šis paketas nepriklauso nuo jokio kito"
 #. TRANSLATORS: title: show the number of other packages we depend on
 #: ../src/gpk-application.c:907
 #, c-format
-msgid "%i additional package is required for %s"
-msgid_plural "%i additional packages are required for %s"
-msgstr[0] "%2$s reikia %1$i papildomo paketo"
-msgstr[1] "%2$s reikia %1$i papildomo paketo"
-msgstr[2] "%2$s reikia %1$i papildomo paketo"
+#| msgid "%i additional package is required for %s"
+#| msgid_plural "%i additional packages are required for %s"
+msgid "%u additional package is required for %s"
+msgid_plural "%u additional packages are required for %s"
+msgstr[0] "%2$s reikia %1$u papildomo paketo"
+msgstr[1] "%2$s reikia %1$u papildomų paketų"
+msgstr[2] "%2$s reikia %1$u papildomų paketų"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #: ../src/gpk-application.c:912
@@ -2702,8 +2733,6 @@ msgstr "Šiuo metu jūsų kompiuteriui nėra jokių paketų atnaujinimų."
 
 #: ../src/gpk-update-viewer.c:1336
 #, c-format
-#| msgid "There is %i update available"
-#| msgid_plural "There are %i updates available"
 msgid "There is %u update available"
 msgid_plural "There are %u updates available"
 msgstr[0] "Yra %u atnaujinimas"
@@ -2713,8 +2742,6 @@ msgstr[2] "Yra %u atnaujinimų"
 #. TRANSLATORS: how many updates are selected in the UI
 #: ../src/gpk-update-viewer.c:1351
 #, c-format
-#| msgid "%i update selected"
-#| msgid_plural "%i updates selected"
 msgid "%u update selected"
 msgid_plural "%u updates selected"
 msgstr[0] "Pasirinktas %u atnaujinimas"
@@ -2724,8 +2751,6 @@ msgstr[2] "Pasirinkta %u atnaujinimų"
 #. TRANSLATORS: how many updates are selected in the UI, and the size of packages to download
 #: ../src/gpk-update-viewer.c:1360
 #, c-format
-#| msgid "%i update selected (%s)"
-#| msgid_plural "%i updates selected (%s)"
 msgid "%u update selected (%s)"
 msgid_plural "%u updates selected (%s)"
 msgstr[0] "Pasirinktas %u atnaujinimas (%s)"
@@ -2953,24 +2978,6 @@ msgstr "Atnaujinti paketus"
 
 #~ msgid "Required Packages"
 #~ msgstr "Priklauso nuo"
-
-#~ msgid "Check for Updates"
-#~ msgstr "Tikrinti, ar yra atnaujinimų"
-
-#~ msgid "Refresh Package Lists"
-#~ msgstr "Atnaujinti paketų sąrašus"
-
-#~ msgid "Only Newest Versions"
-#~ msgstr "Tik naujausios versijos"
-
-#~ msgid "Only Native Packages"
-#~ msgstr "Tik savieji paketai"
-
-#~ msgid "About"
-#~ msgstr "Apie"
-
-#~ msgid "_Quit"
-#~ msgstr "_Išeiti"
 
 #~ msgid "Software signature is required"
 #~ msgstr "Reikalingas programinės įrangos parašas"
