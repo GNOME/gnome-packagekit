@@ -481,8 +481,9 @@ gpk_session_finalize (GObject *object)
 
 	g_object_unref (session->priv->proxy);
 	g_object_unref (session->priv->proxy_presence);
-	g_object_unref (session->priv->proxy_client_private);
 	g_object_unref (session->priv->proxy_prop);
+	if (session->priv->proxy_client_private != NULL)
+		g_object_unref (session->priv->proxy_client_private);
 
 	G_OBJECT_CLASS (gpk_session_parent_class)->finalize (object);
 }
