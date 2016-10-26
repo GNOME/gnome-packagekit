@@ -2089,7 +2089,7 @@ gpk_update_viewer_add_active_row (GtkTreeModel *model, GtkTreePath *path)
 static void
 gpk_update_viewer_remove_active_row (GtkTreeModel *model, GtkTreePath *path)
 {
-	GSList *link;
+	GSList *link_row;
 	GtkTreeRowReference *ref;
 	GtkTreeIter iter;
 
@@ -2097,13 +2097,13 @@ gpk_update_viewer_remove_active_row (GtkTreeModel *model, GtkTreePath *path)
 	gtk_list_store_set (GTK_LIST_STORE (model), &iter, GPK_UPDATES_COLUMN_PULSE, -1, -1);
 
 	ref = gtk_tree_row_reference_new (model, path);
-	link = g_slist_find_custom (active_rows, (gconstpointer)ref, (GCompareFunc)gpk_update_viewer_compare_refs);
+	link_row = g_slist_find_custom (active_rows, (gconstpointer)ref, (GCompareFunc)gpk_update_viewer_compare_refs);
 	gtk_tree_row_reference_free (ref);
-	g_assert (link);
+	g_assert (link_row);
 
-	active_rows = g_slist_remove_link (active_rows, link);
-	gtk_tree_row_reference_free (link->data);
-	g_slist_free (link);
+	active_rows = g_slist_remove_link (active_rows, link_row);
+	gtk_tree_row_reference_free (link_row->data);
+	g_slist_free (link_row);
 
 	if (active_rows == NULL) {
 		g_source_remove (active_row_timeout);
