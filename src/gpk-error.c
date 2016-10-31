@@ -65,6 +65,7 @@ gboolean
 gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const gchar *message, const gchar *details, guint timestamp)
 {
 	GtkWidget *widget;
+	GtkWidget *dialog;
 	GtkBuilder *builder;
 	GtkTextBuffer *buffer = NULL;
 	guint retval;
@@ -82,25 +83,27 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	}
 
 	/* connect up actions */
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_error"));
-	gtk_window_set_resizable (GTK_WINDOW (widget), FALSE);
-	g_signal_connect_swapped (widget, "delete_event", G_CALLBACK (gtk_main_quit), NULL);
+	dialog = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_error"));
+	gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+	g_signal_connect (dialog, "delete_event",
+			  G_CALLBACK (gtk_widget_hide_on_delete), NULL);
 
 	/* never use a title */
-	gtk_window_set_title (GTK_WINDOW (widget), "");
+	gtk_window_set_title (GTK_WINDOW (dialog), "");
 
 	/* make modal if window set */
 	if (window != NULL)
-		gtk_window_set_transient_for (GTK_WINDOW (widget), window);
+		gtk_window_set_transient_for (GTK_WINDOW (dialog), window);
 	else
-		gtk_window_set_modal (GTK_WINDOW (widget), TRUE);
+		gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
 
 	/* set icon name */
-	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
+	gtk_window_set_icon_name (GTK_WINDOW (dialog), GPK_ICON_SOFTWARE_INSTALLER);
 
 	/* close button */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_close"));
-	g_signal_connect_swapped (widget, "clicked", G_CALLBACK (gtk_main_quit), NULL);
+	g_signal_connect_swapped (widget, "clicked",
+				  G_CALLBACK (gtk_widget_hide), dialog);
 
 	/* we become resizable when the expander is expanded */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "expander_details"));
@@ -127,16 +130,8 @@ gpk_error_dialog_modal_with_time (GtkWindow *window, const gchar *title, const g
 	}
 
 	/* show window */
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_error"));
-	gtk_window_present_with_time (GTK_WINDOW (widget), timestamp);
-	gtk_window_set_icon_name (GTK_WINDOW (widget), GPK_ICON_SOFTWARE_INSTALLER);
-
-	/* wait for button press */
-	gtk_main ();
-
-	/* hide window */
-	if (GTK_IS_WIDGET (widget))
-		gtk_widget_hide (widget);
+	gtk_window_present_with_time (GTK_WINDOW (dialog), timestamp);
+	gtk_window_set_icon_name (GTK_WINDOW (dialog), GPK_ICON_SOFTWARE_INSTALLER);
 	if (buffer != NULL)
 		g_object_unref (buffer);
 out_build:
