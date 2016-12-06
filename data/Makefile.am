@@ -5,7 +5,9 @@ SUBDIRS = appdata icons
 migrationdir = $(datadir)/GConf/gsettings
 dist_migration_DATA = org.gnome.packagekit.gschema.migrate
 
-@INTLTOOL_DESKTOP_RULE@
+%.desktop: %.desktop.in
+	$(AM_V_GEN) msgfmt --desktop -d $(top_srcdir)/po --template $< -o $@
+
 desktopdir = $(datadir)/applications
 desktop_in_files =					\
 	gpk-install-local-file.desktop.in		\
@@ -16,8 +18,6 @@ desktop_in_files =					\
 	$(NULL)
 
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
-
-@INTLTOOL_DESKTOP_RULE@
 
 @GSETTINGS_RULES@
 gsettings_SCHEMAS = org.gnome.packagekit.gschema.xml

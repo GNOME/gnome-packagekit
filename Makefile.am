@@ -8,10 +8,7 @@ SUBDIRS =						\
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS}
 
 EXTRA_DIST =						\
-	MAINTAINERS					\
-	intltool-extract.in				\
-	intltool-merge.in				\
-	intltool-update.in
+	MAINTAINERS
 
 clean-local :
 	rm -f *~
@@ -20,15 +17,14 @@ snapshot:
 	$(MAKE) dist distdir=$(PACKAGE)-$(VERSION)-`date +"%Y%m%d"`
 
 DISTCLEANFILES =					\
-	intltool-extract				\
-	intltool-merge					\
-	intltool-update					\
 	gnome-packagekit-*.tar.gz
 
 DISTCHECK_CONFIGURE_FLAGS = --disable-scrollkeeper
 
 MAINTAINERCLEANFILES =					\
 	*~						\
+	ABOUT-NLS					\
+	config.rpath					\
 	aclocal.m4					\
 	compile						\
 	config.guess					\
