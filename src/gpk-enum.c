@@ -577,7 +577,7 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 			 "The package file could be corrupt, or not a proper package.");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_INSTALL_BLOCKED:
-		text = _("Installation of this package prevented by your packaging system's configuration.");
+		text = _("Installation of this package prevented by your packaging system’s configuration.");
 		break;
 	case PK_ERROR_ENUM_PACKAGE_CORRUPT:
 		text = _("The package that was downloaded is corrupt and needs to be downloaded again.");

@@ -2678,7 +2678,7 @@ gpk_update_viewer_get_distro_upgrades_cb (PkClient *client, GAsyncResult *res, g
 	/* only display last (newest) distro */
 	widget = GTK_WIDGET(gtk_builder_get_object (builder, "label_upgrade"));
 	/* TRANSLATORS: new distro available, e.g. F9 to F10 */
-	text = g_strdup_printf (_("New distribution upgrade release '%s' is available"), summary);
+	text = g_strdup_printf (_("New distribution upgrade release “%s” is available"), summary);
 	text_format = g_strdup_printf ("<b>%s</b>", text);
 	gtk_label_set_label (GTK_LABEL(widget), text_format);
 

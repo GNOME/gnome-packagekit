@@ -290,7 +290,7 @@ gpk_task_media_change_question (PkTask *task, guint request, PkResults *results)
 
 	name = gpk_media_type_enum_to_localised_text (media_type);
 	/* TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc */
-	message = g_strdup_printf (_("Additional media is required. Please insert the %s labeled '%s' to continue."), name, media_text);
+	message = g_strdup_printf (_("Additional media is required. Please insert the %s labeled “%s” to continue."), name, media_text);
 
 	priv->current_window = GTK_WINDOW (gtk_message_dialog_new (priv->parent_window,
 								   GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
