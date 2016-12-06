@@ -21,7 +21,7 @@ AM_CPPFLAGS =						\
 	-DLIBEXECDIR=\""$(libexecdir)"\" 		\
 	-DLOCALEDIR=\""$(localedir)"\"			\
 	-DVERSION="\"$(VERSION)\"" 			\
-	-DGPK_DATA=\"$(pkgdatadir)\"			\
+	-DPKGDATADIR=\"$(pkgdatadir)\"			\
 	-DG_LOG_DOMAIN=\"GnomePackageKit\"
 
 bin_PROGRAMS =						\
