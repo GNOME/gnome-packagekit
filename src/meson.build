@@ -30,17 +30,11 @@ gpk_update_viewer_resources = gnome.compile_resources(
 
 shared_srcs = [
   'gpk-debug.c',
-  'gpk-debug.h',
   'gpk-enum.c',
-  'gpk-enum.h',
   'gpk-dialog.c',
-  'gpk-dialog.h',
   'gpk-common.c',
-  'gpk-common.h',
   'gpk-task.c',
-  'gpk-task.h',
   'gpk-error.c',
-  'gpk-error.h'
 ]
 
 executable(
@@ -106,17 +100,13 @@ executable(
 gpk_update_viewer_srcs = [
   'gpk-update-viewer.c',
   'gpk-cell-renderer-size.c',
-  'gpk-cell-renderer-size.h',
   'gpk-cell-renderer-info.c',
-  'gpk-cell-renderer-info.h',
   'gpk-cell-renderer-restart.c',
-  'gpk-cell-renderer-restart.h',
   shared_srcs
 ]
 
 if get_option('enable-systemd')
   gpk_update_viewer_srcs += 'systemd-proxy.c'
-  gpk_update_viewer_srcs += 'systemd-proxy.h'
 endif
 
 executable(
