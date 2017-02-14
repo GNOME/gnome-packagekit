@@ -29,7 +29,6 @@
 #include <sys/types.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
-#include <dbus/dbus-glib.h>
 #include <packagekit-glib2/packagekit.h>
 #include <locale.h>
 
