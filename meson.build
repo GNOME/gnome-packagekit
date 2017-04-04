@@ -2,7 +2,7 @@
 #
 # Licensed under the GNU General Public License Version 2 or later
 project('gnome-packagekit', 'c',
-  version : '3.22.2',
+  version : '3.25.1',
   default_options : ['warning_level=1'],
   meson_version : '>=0.37.0'
 )
@@ -86,7 +86,6 @@ add_global_link_arguments(
 gio = dependency('gio-2.0', version : '>= 2.25.9')
 gtk = dependency('gtk+-3.0', version : '>= 3.15.3')
 packagekit = dependency('packagekit-glib2', version : '>= 0.9.1')
-upower = dependency('upower-glib', version : '>= 0.9.1')
 libm = cc.find_library('libm', required: false)
 
 if get_option('enable-systemd')
@@ -113,7 +112,7 @@ conf.set_quoted('BINDIR',
 conf.set_quoted('PKGDATADIR',
                 join_paths(get_option('prefix'),
                            get_option('datadir'),
-                           'gnome-software'))
+                           'gnome-packagekit'))
 configure_file(
   output : 'config.h',
   configuration : conf

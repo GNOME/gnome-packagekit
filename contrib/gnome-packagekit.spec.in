@@ -29,6 +29,7 @@ BuildRequires: systemd-devel
 BuildRequires: polkit-devel
 BuildRequires: itstool
 BuildRequires: libappstream-glib
+BuildRequires: meson
 
 # the top level package depends on all the apps to make upgrades work
 Requires: %{name}-installer
@@ -75,14 +76,11 @@ without rebooting.
 %setup -q
 
 %build
-%configure --enable-systemd
-make %{?_smp_mflags}
+%meson
+%meson_build
 
 %install
-%make_install
-
-# nuke the ChangeLog file, it's huge
-rm -f $RPM_BUILD_ROOT%{_datadir}/doc/gnome-packagekit-*/ChangeLog
+%meson_install
 
 %find_lang %name --with-gnome
 
@@ -107,7 +105,7 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files common -f %{name}.lang
 %license COPYING
-%doc AUTHORS NEWS README
+%doc AUTHORS
 %{_bindir}/gpk-log
 %{_bindir}/gpk-prefs
 %dir %{_datadir}/gnome-packagekit
@@ -117,7 +115,6 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %dir %{_datadir}/gnome-packagekit/icons/hicolor/*/*
 %{_datadir}/gnome-packagekit/icons/hicolor/*/*/*.png
 %{_datadir}/gnome-packagekit/icons/hicolor/scalable/*/*.svg*
-%{_datadir}/icons/hicolor/*/*/*.png
 %{_datadir}/icons/hicolor/scalable/*/*.svg*
 %{_datadir}/man/man1/gpk-log.1*
 %{_datadir}/man/man1/gpk-prefs.1*
