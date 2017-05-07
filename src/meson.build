@@ -105,8 +105,15 @@ gpk_update_viewer_srcs = [
   shared_srcs
 ]
 
+gpk_update_viewer_deps = [
+    packagekit,
+    gio,
+    gtk
+]
+
 if get_option('enable-systemd')
   gpk_update_viewer_srcs += 'systemd-proxy.c'
+  gpk_update_viewer_deps += [systemd, polkit]
 endif
 
 executable(
@@ -116,13 +123,7 @@ executable(
   include_directories : [
     include_directories('..'),
   ],
-  dependencies : [
-    polkit,
-    packagekit,
-    gio,
-    systemd,
-    gtk
-  ],
+  dependencies : gpk_update_viewer_deps,
   c_args : cargs,
   install : true,
   install_dir : 'bin'
