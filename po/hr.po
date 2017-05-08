@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "packagekit&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2017-04-05 08:03+0000\n"
-"PO-Revision-Date: 2017-05-07 17:29+0200\n"
+"PO-Revision-Date: 2017-05-08 22:16+0200\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -533,16 +533,16 @@ msgstr[2] ""
 #. TRANSLATORS: this package does not depend on any others
 #: src/gpk-application.c:900
 msgid "This package does not depend on any others"
-msgstr ""
+msgstr "Ovaj paket ne zavisi o drugim paketima"
 
 #. TRANSLATORS: title: show the number of other packages we depend on
 #: src/gpk-application.c:907
 #, c-format
 msgid "%u additional package is required for %s"
 msgid_plural "%u additional packages are required for %s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "%u dodatni paket je potreban za %s"
+msgstr[1] "%u dodatna paketa su potrebna za %s"
+msgstr[2] "%u dodatnih paketa je potrebao za %s"
 
 #. TRANSLATORS: message: show the array of dependent packages for this package
 #: src/gpk-application.c:912
@@ -555,74 +555,73 @@ msgstr[2] ""
 
 #. TRANSLATORS: the repo name is invalid or not found, fall back to this
 #: src/gpk-application.c:962
-#, fuzzy
 msgid "Invalid"
 msgstr "Neispravan"
 
 #. TRANSLATORS: no results were found for this search
 #: src/gpk-application.c:1082
 msgid "No results were found."
-msgstr ""
+msgstr "Nema pronađenih rezultata."
 
 #. TRANSLATORS: be helpful, but this shouldn't happen
 #: src/gpk-application.c:1090
 msgid "Try entering a package name in the search bar."
-msgstr ""
+msgstr "Pokušajte upisati naziv paketa u traku pretrage."
 
 #. TRANSLATORS: nothing in the package queue
 #: src/gpk-application.c:1093
 msgid "There are no packages queued to be installed or removed."
-msgstr ""
+msgstr "Nema paketa na čekanju za instalaciju ili uklanjanje."
 
 #. TRANSLATORS: tell the user to switch to details search mode
 #: src/gpk-application.c:1098
 msgid ""
 "Try searching package descriptions by clicking the icon next to the search "
 "text."
-msgstr ""
+msgstr "Pokušaj pretražiti opis paketa klikom na ikonu pokraj teksta pretrage."
 
 #. TRANSLATORS: tell the user to try harder
 #: src/gpk-application.c:1101
 msgid "Try again with a different search term."
-msgstr ""
+msgstr "Pokušaj ponovno s drugačijim izrazom pretrage."
 
 #. TRANSLATORS: title: invalid text in the search bar
 #: src/gpk-application.c:1281
 msgid "Invalid search text"
-msgstr ""
+msgstr "Pogrešan tekst pretrage"
 
 #. TRANSLATORS: message: tell the user that's not allowed
 #: src/gpk-application.c:1283
 msgid "The search text contains invalid characters"
-msgstr ""
+msgstr "Tekst pretrage sadrži neispravne znakove"
 
 #. TRANSLATORS: title: we failed to execute the method
 #: src/gpk-application.c:1324
 msgid "The search could not be completed"
-msgstr ""
+msgstr "Pretraga se ne može završiti"
 
 #. TRANSLATORS: low level failure, details to follow
 #: src/gpk-application.c:1326
 msgid "Running the transaction failed"
-msgstr ""
+msgstr "Pokretanje prijenosa neuspješno"
 
 #. TRANSLATORS: title: warn the user they are quitting with unapplied changes
 #: src/gpk-application.c:1430
 msgid "Changes not applied"
-msgstr ""
+msgstr "Promjene se nisu primijenile"
 
 #: src/gpk-application.c:1431
 msgid "Close _Anyway"
-msgstr ""
+msgstr "Svejedno _zatvori"
 
 #. TRANSLATORS: tell the user the problem
 #: src/gpk-application.c:1435
 msgid "You have made changes that have not yet been applied."
-msgstr ""
+msgstr "Načinili ste promjene koje se još nisu primijenile."
 
 #: src/gpk-application.c:1436
 msgid "These changes will be lost if you close this window."
-msgstr ""
+msgstr "Te promjene će biti izgubljene ako zatvorite ovaj prozor."
 
 #. TRANSLATORS: column for installed status
 #. TRANSLATORS: The state of a package
@@ -693,6 +692,9 @@ msgid ""
 "Software Foundation; either version 2 of the License, or (at your option) "
 "any later version."
 msgstr ""
+"PackageKit je slobodan softver; možete ga besplatno dijeliti i/ili mijenjati "
+"pod uvjetima GNU Opće javne licence koju je izdala Zaklada slobodnog "
+"softvera; bilo prema 2. inačici ili (ako želite) prema novijoj."
 
 #: src/gpk-application.c:2153
 msgid ""
@@ -701,6 +703,9 @@ msgid ""
 "FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for "
 "more details."
 msgstr ""
+"PackageKit je distributiran u nadi da će biti koristan, ali BEZ IKAKVOG "
+"JAMSTVA; čak i bez podrazumijevanog jamstva KUPOPRODAJE ili POGODNOSTI "
+"POSEBNE NAKANE. Pogledajte GNU Opću Javnu Licencu za više pojedinosti."
 
 #: src/gpk-application.c:2157
 msgid ""
@@ -708,6 +713,9 @@ msgid ""
 "this program; if not, write to the Free Software Foundation, Inc., 51 "
 "Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA."
 msgstr ""
+"Trebali ste dobiti primjerak GNU Opće javne licence uz ovaj program. Ako "
+"niste, obratite nam se na adresu: Free Software Foundation, Inc., 51 "
+"Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA."
 
 #. TRANSLATORS: put your own name here -- you deserve credit!
 #: src/gpk-application.c:2163
@@ -728,17 +736,17 @@ msgstr "Upravitelj paketa za GNOME"
 #. TRANSLATORS: welcome text if we can click the group array
 #: src/gpk-application.c:2342
 msgid "Enter a search word or click a category to get started."
-msgstr ""
+msgstr "Upišite izraz pretrage ili kliknite na kategoriju kako bi počeli."
 
 #. TRANSLATORS: welcome text if we have to search by name
 #: src/gpk-application.c:2345
 msgid "Enter a search word to get started."
-msgstr ""
+msgstr "Upišite izraz pretrage kako bi počeli."
 
 #. TRANSLATORS: daemon is broken
 #: src/gpk-application.c:2538
 msgid "Exiting as properties could not be retrieved"
-msgstr ""
+msgstr "Izlaz kao svojstvo se ne može preuzeti"
 
 #. TRANSLATORS: title: all of the packages on the system and available in sources
 #: src/gpk-application.c:2580
@@ -777,18 +785,18 @@ msgstr "64-bitni"
 #. TRANSLATORS: these tools cannot run as root (unknown name)
 #: src/gpk-common.c:251
 msgid "This application is running as a privileged user"
-msgstr ""
+msgstr "Ova aplikacija je pokrenuta kao korijenski korisnik"
 
 #. TRANSLATORS: cannot run as root user, and we display the application name
 #: src/gpk-common.c:254
 #, c-format
 msgid "%s is running as a privileged user"
-msgstr ""
+msgstr "%s je pokrenut(a) kao korijenski korisnik"
 
 #. TRANSLATORS: tell the user off
 #: src/gpk-common.c:257
 msgid "Package management applications are security sensitive."
-msgstr ""
+msgstr "Aplikacije za upravljanje paketima su sigurnosno osjetljive."
 
 #. TRANSLATORS: and explain why
 #: src/gpk-common.c:259
@@ -796,11 +804,13 @@ msgid ""
 "Running graphical applications as a privileged user should be avoided for "
 "security reasons."
 msgstr ""
+"Pokretanje grafičkih aplikacija kao korijenski korisnik bi se trebalo "
+"izbjegavati iz sigurnosnih razloga."
 
 #. TRANSLATORS: button: allow the user to run this, even when insecure
 #: src/gpk-common.c:265
 msgid "Continue _Anyway"
-msgstr ""
+msgstr "Svejedno _nastavi"
 
 #. Translators: a list of two things
 #: src/gpk-common.c:301
@@ -875,15 +885,15 @@ msgstr "medij"
 
 #: src/gpk-enum.c:221
 msgid "Failed with unknown error code"
-msgstr ""
+msgstr "Neuspješno s nepoznatim kôdom greške"
 
 #: src/gpk-enum.c:224
 msgid "No network connection available"
-msgstr ""
+msgstr "Nema dostupnog mrežnog povezivanja"
 
 #: src/gpk-enum.c:227
 msgid "No package cache is available."
-msgstr ""
+msgstr "Nema dostupne predmemorije paketa."
 
 #: src/gpk-enum.c:230
 msgid "Out of memory"
@@ -895,39 +905,39 @@ msgstr ""
 
 #: src/gpk-enum.c:236
 msgid "Not supported by this backend"
-msgstr ""
+msgstr "Nije podržano ovim pozadinskim programom"
 
 #: src/gpk-enum.c:239
 msgid "An internal system error has occurred"
-msgstr ""
+msgstr "Dogodila se unutrašnja greška sustava"
 
 #: src/gpk-enum.c:242
 msgid "A security signature is not present"
-msgstr ""
+msgstr "Sigurnosni potpis nije prisutan"
 
 #: src/gpk-enum.c:245
 msgid "The package is not installed"
-msgstr ""
+msgstr "Paket nije instaliran"
 
 #: src/gpk-enum.c:248
 msgid "The package was not found"
-msgstr ""
+msgstr "Paket nije pronađen"
 
 #: src/gpk-enum.c:251
 msgid "The package is already installed"
-msgstr ""
+msgstr "Paket je već instaliran"
 
 #: src/gpk-enum.c:254
 msgid "The package download failed"
-msgstr ""
+msgstr "Neuspješno preuzimanje paketa"
 
 #: src/gpk-enum.c:257
 msgid "The group was not found"
-msgstr ""
+msgstr "Grupa nije pronađena"
 
 #: src/gpk-enum.c:260
 msgid "The group list was invalid"
-msgstr ""
+msgstr "Popis grupe je neispravan"
 
 #: src/gpk-enum.c:263
 msgid "Dependency resolution failed"
@@ -935,204 +945,204 @@ msgstr ""
 
 #: src/gpk-enum.c:266
 msgid "Search filter was invalid"
-msgstr ""
+msgstr "Filter pretrage je neispravan"
 
 #: src/gpk-enum.c:269
 msgid "The package identifier was not well formed"
-msgstr ""
+msgstr "Identifikator paketa nije u ispravnom obliku"
 
 #: src/gpk-enum.c:272
 msgid "Transaction error"
-msgstr ""
+msgstr "Greška prijenosa"
 
 #: src/gpk-enum.c:275
 msgid "Repository name was not found"
-msgstr ""
+msgstr "Naziv repozitorija nije pronađen"
 
 #: src/gpk-enum.c:278
 msgid "Could not remove a protected system package"
-msgstr ""
+msgstr "Nemoguće uklanjanje zaštićenog paketa sustava"
 
 #: src/gpk-enum.c:281
 msgid "The action was canceled"
-msgstr ""
+msgstr "Radnja je prekinuta"
 
 #: src/gpk-enum.c:284
 msgid "The action was forcibly canceled"
-msgstr ""
+msgstr "Radnja je prisilno prekinuta"
 
 #: src/gpk-enum.c:287
 msgid "Reading the configuration file failed"
-msgstr ""
+msgstr "Neuspješno čitanje datoteke podešavanja"
 
 #: src/gpk-enum.c:290
 msgid "The action cannot be canceled"
-msgstr ""
+msgstr "Radnja se ne može prekinuti"
 
 #: src/gpk-enum.c:293
 msgid "Source packages cannot be installed"
-msgstr ""
+msgstr "Paketi izvora ne mogu biti instalirani"
 
 #: src/gpk-enum.c:296
 msgid "The license agreement failed"
-msgstr ""
+msgstr "Neuspio ugovor licence krajnjeg korisnika (EULA)"
 
 #: src/gpk-enum.c:299
 msgid "Local file conflict between packages"
-msgstr ""
+msgstr "Lokalni sukob datoteka između paketa"
 
 #: src/gpk-enum.c:302
 msgid "Packages are not compatible"
-msgstr ""
+msgstr "Paketi nisu kompatibilni"
 
 #: src/gpk-enum.c:305
 msgid "Problem connecting to a package source"
-msgstr ""
+msgstr "Problem u povezivanje s paketom izvora"
 
 #: src/gpk-enum.c:308
 msgid "Failed to initialize"
-msgstr ""
+msgstr "Neuspješno pokretanje"
 
 #: src/gpk-enum.c:311
 msgid "Failed to finalize"
-msgstr ""
+msgstr "Neuspješno završavanje"
 
 #: src/gpk-enum.c:314
 msgid "Cannot get lock"
-msgstr ""
+msgstr "Nemoguće dobivanje zaključavanja"
 
 #: src/gpk-enum.c:317
 msgid "No packages to update"
-msgstr ""
+msgstr "Nema nadopuna paketa"
 
 #: src/gpk-enum.c:320
 msgid "Cannot write repository configuration"
-msgstr ""
+msgstr "Nemoguće zapisivanje podešavanja repozitorija"
 
 #: src/gpk-enum.c:323
 msgid "Local install failed"
-msgstr ""
+msgstr "Neuspješna lokalna instalacija"
 
 #: src/gpk-enum.c:326
 msgid "Bad security signature"
-msgstr ""
+msgstr "Loš sigurnosni potpis"
 
 #: src/gpk-enum.c:329
 msgid "Missing security signature"
-msgstr ""
+msgstr "Sigurnosni potpis nedostaje"
 
 #: src/gpk-enum.c:332
 msgid "Repository configuration invalid"
-msgstr ""
+msgstr "Neispravno podešavanje repozitorija"
 
 #: src/gpk-enum.c:335
 msgid "Invalid package file"
-msgstr ""
+msgstr "Neispravna datoteka paketa"
 
 #: src/gpk-enum.c:338
 msgid "Package install blocked"
-msgstr ""
+msgstr "Instalacija paketa je blokirana"
 
 #: src/gpk-enum.c:341
 msgid "Package is corrupt"
-msgstr ""
+msgstr "Paket je oštećen"
 
 #: src/gpk-enum.c:344
 msgid "All packages are already installed"
-msgstr ""
+msgstr "Svi paketi su već instalirani"
 
 #: src/gpk-enum.c:347
 msgid "The specified file could not be found"
-msgstr ""
+msgstr "Određena datoteka se ne može pronaći"
 
 #: src/gpk-enum.c:350
 msgid "No more mirrors are available"
-msgstr ""
+msgstr "Nema dostupnih zrcalnih poslužitelja"
 
 #: src/gpk-enum.c:353
 msgid "No distribution upgrade data is available"
-msgstr ""
+msgstr "Nema dostupnih podataka nadogradnje distribucije"
 
 #: src/gpk-enum.c:356
 msgid "Package is incompatible with this system"
-msgstr ""
+msgstr "Paket je nekompatibilan s ovim sustavom"
 
 #: src/gpk-enum.c:359
 msgid "No space is left on the disk"
-msgstr ""
+msgstr "Nema slobodnog prostora na disku"
 
 #. TRANSLATORS: this is the window title when a new CD or DVD is required
 #: src/gpk-enum.c:362 src/gpk-task.c:298
 msgid "A media change is required"
-msgstr ""
+msgstr "Potrebna je promjena medija"
 
 #: src/gpk-enum.c:365
 msgid "Authorization failed"
-msgstr ""
+msgstr "Neuspješna ovjera"
 
 #: src/gpk-enum.c:368
 msgid "Update not found"
-msgstr ""
+msgstr "Nadopuna nije pronađena"
 
 #: src/gpk-enum.c:371
 msgid "Cannot install from untrusted source"
-msgstr ""
+msgstr "Nemoguća instalacija iz nepouzdanih izvora"
 
 #: src/gpk-enum.c:374
 msgid "Cannot update from untrusted source"
-msgstr ""
+msgstr "Nemoguća nadopuna iz nepouzdanih izvora"
 
 #: src/gpk-enum.c:377
 msgid "Cannot get the file list"
-msgstr ""
+msgstr "Nemoguće dobivanje datoteke popisa"
 
 #: src/gpk-enum.c:380
 msgid "Cannot get package requires"
-msgstr ""
+msgstr "Nemoguće dobivanje potrebniha paketa"
 
 #: src/gpk-enum.c:383
 msgid "Cannot disable source"
-msgstr ""
+msgstr "Nemoguće onemogućavanje izvora"
 
 #: src/gpk-enum.c:386
 msgid "The download failed"
-msgstr ""
+msgstr "Neuspješno preuzimanje"
 
 #: src/gpk-enum.c:389
 msgid "Package failed to configure"
-msgstr ""
+msgstr "Neuspješno podešavanje paketa"
 
 #: src/gpk-enum.c:392
 msgid "Package failed to build"
-msgstr ""
+msgstr "Neuspješno izgradnja paketa"
 
 #: src/gpk-enum.c:395
 msgid "Package failed to install"
-msgstr ""
+msgstr "Neuspješno instalacija paketa"
 
 #: src/gpk-enum.c:398
 msgid "Package failed to be removed"
-msgstr ""
+msgstr "Neuspješno uklanjanje paketa"
 
 #: src/gpk-enum.c:401
 msgid "Update failed due to running process"
-msgstr ""
+msgstr "Neuspješna nadopuna uslijed pokretanja procesa"
 
 #: src/gpk-enum.c:404
 msgid "The package database was changed"
-msgstr ""
+msgstr "Baza podataka paketa je promijenjena"
 
 #: src/gpk-enum.c:407
 msgid "Virtual provide type is not supported"
-msgstr ""
+msgstr "Vrsta virtualnog pružanja nije podržana"
 
 #: src/gpk-enum.c:410
 msgid "Install root is invalid"
-msgstr ""
+msgstr "Neispravna korijenska instalacija"
 
 #: src/gpk-enum.c:413
 msgid "Cannot fetch install sources"
-msgstr ""
+msgstr "Nemoguće preuzimanje izvora instalacije"
 
 #: src/gpk-enum.c:416
 msgid "Rescheduled due to priority"
@@ -1140,27 +1150,31 @@ msgstr ""
 
 #: src/gpk-enum.c:419
 msgid "Unfinished transaction"
-msgstr ""
+msgstr "Nedovršen prijenos"
 
 #: src/gpk-enum.c:422
 msgid "Lock required"
-msgstr ""
+msgstr "Potrebno je zaključavanje"
 
 #: src/gpk-enum.c:436
 msgid "Failed with unknown error code."
-msgstr ""
+msgstr "Neuspješno s nepoznatim kôdom greške"
 
 #: src/gpk-enum.c:439
 msgid ""
 "There is no network connection available.\n"
 "Please check your connection settings and try again."
 msgstr ""
+"Nema dostupnog mrežnog povezivanja.\n"
+"Provjerite svoje mrežne postavke i pokušajte ponovno."
 
 #: src/gpk-enum.c:443
 msgid ""
 "The package list needs to be rebuilt.\n"
 "This should have been done by the backend automatically."
 msgstr ""
+"Popis paketa treba ponovno izgraditi.\n"
+"To bi trebalo biti napravljeno s pozadinskim programom automatski."
 
 #: src/gpk-enum.c:447
 msgid ""
@@ -1168,6 +1182,9 @@ msgid ""
 "memory.\n"
 "Please restart your computer."
 msgstr ""
+"Usluzi koja je odgovorna za rukovanje korisnikovim zahtjevima je ponestalo "
+"memorije.\n"
+"Ponovno pokrenite svoje računalo."
 
 #: src/gpk-enum.c:451
 msgid "A thread could not be created to service the user request."
@@ -1179,6 +1196,9 @@ msgid ""
 "Please report a bug in your distribution bug tracker as this should not have "
 "happened."
 msgstr ""
+"Radnja nije podržana ovim pozadinskim programom.\n"
+"Prijavite grešku na pratitelju greške vaše distribucije, zato što se ovo ne "
+"bi smjelo događati."
 
 #: src/gpk-enum.c:458
 msgid ""
@@ -1186,39 +1206,50 @@ msgid ""
 "Please report this bug in your distribution bug tracker with the error "
 "description."
 msgstr ""
+"Neočekivan problem se dogodio.\n"
+"Prijavite ovu grešku na vašem pratitelju grešaka distribucije s opisom "
+"greške."
 
 #: src/gpk-enum.c:462
 msgid ""
 "A security trust relationship could not be made with package source.\n"
 "Please check your security settings."
 msgstr ""
+"Sigurnosna pouzdanost se ne može uspostaviti s izvorom paketa.\n"
+"Provjerite svoje sigurnosne postavke."
 
 #: src/gpk-enum.c:466
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
-msgstr ""
+msgstr "Paket koji se pokušava nadopuniti ili ukloniti nije instaliran."
 
 #: src/gpk-enum.c:469
 msgid ""
 "The package that is being modified was not found on your system or in any "
 "package source."
 msgstr ""
+"Paket koji se pokušava promijeniti nije pronađen na vašem sustavu ili u bilo "
+"kojem izvoru paketa."
 
 #: src/gpk-enum.c:472
 msgid "The package that is trying to be installed is already installed."
-msgstr ""
+msgstr "Paket koji se pokušava instalirati je već instaliran."
 
 #: src/gpk-enum.c:475
 msgid ""
 "The package download failed.\n"
 "Please check your network connectivity."
 msgstr ""
+"Neuspješno preuzimanje paketa.\n"
+"Provjerite svoje mrežno povezivanje."
 
 #: src/gpk-enum.c:479
 msgid ""
 "The group type was not found.\n"
 "Please check your group list and try again."
 msgstr ""
+"Vrsta grupe nije pronađena.\n"
+"Provjerite svoj popis grupe i pokušajte ponovno."
 
 #: src/gpk-enum.c:483
 msgid ""
@@ -1226,12 +1257,17 @@ msgid ""
 "Refreshing your cache may help, although this is normally a software source "
 "error."
 msgstr ""
+"Popis grupe se ne može učitati.\n"
+"Osvježavanje predmemorije može pomoći, iako je to uobičajeno greška izvora "
+"softvera."
 
 #: src/gpk-enum.c:488
 msgid ""
 "A package could not be found that allows the action to complete.\n"
 "More information is available in the detailed report."
 msgstr ""
+"Ne može se pronaći paket koji omogućuje završavanje radnje.\n"
+"Više informacije je dostupno u opširnijem izvještaju."
 
 #: src/gpk-enum.c:492
 msgid "The search filter was not correctly formed."
