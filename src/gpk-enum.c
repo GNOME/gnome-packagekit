@@ -95,6 +95,9 @@ static const PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_CHECK_EXECUTABLE_FILES,	"pk-package-info"},
 	{PK_STATUS_ENUM_CHECK_LIBRARIES,	"pk-package-info"},
 	{PK_STATUS_ENUM_COPY_FILES,		"pk-package-info"},
+#if PK_CHECK_VERSION(1,1,6)
+	{PK_STATUS_ENUM_RUN_HOOK,		"pk-setup"},
+#endif
 	{0, NULL}
 };
 
@@ -888,6 +891,12 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		/* TRANSLATORS: we are copying package files to prepare to install */
 		text = _("Copying files");
 		break;
+#if PK_CHECK_VERSION(1,1,6)
+	case PK_STATUS_ENUM_RUN_HOOK:
+		/* TRANSLATORS: we are running hooks pre or post transaction */
+		text = _("Running hooks");
+		break;
+#endif
 	default:
 		g_warning ("status unrecognized: %s", pk_status_enum_to_string (status));
 	}
