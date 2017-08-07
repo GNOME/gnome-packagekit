@@ -7,19 +7,19 @@ Add any user visible changes into data/appdata/*.xml.in
 
 3. Commit changes in gnome-packagekit git:
 
-git commit -a -m "Release version 3.24.1"
-git tag -s GNOME_PACKAGEKIT_3_24_1 -m "==== Version 3.24.1 ===="
+git commit -a -m "Release version 3.25.90"
+git tag -s GNOME_PACKAGEKIT_3_25_90 -m "==== Version 3.25.90 ===="
 <wait>
 git push --tags
 git push
 
 4. Create tarball
 
-make distcheck
+ninja dist
 
 5. Upload tarballs:
 
-scp *.tar.xz rhughes@master.gnome.org:
+scp meson-dist/*.tar.xz rhughes@master.gnome.org:
 
 6. Install module
 
