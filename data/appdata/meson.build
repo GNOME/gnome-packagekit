@@ -9,6 +9,6 @@ foreach appdata_file: appdata_files
     type: 'xml',
     po_dir: join_paths(meson.source_root(), 'po'),
     install: true,
-    install_dir: join_paths(get_option('datadir'), 'appdata')
+    install_dir: join_paths(get_option('datadir'), 'metainfo')
   )
 endforeach
