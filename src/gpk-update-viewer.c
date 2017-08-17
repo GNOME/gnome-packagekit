@@ -2951,7 +2951,7 @@ main (int argc, char *argv[])
 		return 1;
 
 	/* are we already activated? */
-	application = gtk_application_new ("org.freedesktop.PackageKit.UpdateViewer", 0);
+	application = gtk_application_new ("org.gnome.PackageUpdater", 0);
 	g_signal_connect (application, "startup",
 			  G_CALLBACK (gpk_update_viewer_application_startup_cb), NULL);
 	g_signal_connect (application, "activate",

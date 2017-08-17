@@ -2989,7 +2989,7 @@ main (int argc, char *argv[])
 	priv = g_new0 (GpkApplicationPrivate, 1);
 
 	/* are we already activated? */
-	priv->application = gtk_application_new ("org.freedesktop.PackageKit.Application", 0);
+	priv->application = gtk_application_new ("org.gnome.Packages", 0);
 	g_signal_connect (priv->application, "startup",
 			  G_CALLBACK (gpk_application_startup_cb), priv);
 	g_signal_connect (priv->application, "activate",
