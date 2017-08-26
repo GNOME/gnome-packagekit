@@ -146,7 +146,7 @@ appstream_util = find_program('appstream-util', required : false)
 if appstream_util.found()
   custom_target('NEWS',
     output : 'NEWS',
-    input : 'data/appdata/org.gnome.PowerStats.appdata.xml.in',
+    input : 'data/appdata/org.gnome.Packages.appdata.xml.in',
     command : [appstream_util, 'appdata-to-news', '@INPUT@'],
     capture : true
   )
