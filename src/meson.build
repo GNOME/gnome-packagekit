@@ -146,5 +146,5 @@ if get_option('enable-tests')
     ],
     c_args : cargs
   )
-  test('gnome-power-self-test', e)
+  test('gnome-packagekit-self-test', e)
 endif
