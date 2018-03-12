@@ -11,7 +11,7 @@ conf = configuration_data()
 conf.set_quoted('PACKAGE_VERSION', meson.project_version())
 conf.set_quoted('VERSION', meson.project_version())
 
-if get_option('enable-small-form-factor')
+if get_option('small-form-factor')
   conf.set('PK_BUILD_SMALL_FORM_FACTOR', '1')
 endif
 
@@ -88,7 +88,7 @@ gtk = dependency('gtk+-3.0', version : '>= 3.15.3')
 packagekit = dependency('packagekit-glib2', version : '>= 0.9.1')
 libm = cc.find_library('libm', required: false)
 
-if get_option('enable-systemd')
+if get_option('systemd')
   systemd = dependency('libsystemd')
   polkit = dependency('polkit-gobject-1')
 endif

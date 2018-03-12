@@ -111,7 +111,7 @@ gpk_update_viewer_deps = [
     gtk
 ]
 
-if get_option('enable-systemd')
+if get_option('systemd')
   gpk_update_viewer_srcs += 'systemd-proxy.c'
   gpk_update_viewer_deps += [systemd, polkit]
 endif
@@ -129,7 +129,7 @@ executable(
   install_dir : 'bin'
 )
 
-if get_option('enable-tests')
+if get_option('tests')
   e = executable(
     'gpk-self-test',
     sources : [
