@@ -4,7 +4,7 @@
 project('gnome-packagekit', 'c',
   version : '3.30.0',
   default_options : ['warning_level=1'],
-  meson_version : '>=0.37.0'
+  meson_version : '>=0.46.0'
 )
 
 conf = configuration_data()
@@ -74,14 +74,10 @@ test_link_args = [
   '-Wl,-z,now',
 ]
 foreach arg: test_link_args
-  if cc.has_argument(arg)
-    global_link_args += arg
+  if cc.has_link_argument(arg)
+    add_project_link_arguments(arg, language : 'c')
   endif
 endforeach
-add_global_link_arguments(
-  global_link_args,
-  language: 'c'
-)
 
 gio = dependency('gio-2.0', version : '>= 2.25.9')
 gtk = dependency('gtk+-3.0', version : '>= 3.15.3')
