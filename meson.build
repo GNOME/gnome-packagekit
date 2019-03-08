@@ -2,7 +2,7 @@
 #
 # Licensed under the GNU General Public License Version 2 or later
 project('gnome-packagekit', 'c',
-  version : '3.30.0',
+  version : '3.32.0',
   default_options : ['warning_level=1'],
   meson_version : '>=0.46.0'
 )
