@@ -13,10 +13,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-packagekit\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"packagekit&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2017-08-08 07:36+0000\n"
-"PO-Revision-Date: 2017-08-30 19:49+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-packagekit/"
+"issues\n"
+"POT-Creation-Date: 2019-10-20 13:13+0000\n"
+"PO-Revision-Date: 2020-02-23 14:55+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -24,7 +24,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.3\n"
 "X-Project-Style: gnome\n"
 "X-POT-Import-Date: 2012-03-05 14:46:24+0000\n"
 
@@ -93,12 +93,6 @@ msgstr ""
 msgid "Packages"
 msgstr "Paketit"
 
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.Packages.desktop.in:6
-#: data/gpk-install-local-file.desktop.in:10
-msgid "system-software-install"
-msgstr "system-software-install"
-
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Packages.desktop.in:12
 msgid "Sources;Repositories;Preferences;Install;Store;"
@@ -158,37 +152,37 @@ msgstr "Toteuta muutokset"
 msgid "Changes are not applied instantly, this button applies all changes"
 msgstr "Muutoksia ei toteuteta heti, tämä painike toteuttaa kaikki muutokset"
 
-#: src/gpk-application.ui:416
+#: src/gpk-application.ui:436
 msgid "Check for Updates"
 msgstr "Tarkista päivitykset"
 
 #. TRANSLATORS: program name, an application to add and remove software repositories
-#: src/gpk-application.ui:420 data/gpk-prefs.desktop.in:3 src/gpk-prefs.ui:120
+#: src/gpk-application.ui:440 data/gpk-prefs.desktop.in:3 src/gpk-prefs.ui:120
 #: src/gpk-prefs.c:524
 msgid "Package Sources"
 msgstr "Pakettilähteet"
 
-#: src/gpk-application.ui:424
+#: src/gpk-application.ui:444
 msgid "Refresh Package Lists"
 msgstr "Päivitä pakettiluettelot"
 
-#: src/gpk-application.ui:428 data/gpk-log.desktop.in:3 src/gpk-log.ui:79
+#: src/gpk-application.ui:448 data/gpk-log.desktop.in:3 src/gpk-log.ui:79
 msgid "Package Log"
 msgstr "Pakettiloki"
 
-#: src/gpk-application.ui:434
+#: src/gpk-application.ui:454
 msgid "Only Newest Versions"
 msgstr "Vain uusimmat versiot"
 
-#: src/gpk-application.ui:438
+#: src/gpk-application.ui:458
 msgid "Only Native Packages"
 msgstr "Vain natiivit paketit"
 
-#: src/gpk-application.ui:444
+#: src/gpk-application.ui:464
 msgid "About"
 msgstr "Tietoja"
 
-#: src/gpk-application.ui:448
+#: src/gpk-application.ui:468
 msgid "_Quit"
 msgstr "_Lopeta"
 
@@ -229,11 +223,6 @@ msgstr "Asenna valitut paketit järjestelmään"
 msgid "View past package management tasks"
 msgstr "Katso aiemmat paketinhallintatehtävät"
 
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/gpk-log.desktop.in:6
-msgid "gpk-log"
-msgstr "gpk-log"
-
 #: src/gpk-log.ui:32
 msgid "Filter"
 msgstr "Suodata"
@@ -241,11 +230,6 @@ msgstr "Suodata"
 #: data/gpk-prefs.desktop.in:4
 msgid "Enable or disable package repositories"
 msgstr "Ota käyttöön tai poista käytöstä pakettien asennuslähteitä"
-
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/gpk-prefs.desktop.in:6
-msgid "gpk-prefs"
-msgstr "gpk-prefs"
 
 #: src/gpk-prefs.ui:23
 msgid ""
@@ -264,7 +248,7 @@ msgstr "Luotatko pakettien lähteeseen?"
 
 #: src/gpk-signature.ui:42
 msgid "Repository name"
-msgstr "Asennuslähteen nimi:"
+msgstr "Asennuslähteen nimi"
 
 #: src/gpk-signature.ui:57
 msgid "Signature URL"
@@ -291,11 +275,6 @@ msgstr "Tunnistatko käyttäjän ja luotatko tähän avaimeen?"
 #: src/gpk-update-viewer.c:2949
 msgid "Package Updater"
 msgstr "Pakettien päivitin"
-
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.PackageUpdater.desktop.in:6
-msgid "system-software-update"
-msgstr "system-software-update"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.PackageUpdater.desktop.in:12
@@ -325,7 +304,7 @@ msgstr "_Asenna päivitykset"
 
 #: data/org.gnome.packagekit.gschema.xml:10
 msgid "Automatically remove unused dependencies"
-msgstr "Poista automaattisesti riippuvuudet, joita ei käytetä."
+msgstr "Poista automaattisesti riippuvuudet, joita ei käytetä"
 
 #: data/org.gnome.packagekit.gschema.xml:11
 msgid ""
@@ -728,7 +707,7 @@ msgstr ""
 #: src/gpk-application.c:2163
 msgid "translator-credits"
 msgstr ""
-"Jiri Grönroos, 2016-2017\n"
+"Jiri Grönroos, 2016-2017, 2020\n"
 "Ville-Pekka Vainio, 2008-2011.\n"
 "Tommi Vainikainen, 2010.\n"
 "\n"
@@ -903,7 +882,7 @@ msgstr "Verkkoyhteyttä ei ole käytettävissä"
 
 #: src/gpk-enum.c:236
 msgid "No package cache is available."
-msgstr "Pakettivälimuistia ei ole käytettävissä"
+msgstr "Pakettivälimuistia ei ole käytettävissä."
 
 #: src/gpk-enum.c:239
 msgid "Out of memory"
@@ -1625,10 +1604,8 @@ msgid "A package manager lock is required."
 msgstr "Paketinhallinnan lukko vaaditaan."
 
 #: src/gpk-enum.c:694
-#, fuzzy
-#| msgid "The package is already installed"
 msgid "The software source is already in this state."
-msgstr "Paketti on jo asennettu"
+msgstr "Ohjelmistolähde on jo tässä tilassa."
 
 #: src/gpk-enum.c:709
 msgid "No restart is necessary."
@@ -1862,10 +1839,8 @@ msgstr "Kopioidaan tiedostoja"
 
 #. TRANSLATORS: we are running hooks pre or post transaction
 #: src/gpk-enum.c:913
-#, fuzzy
-#| msgid "Running"
 msgid "Running hooks"
-msgstr "Suoritetaan"
+msgstr "Suoritetaan koukkuja"
 
 #. TRANSLATORS: The type of update
 #: src/gpk-enum.c:929
@@ -2164,10 +2139,8 @@ msgstr "Korjattiin järjestelmä"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: src/gpk-enum.c:1213
-#, fuzzy
-#| msgid "Repairing the system"
 msgid "Upgrading the system"
-msgstr "Korjataan järjestelmää"
+msgstr "Päivitetään järjestelmää"
 
 #. TRANSLATORS: The group type
 #: src/gpk-enum.c:1229
@@ -2456,7 +2429,7 @@ msgstr "Älä päivitä tätä pakettia ellet ole varma, että se on turvallista
 #: src/gpk-task.c:113 src/gpk-task.c:123
 msgid "Malicious software can damage your computer or cause other harm."
 msgstr ""
-"Haittaohjelma voi vahingoittaa tietokonetta tai aiheuttaa muita ongelmia. "
+"Haittaohjelma voi vahingoittaa tietokonetta tai aiheuttaa muita ongelmia."
 
 #. TRANSLATORS: ask if they are absolutely sure they want to do this
 #: src/gpk-task.c:115
@@ -2970,6 +2943,18 @@ msgstr ""
 #: src/gpk-update-viewer.c:2932
 msgid "Update Packages"
 msgstr "Päivitä paketit"
+
+#~ msgid "system-software-install"
+#~ msgstr "system-software-install"
+
+#~ msgid "gpk-log"
+#~ msgstr "gpk-log"
+
+#~ msgid "gpk-prefs"
+#~ msgstr "gpk-prefs"
+
+#~ msgid "system-software-update"
+#~ msgstr "system-software-update"
 
 #~ msgid "Clear"
 #~ msgstr "Tyhjennä"
