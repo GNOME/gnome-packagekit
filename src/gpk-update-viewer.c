@@ -255,6 +255,17 @@ gpk_update_viewer_check_restart (void)
 			gpk_update_viewer_error_dialog (_("Could not restart"), NULL, error->message);
 		}
 #endif
+	} else if (restart_update == PK_RESTART_ENUM_SESSION) {
+		g_autoptr(GDBusConnection) bus = NULL;
+		bus = g_bus_get_sync (G_BUS_TYPE_SESSION, NULL, NULL);
+		g_dbus_connection_call (bus,
+					"org.gnome.SessionManager",
+					"/org/gnome/SessionManager",
+					"org.gnome.SessionManager",
+					"Logout",
+					g_variant_new ("(u)", 0),
+					NULL, G_DBUS_CALL_FLAGS_NONE, G_MAXINT,
+					NULL, NULL, NULL);
 	}
 	return ret;
 }
