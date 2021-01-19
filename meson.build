@@ -86,6 +86,7 @@ libm = cc.find_library('libm', required: false)
 
 if get_option('systemd')
   systemd = dependency('libsystemd')
+  conf.set('HAVE_SYSTEMD', 1)
   polkit = dependency('polkit-gobject-1')
 endif
 
