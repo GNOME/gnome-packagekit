@@ -1,5 +1,5 @@
-			          gnome-packagekit
-		       A PackageKit client for the GNOME desktop
+# gnome-packagekit
+A PackageKit client for the GNOME desktop
 
 gnome-packagekit are PackageKit client programs designed for the GNOME desktop.
 
