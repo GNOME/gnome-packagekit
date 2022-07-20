@@ -139,12 +139,15 @@ if meson.version().version_compare('<0.41.0')
   endif
 endif
 
-appstream_util = find_program('appstream-util', required : false)
-if appstream_util.found()
+ascli_exe = find_program('appstreamcli', required: false)
+if ascli_exe.found()
   custom_target('NEWS',
     output : 'NEWS',
     input : 'data/appdata/org.gnome.Packages.appdata.xml.in',
-    command : [appstream_util, 'appdata-to-news', '@INPUT@'],
+    command : [ascli_exe, 'metainfo-to-news',
+               '--format=text',
+               '@INPUT@',
+               '-'],
     capture : true
   )
 endif
