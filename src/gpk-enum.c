@@ -36,6 +36,7 @@ static const PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_LOW,			"pk-update-low"},
 	{PK_INFO_ENUM_NORMAL,			"pk-update-normal"},
 	{PK_INFO_ENUM_IMPORTANT,		"pk-update-high"},
+	{PK_INFO_ENUM_CRITICAL,			"pk-update-security"},
 	{PK_INFO_ENUM_SECURITY,			"pk-update-security"},
 	{PK_INFO_ENUM_BUGFIX,			"pk-update-bugfix"},
 	{PK_INFO_ENUM_ENHANCEMENT,		"pk-update-enhancement"},

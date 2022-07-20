@@ -55,7 +55,7 @@ gpk_test_enum_func (void)
 	for (i = PK_INFO_ENUM_UNKNOWN+1; i < PK_INFO_ENUM_LAST; i++) {
 		string = gpk_info_enum_to_icon_name (i);
 		if (string == NULL || g_strcmp0 (string, "help-browser") == 0) {
-			g_warning ("failed to get %s", pk_info_enum_to_string (i));
+			g_warning ("failed to get %s (got %s instead)", pk_info_enum_to_string (i), string);
 			break;
 		}
 	}
