@@ -72,29 +72,34 @@ pk_strv_to_ptr_array (gchar **array)
 }
 
 gboolean
-gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
+gpk_window_set_size_request (GtkWindow *window, gint width, gint height)
 {
 #ifdef PK_BUILD_SMALL_FORM_FACTOR
-	GdkScreen *screen;
-	guint screen_w;
-	guint screen_h;
-	guint percent_w;
-	guint percent_h;
+	GdkDisplay *display;
+	GdkMonitor *monitor;
+	GdkRectangle workarea;
+	guint win_w;
+	guint win_h;
+	gdouble percent_scr;
 
 	/* check for tiny screen, like for instance a OLPC or EEE */
-	screen = gdk_screen_get_default ();
-	screen_w = gdk_screen_get_width (screen);
-	screen_h = gdk_screen_get_height (screen);
+	display = gdk_display_get_default ();
+	monitor = gdk_display_get_primary_monitor (display);
+	if (monitor == NULL) {
+		g_debug ("no primary monitor was found, unable to determine small screen support");
+		goto out_normal_size;
+	}
 
 	/* find percentage of screen area */
-	percent_w = (width * 100) / screen_w;
-	percent_h = (height * 100) / screen_h;
-	g_debug ("window coverage x:%i%% y:%i%%", percent_w, percent_h);
+	gdk_monitor_get_workarea (monitor, &workarea);
+	win_w = (width > 0)? width : workarea.width;
+	win_h = (height > 0)? height : workarea.height;
+	percent_scr = (100.0 / (workarea.width * workarea.height)) * (win_w * win_h);
 
-	if (percent_w > GPK_SMALL_FORM_FACTOR_SCREEN_PERCENT ||
-	    percent_h > GPK_SMALL_FORM_FACTOR_SCREEN_PERCENT) {
+	g_debug ("window coverage %.2f%%", percent_scr);
+	if (percent_scr > GPK_SMALL_FORM_FACTOR_SCREEN_PERCENT) {
 		g_debug ("using small form factor mode as %ix%i and requested %ix%i",
-			   screen_w, screen_h, width, height);
+			   workarea.width, workarea.height, width, height);
 		gtk_window_maximize (window);
 		small_form_factor_mode = TRUE;
 		goto out;
@@ -104,8 +109,9 @@ gpk_window_set_size_request (GtkWindow *window, guint width, guint height)
 	if (width == 0 || height == 0)
 		goto out;
 #endif
+out_normal_size:
 	/* normal size laptop panel */
-	g_debug ("using native mode: %ux%u", width, height);
+	g_debug ("using native mode: %ix%i", width, height);
 	gtk_window_set_default_size (window, width, height);
 	small_form_factor_mode = FALSE;
 out:

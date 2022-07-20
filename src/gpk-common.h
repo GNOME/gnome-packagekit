@@ -68,8 +68,8 @@ gboolean	 gpk_check_privileged_user		(const gchar	*application_name,
 							 gboolean	 show_ui);
 gchar		*gpk_strv_join_locale			(gchar		**array);
 gboolean	 gpk_window_set_size_request		(GtkWindow	*window,
-							 guint		 width,
-							 guint		 height);
+							 gint		 width,
+							 gint		 height);
 gboolean	 gpk_window_set_parent_xid		(GtkWindow	*window,
 							 guint32	 xid);
 GPtrArray	*pk_strv_to_ptr_array			(gchar		**array)
