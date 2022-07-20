@@ -446,10 +446,6 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, gpointer
 		goto out;
 	}
 
-	/* hide close button */
-	widget = GTK_WIDGET(gtk_builder_get_object (builder, "button_quit"));
-	gtk_widget_hide (widget);
-
 	/* show a new title */
 	widget = GTK_WIDGET(gtk_builder_get_object (builder, "label_header_title"));
 	/* TRANSLATORS: completed all updates */
@@ -1224,10 +1220,6 @@ gpk_update_viewer_modal_error_with_timeout (const gchar *title, const gchar *mes
 	GtkWidget *dialog;
 	GtkWidget *widget;
 	g_autofree gchar *text = NULL;
-
-	/* hide close button */
-	widget = GTK_WIDGET(gtk_builder_get_object (builder, "button_quit"));
-	gtk_widget_hide (widget);
 
 	/* show a new title */
 	widget = GTK_WIDGET(gtk_builder_get_object (builder, "label_header_title"));
