@@ -80,7 +80,7 @@ foreach arg: test_link_args
 endforeach
 
 gio = dependency('gio-2.0', version : '>= 2.25.9')
-gtk = dependency('gtk+-3.0', version : '>= 3.15.3')
+gtk = dependency('gtk+-3.0', version : '>= 3.22')
 packagekit = dependency('packagekit-glib2', version : '>= 0.9.1')
 libm = cc.find_library('libm', required: false)
 
