@@ -11,7 +11,6 @@ install_data('org.gnome.packagekit.gschema.migrate',
 )
 
 desktop_files = [
-  'gpk-install-local-file.desktop',
   'gpk-log.desktop',
   'gpk-prefs.desktop',
   'org.gnome.Packages.desktop',
