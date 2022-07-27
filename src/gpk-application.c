@@ -2739,7 +2739,7 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   PKGDATADIR G_DIR_SEPARATOR_S "icons");
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
-					   "/usr/share/PackageKit/icons");
+					   "/usr/share/gnome-packagekit/icons");
 
 	priv->control = pk_control_new ();
 

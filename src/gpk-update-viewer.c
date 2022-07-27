@@ -2940,6 +2940,8 @@ main (int argc, char *argv[])
 	/* add application specific icons to search path */
 	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
 					   PKGDATADIR G_DIR_SEPARATOR_S "icons");
+	gtk_icon_theme_append_search_path (gtk_icon_theme_get_default (),
+					   "/usr/share/gnome-packagekit/icons");
 
 	/* TRANSLATORS: title to pass to the user if there are not enough privs */
 	ret = gpk_check_privileged_user (_("Package Updater"), TRUE);
