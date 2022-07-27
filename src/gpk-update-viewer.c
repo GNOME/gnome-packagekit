@@ -2894,7 +2894,7 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	gtk_widget_show (label);
 
 	/* pack infobars into main UI */
-	widget = GTK_WIDGET(gtk_builder_get_object (builder, "vbox1"));
+	widget = GTK_WIDGET(gtk_builder_get_object (builder, "vbox2"));
 	gtk_box_pack_start (GTK_BOX(widget), info_mobile, FALSE, FALSE, 3);
 	gtk_box_reorder_child (GTK_BOX(widget), info_mobile, 1);
 	gtk_box_pack_start (GTK_BOX(widget), info_updates, FALSE, FALSE, 3);
