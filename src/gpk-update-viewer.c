@@ -91,7 +91,7 @@ enum {
 	GPK_UPDATES_COLUMN_LAST
 };
 
-static gboolean gpk_update_viewer_get_new_update_array (void);
+static void gpk_update_viewer_get_new_update_array (void);
 
 static gboolean
 _g_strzero (const gchar *text)
@@ -1475,7 +1475,7 @@ gpk_update_viewer_treeview_query_tooltip_cb (GtkWidget *widget, gint x, gint y, 
 			ret = FALSE;
 			break;
 		}
-		text = gpk_info_status_enum_to_string (info);
+		text = gpk_info_status_enum_to_string ((GpkInfoStatusEnum) info);
 		break;
 	default:
 		/* ignore */
@@ -2398,10 +2398,9 @@ gpk_update_viewer_get_updates_cb (PkClient *client, GAsyncResult *res, gpointer 
 	gpk_update_viewer_reconsider_info ();
 }
 
-static gboolean
+static void
 gpk_update_viewer_get_new_update_array (void)
 {
-	gboolean ret;
 	GtkWidget *widget;
 	g_autofree gchar *text = NULL;
 	PkBitfield filter = PK_FILTER_ENUM_NONE;
@@ -2419,7 +2418,6 @@ gpk_update_viewer_get_new_update_array (void)
 	pk_client_get_updates_async (PK_CLIENT(task), filter, cancellable,
 				     (PkProgressCallback) gpk_update_viewer_progress_cb, NULL,
 				     (GAsyncReadyCallback) gpk_update_viewer_get_updates_cb, NULL);
-	return ret;
 }
 
 /**

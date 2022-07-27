@@ -1409,8 +1409,8 @@ const gchar *
 gpk_info_status_enum_to_string (GpkInfoStatusEnum info)
 {
 	if ((PkInfoEnum)info >= PK_INFO_ENUM_LAST)
-		return gpk_info_enum_to_localised_past (info - PK_INFO_ENUM_LAST);
-	return gpk_info_enum_to_localised_present (info);
+		return gpk_info_enum_to_localised_past ((PkInfoEnum) info - PK_INFO_ENUM_LAST);
+	return gpk_info_enum_to_localised_present ((PkInfoEnum) info);
 }
 
 const gchar *
@@ -1428,5 +1428,5 @@ gpk_info_status_enum_to_icon_name (GpkInfoStatusEnum info)
 		return gpk_info_enum_to_icon_name (info - PK_INFO_ENUM_LAST);
 
 	/* regular PkInfoEnum */
-	return gpk_info_enum_to_icon_name (info);
+	return gpk_info_enum_to_icon_name ((PkInfoEnum) info);
 }
