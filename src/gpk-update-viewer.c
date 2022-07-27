@@ -1799,8 +1799,12 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 	/* only show changelog if we didn't have any update text */
 	if (!has_update_text && !_g_strzero (changelog)) {
 		if (!_g_strzero (changelog)) {
+			g_autofree gchar *changelog_escaped = g_markup_escape_text (changelog, -1);
+
 			/* TRANSLATORS: this is a ChangeLog */
-			line2 = g_strdup_printf ("%s\n%s\n", _("The developer logs will be shown as no description is available for this update:"), changelog);
+			line2 = g_strdup_printf ("%s\n\n<tt>%s</tt>",
+						 _("The developer logs will be shown as no description is available for this update:"),
+						 changelog_escaped);
 			gtk_text_buffer_insert_markup (text_buffer, &iter, line2, -1);
 			g_free (line2);
 		}
