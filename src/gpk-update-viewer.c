@@ -1799,8 +1799,12 @@ gpk_update_viewer_populate_details (PkUpdateDetail *item)
 	/* only show changelog if we didn't have any update text */
 	if (!has_update_text && !_g_strzero (changelog)) {
 		if (!_g_strzero (changelog)) {
+			g_autofree gchar *changelog_escaped = g_markup_escape_text (changelog, -1);
+
 			/* TRANSLATORS: this is a ChangeLog */
-			line2 = g_strdup_printf ("%s\n%s\n", _("The developer logs will be shown as no description is available for this update:"), changelog);
+			line2 = g_strdup_printf ("%s\n\n<tt>%s</tt>",
+						 _("The developer logs will be shown as no description is available for this update:"),
+						 changelog_escaped);
 			gtk_text_buffer_insert_markup (text_buffer, &iter, line2, -1);
 			g_free (line2);
 		}
@@ -2890,7 +2894,7 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	gtk_widget_show (label);
 
 	/* pack infobars into main UI */
-	widget = GTK_WIDGET(gtk_builder_get_object (builder, "vbox1"));
+	widget = GTK_WIDGET(gtk_builder_get_object (builder, "vbox2"));
 	gtk_box_pack_start (GTK_BOX(widget), info_mobile, FALSE, FALSE, 3);
 	gtk_box_reorder_child (GTK_BOX(widget), info_mobile, 1);
 	gtk_box_pack_start (GTK_BOX(widget), info_updates, FALSE, FALSE, 3);

@@ -79,8 +79,8 @@ foreach arg: test_link_args
   endif
 endforeach
 
-gio = dependency('gio-2.0', version : '>= 2.25.9')
-gtk = dependency('gtk+-3.0', version : '>= 3.22')
+gio = dependency('gio-2.0', version : '>= 2.26')
+gtk = dependency('gtk+-3.0', version : '>= 3.24')
 packagekit = dependency('packagekit-glib2', version : '>= 0.9.1')
 libm = cc.find_library('libm', required: false)
 
