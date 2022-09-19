@@ -2182,7 +2182,7 @@ gpk_application_activate_about_cb (GSimpleAction *action,
 			       "license", license_trans,
 			       "wrap-license", TRUE,
 			       "website-label", _("PackageKit Website"),
-			       "website", "http://www.packagekit.org",
+			       "website", "https://www.freedesktop.org/software/PackageKit/",
 				/* TRANSLATORS: description of NULL, gpk-application that is */
 			       "comments", _("Package Manager for GNOME"),
 			       "authors", authors,
