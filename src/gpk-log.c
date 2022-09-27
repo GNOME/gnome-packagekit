@@ -125,22 +125,16 @@ gpk_log_model_get_iter (GtkTreeModel *model, GtkTreeIter *iter, const gchar *id)
 static gchar *
 gpk_log_get_localised_date (const gchar *timespec)
 {
-	GDate *date;
-	GTimeVal timeval;
-	gchar buffer[100];
+	g_autoptr(GDateTime) date_time = NULL;
 
-	/* the old date */
-	g_time_val_from_iso8601 (timespec, &timeval);
-
-	/* get printed string */
-	date = g_date_new ();
-	g_date_set_time_val (date, &timeval);
+	date_time = g_date_time_new_from_iso8601 (timespec, NULL);
+	if (date_time == NULL) {
+		g_warning ("failed to parse date %s", timespec);
+		return g_strdup (timespec);
+	}
 
 	/* TRANSLATORS: strftime formatted please */
-	g_date_strftime (buffer, 100, _("%d %B %Y"), date);
-
-	g_date_free (date);
-	return g_strdup (buffer);
+	return g_date_time_format (date_time, _("%d %B %Y"));
 }
 
 static gchar *

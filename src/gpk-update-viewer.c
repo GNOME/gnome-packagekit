@@ -524,7 +524,7 @@ gpk_update_viewer_compare_refs (GtkTreeRowReference *a, GtkTreeRowReference *b)
 }
 
 static gboolean
-gpk_update_viewer_pulse_active_rows (void)
+gpk_update_viewer_pulse_active_rows (gpointer user_data)
 {
 	GSList *l;
 	GtkTreeRowReference *ref;
@@ -1631,20 +1631,19 @@ static gchar *
 gpk_update_viewer_iso8601_format_locale_date (const gchar *iso_date)
 {
 	g_autoptr(GDateTime) dt = NULL;
-	GTimeVal timeval;
 
 	/* not valid */
 	if (iso_date == NULL || iso_date[0] == '\0')
 		return NULL;
 
 	/* parse ISO8601 date */
-	if (!g_time_val_from_iso8601 (iso_date, &timeval)) {
+	dt = g_date_time_new_from_iso8601 (iso_date, NULL);
+	if (dt == NULL) {
 		g_warning ("failed to parse %s, falling back to ISO8601", iso_date);
 		return g_strdup (iso_date);
 	}
 
 	/* convert to a date object */
-	dt = g_date_time_new_from_timeval_utc (&timeval);
 	return g_date_time_format (dt, "%x");
 }
 
