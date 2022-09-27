@@ -143,7 +143,7 @@ ascli_exe = find_program('appstreamcli', required: false)
 if ascli_exe.found()
   custom_target('NEWS',
     output : 'NEWS',
-    input : 'data/appdata/org.gnome.Packages.appdata.xml.in',
+    input : 'data/metainfo/org.gnome.Packages.metainfo.xml.in',
     command : [ascli_exe, 'metainfo-to-news',
                '--format=text',
                '@INPUT@',

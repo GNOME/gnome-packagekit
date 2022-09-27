@@ -126,17 +126,16 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 
 %files installer
 %{_bindir}/gpk-application
-%{_datadir}/appdata/org.gnome.Packages.appdata.xml
+%{_datadir}/metainfo/org.gnome.Packages.metainfo.xml
 %{_datadir}/applications/org.gnome.Packages.desktop
 %{_datadir}/man/man1/gpk-application.1*
 
 %files updater
 %{_bindir}/gpk-update-viewer
-%{_datadir}/appdata/org.gnome.PackageUpdater.appdata.xml
+%{_datadir}/metainfo/org.gnome.PackageUpdater.metainfo.xml
 %{_datadir}/applications/org.gnome.PackageUpdater.desktop
 %{_datadir}/man/man1/gpk-update-viewer.1*
 
 %changelog
 * #LONGDATE# Richard Hughes <richard@hughsie.com> #VERSION#-0.#BUILD##ALPHATAG#
 - Update from GIT
-
