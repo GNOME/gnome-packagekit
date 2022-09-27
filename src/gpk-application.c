@@ -456,7 +456,7 @@ out:
 static void
 gpk_application_menu_homepage_cb (GtkAction *action, GpkApplicationPrivate *priv)
 {
-	gtk_show_uri (NULL, priv->homepage_url, GDK_CURRENT_TIME, NULL);
+	gtk_show_uri_on_window (NULL, priv->homepage_url, GDK_CURRENT_TIME, NULL);
 }
 
 static gint
@@ -2127,8 +2127,7 @@ gpk_application_entry_text_icon_press_cb (GtkEntry *entry, GtkEntryIconPosition 
 	}
 
 	gtk_widget_show_all (GTK_WIDGET (menu));
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
-			event->button, event->time);
+	gtk_menu_popup_at_pointer (GTK_MENU (menu), (GdkEvent*) event);
 }
 
 static void

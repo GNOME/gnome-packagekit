@@ -31,8 +31,6 @@
 
 static void     gpk_task_finalize	(GObject     *object);
 
-#define GPK_TASK_GET_PRIVATE(o) (G_TYPE_INSTANCE_GET_PRIVATE ((o), GPK_TYPE_TASK, GpkTaskPrivate))
-
 struct _GpkTaskPrivate
 {
 	gpointer		 user_data;
@@ -46,7 +44,8 @@ struct _GpkTaskPrivate
 	const gchar		*help_id;
 };
 
-G_DEFINE_TYPE (GpkTask, gpk_task, PK_TYPE_TASK)
+G_DEFINE_TYPE_WITH_PRIVATE (GpkTask, gpk_task, PK_TYPE_TASK)
+#define GET_PRIVATE(o) (gpk_task_get_instance_private (o))
 
 gboolean
 gpk_task_set_parent_window (GpkTask *task, GtkWindow *parent_window)
@@ -92,7 +91,7 @@ gpk_task_untrusted_question (PkTask *task, guint request, PkResults *results)
 	GtkWidget *widget;
 	g_autofree gchar *message = NULL;
 	PkRoleEnum role;
-	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
+	GpkTaskPrivate *priv = GET_PRIVATE (GPK_TASK(task));
 
 	/* save the current request */
 	priv->request = request;
@@ -151,7 +150,7 @@ gpk_task_key_question (PkTask *task, guint request, PkResults *results)
 	g_autofree gchar *key_userid = NULL;
 	g_autofree gchar *key_id = NULL;
 	PkRepoSignatureRequired *item;
-	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
+	GpkTaskPrivate *priv = GET_PRIVATE (GPK_TASK(task));
 
 	/* save the current request */
 	priv->request = request;
@@ -211,7 +210,7 @@ gpk_task_eula_question (PkTask *task, guint request, PkResults *results)
 	g_autofree gchar *package_id = NULL;
 	g_autofree gchar *vendor_name = NULL;
 	g_autofree gchar *license_agreement = NULL;
-	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
+	GpkTaskPrivate *priv = GET_PRIVATE (GPK_TASK(task));
 
 	/* save the current request */
 	priv->request = request;
@@ -268,7 +267,7 @@ gpk_task_media_change_question (PkTask *task, guint request, PkResults *results)
 	gchar *media_id;
 	PkMediaTypeEnum media_type;
 	gchar *media_text;
-	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
+	GpkTaskPrivate *priv = GET_PRIVATE (GPK_TASK(task));
 
 	/* save the current request */
 	priv->request = request;
@@ -390,7 +389,7 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 {
 	gboolean ret;
 	g_autoptr(GPtrArray) array = NULL;
-	GpkTaskPrivate *priv = GPK_TASK(task)->priv;
+	GpkTaskPrivate *priv = GET_PRIVATE (GPK_TASK(task));
 	PkRoleEnum role;
 	g_autoptr(PkPackageSack) sack = NULL;
 	guint inputs;
@@ -608,14 +607,12 @@ gpk_task_class_init (GpkTaskClass *klass)
 	task_class->eula_question = gpk_task_eula_question;
 	task_class->media_change_question = gpk_task_media_change_question;
 	task_class->simulate_question = gpk_task_simulate_question;
-
-	g_type_class_add_private (klass, sizeof (GpkTaskPrivate));
 }
 
 static void
 gpk_task_init (GpkTask *task)
 {
-	task->priv = GPK_TASK_GET_PRIVATE (task);
+	task->priv = GET_PRIVATE (task);
 	task->priv->request = 0;
 	task->priv->parent_window = NULL;
 	task->priv->current_window = NULL;

@@ -2208,9 +2208,7 @@ gpk_update_viewer_detail_popup_menu_create (GtkWidget *treeview, GdkEventButton 
 	gtk_menu_shell_append (GTK_MENU_SHELL (menu), menuitem);
 
 	gtk_widget_show_all (menu);
-	gtk_menu_popup (GTK_MENU (menu), NULL, NULL, NULL, NULL,
-			(event != NULL) ? event->button : 0,
-			gdk_event_get_time((GdkEvent*)event));
+	gtk_menu_popup_at_pointer (GTK_MENU (menu), (GdkEvent*) event);
 }
 
 static gboolean
@@ -2440,7 +2438,7 @@ gpk_update_viewer_textview_follow_link (GtkWidget *text_view, GtkTextIter *iter)
 		GtkTextTag *tag = tagp->data;
 		const gchar *href = (const gchar *) (g_object_get_data (G_OBJECT (tag), "href"));
 		if (href != NULL)
-			gtk_show_uri (NULL, href, GDK_CURRENT_TIME, NULL);
+			gtk_show_uri_on_window (NULL, href, GDK_CURRENT_TIME, NULL);
 	}
 
 	if (tags != NULL)
