@@ -442,8 +442,6 @@ gpk_update_viewer_update_packages_cb (PkTask *_task, GAsyncResult *res, gpointer
 		gpk_update_viewer_check_restart ();
 		gpk_update_viewer_quit ();
 		goto out;
-	} else {
-		goto out;
 	}
 
 	/* show a new title */
