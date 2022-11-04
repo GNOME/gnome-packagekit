@@ -1,13 +1,12 @@
 %define alphatag			#ALPHATAG#
 
-Summary:   Session applications to manage packages
 Name:      gnome-packagekit
 Version:   #VERSION#
 Release:   0.#BUILD#%{?alphatag}%{?dist}
+Summary:   Session applications to manage packages
 License:   GPLv2+
-Group:     Applications/System
 URL:       https://www.freedesktop.org/software/PackageKit/
-Source0:   http://download.gnome.org/sources/gnome-packagekit/3.20/%{name}-%{version}.tar.xz
+Source0:   http://download.gnome.org/sources/gnome-packagekit/43/%{name}-%{version}.tar.xz
 
 BuildRequires: glib2-devel >= 2.25.8
 BuildRequires: gtk3-devel
@@ -17,7 +16,6 @@ BuildRequires: gettext
 BuildRequires: libtool
 BuildRequires: cairo-devel
 BuildRequires: startup-notification-devel
-BuildRequires: perl(XML::Parser)
 BuildRequires: PackageKit-devel >= 0.5.0
 BuildRequires: xorg-x11-proto-devel
 BuildRequires: fontconfig-devel
@@ -26,10 +24,10 @@ BuildRequires: libgudev1-devel
 BuildRequires: libxslt
 BuildRequires: docbook-utils
 BuildRequires: systemd-devel
+BuildRequires: meson
 BuildRequires: polkit-devel
 BuildRequires: itstool
 BuildRequires: appstream
-BuildRequires: meson
 
 # the top level package depends on all the apps to make upgrades work
 Requires: %{name}-installer
@@ -42,7 +40,6 @@ removing packages on your system.
 
 %package common
 Summary: Common files required for %{name}
-Requires:  %{name}%{?_isa} = %{version}-%{release}
 Requires:  adwaita-icon-theme
 Requires:  PackageKit%{?_isa} >= 0.5.0
 Requires:  PackageKit-libs >= 0.5.0
@@ -50,15 +47,12 @@ Requires:  shared-mime-info
 Requires:  iso-codes
 Requires:  libcanberra%{?_isa} >= 0.10
 
-# required because KPackageKit provides exactly the same interface
-Provides: PackageKit-session-service
-
 %description common
 Files shared by all subpackages of %{name}
 
 %package installer
 Summary: PackageKit package installer
-Requires: %{name}%{?_isa} = %{version}-%{release}
+Requires: %{name}-common%{?_isa} = %{version}-%{release}
 
 %description installer
 A graphical package installer for PackageKit which is used to manage software
@@ -84,22 +78,6 @@ without rebooting.
 
 %find_lang %name --with-gnome
 
-%post
-touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
-update-desktop-database %{_datadir}/applications &> /dev/null || :
-
-%postun
-if [ $1 -eq 0 ] ; then
-    touch --no-create %{_datadir}/icons/hicolor &>/dev/null
-    gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-    glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
-fi
-update-desktop-database %{_datadir}/applications &> /dev/null || :
-
-%posttrans
-gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
-glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
-
 %files
 # nada
 
@@ -116,25 +94,24 @@ glib-compile-schemas %{_datadir}/glib-2.0/schemas &> /dev/null || :
 %{_datadir}/gnome-packagekit/icons/hicolor/*/*/*.png
 %{_datadir}/gnome-packagekit/icons/hicolor/scalable/*/*.svg*
 %{_datadir}/icons/hicolor/scalable/*/*.svg*
-%{_datadir}/man/man1/gpk-log.1*
-%{_datadir}/man/man1/gpk-prefs.1*
-%{_datadir}/applications/gpk-install-local-file.desktop
 %{_datadir}/applications/gpk-log.desktop
 %{_datadir}/applications/gpk-prefs.desktop
 %{_datadir}/glib-2.0/schemas/org.gnome.packagekit.gschema.xml
 %{_datadir}/GConf/gsettings/org.gnome.packagekit.gschema.migrate
+%{_mandir}/man1/gpk-log.1*
+%{_mandir}/man1/gpk-prefs.1*
 
 %files installer
 %{_bindir}/gpk-application
-%{_datadir}/metainfo/org.gnome.Packages.metainfo.xml
 %{_datadir}/applications/org.gnome.Packages.desktop
-%{_datadir}/man/man1/gpk-application.1*
+%{_datadir}/metainfo/org.gnome.Packages.metainfo.xml
+%{_mandir}/man1/gpk-application.1*
 
 %files updater
 %{_bindir}/gpk-update-viewer
-%{_datadir}/metainfo/org.gnome.PackageUpdater.metainfo.xml
 %{_datadir}/applications/org.gnome.PackageUpdater.desktop
-%{_datadir}/man/man1/gpk-update-viewer.1*
+%{_datadir}/metainfo/org.gnome.PackageUpdater.metainfo.xml
+%{_mandir}/man1/gpk-update-viewer.1*
 
 %changelog
 * #LONGDATE# Richard Hughes <richard@hughsie.com> #VERSION#-0.#BUILD##ALPHATAG#
