@@ -1,5 +1,5 @@
 # translation of packagekit-gnome.po to
-# Copyright (C) 2008 THE packagekit-gnome'S COPYRIGHT HOLDER
+# Copyright (C) 2008-2023 packagekit-gnome's COPYRIGHT HOLDER
 # This file is distributed under the same license as the packagekit-gnome package.
 #
 # Necmettin Begiter <necmettin.begiter@gmail.com>, 2008.
@@ -9,6 +9,7 @@
 # Muhammet Kara <muhammetk@gmail.com>, 2011, 2012, 2013, 2014, 2015, 2016.
 # Emin Tufan Çetin <etcetin@gmail.com>, 2018.
 # Fatih Altun <fatih.altun@pardus.org.tr>, 2021.
+# Sabri Ünal <libreajans@gmail.com>, 2023.
 #
 msgid ""
 msgstr ""
@@ -16,15 +17,15 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-packagekit/"
 "issues\n"
 "POT-Creation-Date: 2018-06-10 17:02+0000\n"
-"PO-Revision-Date: 2021-06-19 21:47+0300\n"
-"Last-Translator: Fatih Altun <fatih.altun@pardus.org.tr>\n"
+"PO-Revision-Date: 2023-02-16 04:17+0300\n"
+"Last-Translator: Sabri Ünal <libreajans@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: Gtranslator 3.38.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.1.1\n"
 
 #. TRANSLATORS: user-friendly name for gpk-update-viewer
 #: data/appdata/org.gnome.Packages.appdata.xml.in:7 src/gpk-log.c:434
@@ -95,7 +96,6 @@ msgstr "Paketler"
 #. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/org.gnome.Packages.desktop.in:6
 #: data/gpk-install-local-file.desktop.in:10
-#| msgid "Software Install"
 msgid "system-software-install"
 msgstr "system-software-install"
 
@@ -309,7 +309,7 @@ msgstr ""
 
 #: src/gpk-update-viewer.ui:108
 msgid "_Upgrade"
-msgstr "_Güncelle"
+msgstr "_Yükselt"
 
 #. TRANSLATORS: column for what packages were upgraded
 #: src/gpk-update-viewer.ui:174 src/gpk-log.c:276
@@ -334,7 +334,7 @@ msgstr ""
 
 #: data/org.gnome.packagekit.gschema.xml:15
 msgid "Ask the user if additional packages should be installed"
-msgstr "Kullanıcıya ek paketlerin kurulmasını sor"
+msgstr "Ek paketlerin kurulup kurulmayacağını kullanıcıya sor"
 
 #: data/org.gnome.packagekit.gschema.xml:16
 msgid "Ask the user if additional packages should be installed."
@@ -342,7 +342,7 @@ msgstr "Ek paketlerin kurulup kurulmayacağını kullanıcıya sor."
 
 #: data/org.gnome.packagekit.gschema.xml:20
 msgid "Filter using basename in gpk-application"
-msgstr "gpk-application içindeki temel ad kullanarak süz"
+msgstr "gpk-application içindeki temel adı kullanarak süz"
 
 #: data/org.gnome.packagekit.gschema.xml:21
 msgid "Filter package lists using basename in gpk-application."
@@ -389,7 +389,6 @@ msgstr ""
 "oluşturulması daha uzun sürer."
 
 #: data/org.gnome.packagekit.gschema.xml:45
-#| msgid "Show the 'All Packages' group menu"
 msgid "Show the “All Packages” group menu"
 msgstr "“Tüm Paketler” küme menüsünü göster"
 
@@ -406,9 +405,6 @@ msgid "The search mode used by default"
 msgstr "Öntanımlı olarak kullanılacak arama kipi"
 
 #: data/org.gnome.packagekit.gschema.xml:51
-#| msgid ""
-#| "The search mode used by default. Options are \"name\", \"details\", or "
-#| "\"file\"."
 msgid ""
 "The search mode used by default. Options are “name”, “details”, or “file”."
 msgstr ""
@@ -425,15 +421,15 @@ msgstr "Paket kaynak görüntüleyicide tüm depoları göster."
 
 #: data/org.gnome.packagekit.gschema.xml:60
 msgid "Only show the newest updates in the list"
-msgstr "Listede yalnızca en yeni güncelleştirmeleri göster"
+msgstr "Listede yalnızca en yeni güncellemeleri göster"
 
 #: data/org.gnome.packagekit.gschema.xml:61
 msgid ""
 "Only show the newest packages in the update list, and filter out older "
 "updates that are still available."
 msgstr ""
-"Güncelleştirme listesinde yalnızca en yeni paketleri göster ve hala var olan "
-"eski güncelleştirmeleri dışarıda bırak."
+"Güncelleme listesinde yalnızca en yeni paketleri göster ve hala var olan "
+"eski güncellemeleri dışarıda bırak."
 
 #: data/org.gnome.packagekit.gschema.xml:65
 msgid "Scroll to packages as they are downloaded"
@@ -960,7 +956,7 @@ msgstr "Aktarım hatası"
 
 #: src/gpk-enum.c:284
 msgid "Repository name was not found"
-msgstr "Dep adı bulunamadı"
+msgstr "Depo adı bulunamadı"
 
 #: src/gpk-enum.c:287
 msgid "Could not remove a protected system package"
@@ -1227,8 +1223,7 @@ msgstr ""
 #: src/gpk-enum.c:480
 msgid ""
 "The package that is trying to be removed or updated is not already installed."
-msgstr ""
-"Kaldırılmaya veya güncelleştirilmeye çalışılan paket zaten kurulu değil."
+msgstr "Kaldırılmaya veya güncellenmeye çalışılan paket zaten kurulu değil."
 
 #: src/gpk-enum.c:483
 msgid ""
@@ -1439,9 +1434,6 @@ msgstr ""
 "Paket dosyası bozuk olabilir, ya da uygun bir paket değil."
 
 #: src/gpk-enum.c:594
-#| msgid ""
-#| "Installation of this package prevented by your packaging system's "
-#| "configuration."
 msgid ""
 "Installation of this package prevented by your packaging system’s "
 "configuration."
@@ -1473,7 +1465,7 @@ msgid ""
 "There were no more download mirrors that could be tried."
 msgstr ""
 "Gerekli veriler herhangi bir yapılandırılmış paket kaynağı üzerinde "
-"bulunamadı\n"
+"bulunamadı.\n"
 "Denenebilecek başka indirme yansısı yok."
 
 #: src/gpk-enum.c:611
@@ -1623,7 +1615,6 @@ msgid "A package manager lock is required."
 msgstr "Paket yöneticisi kilidi gerekiyor."
 
 #: src/gpk-enum.c:694
-#| msgid "The package is already installed"
 msgid "The software source is already in this state."
 msgstr "Yazılım kaynağı zaten bu durumda."
 
@@ -1646,7 +1637,7 @@ msgstr "Yeniden başlatma gerekecek."
 #: src/gpk-enum.c:721
 msgid "You will be required to log out and back in due to a security update."
 msgstr ""
-"Güvenlik güncelleştirmesi nedeniyle çıkış yapıp giriş yapmanız gerekmektedir."
+"Güvenlik güncellemesi nedeniyle çıkış yapıp giriş yapmanız gerekmektedir."
 
 #: src/gpk-enum.c:724
 msgid "A restart will be required due to a security update."
@@ -1804,7 +1795,7 @@ msgstr "Kümeler indiriliyor"
 #. TRANSLATORS: transaction state, downloading metadata
 #: src/gpk-enum.c:868
 msgid "Downloading update information"
-msgstr "Güncelleştirme bilgileri indiriliyor"
+msgstr "Güncelleme bilgileri indiriliyor"
 
 #. TRANSLATORS: transaction state, repackaging delta files
 #: src/gpk-enum.c:872
@@ -1884,7 +1875,7 @@ msgstr "Güvenlik güncellemesi"
 #. TRANSLATORS: The type of update
 #: src/gpk-enum.c:945
 msgid "Bug fix update"
-msgstr "Hata giderme güncellemesi"
+msgstr "Hata düzeltme güncellemesi"
 
 #. TRANSLATORS: The type of update
 #: src/gpk-enum.c:949
@@ -1894,7 +1885,7 @@ msgstr "Yenilik güncellemesi"
 #. TRANSLATORS: The type of update
 #: src/gpk-enum.c:953
 msgid "Blocked update"
-msgstr "Kapatılmış güncelleme"
+msgstr "Engellenen güncelleme"
 
 #. TRANSLATORS: The state of a package, i.e. not installed
 #: src/gpk-enum.c:963
@@ -1913,7 +1904,6 @@ msgstr "Güvenilmez"
 
 #. TRANSLATORS: The state of a package
 #: src/gpk-enum.c:976
-#| msgid "Available"
 msgid "Unavailable"
 msgstr "Kullanılabilir değil"
 
@@ -2140,7 +2130,7 @@ msgstr "Paketler indirildi"
 #. TRANSLATORS: The role of the transaction, in past tense
 #: src/gpk-enum.c:1196
 msgid "Got distribution upgrades"
-msgstr "Dağıtım güncellemeleri alındı"
+msgstr "Dağıtım yükseltmeleri alındı"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: src/gpk-enum.c:1200
@@ -2159,9 +2149,8 @@ msgstr "Sistem onarıldı"
 
 #. TRANSLATORS: The role of the transaction, in past tense
 #: src/gpk-enum.c:1213
-#| msgid "Repairing the system"
 msgid "Upgrading the system"
-msgstr "Sistem yükseltildi"
+msgstr "Sistem yükseltiliyor"
 
 #. TRANSLATORS: The group type
 #: src/gpk-enum.c:1229
@@ -2251,7 +2240,7 @@ msgstr "Sunucular"
 #. TRANSLATORS: The group type
 #: src/gpk-enum.c:1297
 msgid "Fonts"
-msgstr "Fontlar"
+msgstr "Yazı tipleri"
 
 #. TRANSLATORS: The group type
 #: src/gpk-enum.c:1301
@@ -2474,9 +2463,6 @@ msgstr "Bu paketi kurmak istediğinize <b>emin</b> misiniz?"
 #. TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc
 #: src/gpk-task.c:293
 #, c-format
-#| msgid ""
-#| "Additional media is required. Please insert the %s labeled '%s' to "
-#| "continue."
 msgid ""
 "Additional media is required. Please insert the %s labeled “%s” to continue."
 msgstr ""
@@ -2629,7 +2615,7 @@ msgstr "Yeniden başlatılamadı"
 #. TRANSLATORS: we failed to install all the updates we requested
 #: src/gpk-update-viewer.c:310
 msgid "Some updates were not installed"
-msgstr "Bazı güncelleştirmeler kurulamadı"
+msgstr "Bazı güncellemeler kurulamadı"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: src/gpk-update-viewer.c:370 src/gpk-update-viewer.c:381
@@ -2645,12 +2631,12 @@ msgstr "Güncellemeler kuruldu"
 #. TRANSLATORS: title: all updates for the machine installed okay
 #: src/gpk-update-viewer.c:454
 msgid "All updates were installed successfully."
-msgstr "Tüm güncelleştirmeler başarıyla kuruldu."
+msgstr "Tüm güncellemeler başarıyla kuruldu."
 
 #. TRANSLATORS: title: all the selected updates installed okay
 #: src/gpk-update-viewer.c:457
 msgid "The selected updates were installed successfully."
-msgstr "Seçilen güncelleştirmeler başarıyla kuruldu."
+msgstr "Seçilen güncellemeler başarıyla kuruldu."
 
 #. TRANSLATORS: The type of update
 #: src/gpk-update-viewer.c:639
@@ -2690,12 +2676,12 @@ msgstr "Diğer güncellemeler"
 #. TRANSLATORS: querying update array
 #: src/gpk-update-viewer.c:914
 msgid "Getting the list of updates"
-msgstr "Güncelleştirme listesi alınıyor"
+msgstr "Güncelleme listesi alınıyor"
 
 #. TRANSLATORS: the PackageKit request did not complete, and it did not send an error
 #: src/gpk-update-viewer.c:1119
 msgid "Could not run upgrade script"
-msgstr "Güncelleme betiği çalıştırılamadı"
+msgstr "Yükseltme betiği çalıştırılamadı"
 
 #. TRANSLATORS, are we going to cost the user lots of money?
 #: src/gpk-update-viewer.c:1146
@@ -2773,19 +2759,19 @@ msgstr "Bu güncelleme, yeni özellikler ekleyecek ve işlevselliği artıracak.
 #. TRANSLATORS: this is the update type, e.g. security
 #: src/gpk-update-viewer.c:1707
 msgid "This update will fix bugs and other non-critical problems."
-msgstr "Bu güncelleştirme hata ve diğer kritik olmayan sorunları çözecek."
+msgstr "Bu güncelleme hata ve diğer kritik olmayan sorunları çözecek."
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: src/gpk-update-viewer.c:1711
 msgid "This update is important as it may solve critical problems."
-msgstr "Bu güncelleştirme kritik problemleri çözebileceği için önemlidir."
+msgstr "Bu güncelleme kritik problemleri çözebileceği için önemlidir."
 
 #. TRANSLATORS: this is the update type, e.g. security
 #: src/gpk-update-viewer.c:1715
 msgid ""
 "This update is needed to fix a security vulnerability with this package."
 msgstr ""
-"Bu güncelleştirme bu paket ile ilgili bir güvenlik açığını düzeltmek için "
+"Bu güncelleme bu paket ile ilgili bir güvenlik açığını düzeltmek için "
 "gereklidir."
 
 #. TRANSLATORS: this is the update type, e.g. security
@@ -2942,7 +2928,6 @@ msgstr "Dağıtım yükseltmeleri listesi alınamadı"
 #. TRANSLATORS: new distro available, e.g. F9 to F10
 #: src/gpk-update-viewer.c:2681
 #, c-format
-#| msgid "New distribution upgrade release '%s' is available"
 msgid "New distribution upgrade release “%s” is available"
 msgstr "“%s” yeni dağıtım yükseltme sürümü var"
 
@@ -2958,472 +2943,3 @@ msgstr ""
 #: src/gpk-update-viewer.c:2932
 msgid "Update Packages"
 msgstr "Paketleri Güncelle"
-
-#~ msgid "Clear"
-#~ msgstr "Temizle"
-
-#~ msgid "Remove Package"
-#~ msgstr "Paketi Kaldır"
-
-#~ msgid "Visit Project Website"
-#~ msgstr "Proje Web Sitesini Ziyaret Et"
-
-#~ msgid "Required Packages"
-#~ msgstr "Gerekli Paketler"
-
-#~ msgid "Software signature is required"
-#~ msgstr "Yazılım imzası gerekiyor"
-
-#~ msgid "Package:"
-#~ msgstr "Paket:"
-
-#~ msgid "If search terms should be completed automatically"
-#~ msgstr "Arama terimlerinin kendiliğinden tamamlanması"
-
-#~ msgid "If search terms should be completed automatically."
-#~ msgstr "Arama terimlerinin kendiliğinden tamamlanması."
-
-#~ msgid "Now"
-#~ msgstr "Şimdi"
-
-#~ msgid "%i second"
-#~ msgid_plural "%i seconds"
-#~ msgstr[0] "%i saniye"
-
-#~ msgid "%i minute"
-#~ msgid_plural "%i minutes"
-#~ msgstr[0] "%i dakika"
-
-#~ msgid "%i hour"
-#~ msgid_plural "%i hours"
-#~ msgstr[0] "%i saat"
-
-#~ msgid "%i %s %i %s"
-#~ msgstr "%i %s %i %s"
-
-#~ msgid "minute"
-#~ msgid_plural "minutes"
-#~ msgstr[0] "dakika"
-
-#~ msgid "second"
-#~ msgid_plural "seconds"
-#~ msgstr[0] "saniye"
-
-#~ msgid "hour"
-#~ msgid_plural "hours"
-#~ msgstr[0] "%i saat"
-
-#~ msgid "Getting dependencies"
-#~ msgstr "Bağımlılıklar alınıyor"
-
-#~ msgid "Getting update detail"
-#~ msgstr "Güncelleme detayları alınıyor"
-
-#~ msgid "Getting details"
-#~ msgstr "Ayrıntılar alınıyor"
-
-#~ msgid "Getting requires"
-#~ msgstr "Gereksinimleri alınıyor"
-
-#~ msgid "Getting updates"
-#~ msgstr "Güncellemeler alınıyor"
-
-#~ msgid "Searching details"
-#~ msgstr "Detaylar aranıyor"
-
-#~ msgid "Searching for file"
-#~ msgstr "Dosya aranıyor"
-
-#~ msgid "Searching groups"
-#~ msgstr "Gruplar aranıyor"
-
-#~ msgid "Searching for package name"
-#~ msgstr "Paket adlarında aranıyor"
-
-#~ msgid "Installing file"
-#~ msgstr "Dosya yükleniyor"
-
-#~ msgid "Refreshing package cache"
-#~ msgstr "Paket önbelleği tazeleniyor"
-
-#~ msgid "Updating packages"
-#~ msgstr "Paket güncelleniyor"
-
-#~ msgid "Getting list of repositories"
-#~ msgstr "Depo listesi alınıyor"
-
-#~ msgid "Enabling repository"
-#~ msgstr "Depo açılıyor"
-
-#~ msgid "Removing repository"
-#~ msgstr "Depo kaldırılıyor"
-
-#~ msgid "Setting repository data"
-#~ msgstr "Depo verisi ayarlanıyor"
-
-#~ msgid "Resolving"
-#~ msgstr "Çözülüyor"
-
-#~ msgid "Getting file list"
-#~ msgstr "Dosya listesi alınıyor"
-
-#~ msgid "Getting what provides"
-#~ msgstr "Ne sağlar alınıyor"
-
-#~ msgid "Installing signature"
-#~ msgstr "İmza yükleniyor"
-
-#~ msgid "Getting package lists"
-#~ msgstr "Paket listeleri alınıyor"
-
-#~ msgid "Accepting EULA"
-#~ msgstr "EULA kabul ediliyor"
-
-#~ msgid "Getting distribution upgrade information"
-#~ msgstr "Dağıtım yükseltme hakkında bilgi alınıyor"
-
-#~ msgid "Getting categories"
-#~ msgstr "Kategoriler alınıyor"
-
-#~ msgid "Getting old transactions"
-#~ msgstr "Eski işlemler alınıyor"
-
-#~ msgid "Install selected software on the system"
-#~ msgstr "Seçili yazılımı sisteme kur"
-
-#~ msgid "Do not exit after the request has been processed"
-#~ msgstr "İşlem gerçekleştikten sonra çıkma"
-
-#~ msgid "Session D-Bus service for PackageKit"
-#~ msgstr "PackageKit için oturum DBus hizmeti"
-
-#~ msgid "Failed to install software"
-#~ msgstr "Yazılım yükleme başarısız"
-
-#~ msgid "No applications were chosen to be installed"
-#~ msgstr "Kurulma için hiçbir uygulama seçilmedi"
-
-#~ msgid "Error details"
-#~ msgstr "Hata ayrıntıları"
-
-#~ msgid "Package Manager error details"
-#~ msgstr "Paket Yöneticisi hata ayrıntıları"
-
-#~ msgid ""
-#~ "Unknown error. Please refer to the detailed report and report in your "
-#~ "distribution bug tracker."
-#~ msgstr ""
-#~ "Bilinmeyen hata. Lütfen ayrıntılı rapora başvurun ve dağıtımınızın hata "
-#~ "takipçisine bildirin."
-
-#~ msgid "Show details"
-#~ msgstr "Detayları göster"
-
-#~ msgid "Failed to install file"
-#~ msgid_plural "Failed to install files"
-#~ msgstr[0] "Dosyalar yüklenirken başarısız olundu"
-
-#~ msgid "Do you want to install this file?"
-#~ msgid_plural "Do you want to install these files?"
-#~ msgstr[0] "Bu dosyaları yüklemek istiyor musunuz?"
-
-#~ msgid "Install local file"
-#~ msgid_plural "Install local files"
-#~ msgstr[0] "Yerel dosya yükle"
-
-#~ msgid "Could not find packages"
-#~ msgstr "Paketler bulunamadı"
-
-#~ msgid "The packages could not be found in any package source"
-#~ msgstr "Paketler hiçbir paket kaynağında bulunamadı"
-
-#~ msgid "More information"
-#~ msgstr "Daha fazla bilgi"
-
-#~ msgid "Nothing to do."
-#~ msgstr "Yapılacak bir şey yok."
-
-#~ msgid "Failed to install package"
-#~ msgstr "Paket yüklenemedi"
-
-#~ msgid "Incorrect response from search"
-#~ msgstr "Aramadan yanlış yanıt"
-
-#~ msgid "An additional package is required:"
-#~ msgid_plural "Additional packages are required:"
-#~ msgstr[0] "Ek paket gerekli:"
-
-#~ msgid "Do you want to search for and install this package now?"
-#~ msgid_plural "Do you want to search for and install these packages now?"
-#~ msgstr[0] "Bu paketleri şimdi aramak ve kurmak istiyor musunuz?"
-
-#~ msgid "%s wants to install a package"
-#~ msgid_plural "%s wants to install packages"
-#~ msgstr[0] "%s paket yüklemek istiyor"
-
-#~ msgid "A program wants to install a package"
-#~ msgid_plural "A program wants to install packages"
-#~ msgstr[0] "Program paket yüklemek istiyor"
-
-#~ msgid "Searching for packages"
-#~ msgstr "Paketler aranıyor"
-
-#~ msgid "Failed to find package"
-#~ msgstr "Paket bulma başarısız"
-
-#~ msgid "The file could not be found in any packages"
-#~ msgstr "Dosya hiçbir paket içinde bulunamadı"
-
-#~ msgid "The %s package already provides this file"
-#~ msgstr "%s paketi zaten bu dosyayı sağlıyor"
-
-#~ msgid "The following file is required:"
-#~ msgid_plural "The following files are required:"
-#~ msgstr[0] "Aşağıdaki dosya gerekli:"
-
-#~ msgid "Do you want to search for this file now?"
-#~ msgid_plural "Do you want to search for these files now?"
-#~ msgstr[0] "Bu dosyayı şimdi aramak ister misiniz?"
-
-#~ msgid "%s wants to install a file"
-#~ msgid_plural "%s wants to install files"
-#~ msgstr[0] "%s dosya yüklemek istiyor"
-
-#~ msgid "A program wants to install a file"
-#~ msgid_plural "A program wants to install files"
-#~ msgstr[0] "Bir program dosya yüklemek istiyor"
-
-#~ msgid "The following plugin is required:"
-#~ msgid_plural "The following plugins are required:"
-#~ msgstr[0] "Aşağıdaki eklenti gereklidir:"
-
-#~ msgid "Do you want to search for this now?"
-#~ msgid_plural "Do you want to search for these now?"
-#~ msgstr[0] "Bunu şimdi aramak ister misiniz?"
-
-#~ msgid "%s requires an additional plugin to decode this file"
-#~ msgid_plural "%s requires additional plugins to decode this file"
-#~ msgstr[0] "%s bu dosya şifresini çözmek için ek bir eklenti gerektiriyor"
-
-#~ msgid "%s requires an additional plugin to encode this file"
-#~ msgid_plural "%s requires additional plugins to encode this file"
-#~ msgstr[0] "%s bu dosyayı kodlamak için ek bir eklenti gerektiriyor"
-
-#~ msgid "%s requires an additional plugin for this operation"
-#~ msgid_plural "%s requires additional plugins for this operation"
-#~ msgstr[0] "%s bu işlem için ek bir eklenti gerektiriyor"
-
-#~ msgid "A program requires an additional plugin to decode this file"
-#~ msgid_plural "A program requires additional plugins to decode this file"
-#~ msgstr[0] ""
-#~ "Bir program dosya şifresini çözmek için ek bir eklenti gerektiriyor"
-
-#~ msgid "A program requires an additional plugin to encode this file"
-#~ msgid_plural "A program requires additional plugins to encode this file"
-#~ msgstr[0] "Bir program dosyayı kodlamak için ek bir eklenti gerektiriyor"
-
-#~ msgid "A program requires an additional plugin for this operation"
-#~ msgid_plural "A program requires additional plugins for this operation"
-#~ msgstr[0] "Bir program işlem için ek bir eklenti gerektiriyor"
-
-#~ msgid "Search"
-#~ msgstr "Ara"
-
-#~ msgid "Failed to search for plugin"
-#~ msgstr "Eklenti için arama başarısız"
-
-#~ msgid "Could not find plugin in any configured package source"
-#~ msgstr "Eklenti, hiçbir yapılandırılmış paket kaynağında bulunamadı"
-
-#~ msgid "Install the following plugin"
-#~ msgid_plural "Install the following plugins"
-#~ msgstr[0] "Aşağıdaki eklentileri kur"
-
-#~ msgid "Do you want to install this package now?"
-#~ msgid_plural "Do you want to install these packages now?"
-#~ msgstr[0] "Bu paketleri şimdi kurmak istiyor musunuz?"
-
-#~ msgid "Searching for plugins"
-#~ msgstr "Eklentiler aranıyor"
-
-#~ msgid "Searching for plugin: %s"
-#~ msgstr "Eklenti aranıyor: %s"
-
-#~ msgid "Failed to search for provides"
-#~ msgstr "Sağladıkları için arama başarısız"
-
-#~ msgid "Failed to find software"
-#~ msgstr "Yazılım bulma başarısız"
-
-#~ msgid "No new applications can be found to handle this type of file"
-#~ msgstr "Bu türde bir dosya işleme için yeni uygulama bulunamadı"
-
-#~ msgid "An additional program is required to open this type of file:"
-#~ msgstr "Bu tür dosyaları açmak için ek program gereklidir:"
-
-#~ msgid "Do you want to search for a program to open this file type now?"
-#~ msgstr "Bu dosya türünü açmak için bir programı şimdi aramak ister misiniz?"
-
-#~ msgid "%s requires a new mime type"
-#~ msgid_plural "%s requires new mime types"
-#~ msgstr[0] "%s yeni mime türü gerektirir"
-
-#~ msgid "A program requires a new mime type"
-#~ msgid_plural "A program requires new mime types"
-#~ msgstr[0] "Bir program yeni mime türü gerektirir"
-
-#~ msgid "Searching for file handlers"
-#~ msgstr "Dosya işleyicileri aranıyor"
-
-#~ msgid "Language tag not parsed"
-#~ msgstr "Dil etiketi ayrıştırılamadı"
-
-#~ msgid "Language code not matched"
-#~ msgstr "Dil kodu eşleşmedi"
-
-#~ msgid "Failed to find font"
-#~ msgid_plural "Failed to find fonts"
-#~ msgstr[0] "Yazıtipi bulma başarısız"
-
-#~ msgid "No new fonts can be found for this document"
-#~ msgstr "Bu belge için yeni yazı tipleri bulunamadı"
-
-#~ msgid "An additional font is required to view this document correctly."
-#~ msgid_plural ""
-#~ "Additional fonts are required to view this document correctly."
-#~ msgstr[0] "Bu belgeyi doğru görüntülemek için ek yazı tipi gereklidir."
-
-#~ msgid "Do you want to search for a suitable package now?"
-#~ msgid_plural "Do you want to search for suitable packages now?"
-#~ msgstr[0] "Uygun paketleri şimdi aramak ister misiniz?"
-
-#~ msgid "%s wants to install a font"
-#~ msgid_plural "%s wants to install fonts"
-#~ msgstr[0] "%s yazı tipi yüklemek istiyor"
-
-#~ msgid "A program wants to install a font"
-#~ msgid_plural "A program wants to install fonts"
-#~ msgstr[0] "Bir program yazı tipi yüklemek istiyor"
-
-#~ msgid "Searching for font"
-#~ msgid_plural "Searching for fonts"
-#~ msgstr[0] "Yazı tipi aranıyor"
-
-#~ msgid "The following service is required:"
-#~ msgid_plural "The following services are required:"
-#~ msgstr[0] "Aşağıdaki hizmetler gerekli:"
-
-#~ msgid "Plasma requires an additional service for this operation"
-#~ msgid_plural "Plasma requires additional services for this operation"
-#~ msgstr[0] "Plasma bu işlem için ek bir hizmet gerektiriyor"
-
-#~ msgid "Failed to search for Plasma service"
-#~ msgstr "Plasma hizmeti için arama başarısız oldu"
-
-#~ msgid "Could not find service in any configured package source"
-#~ msgstr "Hizmet hiçbir yapılandırılmış paket kaynağında bulunamadı"
-
-#~ msgid "Searching for services"
-#~ msgstr "Hizmetler aranıyor"
-
-#~ msgid "Searching for service: %s"
-#~ msgstr "Hizmet aranıyor: %s"
-
-#~ msgid "Failed to remove package"
-#~ msgstr "Paket kaldırma başarısız oldu"
-
-#~ msgid "Install the following driver"
-#~ msgid_plural "Install the following drivers"
-#~ msgstr[0] "Aşağıdaki sürücüleri yükle"
-
-#~ msgid "Failed to find package for this file"
-#~ msgstr "Bu dosya için paket bulma başarısız"
-
-#~ msgid "The following file will be removed:"
-#~ msgid_plural "The following files will be removed:"
-#~ msgstr[0] "Aşağıdaki dosyalar kaldırılacak:"
-
-#~ msgid "Do you want to remove this file now?"
-#~ msgid_plural "Do you want to remove these files now?"
-#~ msgstr[0] "Şimdi dosyaları kaldırmak istiyor musunuz?"
-
-#~ msgid "%s wants to remove a file"
-#~ msgid_plural "%s wants to remove files"
-#~ msgstr[0] "%s dosya kaldırmak istiyor"
-
-#~ msgid "A program wants to remove a file"
-#~ msgid_plural "A program wants to remove files"
-#~ msgstr[0] "Bir program, dosya kaldırmak istiyor"
-
-#~ msgid "Stable"
-#~ msgstr "Kararlı"
-
-#~ msgid "Unstable"
-#~ msgstr "Kararsız"
-
-#~ msgid "Testing"
-#~ msgstr "Sınanıyor"
-
-#~ msgid "%i trivial update"
-#~ msgid_plural "%i trivial updates"
-#~ msgstr[0] "%i basit güncelleme"
-
-#~ msgid "%i update"
-#~ msgid_plural "%i updates"
-#~ msgstr[0] "%i güncelleme"
-
-#~ msgid "%i important update"
-#~ msgid_plural "%i important updates"
-#~ msgstr[0] "%i önemli güncelleme"
-
-#~ msgid "%i security update"
-#~ msgid_plural "%i security updates"
-#~ msgstr[0] "%i güvenlik güncellemesi"
-
-#~ msgid "%i bug fix update"
-#~ msgid_plural "%i bug fix updates"
-#~ msgstr[0] "%i hata giderme güncellemesi"
-
-#~ msgid "%i enhancement update"
-#~ msgid_plural "%i enhancement updates"
-#~ msgstr[0] "%i yenilik güncellemesi"
-
-#~ msgid "%i blocked update"
-#~ msgid_plural "%i blocked updates"
-#~ msgstr[0] "%i engellenmiş güncelleme"
-
-#~ msgid "Icon"
-#~ msgstr "Simge"
-
-#~ msgid "Applications that can open this type of file"
-#~ msgstr "Bu türde dosya açabilen uygulamalar"
-
-#~ msgid "_Install"
-#~ msgstr "Y_ükle"
-
-#~ msgid "Install package"
-#~ msgstr "Paket yükle"
-
-#~ msgid "Run new application?"
-#~ msgstr "Yeni uygulama çalıştırılsın mı?"
-
-#~ msgid "_Run"
-#~ msgstr "Ç_alıştır"
-
-#~ msgid "Files to install"
-#~ msgstr "Yüklenecek dosyalar"
-
-#~ msgid "PackageKit File Installer"
-#~ msgstr "PackageKit Dosya Yükleyici"
-
-#~ msgid "Local file installer"
-#~ msgstr "Yerel dosya yükleyici"
-
-#~ msgid "Failed to install a package to provide a file"
-#~ msgstr "Bir dosya sağlamak için paket yüklemek başarısız oldu"
-
-#~ msgid "You need to specify a file to install"
-#~ msgstr "Yüklemek için bir dosya belirtmelisiniz"
-
-#~ msgid "Remaining time: %s"
-#~ msgstr "Kalan süre: %s"
