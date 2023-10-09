@@ -154,8 +154,11 @@ static const PkEnumMatch enum_group_icon_name[] = {
 	{PK_GROUP_ENUM_COMMUNICATION,		"network-workgroup"},
 	{PK_GROUP_ENUM_DESKTOP_GNOME,		"pk-desktop-gnome"},
 	{PK_GROUP_ENUM_DESKTOP_KDE,		"pk-desktop-kde"},
-	{PK_GROUP_ENUM_DESKTOP_OTHER,		"preferences-desktop-wallpaper"},
 	{PK_GROUP_ENUM_DESKTOP_XFCE,		"pk-desktop-xfce"},
+	{PK_GROUP_ENUM_DESKTOP_OTHER,		"preferences-desktop-wallpaper"},
+#if PK_CHECK_VERSION(1,2,7)
+	{PK_GROUP_ENUM_DESKTOP_DDE,		"preferences-desktop-wallpaper"},
+#endif
 	{PK_GROUP_ENUM_DOCUMENTATION,		"system-help"},
 	{PK_GROUP_ENUM_EDUCATION,		"utilities-system-monitor"},
 	{PK_GROUP_ENUM_ELECTRONICS,		"applications-engineering"},
@@ -1281,6 +1284,12 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		/* TRANSLATORS: The group type */
 		text = _("Xfce desktop");
 		break;
+#if PK_CHECK_VERSION(1,2,7)
+	case PK_GROUP_ENUM_DESKTOP_DDE:
+		/* TRANSLATORS: The group type */
+		text = _("Deepin desktop");
+		break;
+#endif
 	case PK_GROUP_ENUM_DESKTOP_OTHER:
 		/* TRANSLATORS: The group type */
 		text = _("Other desktops");
