@@ -59,6 +59,12 @@ static const PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_DECOMPRESSING,		"dialog-information"},
 	{PK_INFO_ENUM_TRUSTED,			"dialog-information"},
 	{PK_INFO_ENUM_UNTRUSTED,		"dialog-information"},
+#if PK_CHECK_VERSION(1,3,0)
+	{PK_INFO_ENUM_INSTALL,			"pk-package-add"},
+	{PK_INFO_ENUM_REMOVE,			"pk-package-delete"},
+	{PK_INFO_ENUM_OBSOLETE,			"pk-package-cleanup"},
+	{PK_INFO_ENUM_DOWNGRADE,		"pk-package-update"},
+#endif
 	{0, NULL}
 };
 
