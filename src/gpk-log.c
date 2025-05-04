@@ -134,7 +134,7 @@ gpk_log_get_localised_date (const gchar *timespec)
 	}
 
 	/* TRANSLATORS: strftime formatted please */
-	return g_date_time_format (date_time, _("%d %B %Y"));
+	return g_date_time_format (date_time, _("%d %B %Y - %H:%M:%S"));
 }
 
 static gchar *
@@ -264,13 +264,16 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	renderer = gtk_cell_renderer_text_new ();
 	g_object_set (renderer, "yalign", 0.0, NULL);
 	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
-	g_object_set (renderer, "wrap-width", 400, NULL);
+	g_object_set (renderer, "wrap-width", 600, NULL);
+
 	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_log_treeview_size_allocate_cb), renderer);
+
 	/* TRANSLATORS: column for what packages were upgraded */
 	column = gtk_tree_view_column_new_with_attributes (_("Details"), renderer,
 							   "markup", GPK_LOG_COLUMN_DETAILS, NULL);
 	gtk_tree_view_append_column (treeview, column);
 	gtk_tree_view_column_set_expand (column, TRUE);
+	gtk_tree_view_column_set_fixed_width (column, 600);
 
 	/* TRANSLATORS: column for the user name, e.g. Richard Hughes */
 	column = gtk_tree_view_column_new_with_attributes (_("User name"), renderer,
@@ -366,6 +369,13 @@ gpk_log_filter (PkTransactionPast *item)
 			break;
 	}
 	return ret;
+}
+
+static void
+gpk_log_scroll_top_tree_view(GtkTreeView* treeView)
+{
+	GtkTreePath *path = gtk_tree_path_new_first ();
+	gtk_tree_view_scroll_to_cell(treeView, path, NULL, FALSE, 0, 0);
 }
 
 static void
@@ -500,6 +510,7 @@ gpk_log_refilter (void)
 
 	/* remove the items that are not used */
 	gpk_log_remove_nonactive (model);
+	gpk_log_scroll_top_tree_view (treeview);
 }
 
 static void
@@ -596,7 +607,7 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 	gtk_window_set_application (window, application);
 
 	/* set a size, as the screen allows */
-	gpk_window_set_size_request (window, 1200, 1200);
+	gpk_window_set_size_request (window, 1325, 800);
 
 	/* if command line arguments are set, then setup UI */
 	if (filter != NULL) {
@@ -633,7 +644,6 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 
 	/* add columns to the tree view */
 	pk_treeview_add_general_columns (GTK_TREE_VIEW (widget));
-	gtk_tree_view_columns_autosize (GTK_TREE_VIEW (widget));
 
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (list_store),
 					      GPK_LOG_COLUMN_TIMESPEC, GTK_SORT_DESCENDING);

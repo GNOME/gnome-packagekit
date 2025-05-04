@@ -120,8 +120,8 @@ enum {
 
 static void gpk_application_perform_search (GpkApplicationPrivate *priv);
 
-static void gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv);
-static void gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv);
+static void gpk_application_get_requires_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv);
+static void gpk_application_get_depends_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv);
 
 static gboolean
 _g_strzero (const gchar *text)
@@ -466,7 +466,7 @@ gpk_application_strcmp_indirect (gchar **a, gchar **b)
 }
 
 static void
-gpk_application_get_files_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
+gpk_application_get_files_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
 	gboolean ret;
 	g_auto(GStrv) files = NULL;
@@ -483,7 +483,7 @@ gpk_application_get_files_cb (PkClient *client, GAsyncResult *res, GpkApplicatio
 	g_autoptr(PkResults) results = NULL;
 
 	/* get the results */
-	results = pk_client_generic_finish (client, res, &error);
+	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
 		g_warning ("failed to get files: %s", error->message);
 		return;
@@ -660,7 +660,7 @@ gpk_application_menu_files_cb (GtkAction *action, GpkApplicationPrivate *priv)
 
 	/* set correct view */
 	package_ids = pk_package_ids_from_id (package_id_selected);
-	pk_client_get_files_async (PK_CLIENT (priv->task), package_ids, priv->cancellable,
+	pk_task_get_files_async (PK_TASK (priv->task), package_ids, priv->cancellable,
 				   (PkProgressCallback) gpk_application_progress_cb, priv,
 				   (GAsyncReadyCallback) gpk_application_get_files_cb, priv);
 }
@@ -737,7 +737,7 @@ gpk_application_menu_remove_cb (GtkAction *action, GpkApplicationPrivate *priv)
 }
 
 static void
-gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
+gpk_application_get_requires_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
 	g_autoptr(PkResults) results = NULL;
 	g_autoptr(GError) error = NULL;
@@ -753,7 +753,7 @@ gpk_application_get_requires_cb (PkClient *client, GAsyncResult *res, GpkApplica
 	gboolean ret;
 
 	/* get the results */
-	results = pk_client_generic_finish (client, res, &error);
+	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
 		g_warning ("failed to get requires: %s", error->message);
 		return;
@@ -836,7 +836,7 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplicationPrivate *priv
 	/* get the requires */
 	package_ids = pk_package_ids_from_id (package_id_selected);
 
-	pk_client_depends_on_async (PK_CLIENT (priv->task),
+	pk_task_depends_on_async (PK_TASK (priv->task),
 				    pk_bitfield_value (PK_FILTER_ENUM_NONE),
 				    package_ids, TRUE, priv->cancellable,
 				    (PkProgressCallback) gpk_application_progress_cb, priv,
@@ -844,7 +844,7 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplicationPrivate *priv
 }
 
 static void
-gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
+gpk_application_get_depends_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
 	g_autoptr(PkResults) results = NULL;
 	g_autoptr(GError) error = NULL;
@@ -860,7 +860,7 @@ gpk_application_get_depends_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	gboolean ret;
 
 	/* get the results */
-	results = pk_client_generic_finish (client, res, &error);
+	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
 		g_warning ("failed to get depends: %s", error->message);
 		return;
@@ -943,7 +943,7 @@ gpk_application_menu_depends_cb (GtkAction *_action, GpkApplicationPrivate *priv
 	/* get the depends */
 	package_ids = pk_package_ids_from_id (package_id_selected);
 
-	pk_client_required_by_async (PK_CLIENT (priv->task),
+	pk_task_required_by_async (PK_TASK (priv->task),
 				     pk_bitfield_value (PK_FILTER_ENUM_NONE),
 				     package_ids, TRUE, priv->cancellable,
 				     (PkProgressCallback) gpk_application_progress_cb, priv,
@@ -1185,7 +1185,7 @@ gpk_application_set_button_find_sensitivity (GpkApplicationPrivate *priv)
 }
 
 static void
-gpk_application_search_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
+gpk_application_search_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
 	g_autoptr(PkResults) results = NULL;
 	g_autoptr(GError) error = NULL;
@@ -1197,7 +1197,7 @@ gpk_application_search_cb (PkClient *client, GAsyncResult *res, GpkApplicationPr
 	GtkWindow *window;
 
 	/* get the results */
-	results = pk_client_generic_finish (client, res, &error);
+	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
 		g_warning ("failed to search: %s", error->message);
 		goto out;
@@ -1339,12 +1339,12 @@ gpk_application_perform_search_others (GpkApplicationPrivate *priv)
 	if (priv->search_mode == GPK_MODE_GROUP) {
 		g_auto(GStrv) search_groups = NULL;
 		search_groups = g_strsplit (priv->search_group, " ", -1);
-		pk_client_search_groups_async (PK_CLIENT(priv->task),
+		pk_task_search_groups_async (PK_TASK(priv->task),
 					       priv->filters_current, search_groups, priv->cancellable,
 					       (PkProgressCallback) gpk_application_progress_cb, priv,
 					       (GAsyncReadyCallback) gpk_application_search_cb, priv);
 	} else {
-		pk_client_get_packages_async (PK_CLIENT(priv->task),
+		pk_task_get_packages_async (PK_TASK(priv->task),
 					      priv->filters_current, priv->cancellable,
 					      (PkProgressCallback) gpk_application_progress_cb, priv,
 					      (GAsyncReadyCallback) gpk_application_search_cb, priv);
@@ -1787,7 +1787,7 @@ gpk_application_groups_treeview_changed_cb (GtkTreeSelection *selection, GpkAppl
 }
 
 static void
-gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
+gpk_application_get_details_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
 	g_autoptr(PkResults) results = NULL;
 	g_autoptr(GError) error = NULL;
@@ -1808,7 +1808,7 @@ gpk_application_get_details_cb (PkClient *client, GAsyncResult *res, GpkApplicat
 	guint64 size;
 
 	/* get the results */
-	results = pk_client_generic_finish (client, res, &error);
+	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
 		g_warning ("failed to get list of categories: %s", error->message);
 		return;
@@ -1984,7 +1984,7 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 
 	/* get the details */
 	package_ids = pk_package_ids_from_id (package_id);
-	pk_client_get_details_async (PK_CLIENT(priv->task), package_ids, priv->cancellable,
+	pk_task_get_details_async (PK_TASK(priv->task), package_ids, priv->cancellable,
 				     (PkProgressCallback) gpk_application_progress_cb, priv,
 				     (GAsyncReadyCallback) gpk_application_get_details_cb, priv);
 }
@@ -2236,7 +2236,7 @@ gpk_application_activate_log_cb (GSimpleAction *action,
 }
 
 static void
-gpk_application_refresh_cache_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
+gpk_application_refresh_cache_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
 	g_autoptr(PkResults) results = NULL;
 	g_autoptr(GError) error = NULL;
@@ -2244,7 +2244,7 @@ gpk_application_refresh_cache_cb (PkClient *client, GAsyncResult *res, GpkApplic
 	GtkWindow *window;
 
 	/* get the results */
-	results = pk_client_generic_finish (client, res, &error);
+	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
 		g_warning ("failed to refresh: %s", error->message);
 		return;
@@ -2377,7 +2377,7 @@ gpk_application_create_group_array_enum (GpkApplicationPrivate *priv)
 }
 
 static void
-gpk_application_get_categories_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
+gpk_application_get_categories_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
 	g_autoptr(PkResults) results = NULL;
 	g_autoptr(GError) error = NULL;
@@ -2392,7 +2392,7 @@ gpk_application_get_categories_cb (PkClient *client, GAsyncResult *res, GpkAppli
 	GtkWindow *window;
 
 	/* get the results */
-	results = pk_client_generic_finish (client, res, &error);
+	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
 		g_warning ("failed to get list of categories: %s", error->message);
 		return;
@@ -2485,7 +2485,7 @@ gpk_application_create_group_array_categories (GpkApplicationPrivate *priv)
 	g_cancellable_reset (priv->cancellable);
 
 	/* get categories supported */
-	pk_client_get_categories_async (PK_CLIENT(priv->task), priv->cancellable,
+	pk_task_get_categories_async (PK_TASK(priv->task), priv->cancellable,
 				        (PkProgressCallback) gpk_application_progress_cb, priv,
 				        (GAsyncReadyCallback) gpk_application_get_categories_cb, priv);
 }
@@ -2642,7 +2642,7 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 }
 
 static void
-gpk_application_get_repo_list_cb (PkClient *client, GAsyncResult *res, GpkApplicationPrivate *priv)
+gpk_application_get_repo_list_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
 	g_autoptr(PkResults) results = NULL;
 	g_autoptr(GError) error = NULL;
@@ -2653,7 +2653,7 @@ gpk_application_get_repo_list_cb (PkClient *client, GAsyncResult *res, GpkApplic
 	GtkWindow *window;
 
 	/* get the results */
-	results = pk_client_generic_finish (client, res, &error);
+	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
 		g_warning ("failed to get list of repos: %s", error->message);
 		return;
@@ -2886,7 +2886,7 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 			  G_CALLBACK (gpk_application_groups_treeview_changed_cb), priv);
 
 	/* get repos, so we can show the full name in the package source box */
-	pk_client_get_repo_list_async (PK_CLIENT (priv->task),
+	pk_task_get_repo_list_async (PK_TASK (priv->task),
 				       pk_bitfield_value (PK_FILTER_ENUM_NONE),
 				       priv->cancellable,
 				       (PkProgressCallback) gpk_application_progress_cb, priv,
