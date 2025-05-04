@@ -266,8 +266,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
 	g_object_set (renderer, "wrap-width", 600, NULL);
 
-	/* disabled as the window is not resizable */
-	/*g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_log_treeview_size_allocate_cb), renderer); */
+	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_log_treeview_size_allocate_cb), renderer);
 
 	/* TRANSLATORS: column for what packages were upgraded */
 	column = gtk_tree_view_column_new_with_attributes (_("Details"), renderer,
@@ -609,8 +608,6 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 
 	/* set a size, as the screen allows */
 	gpk_window_set_size_request (window, 1325, 800);
-	/* forbid resize to avoid the well-know issue with wrap mode and row high. */
-	gtk_window_set_resizable (window, FALSE);
 
 	/* if command line arguments are set, then setup UI */
 	if (filter != NULL) {
@@ -650,8 +647,6 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 
 	gtk_tree_sortable_set_sort_column_id (GTK_TREE_SORTABLE (list_store),
 					      GPK_LOG_COLUMN_TIMESPEC, GTK_SORT_DESCENDING);
-
-
 
 	/* show */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "dialog_simple"));
