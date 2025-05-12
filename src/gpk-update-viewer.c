@@ -71,6 +71,10 @@ static	GtkWidget		*info_mobile_label = NULL;
 static	GtkApplication		*application = NULL;
 static	PkBitfield		 roles = 0;
 static	gboolean		 have_available_distro_upgrades = FALSE;
+static struct {
+	gint x;
+	gint y;
+} cursor_coordinates;
 
 enum {
 	GPK_UPDATES_COLUMN_TEXT,
@@ -2508,7 +2512,6 @@ gpk_update_viewer_textview_set_cursor (GtkTextView *text_view, gint x, gint y)
 	g_autoptr(GdkCursor) cursor = NULL;
 	gboolean hovering = FALSE;
 	gboolean hovering_over_link = FALSE;
-
 	hovering_over_link = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT(text_view), "hovering"));
 	gtk_text_view_get_iter_at_location (text_view, &iter, x, y);
 
@@ -2518,6 +2521,8 @@ gpk_update_viewer_textview_set_cursor (GtkTextView *text_view, gint x, gint y)
 		const gchar *href = (const gchar *) g_object_get_data (G_OBJECT (tag), "href");
 		if (href != NULL) {
 			hovering = TRUE;
+			cursor_coordinates.x = x;
+			cursor_coordinates.y = y;
 			break;
 		}
 	}
@@ -2569,6 +2574,49 @@ gpk_update_viewer_textview_visibility_notify_event (GtkWidget *text_view, GdkEve
 	gpk_update_viewer_textview_set_cursor (GTK_TEXT_VIEW (text_view), bx, by);
 	return FALSE;
 }
+
+static void
+gpk_update_viewer_detail_popup_menu_copy_url(GtkWidget *menu_item,
+                                             gpointer   user_data)
+{
+	GtkTextView *text_view = GTK_TEXT_VIEW (user_data);
+	GSList *tags = NULL, *tagp = NULL;
+	GtkTextIter iter;
+	GdkDisplay *display;
+	GtkClipboard *clipboard;
+
+	display = gdk_display_get_default ();
+	clipboard = gtk_clipboard_get_default (display);
+	gtk_text_view_get_iter_at_location (GTK_TEXT_VIEW (text_view), &iter, cursor_coordinates.x, cursor_coordinates.y);
+	tags = gtk_text_iter_get_tags (&iter);
+
+	for (tagp = tags; tagp != NULL; tagp = tagp->next) {
+		GtkTextTag *tag = tagp->data;
+		const gchar *href = (const gchar *) (g_object_get_data (G_OBJECT (tag), "href"));
+		if (href != NULL)
+			gtk_clipboard_set_text(clipboard, href, -1);
+	}
+
+	if (tags != NULL)
+		g_slist_free (tags);
+}
+
+static void
+gpk_update_viewer_textview_populate_popup_event(GtkTextView *text_view,
+                                                GtkWidget   *popup,
+                                                gpointer     user_data)
+{
+	gboolean hovering_over_link = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT(text_view), "hovering"));
+	if (hovering_over_link) {
+		/* TRANSLATORS: right click menu, copy URL */
+		GtkWidget *menu_item = gtk_menu_item_new_with_label (_("Copy URL"));
+		g_signal_connect(menu_item, "activate",
+				 G_CALLBACK (gpk_update_viewer_detail_popup_menu_copy_url), text_view);
+		gtk_menu_shell_append(GTK_MENU_SHELL(popup), menu_item);
+		gtk_widget_show_all(popup);
+	}
+}
+
 
 static void
 gpk_update_viewer_updates_changed_cb (PkControl *_control, gpointer user_data)
@@ -2810,6 +2858,7 @@ gpk_update_viewer_application_startup_cb (GtkApplication *_application, gpointer
 	g_signal_connect (GTK_TEXT_VIEW (widget), "event-after", G_CALLBACK (gpk_update_viewer_textview_event_after), NULL);
 	g_signal_connect (GTK_TEXT_VIEW (widget), "motion-notify-event", G_CALLBACK (gpk_update_viewer_textview_motion_notify_event), NULL);
 	g_signal_connect (GTK_TEXT_VIEW (widget), "visibility-notify-event", G_CALLBACK (gpk_update_viewer_textview_visibility_notify_event), NULL);
+	g_signal_connect(GTK_TEXT_VIEW(widget), "populate-popup", G_CALLBACK(gpk_update_viewer_textview_populate_popup_event), NULL);
 
 	/* updates */
 	widget = GTK_WIDGET(gtk_builder_get_object (builder, "treeview_updates"));

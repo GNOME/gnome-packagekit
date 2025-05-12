@@ -160,6 +160,38 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 		if (info_local == info) {
 			g_autofree gchar *str = NULL;
 			str = gpk_package_id_format_oneline (sections[1], NULL);
+			if (filter != NULL) {
+				g_autofree gchar *lower_case_str = NULL;
+				lower_case_str = g_utf8_strdown (str, -1);
+				g_message("LOWERCASE: %s", lower_case_str);
+				gchar *match = g_strrstr(str, filter);
+				if (match != NULL) {
+					glong length = g_utf8_strlen(filter, -1);
+					g_autofree gchar *preformat = NULL;
+					g_message("MATCH: %s", match);
+					/* g_message("@str = %p, @match = %p", str, match); */
+					if (match == str) {
+						/* Match is at the beginning */
+						preformat = g_strdup_printf ("<span background=\"yellow\">%s</span>%s",
+										    filter, str + length);
+						g_message ("PREFORMAT: %s", preformat);
+					} else {
+						/* Match is NOT at the beginning */
+						g_message("SIZE str: %ld", g_utf8_strlen (str + (match - str), -1));
+						g_message("SIZE match: %ld", g_utf8_strlen (filter, -1));
+						if (g_utf8_strlen (str + (match - str), -1) == g_utf8_strlen (filter, -1)) {
+							preformat = g_strdup_printf ("%.*s<span background=\"yellow\">%s</span>",
+										    match - str, str, filter);
+						} else {
+							preformat = g_strdup_printf ("%.*s<span background=\"yellow\">%s</span>%s",
+										    match - str, str, filter, match + length);
+						}
+						g_message ("PREFORMAT: %s", preformat);
+					}
+					g_string_append_printf (string, "%s, ", preformat);
+					continue;
+				}
+			}
 			g_string_append_printf (string, "%s, ", str);
 		}
 	}
@@ -211,17 +243,6 @@ gpk_log_get_details_localised (const gchar *timespec, const gchar *data)
 }
 
 static void
-gpk_log_treeview_size_allocate_cb (GtkWidget *widget, GtkAllocation *allocation, GtkCellRenderer *cell)
-{
-	GtkTreeViewColumn *column;
-	gint width;
-
-	column = gtk_tree_view_get_column (GTK_TREE_VIEW(widget), 2);
-	width = gtk_tree_view_column_get_width (column);
-	g_object_set (cell, "wrap-width", width - 10, NULL);
-}
-
-static void
 pk_treeview_add_general_columns (GtkTreeView *treeview)
 {
 	GtkCellRenderer *renderer;
@@ -266,14 +287,11 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
 	g_object_set (renderer, "wrap-width", 600, NULL);
 
-	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_log_treeview_size_allocate_cb), renderer);
-
 	/* TRANSLATORS: column for what packages were upgraded */
 	column = gtk_tree_view_column_new_with_attributes (_("Details"), renderer,
 							   "markup", GPK_LOG_COLUMN_DETAILS, NULL);
 	gtk_tree_view_append_column (treeview, column);
 	gtk_tree_view_column_set_expand (column, TRUE);
-	gtk_tree_view_column_set_fixed_width (column, 600);
 
 	/* TRANSLATORS: column for the user name, e.g. Richard Hughes */
 	column = gtk_tree_view_column_new_with_attributes (_("User name"), renderer,
@@ -283,6 +301,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	gtk_tree_view_column_set_sort_column_id (column, GPK_LOG_COLUMN_USER);
 
 	/* TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs */
+		g_object_set(renderer, "xpad", 10, NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Application"), renderer,
 							   "markup", GPK_LOG_COLUMN_TOOL, NULL);
 	gtk_tree_view_append_column (treeview, column);
@@ -375,7 +394,12 @@ static void
 gpk_log_scroll_top_tree_view(GtkTreeView* treeView)
 {
 	GtkTreePath *path = gtk_tree_path_new_first ();
-	gtk_tree_view_scroll_to_cell(treeView, path, NULL, FALSE, 0, 0);
+	GtkTreeIter iter;
+	GtkTreeModel *model = gtk_tree_view_get_model(treeView);
+	gboolean notEmpty = gtk_tree_model_get_iter_first(model, &iter);
+	if (notEmpty) {
+		gtk_tree_view_scroll_to_cell(treeView, path, NULL, FALSE, 0, 0);
+	}
 }
 
 static void
@@ -607,7 +631,7 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 	gtk_window_set_application (window, application);
 
 	/* set a size, as the screen allows */
-	gpk_window_set_size_request (window, 1325, 800);
+	gpk_window_set_size_request (window, 1370, 800);
 
 	/* if command line arguments are set, then setup UI */
 	if (filter != NULL) {
@@ -618,8 +642,6 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_refresh"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_refresh_cb), NULL);
 	gtk_widget_hide (widget);
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_filter"));
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_filter_cb), NULL);
 
 	/* hit enter in the search box for filter */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
@@ -639,6 +661,7 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 				 GTK_TREE_MODEL (list_store));
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	gtk_tree_selection_set_mode(selection, GTK_SELECTION_NONE);
 	g_signal_connect (selection, "changed",
 			  G_CALLBACK (gpk_log_treeview_clicked_cb), NULL);
 
