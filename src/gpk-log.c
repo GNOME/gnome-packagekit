@@ -137,6 +137,113 @@ gpk_log_get_localised_date (const gchar *timespec)
 	return g_date_time_format (date_time, _("%d %B %Y - %H:%M:%S"));
 }
 
+static struct {
+	GString *installed;
+	GString *removed;
+	GString *updated;
+} PkTaskStringFormatted;
+
+static gchar*
+gpk_log_get_formatted_transaction_details (gchar **array)
+{
+	guint size;
+	PkInfoEnum info_local;
+	PkTaskStringFormatted.installed = g_string_new ("");
+	PkTaskStringFormatted.removed = g_string_new ("");
+	PkTaskStringFormatted.updated = g_string_new ("");
+	gchar *installedPackages = NULL, *removedPackages = NULL, *updatedPackages = NULL;
+
+
+	size = g_strv_length (array);
+
+	for (guint i = 0; i < size;  i++) {
+		g_auto(GStrv) sections = NULL;
+		sections = g_strsplit (array[i], "\t", 0);
+		info_local = pk_info_enum_from_string (sections[0]);
+		gchar *str = NULL;
+		str = gpk_package_id_format_oneline (sections[1], NULL);
+		gchar *to_append = g_strdup_printf ("%s, ", str);
+
+		if (filter != NULL) {
+			g_autofree gchar *lower_case_str = NULL;
+			lower_case_str = g_utf8_strdown (str, -1);
+			/* g_message("LOWERCASE: %s", lower_case_str); */
+			gchar *match = NULL;
+			match = g_strrstr(str, filter);
+			if (match != NULL) {
+				g_free(to_append);
+				glong length = g_utf8_strlen(filter, -1);
+				/* g_message("MATCH: %s", match); */
+				/* g_message("@str = %p, @match = %p", str, match); */
+				if (match == str) {
+					/* Match is at the beginning */
+					to_append = g_strdup_printf ("<span background=\"#ADD8E6\">%s</span>%s, ",
+									    filter, str + length);
+					g_message ("to_append: %s", to_append);
+				} else {
+					/* Match is NOT at the beginning */
+					/* g_message("SIZE str: %ld", g_utf8_strlen (str + (match - str), -1)); */
+					/* g_message("SIZE match: %ld", g_utf8_strlen (filter, -1)); */
+					/* g_message("DISTANCE: %ld", match - str); */
+					if (g_utf8_strlen (str + (match - str), -1) == g_utf8_strlen (filter, -1)) {
+						to_append = g_strdup_printf ("%.*s<span background=\"#ADD8E6\">%s</span>, ",
+									    match - str, str, filter);
+					} else {
+						to_append = g_strdup_printf ("%.*s<span background=\"#ADD8E6\">%s</span>%s, ",
+									    match - str, str, filter, match + length);
+					}
+					/* g_message ("to_append: %s", to_append); */
+				}
+			}
+		}
+
+		switch (info_local) {
+		case PK_INFO_ENUM_INSTALLING:
+			g_string_append(PkTaskStringFormatted.installed, to_append);
+			break;
+		case PK_INFO_ENUM_REMOVING:
+			g_string_append(PkTaskStringFormatted.removed, to_append);
+			break;
+		case PK_INFO_ENUM_UPDATING:
+			g_string_append(PkTaskStringFormatted.updated, to_append);
+			break;
+		default:
+			break;
+		}
+		if(to_append == NULL) {
+			g_message("to_append is NULL");
+		}
+		g_free(to_append);
+		g_free(str);
+	}
+
+
+	if (PkTaskStringFormatted.installed->len > 0) {
+		installedPackages = g_strdup_printf("<b>%s</b>: %s\n",
+									     gpk_info_enum_to_localised_past (PK_INFO_ENUM_INSTALLING),
+									     PkTaskStringFormatted.installed->str);
+	}
+	g_string_free (PkTaskStringFormatted.installed, TRUE);
+	if (PkTaskStringFormatted.removed->len > 0) {
+		removedPackages = g_strdup_printf("<b>%s</b>: %s\n",
+									     gpk_info_enum_to_localised_past (PK_INFO_ENUM_REMOVING),
+									     PkTaskStringFormatted.removed->str);
+	}
+	g_string_free (PkTaskStringFormatted.removed, TRUE);
+	if (PkTaskStringFormatted.updated->len > 0) {
+		updatedPackages = g_strdup_printf("<b>%s</b>: %s\n",
+									     gpk_info_enum_to_localised_past (PK_INFO_ENUM_UPDATING),
+									     PkTaskStringFormatted.updated->str);
+
+	}
+	g_string_free (PkTaskStringFormatted.updated, TRUE);
+
+	return g_strdup_printf ("%s%s%s",
+				(installedPackages) ? installedPackages : "",
+				(removedPackages) ? removedPackages : "",
+				(updatedPackages) ? updatedPackages : "");
+}
+
 static gchar *
 gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 {
@@ -164,7 +271,8 @@ gpk_log_get_type_line (gchar **array, PkInfoEnum info)
 				g_autofree gchar *lower_case_str = NULL;
 				lower_case_str = g_utf8_strdown (str, -1);
 				g_message("LOWERCASE: %s", lower_case_str);
-				gchar *match = g_strrstr(str, filter);
+				gchar *match = NULL;
+				match = g_strrstr(str, filter);
 				if (match != NULL) {
 					glong length = g_utf8_strlen(filter, -1);
 					g_autofree gchar *preformat = NULL;
@@ -221,18 +329,8 @@ gpk_log_get_details_localised (const gchar *timespec, const gchar *data)
 	string = g_string_new ("");
 	array = g_strsplit (data, "\n", 0);
 
-	/* get each type */
-	text = gpk_log_get_type_line (array, PK_INFO_ENUM_INSTALLING);
-	if (text != NULL)
-		g_string_append (string, text);
-	g_free (text);
-	text = gpk_log_get_type_line (array, PK_INFO_ENUM_REMOVING);
-	if (text != NULL)
-		g_string_append (string, text);
-	g_free (text);
-	text = gpk_log_get_type_line (array, PK_INFO_ENUM_UPDATING);
-	if (text != NULL)
-		g_string_append (string, text);
+	text = gpk_log_get_formatted_transaction_details(array);
+	g_string_append (string, text);
 	g_free (text);
 
 	/* remove last \n */
@@ -523,7 +621,7 @@ gpk_log_refilter (void)
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_simple"));
 	model = gtk_tree_view_get_model (treeview);
 	gpk_log_mark_nonactive (model);
-
+	GTimer *timer = g_timer_new();
 	/* go through the list, adding and removing the items as required */
 	for (i = 0; i < transactions->len; i++) {
 		item = g_ptr_array_index (transactions, i);
@@ -531,7 +629,7 @@ gpk_log_refilter (void)
 		if (ret)
 			gpk_log_add_item (item);
 	}
-
+	g_message("Elapsed time: %f", g_timer_elapsed(timer, NULL));
 	/* remove the items that are not used */
 	gpk_log_remove_nonactive (model);
 	gpk_log_scroll_top_tree_view (treeview);
