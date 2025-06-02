@@ -43,11 +43,33 @@ static GPtrArray *transactions = NULL;
 static GtkTreePath *path_global = NULL;
 static guint xid = 0;
 static gchar* previousEntryText = NULL;
-static struct {
+typedef struct {
 	GString *installed;
 	GString *removed;
 	GString *updated;
 } PkTaskStringFormatted;
+
+static void sformatted_clear(PkTaskStringFormatted *strings)
+{
+	g_return_if_fail (strings != NULL);
+
+	g_string_free (strings->installed, TRUE);
+	g_string_free (strings->removed, TRUE);
+	g_string_free (strings->updated, TRUE);
+}
+
+static void sformatted_free(PkTaskStringFormatted *strings)
+{
+	g_return_if_fail (strings != NULL);
+
+	g_string_free (strings->installed, TRUE);
+	g_string_free (strings->removed, TRUE);
+	g_string_free (strings->updated, TRUE);
+	g_slice_free (PkTaskStringFormatted, strings);
+}
+
+G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (PkTaskStringFormatted, sformatted_clear)
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (PkTaskStringFormatted, sformatted_free)
 
 enum
 {
@@ -63,18 +85,6 @@ enum
 	GPK_LOG_COLUMN_ACTIVE,
 	GPK_LOG_COLUMN_LAST
 };
-
-static gboolean
-gpk_log_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, const gchar *id)
-{
-	gchar *id_tmp = NULL;
-	gtk_tree_model_get (model, iter, GPK_LOG_COLUMN_ID, &id_tmp, -1);
-	if (strcmp (id_tmp, id) == 0) {
-		path_global = gtk_tree_path_copy (path);
-		return TRUE;
-	}
-	return FALSE;
-}
 
 static void
 gpk_log_remove_nonactive (GtkTreeModel *model)
@@ -102,34 +112,36 @@ gpk_log_get_formatted_transaction_details (gchar **array)
 {
 	guint size;
 	PkInfoEnum info_local;
-	PkTaskStringFormatted.installed = g_string_new ("");
-	PkTaskStringFormatted.removed = g_string_new ("");
-	PkTaskStringFormatted.updated = g_string_new ("");
-	g_autofree gchar *installedPackages = NULL, *removedPackages = NULL, *updatedPackages = NULL;
+	g_auto(PkTaskStringFormatted) pk_task_string_formatted;
+	pk_task_string_formatted.installed = g_string_new (NULL);
+	pk_task_string_formatted.removed = g_string_new (NULL);
+	pk_task_string_formatted.updated = g_string_new (NULL);
+	g_autofree gchar *installed_packages = NULL;
+	g_autofree gchar *removed_packages = NULL;
+	g_autofree gchar *updated_packages = NULL;
+	gchar *match = NULL;
 
 	size = g_strv_length (array);
 
 	for (guint i = 0; i < size;  i++) {
 		g_auto(GStrv) sections = NULL;
+		g_autofree gchar *str = NULL;
+		g_autofree gchar *to_append = NULL;
 		sections = g_strsplit (array[i], "\t", 0);
 		info_local = pk_info_enum_from_string (sections[0]);
-		gchar *str = NULL;
 		str = gpk_package_id_format_oneline (sections[1], NULL);
-		gchar *to_append = g_strdup_printf ("%s, ", str);
 
 		if (filter != NULL) {
 			g_autofree gchar *lower_case_str = NULL;
 			lower_case_str = g_utf8_strdown (str, -1);
-			gchar *match = NULL;
 			match = g_strrstr(lower_case_str, filter);
 			if (match != NULL) {
-				g_free(to_append);
 				glong filter_length = g_utf8_strlen(filter, -1);
 				gint match_position = match - lower_case_str;
 				if (match == lower_case_str) {
 					/* Match is at the beginning */
 					to_append = g_strdup_printf ("<span background=\"#ADD8E6\">%.*s</span>%s, ",
-									    filter_length, str, str + filter_length);
+									    (guint) filter_length, str, str + filter_length);
 				} else {
 					if (g_utf8_strlen (lower_case_str + (match - lower_case_str), -1) == filter_length) {
 						to_append = g_strdup_printf ("%.*s<span background=\"#ADD8E6\">%s</span>, ",
@@ -142,47 +154,48 @@ gpk_log_get_formatted_transaction_details (gchar **array)
 			}
 		}
 
+		if (to_append == NULL) {
+			to_append = g_strdup_printf ("%s, ", str);
+		}
+
 		switch (info_local) {
 		case PK_INFO_ENUM_INSTALLING:
-			g_string_append(PkTaskStringFormatted.installed, to_append);
+			g_string_append(pk_task_string_formatted.installed, to_append);
 			break;
 		case PK_INFO_ENUM_REMOVING:
-			g_string_append(PkTaskStringFormatted.removed, to_append);
+			g_string_append(pk_task_string_formatted.removed, to_append);
 			break;
 		case PK_INFO_ENUM_UPDATING:
-			g_string_append(PkTaskStringFormatted.updated, to_append);
+			g_string_append(pk_task_string_formatted.updated, to_append);
 			break;
 		default:
 			break;
 		}
-		g_free(to_append);
-		g_free(str);
 	}
 
 
-	if (PkTaskStringFormatted.installed->len > 0) {
-		installedPackages = g_strdup_printf("<b>%s</b>: %.*s\n",
+	if (pk_task_string_formatted.installed->len > 0) {
+		installed_packages = g_strdup_printf("<b>%s</b>: %.*s\n",
 									     gpk_info_enum_to_localised_past (PK_INFO_ENUM_INSTALLING),
-									     (guint)(PkTaskStringFormatted.installed->len - 2), PkTaskStringFormatted.installed->str);
+									     (guint)(pk_task_string_formatted.installed->len - 2), pk_task_string_formatted.installed->str);
 	}
-	g_string_free (PkTaskStringFormatted.installed, TRUE);
-	if (PkTaskStringFormatted.removed->len > 0) {
-		removedPackages = g_strdup_printf("<b>%s</b>: %.*s\n",
+	/* g_string_free (pk_task_string_formatted.installed, TRUE); */
+	if (pk_task_string_formatted.removed->len > 0) {
+		removed_packages = g_strdup_printf("<b>%s</b>: %.*s\n",
 									     gpk_info_enum_to_localised_past (PK_INFO_ENUM_REMOVING),
-									     (guint)(PkTaskStringFormatted.removed->len - 2), PkTaskStringFormatted.removed->str);
+									     (guint)(pk_task_string_formatted.removed->len - 2), pk_task_string_formatted.removed->str);
 	}
-	g_string_free (PkTaskStringFormatted.removed, TRUE);
-	if (PkTaskStringFormatted.updated->len > 0) {
-		updatedPackages = g_strdup_printf("<b>%s</b>: %.*s\n",
+	/* g_string_free (pk_task_string_formatted.removed, TRUE); */
+	if (pk_task_string_formatted.updated->len > 0) {
+		updated_packages = g_strdup_printf("<b>%s</b>: %.*s\n",
 									     gpk_info_enum_to_localised_past (PK_INFO_ENUM_UPDATING),
-									     (guint)(PkTaskStringFormatted.updated->len - 2), PkTaskStringFormatted.updated->str);
+									     (guint)(pk_task_string_formatted.updated->len - 2), pk_task_string_formatted.updated->str);
 	}
-	g_string_free (PkTaskStringFormatted.updated, TRUE);
 
 	return g_strdup_printf ("%s%s%s",
-				(installedPackages) ? installedPackages : "",
-				(removedPackages) ? removedPackages : "",
-				(updatedPackages) ? updatedPackages : "");
+				(installed_packages) ? installed_packages : "",
+				(removed_packages) ? removed_packages : "",
+				(updated_packages) ? updated_packages : "");
 }
 
 static gchar *
@@ -462,7 +475,7 @@ gpk_log_add_item (PkTransactionPast *item)
 }
 
 static gboolean
-gpk_transaction_is_install_update_or_remove(gchar* info)
+gpk_transaction_is_install_update_or_remove(const gchar* info)
 {
 	PkInfoEnum infoconst = pk_info_enum_from_string (info);
 	switch (infoconst) {

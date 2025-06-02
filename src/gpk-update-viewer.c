@@ -2580,7 +2580,8 @@ gpk_update_viewer_detail_popup_menu_copy_url(GtkWidget *menu_item,
                                              gpointer   user_data)
 {
 	GtkTextView *text_view = GTK_TEXT_VIEW (user_data);
-	GSList *tags = NULL, *tagp = NULL;
+	GSList *tags = NULL;
+	GSList *tagp = NULL;
 	GtkTextIter iter;
 	GdkDisplay *display;
 	GtkClipboard *clipboard;
