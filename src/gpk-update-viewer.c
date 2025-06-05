@@ -2580,8 +2580,8 @@ gpk_update_viewer_detail_popup_menu_copy_url(GtkWidget *menu_item,
                                              gpointer   user_data)
 {
 	GtkTextView *text_view = GTK_TEXT_VIEW (user_data);
-	GSList *tags = NULL;
-	GSList *tagp = NULL;
+	g_autoptr (GSList) tags;
+	g_autoptr (GSList) tagp;
 	GtkTextIter iter;
 	GdkDisplay *display;
 	GtkClipboard *clipboard;
@@ -2597,9 +2597,6 @@ gpk_update_viewer_detail_popup_menu_copy_url(GtkWidget *menu_item,
 		if (href != NULL)
 			gtk_clipboard_set_text(clipboard, href, -1);
 	}
-
-	if (tags != NULL)
-		g_slist_free (tags);
 }
 
 static void

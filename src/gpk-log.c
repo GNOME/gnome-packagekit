@@ -40,7 +40,6 @@ static PkClient *client = NULL;
 static gchar *transaction_id = NULL;
 static gchar *filter = NULL;
 static GPtrArray *transactions = NULL;
-static GtkTreePath *path_global = NULL;
 static guint xid = 0;
 static gchar* previousEntryText = NULL;
 typedef struct {
@@ -399,8 +398,6 @@ gpk_log_add_item (PkTransactionPast *item)
 	guint uid;
 	g_autofree gchar *data = NULL;
 	PkRoleEnum role;
-	GtkTreeView *treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_simple"));
-	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 
 	/* get data */
 	g_object_get (item,
@@ -518,9 +515,11 @@ gpk_log_refilter (void)
 
 	/* go through the list, adding and removing the items as required */
 	for (i = 0; i < transactions->len; i++) {
+		const gchar* transaction_data = NULL;
+		g_auto(GStrv) sections;
 		item = g_ptr_array_index (transactions, i);
-		const gchar* transaction_data = pk_transaction_past_get_data (item);
-		g_auto(GStrv) sections = g_strsplit (transaction_data, "\t", 0);
+		transaction_data = pk_transaction_past_get_data (item);
+		sections = g_strsplit (transaction_data, "\t", 0);
 		ret = gpk_log_filter (item);
 		if (ret && gpk_transaction_is_install_update_or_remove(sections[0])) {
 			gpk_log_add_item (item);
