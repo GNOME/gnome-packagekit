@@ -40,8 +40,26 @@ static PkClient *client = NULL;
 static gchar *transaction_id = NULL;
 static gchar *filter = NULL;
 static GPtrArray *transactions = NULL;
-static GtkTreePath *path_global = NULL;
 static guint xid = 0;
+static gchar* previousEntryText = NULL;
+typedef struct {
+	GString *installed;
+	GString *removed;
+	GString *updated;
+} GpkTaskStringFormatted;
+
+static void
+pk_task_string_formatted_free(GpkTaskStringFormatted *strings)
+{
+	g_return_if_fail (strings != NULL);
+
+	g_string_free (strings->installed, TRUE);
+	g_string_free (strings->removed, TRUE);
+	g_string_free (strings->updated, TRUE);
+	g_slice_free (GpkTaskStringFormatted, strings);
+}
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GpkTaskStringFormatted, pk_task_string_formatted_free)
 
 enum
 {
@@ -58,68 +76,10 @@ enum
 	GPK_LOG_COLUMN_LAST
 };
 
-static gboolean
-gpk_log_find_iter_model_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, const gchar *id)
-{
-	gchar *id_tmp = NULL;
-	gtk_tree_model_get (model, iter, GPK_LOG_COLUMN_ID, &id_tmp, -1);
-	if (strcmp (id_tmp, id) == 0) {
-		path_global = gtk_tree_path_copy (path);
-		return TRUE;
-	}
-	return FALSE;
-}
-
-static gboolean
-gpk_log_mark_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data)
-{
-	gtk_list_store_set (GTK_LIST_STORE(model), iter, GPK_LOG_COLUMN_ACTIVE, FALSE, -1);
-	return FALSE;
-}
-
-static void
-gpk_log_mark_nonactive (GtkTreeModel *model)
-{
-	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_log_mark_nonactive_cb, NULL);
-}
-
-static gboolean
-gpk_log_remove_nonactive_cb (GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gboolean *ret)
-{
-	gboolean active;
-	gtk_tree_model_get (model, iter, GPK_LOG_COLUMN_ACTIVE, &active, -1);
-	if (!active) {
-		*ret = TRUE;
-		gtk_list_store_remove (GTK_LIST_STORE(model), iter);
-		return TRUE;
-	}
-	return FALSE;
-}
-
 static void
 gpk_log_remove_nonactive (GtkTreeModel *model)
 {
-	gboolean ret;
-	/* do this again and again as removing in gtk_tree_model_foreach causes errors */
-	do {
-		ret = FALSE;
-		gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_log_remove_nonactive_cb, &ret);
-	} while (ret);
-}
-
-static gboolean
-gpk_log_model_get_iter (GtkTreeModel *model, GtkTreeIter *iter, const gchar *id)
-{
-	gboolean ret = TRUE;
-	path_global = NULL;
-	gtk_tree_model_foreach (model, (GtkTreeModelForeachFunc) gpk_log_find_iter_model_cb, (gpointer) id);
-	if (path_global == NULL) {
-		gtk_list_store_append (GTK_LIST_STORE(model), iter);
-	} else {
-		ret = gtk_tree_model_get_iter (model, iter, path_global);
-		gtk_tree_path_free (path_global);
-	}
-	return ret;
+	gtk_list_store_clear(GTK_LIST_STORE (model));
 }
 
 static gchar *
@@ -137,46 +97,94 @@ gpk_log_get_localised_date (const gchar *timespec)
 	return g_date_time_format (date_time, _("%d %B %Y - %H:%M:%S"));
 }
 
-static gchar *
-gpk_log_get_type_line (gchar **array, PkInfoEnum info)
+static gchar*
+gpk_log_get_formatted_transaction_details (gchar **array)
 {
-	guint i;
 	guint size;
 	PkInfoEnum info_local;
-	const gchar *info_text;
-	GString *string;
-	g_autofree gchar *text = NULL;
-	gchar *whole;
+	g_autoptr(GpkTaskStringFormatted) pk_task_string_formatted;
+	pk_task_string_formatted = g_slice_new(GpkTaskStringFormatted);
+	pk_task_string_formatted->installed = g_string_new (NULL);
+	pk_task_string_formatted->removed = g_string_new (NULL);
+	pk_task_string_formatted->updated = g_string_new (NULL);
+	g_autofree gchar *installed_packages = NULL;
+	g_autofree gchar *removed_packages = NULL;
+	g_autofree gchar *updated_packages = NULL;
+	gchar *match = NULL;
 
-	string = g_string_new ("");
 	size = g_strv_length (array);
-	info_text = gpk_info_enum_to_localised_past (info);
 
-	/* find all of this type */
-	for (i = 0; i < size; i++) {
+	for (guint i = 0; i < size;  i++) {
 		g_auto(GStrv) sections = NULL;
+		g_autofree gchar *str = NULL;
+		g_autofree gchar *to_append = NULL;
 		sections = g_strsplit (array[i], "\t", 0);
 		info_local = pk_info_enum_from_string (sections[0]);
-		if (info_local == info) {
-			g_autofree gchar *str = NULL;
-			str = gpk_package_id_format_oneline (sections[1], NULL);
-			g_string_append_printf (string, "%s, ", str);
+		str = gpk_package_id_format_oneline (sections[1], NULL);
+
+		if (filter != NULL) {
+			g_autofree gchar *lower_case_str = NULL;
+			lower_case_str = g_utf8_strdown (str, -1);
+			match = g_strrstr(lower_case_str, filter);
+			if (match != NULL) {
+				glong filter_length = g_utf8_strlen(filter, -1);
+				gint match_position = match - lower_case_str;
+				if (match == lower_case_str) {
+					/* Match is at the beginning */
+					to_append = g_strdup_printf ("<span background=\"#ADD8E6\">%.*s</span>%s, ",
+									    (guint) filter_length, str, str + filter_length);
+				} else {
+					if (g_utf8_strlen (lower_case_str + (match - lower_case_str), -1) == filter_length) {
+						to_append = g_strdup_printf ("%.*s<span background=\"#ADD8E6\">%s</span>, ",
+									    match_position, str, str + match_position);
+					} else {
+						to_append = g_strdup_printf ("%.*s<span background=\"#ADD8E6\">%.*s</span>%s, ",
+									    match_position, str, (guint)filter_length, str + match_position , str + match_position+ filter_length);
+					}
+				}
+			}
+		}
+
+		if (to_append == NULL) {
+			to_append = g_strdup_printf ("%s, ", str);
+		}
+
+		switch (info_local) {
+		case PK_INFO_ENUM_INSTALLING:
+			g_string_append(pk_task_string_formatted->installed, to_append);
+			break;
+		case PK_INFO_ENUM_REMOVING:
+			g_string_append(pk_task_string_formatted->removed, to_append);
+			break;
+		case PK_INFO_ENUM_UPDATING:
+			g_string_append(pk_task_string_formatted->updated, to_append);
+			break;
+		default:
+			break;
 		}
 	}
 
-	/* nothing, so return NULL */
-	if (string->len == 0) {
-		g_string_free (string, TRUE);
-		return NULL;
+
+	if (pk_task_string_formatted->installed->len > 0) {
+		installed_packages = g_strdup_printf("<b>%s</b>: %.*s\n",
+									     gpk_info_enum_to_localised_past (PK_INFO_ENUM_INSTALLING),
+									     (guint)(pk_task_string_formatted->installed->len - 2), pk_task_string_formatted->installed->str);
+	}
+	if (pk_task_string_formatted->removed->len > 0) {
+		removed_packages = g_strdup_printf("<b>%s</b>: %.*s\n",
+									     gpk_info_enum_to_localised_past (PK_INFO_ENUM_REMOVING),
+									     (guint)(pk_task_string_formatted->removed->len - 2), pk_task_string_formatted->removed->str);
+	}
+	if (pk_task_string_formatted->updated->len > 0) {
+		updated_packages = g_strdup_printf("<b>%s</b>: %.*s\n",
+									     gpk_info_enum_to_localised_past (PK_INFO_ENUM_UPDATING),
+									     (guint)(pk_task_string_formatted->updated->len - 2), pk_task_string_formatted->updated->str);
 	}
 
-	/* remove last comma space */
-	g_string_set_size (string, string->len - 2);
-
-	/* add a nice header, and make text italic */
-	text = g_string_free (string, FALSE);
-	whole = g_strdup_printf ("<b>%s</b>: %s\n", info_text, text);
-	return whole;
+	return g_strdup_printf ("%s%s%s",
+				(installed_packages) ? installed_packages : "",
+				(removed_packages) ? removed_packages : "",
+				(updated_packages) ? updated_packages : "");
 }
 
 static gchar *
@@ -189,18 +197,8 @@ gpk_log_get_details_localised (const gchar *timespec, const gchar *data)
 	string = g_string_new ("");
 	array = g_strsplit (data, "\n", 0);
 
-	/* get each type */
-	text = gpk_log_get_type_line (array, PK_INFO_ENUM_INSTALLING);
-	if (text != NULL)
-		g_string_append (string, text);
-	g_free (text);
-	text = gpk_log_get_type_line (array, PK_INFO_ENUM_REMOVING);
-	if (text != NULL)
-		g_string_append (string, text);
-	g_free (text);
-	text = gpk_log_get_type_line (array, PK_INFO_ENUM_UPDATING);
-	if (text != NULL)
-		g_string_append (string, text);
+	text = gpk_log_get_formatted_transaction_details(array);
+	g_string_append (string, text);
 	g_free (text);
 
 	/* remove last \n */
@@ -208,17 +206,6 @@ gpk_log_get_details_localised (const gchar *timespec, const gchar *data)
 		g_string_set_size (string, string->len - 1);
 
 	return g_string_free (string, FALSE);
-}
-
-static void
-gpk_log_treeview_size_allocate_cb (GtkWidget *widget, GtkAllocation *allocation, GtkCellRenderer *cell)
-{
-	GtkTreeViewColumn *column;
-	gint width;
-
-	column = gtk_tree_view_get_column (GTK_TREE_VIEW(widget), 2);
-	width = gtk_tree_view_column_get_width (column);
-	g_object_set (cell, "wrap-width", width - 10, NULL);
 }
 
 static void
@@ -266,14 +253,11 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	g_object_set (renderer, "wrap-mode", PANGO_WRAP_WORD, NULL);
 	g_object_set (renderer, "wrap-width", 600, NULL);
 
-	g_signal_connect (treeview, "size-allocate", G_CALLBACK (gpk_log_treeview_size_allocate_cb), renderer);
-
 	/* TRANSLATORS: column for what packages were upgraded */
 	column = gtk_tree_view_column_new_with_attributes (_("Details"), renderer,
 							   "markup", GPK_LOG_COLUMN_DETAILS, NULL);
 	gtk_tree_view_append_column (treeview, column);
 	gtk_tree_view_column_set_expand (column, TRUE);
-	gtk_tree_view_column_set_fixed_width (column, 600);
 
 	/* TRANSLATORS: column for the user name, e.g. Richard Hughes */
 	column = gtk_tree_view_column_new_with_attributes (_("User name"), renderer,
@@ -283,6 +267,7 @@ pk_treeview_add_general_columns (GtkTreeView *treeview)
 	gtk_tree_view_column_set_sort_column_id (column, GPK_LOG_COLUMN_USER);
 
 	/* TRANSLATORS: column for the application used for the install, e.g. Add/Remove Programs */
+		g_object_set(renderer, "xpad", 10, NULL);
 	column = gtk_tree_view_column_new_with_attributes (_("Application"), renderer,
 							   "markup", GPK_LOG_COLUMN_TOOL, NULL);
 	gtk_tree_view_append_column (treeview, column);
@@ -375,7 +360,12 @@ static void
 gpk_log_scroll_top_tree_view(GtkTreeView* treeView)
 {
 	GtkTreePath *path = gtk_tree_path_new_first ();
-	gtk_tree_view_scroll_to_cell(treeView, path, NULL, FALSE, 0, 0);
+	GtkTreeIter iter;
+	GtkTreeModel *model = gtk_tree_view_get_model(treeView);
+	gboolean notEmpty = gtk_tree_model_get_iter_first(model, &iter);
+	if (notEmpty) {
+		gtk_tree_view_scroll_to_cell(treeView, path, NULL, FALSE, 0, 0);
+	}
 }
 
 static void
@@ -398,8 +388,6 @@ gpk_log_add_item (PkTransactionPast *item)
 	guint uid;
 	g_autofree gchar *data = NULL;
 	PkRoleEnum role;
-	GtkTreeView *treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_simple"));
-	GtkTreeModel *model = gtk_tree_view_get_model (treeview);
 
 	/* get data */
 	g_object_get (item,
@@ -454,7 +442,7 @@ gpk_log_add_item (PkTransactionPast *item)
 	else
 		tool = cmdline;
 
-	gpk_log_model_get_iter (model, &iter, tid);
+	gtk_list_store_append (list_store, &iter);
 	gtk_list_store_set (list_store, &iter,
 			    GPK_LOG_COLUMN_ICON, icon_name,
 			    GPK_LOG_COLUMN_TIMESPEC, timespec,
@@ -473,6 +461,21 @@ gpk_log_add_item (PkTransactionPast *item)
 			gtk_main_iteration ();
 }
 
+static gboolean
+gpk_transaction_is_install_update_or_remove(const gchar* info)
+{
+	PkInfoEnum infoconst = pk_info_enum_from_string (info);
+	switch (infoconst) {
+	case PK_INFO_ENUM_INSTALLING:
+	case PK_INFO_ENUM_REMOVING:
+	case PK_INFO_ENUM_UPDATING:
+		return TRUE;
+	default:
+		return FALSE;
+	}
+}
+
+
 static void
 gpk_log_refilter (void)
 {
@@ -489,7 +492,7 @@ gpk_log_refilter (void)
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
 	package = gtk_entry_get_text (GTK_ENTRY(widget));
 	if (package != NULL && package[0] != '\0')
-		filter = g_strdup (package);
+		filter = g_utf8_strdown (package, -1);
 	else
 		filter = NULL;
 
@@ -498,19 +501,25 @@ gpk_log_refilter (void)
 	/* mark the items as not used */
 	treeview = GTK_TREE_VIEW (gtk_builder_get_object (builder, "treeview_simple"));
 	model = gtk_tree_view_get_model (treeview);
-	gpk_log_mark_nonactive (model);
+	gpk_log_remove_nonactive (model);
 
 	/* go through the list, adding and removing the items as required */
 	for (i = 0; i < transactions->len; i++) {
+		const gchar* transaction_data = NULL;
+		g_auto(GStrv) sections;
 		item = g_ptr_array_index (transactions, i);
+		transaction_data = pk_transaction_past_get_data (item);
+		sections = g_strsplit (transaction_data, "\t", 0);
 		ret = gpk_log_filter (item);
-		if (ret)
+		if (ret && gpk_transaction_is_install_update_or_remove(sections[0])) {
 			gpk_log_add_item (item);
+		}
 	}
 
 	/* remove the items that are not used */
-	gpk_log_remove_nonactive (model);
-	gpk_log_scroll_top_tree_view (treeview);
+	if (i == transactions->len) {
+		gpk_log_scroll_top_tree_view (treeview);
+	}
 }
 
 static void
@@ -557,16 +566,16 @@ gpk_log_button_refresh_cb (GtkWidget *widget, gpointer data)
 	gpk_log_refresh ();
 }
 
-static void
-gpk_log_button_filter_cb (GtkWidget *widget2, gpointer data)
-{
-	gpk_log_refilter ();
-}
-
 static gboolean
 gpk_log_entry_filter_cb (GtkWidget *widget, GdkEventKey *event, gpointer user_data)
 {
-	gpk_log_refilter ();
+	const gchar *entryText = gtk_entry_get_text(GTK_ENTRY (widget));
+	if (g_strcmp0 (entryText, previousEntryText)) {
+		g_free(previousEntryText);
+		previousEntryText = g_strdup (entryText);
+		gpk_log_refilter ();
+		return TRUE;
+	}
 	return FALSE;
 }
 
@@ -586,6 +595,7 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 	GtkWidget *widget;
 	GtkWindow *window;
 	guint retval;
+	previousEntryText = g_strdup ("");
 
 	client = pk_client_new ();
 	g_object_set (client,
@@ -607,7 +617,7 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 	gtk_window_set_application (window, application);
 
 	/* set a size, as the screen allows */
-	gpk_window_set_size_request (window, 1325, 800);
+	gpk_window_set_size_request (window, 1370, 800);
 
 	/* if command line arguments are set, then setup UI */
 	if (filter != NULL) {
@@ -618,13 +628,8 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_refresh"));
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_refresh_cb), NULL);
 	gtk_widget_hide (widget);
-	widget = GTK_WIDGET (gtk_builder_get_object (builder, "button_filter"));
-	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_filter_cb), NULL);
 
-	/* hit enter in the search box for filter */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
-	g_signal_connect (widget, "activate", G_CALLBACK (gpk_log_button_filter_cb), NULL);
-
 	/* autocompletion can be turned off as it's slow */
 	g_signal_connect (widget, "key-release-event", G_CALLBACK (gpk_log_entry_filter_cb), NULL);
 
@@ -639,6 +644,7 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 				 GTK_TREE_MODEL (list_store));
 
 	selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (widget));
+	gtk_tree_selection_set_mode(selection, GTK_SELECTION_NONE);
 	g_signal_connect (selection, "changed",
 			  G_CALLBACK (gpk_log_treeview_clicked_cb), NULL);
 
