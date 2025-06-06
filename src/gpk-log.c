@@ -46,29 +46,20 @@ typedef struct {
 	GString *installed;
 	GString *removed;
 	GString *updated;
-} PkTaskStringFormatted;
+} GpkTaskStringFormatted;
 
-static void sformatted_clear(PkTaskStringFormatted *strings)
+static void
+pk_task_string_formatted_free(GpkTaskStringFormatted *strings)
 {
 	g_return_if_fail (strings != NULL);
 
 	g_string_free (strings->installed, TRUE);
 	g_string_free (strings->removed, TRUE);
 	g_string_free (strings->updated, TRUE);
+	g_slice_free (GpkTaskStringFormatted, strings);
 }
 
-static void sformatted_free(PkTaskStringFormatted *strings)
-{
-	g_return_if_fail (strings != NULL);
-
-	g_string_free (strings->installed, TRUE);
-	g_string_free (strings->removed, TRUE);
-	g_string_free (strings->updated, TRUE);
-	g_slice_free (PkTaskStringFormatted, strings);
-}
-
-G_DEFINE_AUTO_CLEANUP_CLEAR_FUNC (PkTaskStringFormatted, sformatted_clear)
-G_DEFINE_AUTOPTR_CLEANUP_FUNC (PkTaskStringFormatted, sformatted_free)
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GpkTaskStringFormatted, pk_task_string_formatted_free)
 
 enum
 {
@@ -111,10 +102,11 @@ gpk_log_get_formatted_transaction_details (gchar **array)
 {
 	guint size;
 	PkInfoEnum info_local;
-	g_auto(PkTaskStringFormatted) pk_task_string_formatted;
-	pk_task_string_formatted.installed = g_string_new (NULL);
-	pk_task_string_formatted.removed = g_string_new (NULL);
-	pk_task_string_formatted.updated = g_string_new (NULL);
+	g_autoptr(GpkTaskStringFormatted) pk_task_string_formatted;
+	pk_task_string_formatted = g_slice_new(GpkTaskStringFormatted);
+	pk_task_string_formatted->installed = g_string_new (NULL);
+	pk_task_string_formatted->removed = g_string_new (NULL);
+	pk_task_string_formatted->updated = g_string_new (NULL);
 	g_autofree gchar *installed_packages = NULL;
 	g_autofree gchar *removed_packages = NULL;
 	g_autofree gchar *updated_packages = NULL;
@@ -159,13 +151,13 @@ gpk_log_get_formatted_transaction_details (gchar **array)
 
 		switch (info_local) {
 		case PK_INFO_ENUM_INSTALLING:
-			g_string_append(pk_task_string_formatted.installed, to_append);
+			g_string_append(pk_task_string_formatted->installed, to_append);
 			break;
 		case PK_INFO_ENUM_REMOVING:
-			g_string_append(pk_task_string_formatted.removed, to_append);
+			g_string_append(pk_task_string_formatted->removed, to_append);
 			break;
 		case PK_INFO_ENUM_UPDATING:
-			g_string_append(pk_task_string_formatted.updated, to_append);
+			g_string_append(pk_task_string_formatted->updated, to_append);
 			break;
 		default:
 			break;
@@ -173,22 +165,20 @@ gpk_log_get_formatted_transaction_details (gchar **array)
 	}
 
 
-	if (pk_task_string_formatted.installed->len > 0) {
+	if (pk_task_string_formatted->installed->len > 0) {
 		installed_packages = g_strdup_printf("<b>%s</b>: %.*s\n",
 									     gpk_info_enum_to_localised_past (PK_INFO_ENUM_INSTALLING),
-									     (guint)(pk_task_string_formatted.installed->len - 2), pk_task_string_formatted.installed->str);
+									     (guint)(pk_task_string_formatted->installed->len - 2), pk_task_string_formatted->installed->str);
 	}
-	/* g_string_free (pk_task_string_formatted.installed, TRUE); */
-	if (pk_task_string_formatted.removed->len > 0) {
+	if (pk_task_string_formatted->removed->len > 0) {
 		removed_packages = g_strdup_printf("<b>%s</b>: %.*s\n",
 									     gpk_info_enum_to_localised_past (PK_INFO_ENUM_REMOVING),
-									     (guint)(pk_task_string_formatted.removed->len - 2), pk_task_string_formatted.removed->str);
+									     (guint)(pk_task_string_formatted->removed->len - 2), pk_task_string_formatted->removed->str);
 	}
-	/* g_string_free (pk_task_string_formatted.removed, TRUE); */
-	if (pk_task_string_formatted.updated->len > 0) {
+	if (pk_task_string_formatted->updated->len > 0) {
 		updated_packages = g_strdup_printf("<b>%s</b>: %.*s\n",
 									     gpk_info_enum_to_localised_past (PK_INFO_ENUM_UPDATING),
-									     (guint)(pk_task_string_formatted.updated->len - 2), pk_task_string_formatted.updated->str);
+									     (guint)(pk_task_string_formatted->updated->len - 2), pk_task_string_formatted->updated->str);
 	}
 
 	return g_strdup_printf ("%s%s%s",
@@ -639,10 +629,7 @@ gpk_log_startup_cb (GtkApplication *application, gpointer user_data)
 	g_signal_connect (widget, "clicked", G_CALLBACK (gpk_log_button_refresh_cb), NULL);
 	gtk_widget_hide (widget);
 
-	/* hit enter in the search box for filter */
 	widget = GTK_WIDGET (gtk_builder_get_object (builder, "entry_package"));
-	/* g_signal_connect (widget, "activate", G_CALLBACK (gpk_log_button_filter_cb), NULL); */
-
 	/* autocompletion can be turned off as it's slow */
 	g_signal_connect (widget, "key-release-event", G_CALLBACK (gpk_log_entry_filter_cb), NULL);
 

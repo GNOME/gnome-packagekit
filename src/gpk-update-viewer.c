@@ -2512,6 +2512,7 @@ gpk_update_viewer_textview_set_cursor (GtkTextView *text_view, gint x, gint y)
 	g_autoptr(GdkCursor) cursor = NULL;
 	gboolean hovering = FALSE;
 	gboolean hovering_over_link = FALSE;
+
 	hovering_over_link = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT(text_view), "hovering"));
 	gtk_text_view_get_iter_at_location (text_view, &iter, x, y);
 
