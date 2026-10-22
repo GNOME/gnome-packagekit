@@ -29,7 +29,7 @@
 #include <sys/types.h>
 #include <pwd.h>
 
-#include <packagekit-glib2/packagekit.h>
+#include <packagekit/packagekit.h>
 
 #include "gpk-common.h"
 #include "gpk-debug.h"
@@ -98,9 +98,8 @@ gpk_log_get_localised_date (const gchar *timespec)
 }
 
 static gchar*
-gpk_log_get_formatted_transaction_details (gchar **array)
+gpk_log_get_formatted_transaction_details (GPtrArray *packages)
 {
-	guint size;
 	PkInfoEnum info_local;
 	g_autoptr(GpkTaskStringFormatted) pk_task_string_formatted;
 	pk_task_string_formatted = g_slice_new(GpkTaskStringFormatted);
@@ -112,15 +111,12 @@ gpk_log_get_formatted_transaction_details (gchar **array)
 	g_autofree gchar *updated_packages = NULL;
 	gchar *match = NULL;
 
-	size = g_strv_length (array);
-
-	for (guint i = 0; i < size;  i++) {
-		g_auto(GStrv) sections = NULL;
+	for (guint i = 0; packages != NULL && i < packages->len; i++) {
+		PkPackage *package = g_ptr_array_index (packages, i);
 		g_autofree gchar *str = NULL;
 		g_autofree gchar *to_append = NULL;
-		sections = g_strsplit (array[i], "\t", 0);
-		info_local = pk_info_enum_from_string (sections[0]);
-		str = gpk_package_id_format_oneline (sections[1], NULL);
+		info_local = pk_package_get_info (package);
+		str = gpk_package_id_format_oneline (pk_package_get_id (package), NULL);
 
 		if (filter != NULL) {
 			g_autofree gchar *lower_case_str = NULL;
@@ -188,16 +184,13 @@ gpk_log_get_formatted_transaction_details (gchar **array)
 }
 
 static gchar *
-gpk_log_get_details_localised (const gchar *timespec, const gchar *data)
+gpk_log_get_details_localised (GPtrArray *packages)
 {
 	GString *string;
 	gchar *text;
-	g_auto(GStrv) array = NULL;
 
 	string = g_string_new ("");
-	array = g_strsplit (data, "\n", 0);
-
-	text = gpk_log_get_formatted_transaction_details(array);
+	text = gpk_log_get_formatted_transaction_details (packages);
 	g_string_append (string, text);
 	g_free (text);
 
@@ -296,30 +289,11 @@ gpk_log_treeview_clicked_cb (GtkTreeSelection *selection, gpointer data)
 }
 
 static gboolean
-gpk_log_filter (PkTransactionPast *item)
+gpk_log_filter (PkHistoryItem *item)
 {
 	gboolean ret = FALSE;
-	guint i;
-	guint length;
-	g_auto(GStrv) packages = NULL;
-	g_autofree gchar *tid = NULL;
-	gboolean succeeded;
-	g_autofree gchar *cmdline = NULL;
-	g_autofree gchar *data = NULL;
-
-	/* get data */
-	g_object_get (item,
-		      "tid", &tid,
-		      "succeeded", &succeeded,
-		      "cmdline", &cmdline,
-		      "data", &data,
-		      NULL);
-
-	/* only show transactions that succeeded */
-	if (!succeeded) {
-		g_debug ("tid %s did not succeed, so not adding", tid);
-		return FALSE;
-	}
+	GPtrArray *packages = pk_history_item_get_packages (item);
+	const gchar *cmdline = pk_history_item_get_cmdline (item);
 
 	if (filter == NULL)
 		return TRUE;
@@ -328,25 +302,22 @@ gpk_log_filter (PkTransactionPast *item)
 	if (cmdline != NULL && g_strrstr (cmdline, filter) != NULL)
 		ret = TRUE;
 
-	/* look in all the data for the filter string */
-	packages = g_strsplit (data, "\n", 0);
-	length = g_strv_length (packages);
-	for (i = 0; i < length; i++) {
-		g_auto(GStrv) split = NULL;
-		g_auto(GStrv) sections = NULL;
-		sections = g_strsplit (packages[i], "\t", 0);
+	/* look in all the packages for the filter string */
+	for (guint i = 0; packages != NULL && i < packages->len; i++) {
+		PkPackage *package = g_ptr_array_index (packages, i);
+		const gchar *version = pk_package_get_version (package);
+		const gchar *arch = pk_package_get_arch (package);
 
 		/* check if type matches filter */
-		if (g_strrstr (sections[0], filter) != NULL)
+		if (g_strrstr (pk_info_enum_to_string (pk_package_get_info (package)), filter) != NULL)
 			ret = TRUE;
 
 		/* check to see if package name, version or arch matches */
-		split = pk_package_id_split (sections[1]);
-		if (g_strrstr (split[0], filter) != NULL)
+		if (g_strrstr (pk_package_get_name (package), filter) != NULL)
 			ret = TRUE;
-		if (split[1] != NULL && g_strrstr (split[1], filter) != NULL)
+		if (version != NULL && g_strrstr (version, filter) != NULL)
 			ret = TRUE;
-		if (split[2] != NULL && g_strrstr (split[2], filter) != NULL)
+		if (arch != NULL && g_strrstr (arch, filter) != NULL)
 			ret = TRUE;
 
 		/* shortcut for speed */
@@ -369,7 +340,7 @@ gpk_log_scroll_top_tree_view(GtkTreeView* treeView)
 }
 
 static void
-gpk_log_add_item (PkTransactionPast *item)
+gpk_log_add_item (PkHistoryItem *item)
 {
 	GtkTreeIter iter;
 	g_autofree gchar *details = NULL;
@@ -377,6 +348,7 @@ gpk_log_add_item (PkTransactionPast *item)
 	const gchar *icon_name;
 	const gchar *role_text;
 	const gchar *username = NULL;
+	g_autofree gchar *realname = NULL;
 	const gchar *tool;
 	static guint count;
 	struct passwd *pw;
@@ -386,40 +358,42 @@ gpk_log_add_item (PkTransactionPast *item)
 	guint duration;
 	g_autofree gchar *cmdline = NULL;
 	guint uid;
-	g_autofree gchar *data = NULL;
 	PkRoleEnum role;
 
 	/* get data */
 	g_object_get (item,
 		      "role", &role,
 		      "tid", &tid,
-		      "timespec", &timespec,
+		      "time-started", &timespec,
 		      "succeeded", &succeeded,
 		      "duration", &duration,
 		      "cmdline", &cmdline,
 		      "uid", &uid,
-		      "data", &data,
 		      NULL);
 
 	/* put formatted text into treeview */
-	details = gpk_log_get_details_localised (timespec, data);
+	details = gpk_log_get_details_localised (pk_history_item_get_packages (item));
 	date = gpk_log_get_localised_date (timespec);
 
 	icon_name = gpk_role_enum_to_icon_name (role);
 	role_text = gpk_role_enum_to_localised_past (role);
 
-	/* query real name */
+	/* query real name, the first of the comma separated GECOS fields */
 	pw = getpwuid(uid);
 	if (pw != NULL) {
 		if (pw->pw_gecos != NULL)
-			username = pw->pw_gecos;
+			realname = g_strndup (pw->pw_gecos, strcspn (pw->pw_gecos, ","));
+		if (realname != NULL && realname[0] != '\0')
+			username = realname;
 		else if (pw->pw_name != NULL)
 			username = pw->pw_name;
 	}
 
 	/* get nice name for tool name */
-	if (strstr (cmdline, "pkcon") != NULL)
-		/* TRANSLATORS: user-friendly name for pkcon */
+	if (cmdline == NULL)
+		tool = NULL;
+	else if (strstr (cmdline, "pkgcli") != NULL || strstr (cmdline, "pkcon") != NULL)
+		/* TRANSLATORS: user-friendly name for pkgcli and pkcon */
 		tool = _("Command line client");
 	else if (strstr (cmdline, "gpk-application") != NULL)
 		/* TRANSLATORS: user-friendly name for gpk-update-viewer */
@@ -461,27 +435,12 @@ gpk_log_add_item (PkTransactionPast *item)
 			gtk_main_iteration ();
 }
 
-static gboolean
-gpk_transaction_is_install_update_or_remove(const gchar* info)
-{
-	PkInfoEnum infoconst = pk_info_enum_from_string (info);
-	switch (infoconst) {
-	case PK_INFO_ENUM_INSTALLING:
-	case PK_INFO_ENUM_REMOVING:
-	case PK_INFO_ENUM_UPDATING:
-		return TRUE;
-	default:
-		return FALSE;
-	}
-}
-
-
 static void
 gpk_log_refilter (void)
 {
 	guint i;
 	gboolean ret;
-	PkTransactionPast *item;
+	PkHistoryItem *item;
 	GtkWidget *widget;
 	const gchar *package;
 	GtkTreeView *treeview;
@@ -496,6 +455,10 @@ gpk_log_refilter (void)
 	else
 		filter = NULL;
 
+	/* the history has not been loaded yet */
+	if (transactions == NULL)
+		return;
+
 	g_debug ("len=%u", transactions->len);
 
 	/* mark the items as not used */
@@ -505,15 +468,10 @@ gpk_log_refilter (void)
 
 	/* go through the list, adding and removing the items as required */
 	for (i = 0; i < transactions->len; i++) {
-		const gchar* transaction_data = NULL;
-		g_auto(GStrv) sections;
 		item = g_ptr_array_index (transactions, i);
-		transaction_data = pk_transaction_past_get_data (item);
-		sections = g_strsplit (transaction_data, "\t", 0);
 		ret = gpk_log_filter (item);
-		if (ret && gpk_transaction_is_install_update_or_remove(sections[0])) {
+		if (ret)
 			gpk_log_add_item (item);
-		}
 	}
 
 	/* remove the items that are not used */
@@ -523,7 +481,7 @@ gpk_log_refilter (void)
 }
 
 static void
-gpk_log_get_old_transactions_cb (GObject *object, GAsyncResult *res, gpointer user_data)
+gpk_log_get_history_cb (GObject *object, GAsyncResult *res, gpointer user_data)
 {
 //	PkClient *client = PK_CLIENT (object);
 	g_autoptr(GError) error = NULL;
@@ -533,30 +491,33 @@ gpk_log_get_old_transactions_cb (GObject *object, GAsyncResult *res, gpointer us
 	/* get the results */
 	results = pk_client_generic_finish (client, res, &error);
 	if (results == NULL) {
-		g_warning ("failed to get old transactions: %s", error->message);
+		g_warning ("failed to get history: %s", error->message);
 		return;
 	}
 
 	/* check error code */
 	error_code = pk_results_get_error_code (results);
 	if (error_code != NULL) {
-		g_warning ("failed to get old transactions: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
+		g_warning ("failed to get history: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
 		return;
 	}
 
 	/* get the list */
 	if (transactions != NULL)
 		g_ptr_array_unref (transactions);
-	transactions = pk_results_get_transaction_array (results);
+	transactions = pk_results_get_history_array (results);
 	gpk_log_refilter ();
 }
 
 static void
 gpk_log_refresh (void)
 {
-	/* get the list async */
-	pk_client_get_old_transactions_async (client, 0, NULL, NULL, NULL,
-					      (GAsyncReadyCallback) gpk_log_get_old_transactions_cb, NULL);
+	/* get the list async, only successful transactions that changed packages */
+	pk_client_get_history_async (client,
+				     pk_bitfield_from_enums (PK_HISTORY_FLAG_ENUM_SUCCEEDED,
+							     PK_HISTORY_FLAG_ENUM_PACKAGE_CHANGES, -1),
+				     0, NULL, NULL, NULL, NULL,
+				     (GAsyncReadyCallback) gpk_log_get_history_cb, NULL);
 }
 
 static void

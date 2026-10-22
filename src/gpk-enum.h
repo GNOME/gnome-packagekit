@@ -23,7 +23,7 @@
 #define __GPK_ENUM_H
 
 #include <glib-object.h>
-#include <packagekit-glib2/packagekit.h>
+#include <packagekit/packagekit.h>
 
 G_BEGIN_DECLS
 
@@ -46,20 +46,21 @@ typedef enum {
 	GPK_INFO_ENUM_REMOVING		= PK_INFO_ENUM_REMOVING,
 	GPK_INFO_ENUM_CLEANUP		= PK_INFO_ENUM_CLEANUP,
 	GPK_INFO_ENUM_OBSOLETING	= PK_INFO_ENUM_OBSOLETING,
-	GPK_INFO_ENUM_DOWNLOADED	= PK_INFO_ENUM_UNKNOWN + PK_INFO_ENUM_DOWNLOADING,
-	GPK_INFO_ENUM_UPDATED		= PK_INFO_ENUM_UNKNOWN + PK_INFO_ENUM_UPDATING,
-	GPK_INFO_ENUM_INSTALLED		= PK_INFO_ENUM_UNKNOWN + PK_INFO_ENUM_INSTALLING,
-	GPK_INFO_ENUM_REMOVED		= PK_INFO_ENUM_UNKNOWN + PK_INFO_ENUM_REMOVING,
-	GPK_INFO_ENUM_CLEANEDUP		= PK_INFO_ENUM_UNKNOWN + PK_INFO_ENUM_CLEANUP,
-	GPK_INFO_ENUM_OBSOLETED		= PK_INFO_ENUM_UNKNOWN + PK_INFO_ENUM_OBSOLETING,
+	GPK_INFO_ENUM_DOWNLOADED	= PK_INFO_ENUM_LAST + PK_INFO_ENUM_DOWNLOADING,
+	GPK_INFO_ENUM_UPDATED		= PK_INFO_ENUM_LAST + PK_INFO_ENUM_UPDATING,
+	GPK_INFO_ENUM_INSTALLED		= PK_INFO_ENUM_LAST + PK_INFO_ENUM_INSTALLING,
+	GPK_INFO_ENUM_REMOVED		= PK_INFO_ENUM_LAST + PK_INFO_ENUM_REMOVING,
+	GPK_INFO_ENUM_CLEANEDUP		= PK_INFO_ENUM_LAST + PK_INFO_ENUM_CLEANUP,
+	GPK_INFO_ENUM_OBSOLETED		= PK_INFO_ENUM_LAST + PK_INFO_ENUM_OBSOLETING,
 	GPK_INFO_ENUM_UNKNOWN
 } GpkInfoStatusEnum;
 
 const gchar	*gpk_role_enum_to_localised_past	(PkRoleEnum	 role)
 							 G_GNUC_CONST;
 const gchar	*gpk_role_enum_to_icon_name		(PkRoleEnum	 role);
-const gchar	*gpk_media_type_enum_to_localised_text	(PkMediaTypeEnum type)
+const gchar	*gpk_severity_enum_to_localised_text	(PkSeverityEnum	 severity)
 							 G_GNUC_CONST;
+const gchar	*gpk_severity_enum_to_icon_name		(PkSeverityEnum	 severity);
 const gchar	*gpk_info_enum_to_localised_text	(PkInfoEnum	 info)
 							 G_GNUC_CONST;
 const gchar	*gpk_info_enum_to_localised_past	(PkInfoEnum	 info)

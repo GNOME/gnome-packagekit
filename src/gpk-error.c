@@ -26,7 +26,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib2/packagekit.h>
+#include <packagekit/packagekit.h>
 
 #include "gpk-common.h"
 #include "gpk-error.h"

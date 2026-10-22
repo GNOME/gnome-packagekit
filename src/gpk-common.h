@@ -24,14 +24,13 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib2/packagekit.h>
+#include <packagekit/packagekit.h>
 
 #include "gpk-enum.h"
 
 G_BEGIN_DECLS
 
 #define GPK_SETTINGS_SCHEMA				"org.gnome.packagekit"
-#define GPK_SETTINGS_CATEGORY_GROUPS			"category-groups"
 #define GPK_SETTINGS_DBUS_DEFAULT_INTERACTION		"dbus-default-interaction"
 #define GPK_SETTINGS_DBUS_ENFORCED_INTERACTION		"dbus-enforced-interaction"
 #define GPK_SETTINGS_ENABLE_AUTOREMOVE			"enable-autoremove"

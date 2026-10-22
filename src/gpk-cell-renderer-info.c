@@ -24,7 +24,7 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib2/packagekit.h>
+#include <packagekit/packagekit.h>
 
 #include "gpk-enum.h"
 #include "gpk-cell-renderer-info.h"

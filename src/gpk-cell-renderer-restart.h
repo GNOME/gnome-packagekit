@@ -24,7 +24,7 @@
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib2/packagekit.h>
+#include <packagekit/packagekit.h>
 
 G_BEGIN_DECLS
 

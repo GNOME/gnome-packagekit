@@ -22,7 +22,7 @@
 #include "config.h"
 
 #include <glib/gi18n.h>
-#include <packagekit-glib2/packagekit.h>
+#include <packagekit/packagekit.h>
 
 #include "gpk-task.h"
 #include "gpk-common.h"
@@ -257,54 +257,18 @@ gpk_task_eula_question (PkTask *task, guint request, PkResults *results)
 	gtk_widget_show (GTK_WIDGET(priv->current_window));
 }
 
-static void
-gpk_task_media_change_question (PkTask *task, guint request, PkResults *results)
+static gboolean
+gpk_task_filter_info_cb (PkPackage *package, gpointer user_data)
 {
-	g_autoptr(GPtrArray) array = NULL;
-	PkMediaChangeRequired *item;
-	const gchar *name;
-	g_autofree gchar *message = NULL;
-	gchar *media_id;
-	PkMediaTypeEnum media_type;
-	gchar *media_text;
-	GpkTaskPrivate *priv = GET_PRIVATE (GPK_TASK(task));
+	PkInfoEnum info = GPOINTER_TO_UINT (user_data);
+	PkInfoEnum info_pkg = pk_package_get_info (package);
 
-	/* save the current request */
-	priv->request = request;
-
-	/* get data */
-	array = pk_results_get_media_change_required_array (results);
-	if (array->len != 1) {
-		g_warning ("array length %i, aborting", array->len);
-		return;
-	}
-
-	/* only one item supported */
-	item = g_ptr_array_index (array, 0);
-	g_object_get (item,
-		      "media-id", &media_id,
-		      "media-type", &media_type,
-		      "media-text", &media_text,
-		      NULL);
-
-	name = gpk_media_type_enum_to_localised_text (media_type);
-	/* TRANSLATORS: dialog body, explains to the user that they need to insert a disk to continue. The first replacement is DVD, CD etc */
-	message = g_strdup_printf (_("Additional media is required. Please insert the %s labeled “%s” to continue."), name, media_text);
-
-	priv->current_window = GTK_WINDOW (gtk_message_dialog_new (priv->parent_window,
-								   GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-								   /* TRANSLATORS: this is the window title when a new CD or DVD is required */
-								   GTK_MESSAGE_INFO, GTK_BUTTONS_CANCEL, _("A media change is required")));
-	gtk_message_dialog_format_secondary_markup (GTK_MESSAGE_DIALOG(priv->current_window), "%s", message);
-
-	/* TRANSLATORS: this is button text */
-	gtk_dialog_add_button (GTK_DIALOG(priv->current_window), _("Continue"), GTK_RESPONSE_YES);
-
-	/* set icon name */
-	gtk_window_set_icon_name (priv->current_window, GPK_ICON_SOFTWARE_INSTALLER);
-
-	g_signal_connect (priv->current_window, "response", G_CALLBACK (gpk_task_dialog_response_cb), task);
-	gtk_widget_show_all (GTK_WIDGET(priv->current_window));
+	/* all update kinds are shown in the same section */
+	if (info == PK_INFO_ENUM_UPDATE)
+		return info_pkg == PK_INFO_ENUM_UPDATE ||
+		       info_pkg == PK_INFO_ENUM_UPDATE_SECURITY ||
+		       info_pkg == PK_INFO_ENUM_UPDATE_ENHANCEMENT;
+	return info_pkg == info;
 }
 
 static void
@@ -322,7 +286,7 @@ gpk_task_add_dialog_deps_section (PkTask *task,
 	GtkWidget *tab_page;
 	GtkWidget *tab_label;
 
-	sack_tmp = pk_package_sack_filter_by_info (sack, info);
+	sack_tmp = pk_package_sack_filter (sack, gpk_task_filter_info_cb, GUINT_TO_POINTER (info));
 	if (pk_package_sack_get_size (sack_tmp) == 0) {
 		g_debug ("no packages with %s", pk_info_enum_to_string (info));
 		return;
@@ -333,32 +297,32 @@ gpk_task_add_dialog_deps_section (PkTask *task,
 
 	/* get the header */
 	switch (info) {
-	case PK_INFO_ENUM_INSTALLING:
+	case PK_INFO_ENUM_INSTALL:
 		/* TRANSLATORS: additional message text for the deps dialog */
 		title = _("The following software also needs to be installed");
 		tab_label = gtk_label_new (_("Install"));
 		break;
-	case PK_INFO_ENUM_REMOVING:
+	case PK_INFO_ENUM_REMOVE:
 		/* TRANSLATORS: additional message text for the deps dialog */
 		title = _("The following software also needs to be removed");
 		tab_label = gtk_label_new (_("Remove"));
 		break;
-	case PK_INFO_ENUM_OBSOLETING:
+	case PK_INFO_ENUM_OBSOLETE:
 		/* TRANSLATORS: additional message text for the deps dialog */
 		title = _("The following software also needs to be removed");
 		tab_label = gtk_label_new (_("Obsoleted"));
 		break;
-	case PK_INFO_ENUM_UPDATING:
+	case PK_INFO_ENUM_UPDATE:
 		/* TRANSLATORS: additional message text for the deps dialog */
 		title = _("The following software also needs to be updated");
 		tab_label = gtk_label_new (_("Update"));
 		break;
-	case PK_INFO_ENUM_REINSTALLING:
+	case PK_INFO_ENUM_REINSTALL:
 		/* TRANSLATORS: additional message text for the deps dialog */
 		title = _("The following software also needs to be re-installed");
 		tab_label = gtk_label_new (_("Reinstall"));
 		break;
-	case PK_INFO_ENUM_DOWNGRADING:
+	case PK_INFO_ENUM_DOWNGRADE:
 		/* TRANSLATORS: additional message text for the deps dialog */
 		title = _("The following software also needs to be downgraded");
 		tab_label = gtk_label_new (_("Downgrade"));
@@ -460,27 +424,27 @@ gpk_task_simulate_question (PkTask *task, guint request, PkResults *results)
 	sack = pk_results_get_package_sack (results);
 
 	gpk_task_add_dialog_deps_section (task, tabbed_widget, sack,
-					  PK_INFO_ENUM_INSTALLING);
+					  PK_INFO_ENUM_INSTALL);
 
 	/* TRANSLATORS: additional message text for the deps dialog */
 	gpk_task_add_dialog_deps_section (task, tabbed_widget, sack,
-					  PK_INFO_ENUM_REMOVING);
+					  PK_INFO_ENUM_REMOVE);
 
 	/* TRANSLATORS: additional message text for the deps dialog */
 	gpk_task_add_dialog_deps_section (task, tabbed_widget, sack,
-					  PK_INFO_ENUM_UPDATING);
+					  PK_INFO_ENUM_UPDATE);
 
 	/* TRANSLATORS: additional message text for the deps dialog */
 	gpk_task_add_dialog_deps_section (task, tabbed_widget, sack,
-					  PK_INFO_ENUM_OBSOLETING);
+					  PK_INFO_ENUM_OBSOLETE);
 
 	/* TRANSLATORS: additional message text for the deps dialog */
 	gpk_task_add_dialog_deps_section (task, tabbed_widget, sack,
-					  PK_INFO_ENUM_REINSTALLING);
+					  PK_INFO_ENUM_REINSTALL);
 
 	/* TRANSLATORS: additional message text for the deps dialog */
 	gpk_task_add_dialog_deps_section (task, tabbed_widget, sack,
-					  PK_INFO_ENUM_DOWNGRADING);
+					  PK_INFO_ENUM_DOWNGRADE);
 
 	gpk_dialog_embed_tabbed_widget (GTK_DIALOG(priv->current_window),
 					tabbed_widget);
@@ -605,7 +569,6 @@ gpk_task_class_init (GpkTaskClass *klass)
 	task_class->untrusted_question = gpk_task_untrusted_question;
 	task_class->key_question = gpk_task_key_question;
 	task_class->eula_question = gpk_task_eula_question;
-	task_class->media_change_question = gpk_task_media_change_question;
 	task_class->simulate_question = gpk_task_simulate_question;
 }
 

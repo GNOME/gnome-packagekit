@@ -24,7 +24,7 @@
 #include <glib/gi18n.h>
 #include <locale.h>
 #include <gtk/gtk.h>
-#include <packagekit-glib2/packagekit.h>
+#include <packagekit/packagekit.h>
 
 #include "gpk-common.h"
 #include "gpk-debug.h"

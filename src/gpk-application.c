@@ -29,7 +29,7 @@
 #include <gtk/gtk.h>
 #include <locale.h>
 #include <math.h>
-#include <packagekit-glib2/packagekit.h>
+#include <packagekit/packagekit.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -94,7 +94,6 @@ typedef struct {
 enum {
 	GPK_STATE_INSTALLED,
 	GPK_STATE_IN_LIST,
-	GPK_STATE_COLLECTION,
 	GPK_STATE_UNKNOWN
 };
 
@@ -148,33 +147,15 @@ gpk_application_state_get_icon (PkBitfield state)
 	if (state == pk_bitfield_from_enums (GPK_STATE_INSTALLED, GPK_STATE_IN_LIST, -1))
 		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_REMOVING);
 
-	if (state == pk_bitfield_value (GPK_STATE_COLLECTION))
-		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_COLLECTION_AVAILABLE);
-
-	if (state == pk_bitfield_from_enums (GPK_STATE_INSTALLED, GPK_STATE_COLLECTION, -1))
-		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_COLLECTION_INSTALLED);
-
-	if (state == pk_bitfield_from_enums (GPK_STATE_IN_LIST, GPK_STATE_INSTALLED, GPK_STATE_COLLECTION, -1))
-		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_REMOVING); // need new icon
-
-	if (state == pk_bitfield_from_enums (GPK_STATE_IN_LIST, GPK_STATE_COLLECTION, -1))
-		return gpk_info_enum_to_icon_name (PK_INFO_ENUM_INSTALLING); // need new icon
-
 	return NULL;
 }
 
 static gboolean
 gpk_application_state_get_checkbox (PkBitfield state)
 {
-	PkBitfield state_local;
-
-	/* remove any we don't care about */
-	state_local = state;
-	pk_bitfield_remove (state_local, GPK_STATE_COLLECTION);
-
 	/* installed or in array */
-	if (state_local == pk_bitfield_value (GPK_STATE_INSTALLED) ||
-	    state_local == pk_bitfield_value (GPK_STATE_IN_LIST))
+	if (state == pk_bitfield_value (GPK_STATE_INSTALLED) ||
+	    state == pk_bitfield_value (GPK_STATE_IN_LIST))
 		return TRUE;
 	return FALSE;
 }
@@ -469,7 +450,7 @@ static void
 gpk_application_get_files_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv)
 {
 	gboolean ret;
-	g_auto(GStrv) files = NULL;
+	GPtrArray *files;
 	g_autofree gchar *package_id_selected = NULL;
 	g_auto(GStrv) split = NULL;
 	g_autofree gchar *title = NULL;
@@ -518,13 +499,11 @@ gpk_application_get_files_cb (PkTask *task, GAsyncResult *res, GpkApplicationPri
 		return;
 	}
 
-	/* get data */
-	g_object_get (item,
-		      "files", &files,
-		      NULL);
-
-	/* convert to pointer array */
-	array_sort = pk_strv_to_ptr_array (files);
+	/* get the paths, owned by @results */
+	files = pk_files_get_files (item);
+	array_sort = g_ptr_array_sized_new (files->len);
+	for (guint i = 0; i < files->len; i++)
+		g_ptr_array_add (array_sort, (gpointer) pk_file_get_path (g_ptr_array_index (files, i)));
 	g_ptr_array_sort (array_sort, (GCompareFunc) gpk_application_strcmp_indirect);
 
 	/* title */
@@ -836,11 +815,11 @@ gpk_application_menu_requires_cb (GtkAction *action, GpkApplicationPrivate *priv
 	/* get the requires */
 	package_ids = pk_package_ids_from_id (package_id_selected);
 
-	pk_task_depends_on_async (PK_TASK (priv->task),
-				    pk_bitfield_value (PK_FILTER_ENUM_NONE),
-				    package_ids, TRUE, priv->cancellable,
-				    (PkProgressCallback) gpk_application_progress_cb, priv,
-				    (GAsyncReadyCallback) gpk_application_get_depends_cb, priv);
+	pk_task_get_dependencies_async (PK_TASK (priv->task),
+					pk_bitfield_value (PK_FILTER_ENUM_NONE),
+					package_ids, TRUE, priv->cancellable,
+					(PkProgressCallback) gpk_application_progress_cb, priv,
+					(GAsyncReadyCallback) gpk_application_get_depends_cb, priv);
 }
 
 static void
@@ -943,34 +922,30 @@ gpk_application_menu_depends_cb (GtkAction *_action, GpkApplicationPrivate *priv
 	/* get the depends */
 	package_ids = pk_package_ids_from_id (package_id_selected);
 
-	pk_task_required_by_async (PK_TASK (priv->task),
-				     pk_bitfield_value (PK_FILTER_ENUM_NONE),
-				     package_ids, TRUE, priv->cancellable,
-				     (PkProgressCallback) gpk_application_progress_cb, priv,
-				     (GAsyncReadyCallback) gpk_application_get_requires_cb, priv);
+	pk_task_get_dependents_async (PK_TASK (priv->task),
+				      pk_bitfield_value (PK_FILTER_ENUM_NONE),
+				      package_ids, TRUE, priv->cancellable,
+				      (PkProgressCallback) gpk_application_progress_cb, priv,
+				      (GAsyncReadyCallback) gpk_application_get_requires_cb, priv);
 }
 
 static const gchar *
-gpk_application_get_full_repo_name (GpkApplicationPrivate *priv, const gchar *data)
+gpk_application_get_full_repo_name (GpkApplicationPrivate *priv, const gchar *origin)
 {
 	const gchar *repo_name;
 
-	/* if no data, we can't look up in the hash table */
-	if (_g_strzero (data)) {
-		g_warning ("no ident data");
+	/* if no origin, we can't look up in the hash table */
+	if (_g_strzero (origin)) {
+		g_warning ("no origin");
 		/* TRANSLATORS: the repo name is invalid or not found, fall back to this */
 		return _("Invalid");
 	}
 
-	/* trim prefix */
-	if (g_str_has_prefix (data, "installed:"))
-		data += 10;
-
 	/* try to find in cached repo array */
-	repo_name = (const gchar *) g_hash_table_lookup (priv->repos, data);
+	repo_name = (const gchar *) g_hash_table_lookup (priv->repos, origin);
 	if (repo_name == NULL) {
-		g_warning ("no repo name, falling back to %s", data);
-		return data;
+		g_warning ("no repo name, falling back to %s", origin);
+		return origin;
 	}
 	return repo_name;
 }
@@ -1036,16 +1011,12 @@ gpk_application_add_item_to_results (GpkApplicationPrivate *priv, PkPackage *ite
 
 	/* are we in the package array? */
 	in_queue = (pk_package_sack_find_by_id (priv->package_sack, package_id) != NULL);
-	installed = (info == PK_INFO_ENUM_INSTALLED) || (info == PK_INFO_ENUM_COLLECTION_INSTALLED);
+	installed = (info == PK_INFO_ENUM_INSTALLED);
 
 	if (installed)
 		pk_bitfield_add (state, GPK_STATE_INSTALLED);
 	if (in_queue)
 		pk_bitfield_add (state, GPK_STATE_IN_LIST);
-
-	/* special icon */
-	if (info == PK_INFO_ENUM_COLLECTION_INSTALLED || info == PK_INFO_ENUM_COLLECTION_AVAILABLE)
-		pk_bitfield_add (state, GPK_STATE_COLLECTION);
 
 	/* use two lines */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "window_manager"));
@@ -1797,9 +1768,13 @@ gpk_application_get_details_cb (PkTask *task, GAsyncResult *res, GpkApplicationP
 	GtkWidget *widget;
 	gchar *value;
 	const gchar *repo_name;
-	gboolean installed;
+	gboolean installed = FALSE;
 	g_auto(GStrv) split = NULL;
 	GtkWindow *window;
+	GtkTreeView *treeview;
+	GtkTreeModel *model;
+	GtkTreeIter iter;
+	PkBitfield state;
 	g_autofree gchar *package_id = NULL;
 	g_autofree gchar *url = NULL;
 	PkGroupEnum group;
@@ -1810,7 +1785,7 @@ gpk_application_get_details_cb (PkTask *task, GAsyncResult *res, GpkApplicationP
 	/* get the results */
 	results = pk_task_generic_finish (task, res, &error);
 	if (results == NULL) {
-		g_warning ("failed to get list of categories: %s", error->message);
+		g_warning ("failed to get details: %s", error->message);
 		return;
 	}
 
@@ -1853,7 +1828,13 @@ gpk_application_get_details_cb (PkTask *task, GAsyncResult *res, GpkApplicationP
 		      NULL);
 
 	split = pk_package_id_split (package_id);
-	installed = g_str_has_prefix (split[PK_PACKAGE_ID_DATA], "installed");
+
+	/* the package ID carries no state, so use the state of the selected row */
+	treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_packages"));
+	if (gtk_tree_selection_get_selected (gtk_tree_view_get_selection (treeview), &model, &iter)) {
+		gtk_tree_model_get (model, &iter, PACKAGES_COLUMN_STATE, &state, -1);
+		installed = pk_bitfield_contain (state, GPK_STATE_INSTALLED);
+	}
 
 	/* homepage */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_homepage"));
@@ -1884,7 +1865,7 @@ gpk_application_get_details_cb (PkTask *task, GAsyncResult *res, GpkApplicationP
 	if (size > 0) {
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_size_title"));
 		/* set the size */
-		if (g_strcmp0 (split[PK_PACKAGE_ID_DATA], "meta") == 0) {
+		if (group == PK_GROUP_ENUM_META) {
 			/* TRANSLATORS: the size of the meta package */
 			gtk_label_set_label (GTK_LABEL (widget), _("Size"));
 		} else if (installed) {
@@ -1910,7 +1891,7 @@ gpk_application_get_details_cb (PkTask *task, GAsyncResult *res, GpkApplicationP
 	/* set the repo text */
 	widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "label_source"));
 	/* get the full name of the repo from the repo_id */
-	repo_name = gpk_application_get_full_repo_name (priv, split[PK_PACKAGE_ID_DATA]);
+	repo_name = gpk_application_get_full_repo_name (priv, split[PK_PACKAGE_ID_ORIGIN]);
 	gtk_label_set_label (GTK_LABEL (widget), repo_name);
 }
 
@@ -1987,18 +1968,6 @@ gpk_application_packages_treeview_clicked_cb (GtkTreeSelection *selection, GpkAp
 	pk_task_get_details_async (PK_TASK(priv->task), package_ids, priv->cancellable,
 				     (PkProgressCallback) gpk_application_progress_cb, priv,
 				     (GAsyncReadyCallback) gpk_application_get_details_cb, priv);
-}
-
-static void
-gpk_application_notify_network_state_cb (PkControl *_control, GParamSpec *pspec, GpkApplicationPrivate *priv)
-{
-	PkNetworkEnum state;
-
-	/* show icon? */
-	g_object_get (priv->control,
-		      "network-state", &state,
-		      NULL);
-	g_debug ("state=%u", state);
 }
 
 static void
@@ -2367,142 +2336,18 @@ gpk_application_create_group_array_enum (GpkApplicationPrivate *priv)
 
 	/* create group tree view if we can search by group */
 	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_SEARCH_GROUP)) {
-		/* add all the groups supported (except collections, which we handled above */
+		/* add all the groups supported */
 		for (i = 0; i < PK_GROUP_ENUM_LAST; i++) {
-			if (pk_bitfield_contain (priv->groups, i) &&
-			    i != PK_GROUP_ENUM_COLLECTIONS && i != PK_GROUP_ENUM_NEWEST)
+			if (pk_bitfield_contain (priv->groups, i))
 				gpk_application_group_add_data (priv, i);
 		}
 	}
 }
 
 static void
-gpk_application_get_categories_cb (PkTask *task, GAsyncResult *res, GpkApplicationPrivate *priv)
-{
-	g_autoptr(PkResults) results = NULL;
-	g_autoptr(GError) error = NULL;
-	g_autoptr(PkError) error_code = NULL;
-	g_autoptr(GPtrArray) array = NULL;
-	GtkTreeIter iter;
-	GtkTreeIter iter2;
-	guint i, j;
-	GtkTreeView *treeview;
-	PkCategory *item;
-	PkCategory *item2;
-	GtkWindow *window;
-
-	/* get the results */
-	results = pk_task_generic_finish (task, res, &error);
-	if (results == NULL) {
-		g_warning ("failed to get list of categories: %s", error->message);
-		return;
-	}
-
-	/* check error code */
-	error_code = pk_results_get_error_code (results);
-	if (error_code != NULL) {
-		g_warning ("failed to get cats: %s, %s", pk_error_enum_to_string (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-
-		/* if obvious message, don't tell the user */
-		if (pk_error_get_code (error_code) != PK_ERROR_ENUM_TRANSACTION_CANCELLED) {
-			window = GTK_WINDOW (gtk_builder_get_object (priv->builder, "window_manager"));
-			gpk_error_dialog_modal (window, gpk_error_enum_to_localised_text (pk_error_get_code (error_code)),
-						gpk_error_enum_to_localised_message (pk_error_get_code (error_code)), pk_error_get_details (error_code));
-		}
-		return;
-	}
-
-	/* set to expanders with indent */
-	treeview = GTK_TREE_VIEW (gtk_builder_get_object (priv->builder, "treeview_groups"));
-	gtk_tree_view_set_show_expanders (treeview, TRUE);
-	gtk_tree_view_set_level_indentation  (treeview, 3);
-
-	/* add repos with descriptions */
-	array = pk_results_get_category_array (results);
-	for (i = 0; i < array->len; i++) {
-		g_autofree gchar *package_id = NULL;
-		g_autofree gchar *name = NULL;
-		g_autofree gchar *summary = NULL;
-		g_autofree gchar *cat_id = NULL;
-		g_autofree gchar *icon = NULL;
-
-		item = g_ptr_array_index (array, i);
-		g_object_get (item,
-			      "name", &name,
-			      "summary", &summary,
-			      "cat-id", &cat_id,
-			      "icon", &icon,
-			      NULL);
-
-		gtk_tree_store_append (priv->groups_store, &iter, NULL);
-		gtk_tree_store_set (priv->groups_store, &iter,
-				    GROUPS_COLUMN_NAME, name,
-				    GROUPS_COLUMN_SUMMARY, summary,
-				    GROUPS_COLUMN_ID, cat_id,
-				    GROUPS_COLUMN_ICON, icon,
-				    GROUPS_COLUMN_ACTIVE, FALSE,
-				    -1);
-		j = 0;
-		do {
-			g_autofree gchar *cat_id_tmp = NULL;
-			g_autofree gchar *icon_tmp = NULL;
-			g_autofree gchar *name_tmp = NULL;
-			g_autofree gchar *parent_id_tmp = NULL;
-			g_autofree gchar *summary_tmp = NULL;
-
-			/* only allows groups two layers deep */
-			item2 = g_ptr_array_index (array, j);
-			g_object_get (item2,
-				      "parent-id", &parent_id_tmp,
-				      "cat-id", &cat_id_tmp,
-				      "name", &name_tmp,
-				      "summary", &summary_tmp,
-				      "icon", &icon_tmp,
-				      NULL);
-			if (g_strcmp0 (parent_id_tmp, cat_id) == 0) {
-				gtk_tree_store_append (priv->groups_store, &iter2, &iter);
-				gtk_tree_store_set (priv->groups_store, &iter2,
-						    GROUPS_COLUMN_NAME, name_tmp,
-						    GROUPS_COLUMN_SUMMARY, summary_tmp,
-						    GROUPS_COLUMN_ID, cat_id_tmp,
-						    GROUPS_COLUMN_ICON, icon_tmp,
-						    GROUPS_COLUMN_ACTIVE, TRUE,
-						    -1);
-				g_ptr_array_remove (array, item2);
-			} else
-				j++;
-		} while (j < array->len);
-	}
-
-	/* open all expanders */
-	gtk_tree_view_collapse_all (treeview);
-}
-
-static void
-gpk_application_create_group_array_categories (GpkApplicationPrivate *priv)
-{
-	/* ensure new action succeeds */
-	g_cancellable_reset (priv->cancellable);
-
-	/* get categories supported */
-	pk_task_get_categories_async (PK_TASK(priv->task), priv->cancellable,
-				        (PkProgressCallback) gpk_application_progress_cb, priv,
-				        (GAsyncReadyCallback) gpk_application_get_categories_cb, priv);
-}
-
-static void
 gpk_application_key_changed_cb (GSettings *settings, const gchar *key, GpkApplicationPrivate *priv)
 {
-	gboolean ret;
-
-	if (g_strcmp0 (key, GPK_SETTINGS_CATEGORY_GROUPS) == 0) {
-		ret = g_settings_get_boolean (priv->settings, key);
-		gtk_tree_store_clear (priv->groups_store);
-		if (ret)
-			gpk_application_create_group_array_categories (priv);
-		else
-			gpk_application_create_group_array_enum (priv);
-	} else if (g_strcmp0 (key, "filter-newest") == 0) {
+	if (g_strcmp0 (key, "filter-newest") == 0) {
 		/* refresh the search results */
 		if (g_settings_get_boolean (priv->settings, key))
 			pk_bitfield_add (priv->filters_current, PK_FILTER_ENUM_NEWEST);
@@ -2554,12 +2399,12 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_files"));
 		gtk_widget_hide (widget);
 	}
-	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_DEPENDS_ON) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_depends"));
+	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_DEPENDENCIES) == FALSE) {
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_requires"));
 		gtk_widget_hide (widget);
 	}
-	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_REQUIRED_BY) == FALSE) {
-		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_requires"));
+	if (pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_DEPENDENTS) == FALSE) {
+		widget = GTK_WIDGET (gtk_builder_get_object (priv->builder, "button_depends"));
 		gtk_widget_hide (widget);
 	}
 
@@ -2584,10 +2429,6 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 				    GROUPS_COLUMN_ICON, icon_name, -1);
 	}
 
-	/* add these at the top of the array */
-	if (pk_bitfield_contain (priv->groups, PK_GROUP_ENUM_COLLECTIONS))
-		gpk_application_group_add_data (priv, PK_GROUP_ENUM_COLLECTIONS);
-
 	/* add a separator */
 	gtk_tree_store_append (priv->groups_store, &iter, NULL);
 	gtk_tree_store_set (priv->groups_store, &iter,
@@ -2597,12 +2438,7 @@ pk_backend_status_get_properties_cb (GObject *object, GAsyncResult *res, GpkAppl
 					      (GtkTreeViewRowSeparatorFunc) gpk_application_group_row_separator_func,
 					      priv, NULL);
 
-	/* simple array or category tree? */
-	ret = g_settings_get_boolean (priv->settings, GPK_SETTINGS_CATEGORY_GROUPS);
-	if (ret && pk_bitfield_contain (priv->roles, PK_ROLE_ENUM_GET_CATEGORIES))
-		gpk_application_create_group_array_categories (priv);
-	else
-		gpk_application_create_group_array_enum (priv);
+	gpk_application_create_group_array_enum (priv);
 
 	/* set the search mode */
 	priv->search_type = g_settings_get_enum (priv->settings, GPK_SETTINGS_SEARCH_MODE);
@@ -2750,8 +2586,6 @@ gpk_application_startup_cb (GtkApplication *application, GpkApplicationPrivate *
 
 	/* get properties */
 	pk_control_get_properties_async (priv->control, NULL, (GAsyncReadyCallback) pk_backend_status_get_properties_cb, priv);
-	g_signal_connect (priv->control, "notify::network-state",
-			  G_CALLBACK (gpk_application_notify_network_state_cb), priv);
 
 	/* get UI */
 	priv->builder = gtk_builder_new ();

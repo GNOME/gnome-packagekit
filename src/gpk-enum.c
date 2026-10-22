@@ -1,6 +1,7 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: t; c-basic-offset: 8 -*-
  *
  * Copyright (C) 2007-2008 Richard Hughes <richard@hughsie.com>
+ * Copyright (C) 2025-2026 Matthias Klumpp <matthias@tenstral.net>
  *
  * Licensed under the GNU General Public License Version 2
  *
@@ -23,7 +24,7 @@
 
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <packagekit-glib2/packagekit.h>
+#include <packagekit/packagekit.h>
 
 #include "gpk-enum.h"
 #include "gpk-common.h"
@@ -33,38 +34,36 @@ static const PkEnumMatch enum_info_icon_name[] = {
 	{PK_INFO_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
 	{PK_INFO_ENUM_INSTALLED,		"pk-package-installed"},
 	{PK_INFO_ENUM_AVAILABLE,		"pk-package-available"},
-	{PK_INFO_ENUM_LOW,			"pk-update-low"},
-	{PK_INFO_ENUM_NORMAL,			"pk-update-normal"},
-	{PK_INFO_ENUM_IMPORTANT,		"pk-update-high"},
-	{PK_INFO_ENUM_CRITICAL,			"pk-update-security"},
-	{PK_INFO_ENUM_SECURITY,			"pk-update-security"},
-	{PK_INFO_ENUM_BUGFIX,			"pk-update-bugfix"},
-	{PK_INFO_ENUM_ENHANCEMENT,		"pk-update-enhancement"},
+	{PK_INFO_ENUM_RESIDUAL,			"pk-package-available"},
 	{PK_INFO_ENUM_BLOCKED,			"pk-package-blocked"},
-#if PK_CHECK_VERSION(1,0,4)
-	{PK_INFO_ENUM_UNAVAILABLE,		"pk-package-blocked"},
-#endif
 	{PK_INFO_ENUM_DOWNLOADING,		"pk-package-download"},
 	{PK_INFO_ENUM_UPDATING,			"pk-package-update"},
 	{PK_INFO_ENUM_INSTALLING,		"pk-package-add"},
 	{PK_INFO_ENUM_REMOVING,			"pk-package-delete"},
 	{PK_INFO_ENUM_OBSOLETING,		"pk-package-cleanup"},
 	{PK_INFO_ENUM_CLEANUP,			"pk-package-cleanup"},
-	{PK_INFO_ENUM_COLLECTION_INSTALLED,	"pk-collection-installed"},
-	{PK_INFO_ENUM_COLLECTION_AVAILABLE,	"pk-collection-available"},
-	{PK_INFO_ENUM_FINISHED,			"dialog-information"},
 	{PK_INFO_ENUM_REINSTALLING,		"dialog-information"},
 	{PK_INFO_ENUM_DOWNGRADING,		"pk-package-update"},
 	{PK_INFO_ENUM_PREPARING,		"dialog-information"},
-	{PK_INFO_ENUM_DECOMPRESSING,		"dialog-information"},
 	{PK_INFO_ENUM_TRUSTED,			"dialog-information"},
 	{PK_INFO_ENUM_UNTRUSTED,		"dialog-information"},
-#if PK_CHECK_VERSION(1,3,0)
 	{PK_INFO_ENUM_INSTALL,			"pk-package-add"},
+	{PK_INFO_ENUM_REINSTALL,		"pk-package-add"},
+	{PK_INFO_ENUM_UPDATE,			"pk-update-normal"},
+	{PK_INFO_ENUM_UPDATE_SECURITY,		"pk-update-security"},
+	{PK_INFO_ENUM_UPDATE_ENHANCEMENT,	"pk-update-enhancement"},
 	{PK_INFO_ENUM_REMOVE,			"pk-package-delete"},
 	{PK_INFO_ENUM_OBSOLETE,			"pk-package-cleanup"},
 	{PK_INFO_ENUM_DOWNGRADE,		"pk-package-update"},
-#endif
+	{0, NULL}
+};
+
+static const PkEnumMatch enum_severity_icon_name[] = {
+	{PK_SEVERITY_ENUM_NONE,			"pk-update-normal"},	/* fall though value */
+	{PK_SEVERITY_ENUM_LOW,			"pk-update-low"},
+	{PK_SEVERITY_ENUM_MEDIUM,		"pk-update-normal"},
+	{PK_SEVERITY_ENUM_HIGH,			"pk-update-high"},
+	{PK_SEVERITY_ENUM_CRITICAL,		"pk-update-security"},
 	{0, NULL}
 };
 
@@ -76,13 +75,11 @@ static const PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_DEP_RESOLVE,		"pk-package-info"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_DOWNLOAD_CHANGELOG,	"pk-refresh-cache"},
 	{PK_STATUS_ENUM_DOWNLOAD_FILELIST,	"pk-refresh-cache"},
-	{PK_STATUS_ENUM_DOWNLOAD_GROUP,		"pk-refresh-cache"},
 	{PK_STATUS_ENUM_DOWNLOAD_PACKAGELIST,	"pk-refresh-cache"},
 	{PK_STATUS_ENUM_DOWNLOAD,		"pk-package-download"},
 	{PK_STATUS_ENUM_DOWNLOAD_REPOSITORY,	"pk-refresh-cache"},
 	{PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO,	"pk-refresh-cache"},
 	{PK_STATUS_ENUM_FINISHED,		"pk-package-cleanup"}, /* TODO: need better icon */
-	{PK_STATUS_ENUM_GENERATE_PACKAGE_LIST,	"pk-refresh-cache"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_WAITING_FOR_LOCK,	"pk-package-blocked"},
 	{PK_STATUS_ENUM_WAITING_FOR_AUTH,	"gtk-dialog-authentication"},
 	{PK_STATUS_ENUM_INFO,			"pk-package-info"},
@@ -95,19 +92,13 @@ static const PkEnumMatch enum_status_icon_name[] = {
 	{PK_STATUS_ENUM_REPACKAGING,		"pk-package-cleanup"},
 	{PK_STATUS_ENUM_REQUEST,		"pk-package-search"},
 	{PK_STATUS_ENUM_RUNNING,		"pk-setup"},
-	{PK_STATUS_ENUM_SCAN_APPLICATIONS,	"pk-package-search"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_SETUP,			"pk-setup"},
 	{PK_STATUS_ENUM_SIG_CHECK,		"pk-package-info"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_TEST_COMMIT,		"pk-package-info"}, /* TODO: need better icon */
 	{PK_STATUS_ENUM_UPDATE,			"pk-package-update"},
 	{PK_STATUS_ENUM_WAIT,			"pk-wait"},
-	{PK_STATUS_ENUM_SCAN_PROCESS_LIST,	"pk-package-info"},
-	{PK_STATUS_ENUM_CHECK_EXECUTABLE_FILES,	"pk-package-info"},
-	{PK_STATUS_ENUM_CHECK_LIBRARIES,	"pk-package-info"},
 	{PK_STATUS_ENUM_COPY_FILES,		"pk-package-info"},
-#if PK_CHECK_VERSION(1,1,6)
 	{PK_STATUS_ENUM_RUN_HOOK,		"pk-setup"},
-#endif
 	{0, NULL}
 };
 
@@ -115,15 +106,14 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
 	{PK_ROLE_ENUM_ACCEPT_EULA,		"pk-package-info"},
 	{PK_ROLE_ENUM_CANCEL,			"process-stop"},
-	{PK_ROLE_ENUM_DEPENDS_ON,		"pk-package-info"},
+	{PK_ROLE_ENUM_GET_DEPENDENCIES,		"pk-package-info"},
 	{PK_ROLE_ENUM_DOWNLOAD_PACKAGES,	"pk-package-download"},
-	{PK_ROLE_ENUM_GET_CATEGORIES,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_DETAILS,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_DETAILS_LOCAL,	"pk-package-search"},
-	{PK_ROLE_ENUM_GET_DISTRO_UPGRADES,	"pk-package-info"},
+	{PK_ROLE_ENUM_GET_SYSTEM_UPGRADES,	"pk-package-info"},
 	{PK_ROLE_ENUM_GET_FILES,		"pk-package-search"},
 	{PK_ROLE_ENUM_GET_FILES_LOCAL,		"pk-package-search"},
-	{PK_ROLE_ENUM_GET_OLD_TRANSACTIONS,	"pk-package-info"},
+	{PK_ROLE_ENUM_GET_HISTORY,		"pk-package-info"},
 	{PK_ROLE_ENUM_GET_PACKAGES,		"pk-package-search"},
 	{PK_ROLE_ENUM_GET_REPO_LIST,		"pk-package-sources"},
 	{PK_ROLE_ENUM_GET_UPDATE_DETAIL,	"pk-package-info"},
@@ -136,7 +126,7 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_REPO_ENABLE,		"pk-package-sources"},
 	{PK_ROLE_ENUM_REPO_SET_DATA,		"pk-package-sources"},
 	{PK_ROLE_ENUM_REPO_REMOVE,		"pk-package-sources"},
-	{PK_ROLE_ENUM_REQUIRED_BY,		"pk-package-info"},
+	{PK_ROLE_ENUM_GET_DEPENDENTS,		"pk-package-info"},
 	{PK_ROLE_ENUM_RESOLVE,			"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_DETAILS,		"pk-package-search"},
 	{PK_ROLE_ENUM_SEARCH_FILE,		"pk-package-search"},
@@ -145,52 +135,67 @@ static const PkEnumMatch enum_role_icon_name[] = {
 	{PK_ROLE_ENUM_UPDATE_PACKAGES,		"pk-package-update"},
 	{PK_ROLE_ENUM_WHAT_PROVIDES,		"pk-package-search"},
 	{PK_ROLE_ENUM_REPAIR_SYSTEM,		"system-software-update"},
-#if PK_CHECK_VERSION(1,0,10)
 	{PK_ROLE_ENUM_UPGRADE_SYSTEM,		"system-software-update"},
-#endif
 	{0, NULL}
 };
 
-static const PkEnumMatch enum_group_icon_name[] = {
-	{PK_GROUP_ENUM_UNKNOWN,			"help-browser"},	/* fall though value */
-	{PK_GROUP_ENUM_ACCESSIBILITY,		"preferences-desktop-accessibility"},
-	{PK_GROUP_ENUM_ACCESSORIES,		"applications-utilities"},
-	{PK_GROUP_ENUM_ADMIN_TOOLS,		"system-lock-screen"},
-	{PK_GROUP_ENUM_COLLECTIONS,		"pk-collection-installed"},
-	{PK_GROUP_ENUM_COMMUNICATION,		"network-workgroup"},
-	{PK_GROUP_ENUM_DESKTOP_GNOME,		"pk-desktop-gnome"},
-	{PK_GROUP_ENUM_DESKTOP_KDE,		"pk-desktop-kde"},
-	{PK_GROUP_ENUM_DESKTOP_XFCE,		"pk-desktop-xfce"},
-	{PK_GROUP_ENUM_DESKTOP_OTHER,		"preferences-desktop-wallpaper"},
-#if PK_CHECK_VERSION(1,2,7)
-	{PK_GROUP_ENUM_DESKTOP_DDE,		"preferences-desktop-wallpaper"},
-#endif
-	{PK_GROUP_ENUM_DOCUMENTATION,		"system-help"},
-	{PK_GROUP_ENUM_EDUCATION,		"utilities-system-monitor"},
-	{PK_GROUP_ENUM_ELECTRONICS,		"applications-engineering"},
-	{PK_GROUP_ENUM_FONTS,			"preferences-desktop-font"},
-	{PK_GROUP_ENUM_GAMES,			"applications-games"},
-	{PK_GROUP_ENUM_GRAPHICS,		"applications-graphics"},
-	{PK_GROUP_ENUM_INTERNET,		"applications-internet"},
-	{PK_GROUP_ENUM_LEGACY,			"media-floppy"},
-	{PK_GROUP_ENUM_LOCALIZATION,		"preferences-desktop-locale"},
-	{PK_GROUP_ENUM_MAPS,			"applications-multimedia"},
-	{PK_GROUP_ENUM_MULTIMEDIA,		"applications-multimedia"},
-	{PK_GROUP_ENUM_NETWORK,			"network-wired"},
-	{PK_GROUP_ENUM_OFFICE,			"applications-office"},
-	{PK_GROUP_ENUM_OTHER,			"applications-other"},
-	{PK_GROUP_ENUM_POWER_MANAGEMENT,	"battery"},
-	{PK_GROUP_ENUM_PROGRAMMING,		"applications-development"},
-	{PK_GROUP_ENUM_PUBLISHING,		"accessories-dictionary"},
-	{PK_GROUP_ENUM_REPOS,			"x-package-repository"},
-	{PK_GROUP_ENUM_SCIENCE,			"applications-science"},
-	{PK_GROUP_ENUM_SECURITY,		"network-wireless-encrypted"},
-	{PK_GROUP_ENUM_SERVERS,			"network-server"},
-	{PK_GROUP_ENUM_SYSTEM,			"applications-system"},
-	{PK_GROUP_ENUM_VIRTUALIZATION,		"computer"},
-	{PK_GROUP_ENUM_VENDOR,			"application-certificate"},
-	{PK_GROUP_ENUM_NEWEST,			"dialog-information"},
-	{0, NULL}
+/* icon names in order of preference, the first one the icon theme has is used, the last entry
+ * is the fallback that should definitely be present in Adwaita (or is shipped by us) */
+static const struct {
+	PkGroupEnum	 group;
+	const gchar	*icon_names[5];
+} enum_group_icon_names[] = {
+	{PK_GROUP_ENUM_UNKNOWN,		{"help-browser", "package-x-generic", NULL}},
+	{PK_GROUP_ENUM_ACCESSIBILITY,	{"preferences-desktop-accessibility", "preferences-desktop-accessibility-symbolic", NULL}},
+	{PK_GROUP_ENUM_ADMIN,		{"administration", "preferences-system", "applications-system", "preferences-system-symbolic", NULL}},
+	{PK_GROUP_ENUM_COMMUNICATION,	{"internet-chat", "network-workgroup", NULL}},
+	{PK_GROUP_ENUM_DATABASES,	{"server-database", "application-vnd.oasis.opendocument.database", "network-server", NULL}},
+	{PK_GROUP_ENUM_DEBUG,		{"tools-report-bug", "debug-run", "applications-development", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_DESKTOP_GNOME,	{"pk-desktop-gnome", NULL}},
+	{PK_GROUP_ENUM_DESKTOP_KDE,	{"pk-desktop-kde", NULL}},
+	{PK_GROUP_ENUM_DESKTOP_OTHER,	{"preferences-desktop-wallpaper", "user-desktop", NULL}},
+	{PK_GROUP_ENUM_DEVEL,		{"applications-development", "folder-projects", NULL}},
+	{PK_GROUP_ENUM_DOCUMENTATION,	{"system-help", "help-browser", "x-office-document", NULL}},
+	{PK_GROUP_ENUM_EDITORS,		{"accessories-text-editor", "text-editor", "text-x-generic", NULL}},
+	{PK_GROUP_ENUM_EDUCATION,	{"applications-education", "applications-science", "ebook-reader", NULL}},
+	{PK_GROUP_ENUM_ELECTRONICS,	{"applications-electronics", "applications-engineering", "application-x-firmware", NULL}},
+	{PK_GROUP_ENUM_FONTS,		{"preferences-desktop-font", "font-x-generic", NULL}},
+	{PK_GROUP_ENUM_GAMES,		{"applications-games", "input-gaming", NULL}},
+	{PK_GROUP_ENUM_GEOGRAPHY,	{"map-globe", "globe", "applications-science", "mark-location-symbolic", NULL}},
+	{PK_GROUP_ENUM_GRAPHICS,	{"applications-graphics", "image-x-generic", NULL}},
+	{PK_GROUP_ENUM_INTERNET,	{"applications-internet", "internet-web-browser", "text-html", NULL}},
+	{PK_GROUP_ENUM_LANG_C,		{"text-x-csrc", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_LANG_GO,		{"text-x-go", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_LANG_HASKELL,	{"text-x-haskell", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_LANG_JAVA,	{"text-x-java", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_LANG_JAVASCRIPT,	{"text-javascript", "application-javascript", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_LANG_LISP,	{"text-x-common-lisp", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_LANG_OCAML,	{"text-x-ocaml", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_LANG_PERL,	{"application-x-perl", "text-x-perl", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_LANG_PHP,	{"application-x-php", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_LANG_PYTHON,	{"text-x-python", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_LANG_RUBY,	{"application-x-ruby", "text-x-ruby", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_LANG_RUST,	{"text-rust", "text-x-rust", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_LEGACY,		{"media-floppy", "media-removable", NULL}},
+	{PK_GROUP_ENUM_LIBRARIES,	{"application-x-sharedlib", NULL}},
+	{PK_GROUP_ENUM_LOCALIZATION,	{"preferences-desktop-locale", "applications-education-language", "preferences-desktop-locale-symbolic", NULL}},
+	{PK_GROUP_ENUM_META,		{"pk-collection-available", NULL}},
+	{PK_GROUP_ENUM_MULTIMEDIA,	{"applications-multimedia", "video-x-generic", NULL}},
+	{PK_GROUP_ENUM_NETWORK,		{"preferences-system-network", "network-wired", "network-workgroup", NULL}},
+	{PK_GROUP_ENUM_OFFICE,		{"applications-office", "x-office-document", NULL}},
+	{PK_GROUP_ENUM_OTHER,		{"applications-other", "package-x-generic", NULL}},
+	{PK_GROUP_ENUM_PROGRAMMING,	{"applications-development", "folder-projects", NULL}},
+	{PK_GROUP_ENUM_PUBLISHING,	{"x-office-drawing", NULL}},
+	{PK_GROUP_ENUM_REPOS,		{"x-package-repository", "software-properties", "package-x-generic", NULL}},
+	{PK_GROUP_ENUM_SCIENCE,		{"applications-science", "applications-education-science", "applications-science-symbolic", NULL}},
+	{PK_GROUP_ENUM_SECURITY,	{"security-high", "channel-secure-symbolic", NULL}},
+	{PK_GROUP_ENUM_SERVERS,		{"network-server", NULL}},
+	{PK_GROUP_ENUM_SHELLS,		{"utilities-terminal", "application-x-shellscript", "text-x-script", NULL}},
+	{PK_GROUP_ENUM_SYSTEM,		{"applications-system", "preferences-system", "application-x-executable", NULL}},
+	{PK_GROUP_ENUM_UTILITIES,	{"applications-utilities", "applications-accessories", "application-x-executable", NULL}},
+	{PK_GROUP_ENUM_VENDOR,		{"application-certificate", NULL}},
+	{PK_GROUP_ENUM_VIRTUALIZATION,	{"preferences-virtualization-vm", "computer", NULL}},
+	{PK_GROUP_ENUM_LAST,		{NULL}}
 };
 
 static const PkEnumMatch enum_restart_icon_name[] = {
@@ -199,37 +204,8 @@ static const PkEnumMatch enum_restart_icon_name[] = {
 	{PK_RESTART_ENUM_SYSTEM,		"system-shutdown"},
 	{PK_RESTART_ENUM_SESSION,		"system-log-out"},
 	{PK_RESTART_ENUM_APPLICATION,		"emblem-symbolic-link"},
-	{PK_RESTART_ENUM_SECURITY_SYSTEM,	"system-shutdown"},
-	{PK_RESTART_ENUM_SECURITY_SESSION,	"system-log-out"},
 	{0, NULL}
 };
-
-const gchar *
-gpk_media_type_enum_to_localised_text (PkMediaTypeEnum type)
-{
-	const gchar *text = NULL;
-	switch (type) {
-	case PK_MEDIA_TYPE_ENUM_CD:
-		/* TRANSLATORS: this is compact disk (CD) media */
-		text = _("CD");
-		break;
-	case PK_MEDIA_TYPE_ENUM_DVD:
-		/* TRANSLATORS: this is digital versatile disk (DVD) media */
-		text = _("DVD");
-		break;
-	case PK_MEDIA_TYPE_ENUM_DISC:
-		/* TRANSLATORS: this is either CD or DVD media */
-		text = _("disc");
-		break;
-	case PK_MEDIA_TYPE_ENUM_UNKNOWN:
-		/* TRANSLATORS: this is generic media of unknown type that we will install from */
-		text = _("media");
-		break;
-	default:
-		g_warning ("Unknown media type");
-	}
-	return text;
-}
 
 const gchar *
 gpk_error_enum_to_localised_text (PkErrorEnum code)
@@ -308,9 +284,6 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 	case PK_ERROR_ENUM_CANNOT_CANCEL:
 		text = _("The action cannot be canceled");
 		break;
-	case PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE:
-		text = _("Source packages cannot be installed");
-		break;
 	case PK_ERROR_ENUM_NO_LICENSE_AGREEMENT:
 		text = _("The license agreement failed");
 		break;
@@ -368,7 +341,7 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 	case PK_ERROR_ENUM_NO_MORE_MIRRORS_TO_TRY:
 		text = _("No more mirrors are available");
 		break;
-	case PK_ERROR_ENUM_NO_DISTRO_UPGRADE_DATA:
+	case PK_ERROR_ENUM_NO_SYSTEM_UPGRADE_DATA:
 		text = _("No distribution upgrade data is available");
 		break;
 	case PK_ERROR_ENUM_INCOMPATIBLE_ARCHITECTURE:
@@ -376,9 +349,6 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 		break;
 	case PK_ERROR_ENUM_NO_SPACE_ON_DEVICE:
 		text = _("No space is left on the disk");
-		break;
-	case PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED:
-		text = _("A media change is required");
 		break;
 	case PK_ERROR_ENUM_NOT_AUTHORIZED:
 		text = _("Authorization failed");
@@ -422,12 +392,6 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 	case PK_ERROR_ENUM_PACKAGE_DATABASE_CHANGED:
 		text = _("The package database was changed");
 		break;
-	case PK_ERROR_ENUM_PROVIDE_TYPE_NOT_SUPPORTED:
-		text = _("Virtual provide type is not supported");
-		break;
-	case PK_ERROR_ENUM_INSTALL_ROOT_INVALID:
-		text = _("Install root is invalid");
-		break;
 	case PK_ERROR_ENUM_CANNOT_FETCH_SOURCES:
 		text = _("Cannot fetch install sources");
 		break;
@@ -440,11 +404,9 @@ gpk_error_enum_to_localised_text (PkErrorEnum code)
 	case PK_ERROR_ENUM_LOCK_REQUIRED:
 		text = _("Lock required");
 		break;
-#if PK_CHECK_VERSION(1,1,4)
 	case PK_ERROR_ENUM_REPO_ALREADY_SET:
 		text = _("Source already set");
 		break;
-#endif
 	default:
 		g_warning ("Unknown error %i", code);
 	}
@@ -544,10 +506,6 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 	case PK_ERROR_ENUM_CANNOT_CANCEL:
 		text = _("The action cannot be canceled at this time.");
 		break;
-	case PK_ERROR_ENUM_CANNOT_INSTALL_SOURCE_PACKAGE:
-		text = _("Source packages are not normally installed this way.\n"
-			 "Check the extension of the file you are trying to install.");
-		break;
 	case PK_ERROR_ENUM_NO_LICENSE_AGREEMENT:
 		text = _("The license agreement was not agreed to.\n"
 			 "To use this software you have to accept the license.");
@@ -617,7 +575,7 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 		text = _("Required data could not be found on any of the configured package sources.\n"
 			 "There were no more download mirrors that could be tried.");
 		break;
-	case PK_ERROR_ENUM_NO_DISTRO_UPGRADE_DATA:
+	case PK_ERROR_ENUM_NO_SYSTEM_UPGRADE_DATA:
 		text = _("Required upgrade data could not be found in any of the configured package sources.\n"
 			 "The list of distribution upgrades will be unavailable.");
 		break;
@@ -627,9 +585,6 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 	case PK_ERROR_ENUM_NO_SPACE_ON_DEVICE:
 		text = _("There is insufficient space on the device.\n"
 			 "Free some space on the system disk to perform this operation.");
-		break;
-	case PK_ERROR_ENUM_MEDIA_CHANGE_REQUIRED:
-		text = _("Additional media is required to complete the transaction.");
 		break;
 	case PK_ERROR_ENUM_NOT_AUTHORIZED:
 		text = _("You have failed to provide correct authentication.\n"
@@ -681,12 +636,6 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 	case PK_ERROR_ENUM_PACKAGE_DATABASE_CHANGED:
 		text = _("The package database was changed while the request was running.");
 		break;
-	case PK_ERROR_ENUM_PROVIDE_TYPE_NOT_SUPPORTED:
-		text = _("The virtual provide type is not supported by this system.");
-		break;
-	case PK_ERROR_ENUM_INSTALL_ROOT_INVALID:
-		text = _("The install root is invalid. Please contact your administrator.");
-		break;
 	case PK_ERROR_ENUM_CANNOT_FETCH_SOURCES:
 		text = _("The list of package sources could not be downloaded.");
 		break;
@@ -699,11 +648,9 @@ gpk_error_enum_to_localised_message (PkErrorEnum code)
 	case PK_ERROR_ENUM_LOCK_REQUIRED:
 		text = _("A package manager lock is required.");
 		break;
-#if PK_CHECK_VERSION(1,1,4)
 	case PK_ERROR_ENUM_REPO_ALREADY_SET:
 		text = _("The software source is already in this state.");
 		break;
-#endif
 	default:
 		break;
 	}
@@ -727,12 +674,6 @@ gpk_restart_enum_to_localised_text_future (PkRestartEnum restart)
 	case PK_RESTART_ENUM_SYSTEM:
 		text = _("A restart will be required.");
 		break;
-	case PK_RESTART_ENUM_SECURITY_SESSION:
-		text = _("You will be required to log out and back in due to a security update.");
-		break;
-	case PK_RESTART_ENUM_SECURITY_SYSTEM:
-		text = _("A restart will be required due to a security update.");
-		break;
 	default:
 		g_warning ("restart unrecognized: %u", restart);
 	}
@@ -755,12 +696,6 @@ gpk_restart_enum_to_localised_text (PkRestartEnum restart)
 		break;
 	case PK_RESTART_ENUM_APPLICATION:
 		text = _("You need to restart the application.");
-		break;
-	case PK_RESTART_ENUM_SECURITY_SESSION:
-		text = _("You need to log out and log back in to remain secure.");
-		break;
-	case PK_RESTART_ENUM_SECURITY_SYSTEM:
-		text = _("A restart is required to remain secure.");
 		break;
 	default:
 		g_warning ("restart unrecognized: %u", restart);
@@ -869,10 +804,6 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		/* TRANSLATORS: transaction state, downloading metadata */
 		text = _("Downloading lists of changes");
 		break;
-	case PK_STATUS_ENUM_DOWNLOAD_GROUP:
-		/* TRANSLATORS: transaction state, downloading metadata */
-		text = _("Downloading groups");
-		break;
 	case PK_STATUS_ENUM_DOWNLOAD_UPDATEINFO:
 		/* TRANSLATORS: transaction state, downloading metadata */
 		text = _("Downloading update information");
@@ -885,14 +816,6 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		/* TRANSLATORS: transaction state, loading databases */
 		text = _("Loading cache");
 		break;
-	case PK_STATUS_ENUM_SCAN_APPLICATIONS:
-		/* TRANSLATORS: transaction state, scanning for running processes */
-		text = _("Scanning installed applications");
-		break;
-	case PK_STATUS_ENUM_GENERATE_PACKAGE_LIST:
-		/* TRANSLATORS: transaction state, generating a list of packages installed on the system */
-		text = _("Generating package lists");
-		break;
 	case PK_STATUS_ENUM_WAITING_FOR_LOCK:
 		/* TRANSLATORS: transaction state, when we're waiting for the native tools to exit */
 		text = _("Waiting for package manager lock");
@@ -901,30 +824,40 @@ gpk_status_enum_to_localised_text (PkStatusEnum status)
 		/* TRANSLATORS: waiting for user to type in a password */
 		text = _("Waiting for authentication");
 		break;
-	case PK_STATUS_ENUM_SCAN_PROCESS_LIST:
-		/* TRANSLATORS: we are updating the list of processes */
-		text = _("Updating the list of running applications");
-		break;
-	case PK_STATUS_ENUM_CHECK_EXECUTABLE_FILES:
-		/* TRANSLATORS: we are checking executable files in use */
-		text = _("Checking for applications currently in use");
-		break;
-	case PK_STATUS_ENUM_CHECK_LIBRARIES:
-		/* TRANSLATORS: we are checking for libraries in use */
-		text = _("Checking for libraries currently in use");
-		break;
 	case PK_STATUS_ENUM_COPY_FILES:
 		/* TRANSLATORS: we are copying package files to prepare to install */
 		text = _("Copying files");
 		break;
-#if PK_CHECK_VERSION(1,1,6)
 	case PK_STATUS_ENUM_RUN_HOOK:
 		/* TRANSLATORS: we are running hooks pre or post transaction */
 		text = _("Running hooks");
 		break;
-#endif
 	default:
 		g_warning ("status unrecognized: %s", pk_status_enum_to_string (status));
+	}
+	return text;
+}
+
+const gchar *
+gpk_severity_enum_to_localised_text (PkSeverityEnum severity)
+{
+	const gchar *text = NULL;
+	switch (severity) {
+	case PK_SEVERITY_ENUM_LOW:
+		/* TRANSLATORS: The severity of an update */
+		text = _("Low priority updates");
+		break;
+	case PK_SEVERITY_ENUM_HIGH:
+		/* TRANSLATORS: The severity of an update */
+		text = _("Important updates");
+		break;
+	case PK_SEVERITY_ENUM_CRITICAL:
+		/* TRANSLATORS: The severity of an update */
+		text = _("Critical updates");
+		break;
+	default:
+		/* TRANSLATORS: The severity of an update, i.e. medium or unspecified */
+		text = _("Normal updates");
 	}
 	return text;
 }
@@ -934,27 +867,15 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 {
 	const gchar *text = NULL;
 	switch (info) {
-	case PK_INFO_ENUM_LOW:
-		/* TRANSLATORS: The type of update */
-		text = _("Trivial update");
-		break;
-	case PK_INFO_ENUM_NORMAL:
+	case PK_INFO_ENUM_UPDATE:
 		/* TRANSLATORS: The type of update */
 		text = _("Normal update");
 		break;
-	case PK_INFO_ENUM_IMPORTANT:
-		/* TRANSLATORS: The type of update */
-		text = _("Important update");
-		break;
-	case PK_INFO_ENUM_SECURITY:
+	case PK_INFO_ENUM_UPDATE_SECURITY:
 		/* TRANSLATORS: The type of update */
 		text = _("Security update");
 		break;
-	case PK_INFO_ENUM_BUGFIX:
-		/* TRANSLATORS: The type of update */
-		text = _("Bug fix update");
-		break;
-	case PK_INFO_ENUM_ENHANCEMENT:
+	case PK_INFO_ENUM_UPDATE_ENHANCEMENT:
 		/* TRANSLATORS: The type of update */
 		text = _("Enhancement update");
 		break;
@@ -963,12 +884,10 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 		text = _("Blocked update");
 		break;
 	case PK_INFO_ENUM_INSTALLED:
-	case PK_INFO_ENUM_COLLECTION_INSTALLED:
 		/* TRANSLATORS: The state of a package */
 		text = _("Installed");
 		break;
 	case PK_INFO_ENUM_AVAILABLE:
-	case PK_INFO_ENUM_COLLECTION_AVAILABLE:
 		/* TRANSLATORS: The state of a package, i.e. not installed */
 		text = _("Available");
 		break;
@@ -980,12 +899,6 @@ gpk_info_enum_to_localised_text (PkInfoEnum info)
 		/* TRANSLATORS: The type of package */
 		text = _("Untrusted");
 		break;
-#if PK_CHECK_VERSION(1,0,4)
-	case PK_INFO_ENUM_UNAVAILABLE:
-		/* TRANSLATORS: The state of a package */
-		text = _("Unavailable");
-		break;
-#endif
 	default:
 		g_warning ("info unrecognized: %s", pk_info_enum_to_string (info));
 	}
@@ -1028,10 +941,6 @@ gpk_info_enum_to_localised_present (PkInfoEnum info)
 	case PK_INFO_ENUM_PREPARING:
 		/* TRANSLATORS: The action of the package, in present tense */
 		text = _("Preparing");
-		break;
-	case PK_INFO_ENUM_DECOMPRESSING:
-		/* TRANSLATORS: The action of the package, in present tense */
-		text = _("Decompressing");
 		break;
 	default:
 		g_warning ("info unrecognized: %s", pk_info_enum_to_string (info));
@@ -1076,10 +985,6 @@ gpk_info_enum_to_localised_past (PkInfoEnum info)
 		/* TRANSLATORS: The action of the package, in past tense */
 		text = _("Prepared");
 		break;
-	case PK_INFO_ENUM_DECOMPRESSING:
-		/* TRANSLATORS: The action of the package, in past tense */
-		text = _("Decompressed");
-		break;
 	default:
 		g_warning ("info unrecognized: %s", pk_info_enum_to_string (info));
 	}
@@ -1095,7 +1000,7 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Unknown role type");
 		break;
-	case PK_ROLE_ENUM_DEPENDS_ON:
+	case PK_ROLE_ENUM_GET_DEPENDENCIES:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got dependencies");
 		break;
@@ -1108,7 +1013,7 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got details");
 		break;
-	case PK_ROLE_ENUM_REQUIRED_BY:
+	case PK_ROLE_ENUM_GET_DEPENDENTS:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got requires");
 		break;
@@ -1201,15 +1106,11 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Downloaded packages");
 		break;
-	case PK_ROLE_ENUM_GET_DISTRO_UPGRADES:
+	case PK_ROLE_ENUM_GET_SYSTEM_UPGRADES:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got distribution upgrades");
 		break;
-	case PK_ROLE_ENUM_GET_CATEGORIES:
-		/* TRANSLATORS: The role of the transaction, in past tense */
-		text = _("Got categories");
-		break;
-	case PK_ROLE_ENUM_GET_OLD_TRANSACTIONS:
+	case PK_ROLE_ENUM_GET_HISTORY:
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Got old transactions");
 		break;
@@ -1217,12 +1118,10 @@ gpk_role_enum_to_localised_past (PkRoleEnum role)
 		/* TRANSLATORS: The role of the transaction, in past tense */
 		text = _("Repaired the system");
 		break;
-#if PK_CHECK_VERSION(1,0,10)
 	case PK_ROLE_ENUM_UPGRADE_SYSTEM:
 		/* TRANSLATORS: The role of the transaction, in past tense */
-		text = _("Upgrading the system");
+		text = _("Upgraded the system");
 		break;
-#endif
 	default:
 		g_warning ("role unrecognized: %s", pk_role_enum_to_string (role));
 	}
@@ -1237,10 +1136,6 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 	case PK_GROUP_ENUM_ACCESSIBILITY:
 		/* TRANSLATORS: The group type */
 		text = _("Accessibility");
-		break;
-	case PK_GROUP_ENUM_ACCESSORIES:
-		/* TRANSLATORS: The group type */
-		text = _("Accessories");
 		break;
 	case PK_GROUP_ENUM_EDUCATION:
 		/* TRANSLATORS: The group type */
@@ -1286,16 +1181,6 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		/* TRANSLATORS: The group type */
 		text = _("KDE desktop");
 		break;
-	case PK_GROUP_ENUM_DESKTOP_XFCE:
-		/* TRANSLATORS: The group type */
-		text = _("Xfce desktop");
-		break;
-#if PK_CHECK_VERSION(1,2,7)
-	case PK_GROUP_ENUM_DESKTOP_DDE:
-		/* TRANSLATORS: The group type */
-		text = _("Deepin desktop");
-		break;
-#endif
 	case PK_GROUP_ENUM_DESKTOP_OTHER:
 		/* TRANSLATORS: The group type */
 		text = _("Other desktops");
@@ -1311,10 +1196,6 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 	case PK_GROUP_ENUM_FONTS:
 		/* TRANSLATORS: The group type */
 		text = _("Fonts");
-		break;
-	case PK_GROUP_ENUM_ADMIN_TOOLS:
-		/* TRANSLATORS: The group type */
-		text = _("Admin tools");
 		break;
 	case PK_GROUP_ENUM_LEGACY:
 		/* TRANSLATORS: The group type */
@@ -1332,10 +1213,6 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		/* TRANSLATORS: The group type */
 		text = _("Security");
 		break;
-	case PK_GROUP_ENUM_POWER_MANAGEMENT:
-		/* TRANSLATORS: The group type */
-		text = _("Power management");
-		break;
 	case PK_GROUP_ENUM_COMMUNICATION:
 		/* TRANSLATORS: The group type */
 		text = _("Communication");
@@ -1343,10 +1220,6 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 	case PK_GROUP_ENUM_NETWORK:
 		/* TRANSLATORS: The group type */
 		text = _("Network");
-		break;
-	case PK_GROUP_ENUM_MAPS:
-		/* TRANSLATORS: The group type */
-		text = _("Maps");
 		break;
 	case PK_GROUP_ENUM_REPOS:
 		/* TRANSLATORS: The group type */
@@ -1364,17 +1237,97 @@ gpk_group_enum_to_localised_text (PkGroupEnum group)
 		/* TRANSLATORS: The group type */
 		text = _("Electronics");
 		break;
-	case PK_GROUP_ENUM_COLLECTIONS:
-		/* TRANSLATORS: The group type */
-		text = _("Package collections");
-		break;
 	case PK_GROUP_ENUM_VENDOR:
 		/* TRANSLATORS: The group type */
 		text = _("Vendor");
 		break;
-	case PK_GROUP_ENUM_NEWEST:
+	case PK_GROUP_ENUM_ADMIN:
 		/* TRANSLATORS: The group type */
-		text = _("Newest packages");
+		text = _("Admin tools");
+		break;
+	case PK_GROUP_ENUM_DATABASES:
+		/* TRANSLATORS: The group type */
+		text = _("Databases");
+		break;
+	case PK_GROUP_ENUM_DEBUG:
+		/* TRANSLATORS: The group type */
+		text = _("Debugging");
+		break;
+	case PK_GROUP_ENUM_DEVEL:
+		/* TRANSLATORS: The group type */
+		text = _("Development");
+		break;
+	case PK_GROUP_ENUM_EDITORS:
+		/* TRANSLATORS: The group type */
+		text = _("Editors");
+		break;
+	case PK_GROUP_ENUM_GEOGRAPHY:
+		/* TRANSLATORS: The group type */
+		text = _("Geography");
+		break;
+	case PK_GROUP_ENUM_LANG_C:
+		/* TRANSLATORS: The group type */
+		text = _("C and C++");
+		break;
+	case PK_GROUP_ENUM_LANG_GO:
+		/* TRANSLATORS: The group type */
+		text = _("Go");
+		break;
+	case PK_GROUP_ENUM_LANG_HASKELL:
+		/* TRANSLATORS: The group type */
+		text = _("Haskell");
+		break;
+	case PK_GROUP_ENUM_LANG_JAVA:
+		/* TRANSLATORS: The group type */
+		text = _("Java");
+		break;
+	case PK_GROUP_ENUM_LANG_JAVASCRIPT:
+		/* TRANSLATORS: The group type */
+		text = _("JavaScript");
+		break;
+	case PK_GROUP_ENUM_LANG_LISP:
+		/* TRANSLATORS: The group type */
+		text = _("Lisp");
+		break;
+	case PK_GROUP_ENUM_LANG_OCAML:
+		/* TRANSLATORS: The group type */
+		text = _("OCaml");
+		break;
+	case PK_GROUP_ENUM_LANG_PERL:
+		/* TRANSLATORS: The group type */
+		text = _("Perl");
+		break;
+	case PK_GROUP_ENUM_LANG_PHP:
+		/* TRANSLATORS: The group type */
+		text = _("PHP");
+		break;
+	case PK_GROUP_ENUM_LANG_PYTHON:
+		/* TRANSLATORS: The group type */
+		text = _("Python");
+		break;
+	case PK_GROUP_ENUM_LANG_RUBY:
+		/* TRANSLATORS: The group type */
+		text = _("Ruby");
+		break;
+	case PK_GROUP_ENUM_LANG_RUST:
+		/* TRANSLATORS: The group type */
+		text = _("Rust");
+		break;
+	case PK_GROUP_ENUM_LIBRARIES:
+		/* TRANSLATORS: The group type */
+		text = _("Libraries");
+		break;
+	case PK_GROUP_ENUM_META:
+		/* TRANSLATORS: The group type */
+		text = _("Metapackages");
+		break;
+	case PK_GROUP_ENUM_SHELLS:
+		/* TRANSLATORS: The group type */
+		text = _("Shells");
+		break;
+	case PK_GROUP_ENUM_UTILITIES:
+		/* TRANSLATORS: The group type */
+		text = _("Utilities");
 		break;
 	case PK_GROUP_ENUM_UNKNOWN:
 		/* TRANSLATORS: The group type */
@@ -1393,6 +1346,12 @@ gpk_info_enum_to_icon_name (PkInfoEnum info)
 }
 
 const gchar *
+gpk_severity_enum_to_icon_name (PkSeverityEnum severity)
+{
+	return pk_enum_find_string (enum_severity_icon_name, severity);
+}
+
+const gchar *
 gpk_status_enum_to_icon_name (PkStatusEnum status)
 {
 	return pk_enum_find_string (enum_status_icon_name, status);
@@ -1407,7 +1366,23 @@ gpk_role_enum_to_icon_name (PkRoleEnum role)
 const gchar *
 gpk_group_enum_to_icon_name (PkGroupEnum group)
 {
-	return pk_enum_find_string (enum_group_icon_name, group);
+	GtkIconTheme *icon_theme = gtk_icon_theme_get_default ();
+
+	for (guint i = 0; enum_group_icon_names[i].group != PK_GROUP_ENUM_LAST; i++) {
+		const gchar * const *names = enum_group_icon_names[i].icon_names;
+		guint j;
+
+		if (enum_group_icon_names[i].group != group)
+			continue;
+
+		/* use the first icon the theme has, otherwise the last fallback */
+		for (j = 0; names[j + 1] != NULL; j++) {
+			if (gtk_icon_theme_has_icon (icon_theme, names[j]))
+				break;
+		}
+		return names[j];
+	}
+	return enum_group_icon_names[0].icon_names[0];
 }
 
 const gchar *

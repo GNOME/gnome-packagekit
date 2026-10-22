@@ -81,7 +81,7 @@ endforeach
 
 gio = dependency('gio-2.0', version : '>= 2.56')
 gtk = dependency('gtk+-3.0', version : '>= 3.24')
-packagekit = dependency('packagekit-glib2', version : '>= 0.9.1')
+packagekit = dependency('packagekit', version : '>= 1.99.0')
 libm = cc.find_library('libm', required: false)
 
 if get_option('systemd')
@@ -89,9 +89,6 @@ if get_option('systemd')
   conf.set('HAVE_SYSTEMD', 1)
   polkit = dependency('polkit-gobject-1')
 endif
-
-add_project_arguments('-DI_KNOW_THE_PACKAGEKIT_GLIB2_API_IS_SUBJECT_TO_CHANGE',
-                      language : 'c')
 
 gnome = import('gnome')
 i18n = import('i18n')

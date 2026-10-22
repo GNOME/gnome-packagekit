@@ -149,22 +149,22 @@ gpk_test_common_func (void)
 	gchar *text;
 
 	/* package id pretty valid package id, no summary */
-	text = gpk_package_id_format_twoline (NULL, "simon;0.0.1;i386;data", NULL);
+	text = gpk_package_id_format_twoline (NULL, "simon;0.0.1;i386;fedora;data", NULL);
 	g_assert_cmpstr (text, ==, "simon-0.0.1 (32-bit)");
 	g_free (text);
 
 	/* package id pretty valid package id, no summary 2 */
-	text = gpk_package_id_format_twoline (NULL, "simon;0.0.1;;data", NULL);
+	text = gpk_package_id_format_twoline (NULL, "simon;0.0.1;;fedora;data", NULL);
 	g_assert_cmpstr (text, ==, "simon-0.0.1");
 	g_free (text);
 
 	/* package id pretty valid package id, no summary 3 */
-	text = gpk_package_id_format_twoline (NULL, "simon;;;data", NULL);
+	text = gpk_package_id_format_twoline (NULL, "simon;;;fedora;data", NULL);
 	g_assert_cmpstr (text, ==, "simon");
 	g_free (text);
 
 	/* package id pretty valid package id, no summary 4 */
-	text = gpk_package_id_format_twoline (NULL, "simon;0.0.1;;data", "dude");
+	text = gpk_package_id_format_twoline (NULL, "simon;0.0.1;;fedora;data", "dude");
 	g_assert_cmpstr (text, ==, "dude\n<span color=\"gray\">simon-0.0.1</span>");
 	g_free (text);
 }
